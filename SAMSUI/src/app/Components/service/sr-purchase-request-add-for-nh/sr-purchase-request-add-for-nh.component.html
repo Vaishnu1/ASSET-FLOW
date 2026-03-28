@@ -1,0 +1,159 @@
+<mat-icon class="close-icon-large" (click)="closePurchaseNHModal()">highlight_off</mat-icon>
+
+<div class="row page_header">
+  <div class="col page_header_items">
+    <div class="page_header_tilte">
+      {{ 'PURCHASE_REQUEST_CREATE' | translate }}
+    </div>
+  </div>
+  <div class="col page_header_items">
+    <div>
+      <div class="col-form-label" style="font-size:15px;">Service Request No : <span
+          style="color:red;font-size:15px;">{{srNo}}</span> </div>
+    </div>
+  </div>
+  <div class="col page_header_items">
+    <div>
+      <div class="col-form-label" style="font-size:15px;">PR group : <span
+          style="color:violet;font-size:15px;">{{prGroup1}}</span> </div>
+    </div>
+  </div>
+  <div class="col page_header_items">
+    <div class="float-right" style="display: flex;">
+      <div class="button-row" style="display: flex !important;">
+        <button mat-raised-button class="space" color="primary" (click)="savePurchase()">
+          {{ 'COMMON_SAVE' | translate }}</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<fieldset>
+  <div class="panel-body" [formGroup]="purchaseRequestCreate">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="col-form-label">{{ 'PR_NO' | translate}} : <span style="color: teal; font-size: 16px;">
+          {{purchaseRequestCreate.controls.poReqNo.value}}
+        </span></div>
+
+        <div class="col-form-label">{{ 'PR_DT' | translate}} : <span
+            style="color: teal">{{ poReqDtDisp | date:'longDate' }}</span></div>
+
+        <div class="col-form-label">{{ 'PR_REQUESTED_BY' | translate}} : <span style="color: teal">
+            {{purchaseRequestCreate.controls.requestedBy.value}}
+        </span></div>
+
+        <div style="padding-top: 10px !important;">
+          <mat-radio-group aria-label="Select an option" formControlName="prGroupType"
+            (change)="selectRadioValue($event)">
+            <mat-radio-button value="Material">{{'PURCHASE_MATERIAL' | translate}}</mat-radio-button>
+            <mat-radio-button value="Service">{{ 'PURCHASE_SERVICE' | translate}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div>
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'ASSET_MAINTENANCE_STRATEGY' | translate}}
+            </mat-label>
+            <input matInput formControlName="prType" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <div class="example-full-width">
+              <span class="input-label">{{'PURCHASE_ORDER_TYPE' | translate}}<span class="mandatory-style"> *</span></span>
+              <ng-select [items]="orderReasonList" bindLabel="orderReasonName" bindValue="orderReasonName"
+                (search)="loadOrderReasonComboData($event)" (click)="loadOrderReasonComboData($event)" [virtualScroll]="true"
+                (scrollToEnd)="loadOrderReasonComboData({})" (keyup.backspace)="loadOrderReasonComboData($event.target.value ? $event : 'back')" (clear)="loadOrderReasonComboData('clear')" [loading]="scrollorderReasonsync" loadingText="Loading..."
+                (change)="selectedOrderReasonData($event)" formControlName="orderReason">
+              </ng-select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="example-full-width">
+                <span class="input-label">{{'ITEM_TYPE' | translate}}<span class="mandatory-style"> *</span></span>
+                <ng-select  formControlName="itemTypeName" tabindex="10"
+                  [items]="itemCatList" bindLabel="lable" bindValue="lable">
+                </ng-select>
+              </div>
+        </div>
+        <div class="form-group">
+          <div class="example-full-width">
+            <span class="input-label">{{'ITEM_NAME' | translate}}<span class="mandatory-style"> *</span></span>
+            <ng-select [items]="accessoriesList" bindLabel="itemName" bindValue="itemName" (search)="listOfItem($event)"
+              (click)="listOfItem($event)" [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')"
+              [loading]="scrollsyncItemName" loadingText="Loading..." (change)="getAccessoriesComboValue($event)"
+              formControlName="itemName">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-group" style="padding-top: 10px !important;">
+          <mat-checkbox type="checkbox" formControlName="unmatchedFlag" (click)="disableFieldsForUnmatched()">
+              <span class="input-label"> {{ 'PURCHASE_UN_MATCHED' | translate }} </span>
+            </mat-checkbox>
+      </div>
+
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'ITEM_DESC' | translate}}
+            </mat-label>
+            <input matInput formControlName="description" required>
+          </mat-form-field>         
+        </div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'ITEM_OEM_CODE' | translate}}
+            </mat-label>
+            <input matInput formControlName="makerPartCode">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'REQ_QTY' | translate}}
+            </mat-label>
+            <input matInput formControlName="poReqQty" required>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-12 rightbutton">
+        <button mat-raised-button class="space" color="primary" (click)="raisePurchaseRequest()" [disabled]="purchaseRequestCreate.invalid">
+          {{ 'COMMON_ADD' | translate }}</button>
+    </div>
+
+    <div class="pmsTable">
+        <table class="table table-condensed ">
+          <thead class="table_header">
+            <tr class="table_header">
+              <th>{{ 'COMMON_S_NO' | translate }}</th>
+              <th>{{ 'ITEM_TYPE' | translate }}</th>
+              <th>{{ 'ITEM_NAME' | translate }}</th>
+              <th>{{ 'ITEM_DESC' | translate }}</th>
+              <th>{{ 'PURCHASE_TYPE_FOR_SR' | translate }}</th>
+              <th>{{ 'REQ_QTY' | translate }}</th>
+              <th>{{ 'COMMON_DELETE' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+           <tr *ngFor="let prlist of prReqHdrList; let i = index;">
+              <td style="font-size: 10px;">{{i+1}}</td>
+              <td style="font-size: 10px;">{{prlist.poReqDtl.itemTypeName}}</td>
+              <td style="font-size: 10px;">{{prlist.poReqDtl.itemName}}</td>
+              <td style="font-size: 10px;">{{prlist.poReqDtl.description}}</td>
+              <td style="font-size: 10px;">{{prlist.prType}}</td>
+              <td style="font-size: 10px;">{{prlist.poReqDtl.poReqQty}}</td>
+              <td>           
+                 <mat-icon class="close-icon-large-remove" (click)="delete(i)">remove_circle_outline</mat-icon>
+              </td>
+            </tr> 
+          </tbody>
+        </table>
+      </div>
+  </div>
+</fieldset>

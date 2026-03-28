@@ -1,0 +1,44 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="pdf-form"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{'SR_SERVICE_REQUEST'| translate}} {{ 'SR_PDF_REPORT_CONFIRMATION' | translate }} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="closeModel()">highlight_off</mat-icon>
+      </div>
+    </div>
+    
+    <div fxLayout="row" class="pdf-form">
+      <label>Select {{'SR_SERVICE_REQUEST'| translate}} pdf report type to download</label>
+    </div>
+  
+    <div fxLayout="column" class="pdf-form"> 
+        <mat-radio-group name="reportType" [(ngModel)]="reportType" fxLayout="column"> 
+            <mat-radio-button value="CONSOLIDATED" >{{ 'SR_PDF_REPORT_TYPE_CONSOLIDATED' | translate }}
+              <mat-icon color="primary" style="margin-left: 20px;"
+                matTooltip="Consolidated Report is probably single page report which contains {{'SR_SERVICE_REQUEST'| translate}} 
+                Info, Asset info, Contract Info, Service and Spare Info">
+                info
+              </mat-icon>
+            </mat-radio-button> 
+            <mat-radio-button  value="DETAILED">{{ 'SR_PDF_REPORT_TYPE_DETAILED' | translate }}
+              <mat-icon  color="primary" style="margin-left: 54px;"
+                matTooltip="Detailed Report contains {{'SR_SERVICE_REQUEST'| translate}} 
+                Info, Asset info, Contract Info, Work Activity Info, Activity log Info, 
+                Purchase Info, Stock Indent Info, Gate Pass info, Documents Uploaded Info,
+                Re_Opened Info, and Workflow Info">
+                info
+              </mat-icon>
+            </mat-radio-button> 
+        </mat-radio-group> 
+    </div> 
+    
+
+    <div fxLayout="row" class="create-emp-button pdf-form">  
+      <button color="primary" mat-raised-button
+        (click)="downloadSRPdfReport()">{{ 'COMMON_DOWNLOAD' | translate }}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,740 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="70" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'CUSTOMER_SITE_NAME' | translate}}</h4>
+    </div>
+    <div fxFlex="30" fxLayoutAlign="end start" class="mb-5">
+      <button mat-raised-button class="space" color="primary" (click)="exit()">Back</button>
+      <button mat-raised-button class="space" color="primary" (click)="clear()" *ngIf="headingDisplay === 'Create'"
+      [disabled]="disableClearButton">Clear</button>
+      <button *ngIf="!modelCustomerSite" mat-raised-button class="space" color="primary" (click)="addCustomerSite()"
+      [disabled]="customerSiteForm.controls.customerSiteName.invalid  ||  customerSiteForm.controls.customerState.invalid ||
+      customerSiteForm.controls.custSiteAddress1.invalid || customerSiteForm.controls.custSiteCompanyEmailId.invalid ||
+      customerSiteForm.controls.customerArea.invalid || customerSiteForm.controls.customerCountry.invalid ||
+      customerSiteForm.controls.customerCity.invalid || customerSiteForm.controls.custSitePinCode.invalid ||
+      customerSiteForm.controls.custSiteCompanyPhoneNo.invalid ||  customerSiteForm.controls.custContactPerson.invalid || 
+      customerSiteForm.controls.custContactPersonEmailId.invalid ||customerSiteForm.controls.custContactPersonContactNo.invalid || !customerSiteForm.dirty">
+            Add</button> 
+    </div>
+  </div>
+  
+  <div fxFlex="100">
+    <form [formGroup]=" customerSiteForm" >
+      <div >
+        
+          <mat-tab-group [selectedIndex]="selectedIndex" (click)="changeTabValidation('tab1')"  [@.disabled]="true">
+            <mat-tab>
+
+              <ng-template mat-tab-label>
+                {{'CUSTOMER_SITE_NAME'|translate }}
+                <div *ngIf="!modelCustomerSite">
+                  <div class="tab-mini-fab-icon">
+                    <mat-icon *ngIf="!formOneValid" class="mandatory-style" aria-hidden="true">error</mat-icon>
+                  </div>
+                </div>
+              </ng-template>
+
+              <mat-card class="card-style">
+                <mat-card-content style="width: 100%;">
+                  <div class="content-style" style="width: 100%;"  fxLayout="row" fxHide.lt-md  >
+                    
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">  
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'CUSTOMER_SITE_NAME' | translate}}</mat-label>
+                            <input matInput #customerSite formControlName="customerSiteName" required [tabIndex]=1
+                              (input)="formOneValidation()" [maxlength]="100"
+                              oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.customerSiteName.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.customerSiteName.invalid &&  customerSiteForm.controls.customerSiteName.touched">
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerSiteName.errors.required">
+                                "{{'SUPPLIER_SITE_NAME' | translate }}" Is Required </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_AREA' | translate }} </mat-label>
+                            <input matInput required formControlName="customerArea" (input)="formOneValidation()"
+                              [tabIndex]=4 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.customerArea.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerArea.errors &&  customerSiteForm.controls.customerArea.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.customerArea.errors.required">
+                                "{{'COMMON_AREA' | translate }}" Is Required</div>
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerArea.errors.notUnique">{{ErrorMsg}}</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label"> {{'COMMON_COUNTRY' | translate }} <span class="mandatory-style">*</span> </span>
+                            <ng-select  [tabIndex]=7 required formControlName="customerCountry"
+                              [items]="countries" (search)="getCountryData($event)" (click)="getCountryData({})"
+                              (change)=" formOneValidation(); setCountryData($event)" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                              [loading]="scrollCountrysync" loadingText="Loading..." bindLabel="countryName"
+                              bindValue="countryName">
+                            </ng-select>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerCountry.invalid &&  customerSiteForm.controls.customerCountry.touched">
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerCountry.errors.required">
+                                Kindly Select The "{{'COMMON_COUNTRY' | translate }}" </div>
+                            </mat-error>
+                          </div>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_EMAIL_ID' | translate }}</mat-label>
+                            <input matInput formControlName="custSiteCompanyEmailId" (input)="formOneValidation()" required
+                              [tabIndex]=10 [maxlength]="50" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyEmailId.value?.length || 0}}/50
+                            </mat-hint>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.custSiteCompanyEmailId.invalid &&  customerSiteForm.controls.custSiteCompanyEmailId.touched">
+                              <div class="err-field"  *ngIf=" customerSiteForm.controls.custSiteCompanyEmailId.errors.required">
+                                "{{'COMMON_EMAIL_ID' | translate }}" Is Required</div>
+                              <div class="err-field"  *ngIf=" customerSiteForm.controls.custSiteCompanyEmailId.errors.pattern">
+                                {{'COMMON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <span class="input-label">{{'SUPPLIER_PAYMENT_METHOD' | translate }}</span>
+                          <ng-select  [tabIndex]=13 formControlName="custSitePaymentMethod"
+                            [items]="paymentMethod" bindLabel="name" bindValue="name" [maxlength]="20">
+                          </ng-select>
+                          
+                        </div>
+
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_ADDRESS_1' | translate }}</mat-label>
+                            <input required matInput formControlName="custSiteAddress1" (input)="formOneValidation()"
+                              [tabIndex]=2 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteAddress1.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSiteAddress1.invalid &&  customerSiteForm.controls.custSiteAddress1.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteAddress1.errors.required">
+                                "{{'COMMON_ADDRESS_1' | translate }}" Is Required</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_CITY' | translate }}</mat-label>
+                            <input matInput formControlName="customerCity" (input)="formOneValidation()" required
+                              [tabIndex]=5 [maxlength]="50" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls. customerCity.value?.length || 0}}/50
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerCity.invalid &&  customerSiteForm.controls.customerCity.touched">
+                              <div class="err-field"  *ngIf=" customerSiteForm.controls.customerCity.errors.required">
+                                Kindly Select The "{{'COMMON_CITY' | translate }}" </div>
+                              
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_ZIP_CODE' | translate }} </mat-label>
+                            <input matInput formControlName="custSitePinCode" required (input)="formOneValidation()"
+                              [tabIndex]=8 [maxlength]="10" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSitePinCode.value?.length || 0}}/10
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSitePinCode.invalid &&  customerSiteForm.controls.custSitePinCode.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSitePinCode.errors.required">
+                                "{{'COMMON_ZIP_CODE' | translate }}" Is Required </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label">{{'COMMON_PHONE_NO' | translate }} </mat-label>
+                            <input matInput formControlName="custSiteCompanyPhoneNo" (input)="formOneValidation()" [tabIndex]=11
+                              required [maxlength]="15" [minlength]="10" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyPhoneNo.value?.length || 0}}/15
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.invalid &&  customerSiteForm.controls.custSiteCompanyPhoneNo.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.errors.required">
+                                "{{'COMMON_PHONE_NO' | translate }}" Is Required </div>
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.errors.pattern">
+                                Kindly Enter Valid "{{'COMMON_PHONE_NO' | translate }}"</div>
+                              <div class="err-field" *ngIf="customerSiteForm.controls.custSiteCompanyPhoneNo.errors.pattern?false:customerSiteForm.controls.custSiteCompanyPhoneNo.errors.minlength">
+                                "{{'COMMON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'SUPPLIER_PAYMENT_TERMS' | translate }}</mat-label>
+                            <textarea matInput formControlName="custSitePaymentTerms" [tabIndex]=14 [maxlength]="50"></textarea>
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSitePaymentTerms.value?.length || 0}}/50
+                            </mat-hint>
+                          </mat-form-field>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_ADDRESS_2' | translate }}</mat-label>
+                            <input matInput formControlName="custSiteAddress2" 
+                            [tabIndex]=3 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteAddress2.value?.length || 0}}/100
+                            </mat-hint>
+                          
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label"> {{'COMMON_STATE' | translate }} <span class="mandatory-style">*</span>
+                            </span>
+                            <ng-select  [tabIndex]=6 required formControlName="customerState" [items]="states"
+                              bindLabel="stateName" (search)="getStateData($event)" (click)="getStateData({})"
+                              [virtualScroll]="true" (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="scrollStatesync"
+                              loadingText="Loading..." (change)="formOneValidation();setStateData($event)"
+                              bindValue="stateName">
+                            </ng-select>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.customerState.invalid &&  customerSiteForm.controls.customerState.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.customerState.errors.required">
+                                Kindly Select The "{{'COMMON_STATE' | translate }}" </div>
+                            </mat-error>
+                          </div>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label">{{'CURRENCY_CD' | translate }}
+                            </span>
+                            <ng-select  [tabIndex]=9 formControlName="custSiteCurrencyCode"
+                              (search)="listOfCurrencyCd($event)" (click)="listOfCurrencyCd({})" [virtualScroll]="true"
+                              (scrollToEnd)="listOfCurrencyCd({})" (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')" (clear)="listOfCurrencyCd('clear')" [loading]="scrollCurrencyCodesync"
+                              loadingText="Loading..." (change)="formOneValidation();getCurrencyCodeData($event)"
+                              [items]="currencycdList" bindLabel="curCd" bindValue="curCd">
+                            </ng-select>
+                          </div>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_WEBSITE' | translate }} </mat-label>
+                            <input type="url"  matInput formControlName="custSiteWebsite" [tabIndex]=12
+                              [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteWebsite.value?.length || 0}}/100
+                            </mat-hint>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group" *ngIf="disableClearButton ">
+                          <div class="example-full-width check-box">
+                            <mat-checkbox color="primary" class="example-margin" formControlName="active" [tabIndex]=15>
+                              {{'SUPPLIER_ACTIVE' | translate }}
+                            </mat-checkbox>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="content-style" style="width: 100%;" fxLayout="row" fxHide.gt-sm  >
+                    
+                    <div fxLayout="column" fxFlex="50" fxFlexFill>
+                      <div class="pad-1-per">  
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'CUSTOMER_SITE_NAME' | translate}}</mat-label>
+                            <input matInput #customerSite formControlName="customerSiteName" required [tabIndex]=1
+                              (input)="formOneValidation()" [maxlength]="100"
+                              oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.customerSiteName.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.customerSiteName.invalid &&  customerSiteForm.controls.customerSiteName.touched">
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerSiteName.errors.required">
+                                "{{'SUPPLIER_SITE_NAME' | translate }}" Is Required</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                     
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_ADDRESS_2' | translate }}</mat-label>
+                            <input matInput formControlName="custSiteAddress2" 
+                            [tabIndex]=3 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteAddress2.value?.length || 0}}/100
+                            </mat-hint>
+                          
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_CITY' | translate }}</mat-label>
+                            <input matInput formControlName="customerCity" (input)="formOneValidation()" required
+                              [tabIndex]=5 [maxlength]="50" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls. customerCity.value?.length || 0}}/50
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerCity.invalid &&  customerSiteForm.controls.customerCity.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.customerCity.errors.required">
+                                Kindly Select The "{{'COMMON_CITY' | translate }}"</div>
+                              
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label"> {{'COMMON_COUNTRY' | translate }} <span class="mandatory-style">*</span> </span>
+                            <ng-select  [tabIndex]=7 required formControlName="customerCountry"
+                              [items]="countries" (search)="getCountryData($event)" (click)="getCountryData({})"
+                              (change)=" formOneValidation(); setCountryData($event)" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                              [loading]="scrollCountrysync" loadingText="Loading..." bindLabel="countryName"
+                              bindValue="countryName">
+                            </ng-select>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerCountry.invalid &&  customerSiteForm.controls.customerCountry.touched">
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerCountry.errors.required">
+                                Kindly Select The "{{'COMMON_COUNTRY' | translate }}" </div>
+                            </mat-error>
+                          </div>
+                        </div>  
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label">{{'CURRENCY_CD' | translate }}
+                            </span>
+                            <ng-select  [tabIndex]=9 formControlName="custSiteCurrencyCode"
+                              (search)="listOfCurrencyCd($event)" (click)="listOfCurrencyCd({})" [virtualScroll]="true"
+                              (scrollToEnd)="listOfCurrencyCd({})" (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')" (clear)="listOfCurrencyCd('clear')" [loading]="scrollCurrencyCodesync"
+                              loadingText="Loading..." (change)="formOneValidation();getCurrencyCodeData($event)"
+                              [items]="currencycdList" bindLabel="curCd" bindValue="curCd">
+                            </ng-select>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label">{{'COMMON_PHONE_NO' | translate }} </mat-label>
+                            <input matInput formControlName="custSiteCompanyPhoneNo" (input)="formOneValidation()" [tabIndex]=11
+                              required [maxlength]="15" [minlength]="10" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyPhoneNo.value?.length || 0}}/15
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.invalid &&  customerSiteForm.controls.custSiteCompanyPhoneNo.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.errors.required">
+                                "{{'COMMON_PHONE_NO' | translate }}" Is Required </div>
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.errors.pattern">
+                                Kindly Enter Valid "{{'COMMON_PHONE_NO' | translate }}"</div>
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyPhoneNo.errors.minlength">
+                                "{{'COMMON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <span class="input-label">{{'SUPPLIER_PAYMENT_METHOD' | translate }}</span>
+                          <ng-select  [tabIndex]=13 formControlName="custSitePaymentMethod"
+                            [items]="paymentMethod" bindLabel="name" bindValue="name" [maxlength]="20">
+                          </ng-select>
+                          
+                        </div>
+                      </div>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="50" fxFlexFill>
+                      <div class="pad-1-per">
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_ADDRESS_1' | translate }}</mat-label>
+                            <input required matInput formControlName="custSiteAddress1" (input)="formOneValidation()"
+                              [tabIndex]=2 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteAddress1.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSiteAddress1.invalid &&  customerSiteForm.controls.custSiteAddress1.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteAddress1.errors.required">
+                                "{{'COMMON_ADDRESS_1' | translate }}" Is Required</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_AREA' | translate }} </mat-label>
+                            <input matInput required formControlName="customerArea" (input)="formOneValidation()"
+                              [tabIndex]=4 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.customerArea.value?.length || 0}}/100
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.customerArea.errors &&  customerSiteForm.controls.customerArea.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.customerArea.errors.required">
+                                "{{'COMMON_AREA' | translate }}" Is Required</div>
+                              <div class="err-field" *ngIf="customerSiteForm.controls.customerArea.errors.notUnique">{{ErrorMsg}}</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <div class="example-full-width">
+                            <span class="input-label"> {{'COMMON_STATE' | translate }} <span class="mandatory-style">*</span>
+                            </span>
+                            <ng-select  [tabIndex]=6 required formControlName="customerState" [items]="states"
+                              bindLabel="stateName" (search)="getStateData($event)" (click)="getStateData({})"
+                              [virtualScroll]="true" (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="scrollStatesync"
+                              loadingText="Loading..." (change)="formOneValidation();setStateData($event)"
+                              bindValue="stateName">
+                            </ng-select>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.customerState.invalid &&  customerSiteForm.controls.customerState.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.customerState.errors.required">
+                                Kindly Select The "{{'COMMON_STATE' | translate }}" </div>
+                            </mat-error>
+                          </div>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_6_DIG }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_ZIP_CODE' | translate }} </mat-label>
+                            <input matInput formControlName="custSitePinCode" required (input)="formOneValidation()"
+                              [tabIndex]=8 required [maxlength]="6" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSitePinCode.value?.length || 0}}/6
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custSitePinCode.invalid &&  customerSiteForm.controls.custSitePinCode.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSitePinCode.errors.required">
+                                "{{'COMMON_ZIP_CODE' | translate }}" Is Required </div>
+                            
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSitePinCode.errors.pattern">
+                                {{'COMMON_ZIP_CODE' | translate }} contains only Numbers </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'COMMON_EMAIL_ID' | translate }}</mat-label>
+                            <input matInput formControlName="custSiteCompanyEmailId" (input)="formOneValidation()" required
+                              [tabIndex]=10 [maxlength]="50" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyEmailId.value?.length || 0}}/50
+                            </mat-hint>
+                            <mat-error
+                              *ngIf="customerSiteForm.controls.custSiteCompanyEmailId.invalid &&  customerSiteForm.controls.custSiteCompanyEmailId.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyEmailId.errors.required">
+                                "{{'COMMON_EMAIL_ID' | translate }}" Is Required</div>
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custSiteCompanyEmailId.errors.pattern">
+                                {{'COMMON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_WEBSITE' | translate }} </mat-label>
+                            <input type="url"  matInput formControlName="custSiteWebsite" [tabIndex]=12
+                              [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteWebsite.value?.length || 0}}/100
+                            </mat-hint>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group h_54_px">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label">{{'SUPPLIER_PAYMENT_TERMS' | translate }}</mat-label>
+                            <textarea matInput formControlName="custSitePaymentTerms" [tabIndex]=14 [maxlength]="50"></textarea>
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSitePaymentTerms.value?.length || 0}}/50
+                            </mat-hint>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-group" *ngIf="disableClearButton ">
+                          <div class="example-full-width check-box">
+                            <mat-checkbox color="primary" class="example-margin" formControlName="active" [tabIndex]=15>
+                              {{'SUPPLIER_ACTIVE' | translate }}
+                            </mat-checkbox>
+                          </div>
+                        </div>
+
+                        
+                      </div>
+                    </div>
+                                    
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+            </mat-tab>
+
+            <mat-tab >
+              <ng-template mat-tab-label>
+                {{'SUPPLIER_CONTACT_PERSON_INFO' | translate }}
+                <div *ngIf="! modelCustomerSite">
+                  <div class="tab-mini-fab-icon">
+                    <mat-icon *ngIf="!formThreeValid" class="mandatory-style" aria-hidden="true">error</mat-icon>
+                  </div>
+                </div>
+              </ng-template>
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style" style="width: 100%;" fxLayout="row" fxHide.lt-md  >
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label"> {{'LOCATION_CONTACT_PERSON' | translate }} </mat-label>
+                            <input #contactPerson matInput formControlName="custContactPerson" (change)="formThreeValidation()"
+                              required [tabIndex]=16 [maxlength]="15" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custContactPerson.value?.length || 0}}/15
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custContactPerson.invalid &&  customerSiteForm.controls.custContactPerson.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPerson.errors.required">
+                                "{{'LOCATION_CONTACT_PERSON' | translate }}" Is Required </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_LAND_LINE_NO' | translate }} </mat-label>
+                            <input matInput formControlName="custSiteCompanyLandLineNo" [tabIndex]=19 [maxlength]="15" [minlength]="10"
+                              oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyLandLineNo.value?.length || 0}}/15
+                            </mat-hint>
+                            <mat-error
+                            *ngIf=" customerSiteForm.controls.custSiteCompanyLandLineNo.invalid &&  customerSiteForm.controls.custSiteCompanyLandLineNo.touched">
+                            <div class="err-field"  *ngIf=" customerSiteForm.controls.custSiteCompanyLandLineNo.errors.pattern">
+                              Kindly Enter Valid "{{'COMMON_LAND_LINE_NO' | translate }}" </div>
+                            <div class="err-field" *ngIf="customerSiteForm.controls.custSiteCompanyLandLineNo.errors.pattern?false:customerSiteForm.controls.custSiteCompanyLandLineNo.errors.minlength">
+                              "{{'COMMON_LAND_LINE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                          </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_EMAIL_ID' | translate }} </mat-label>
+                            <input matInput formControlName="custContactPersonEmailId" (change)="formThreeValidation()"
+                              [tabIndex]=17 [maxlength]="50" oninput="this.value = this.value.toUpperCase()" required>
+                            <mat-hint align="end">
+                              {{ customerSiteForm.controls.custContactPersonEmailId.value?.length || 0}}/50</mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custContactPersonEmailId.invalid &&  customerSiteForm.controls.custContactPersonEmailId.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonEmailId.errors.required">
+                                "{{'COMMON_EMAIL_ID' | translate }}" Is Required </div> 
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonEmailId.errors.pattern">
+                                {{'COMMON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz" </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxFlex="30" fxFlexFill>
+                      <div class="pad-1-per">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label">{{'COMMON_PHONE_NO' | translate }}</mat-label>
+                            <input matInput required formControlName="custContactPersonContactNo"
+                              (change)="formThreeValidation()" [tabIndex]=18 [maxlength]="15" required>
+                            <mat-hint align="end">
+                              {{ customerSiteForm.controls.custContactPersonContactNo.value?.length || 0}}/15</mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custContactPersonContactNo.invalid &&  customerSiteForm.controls.custContactPersonContactNo.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonContactNo.errors.required">
+                                "{{'COMMON_PHONE_NO' | translate }}" Is Required</div>
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonContactNo.errors.pattern">
+                                Kindly Enter Valid "{{'COMMON_PHONE_NO' | translate }}" </div>
+                              <div class="err-field" *ngIf="customerSiteForm.controls.custContactPersonContactNo.errors.pattern?false:customerSiteForm.controls.custContactPersonContactNo.errors.minlength">
+                               "{{'COMMON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="content-style" style="width: 100%;" fxLayout="row" fxHide.gt-sm  >
+                    <div fxLayout="column" fxFlex="50" fxFlexFill>
+                      <div class="pad-1-per">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                            <mat-label class="example-label input-label"> {{'LOCATION_CONTACT_PERSON' | translate }} </mat-label>
+                            <input #contactPerson matInput formControlName="custContactPerson" (change)="formThreeValidation()"
+                              required [tabIndex]=16 [maxlength]="15" oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{ customerSiteForm.controls.custContactPerson.value?.length || 0}}/15
+                            </mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custContactPerson.invalid &&  customerSiteForm.controls.custContactPerson.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPerson.errors.required">
+                                "{{'LOCATION_CONTACT_PERSON' | translate }}" Is Required </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                            <mat-label class="example-label input-label"> {{'COMMON_EMAIL_ID' | translate }} </mat-label>
+                            <input matInput formControlName="custContactPersonEmailId" (change)="formThreeValidation()"
+                              [tabIndex]=17 [maxlength]="50" oninput="this.value = this.value.toUpperCase()" required>
+                            <mat-hint align="end">
+                              {{ customerSiteForm.controls.custContactPersonEmailId.value?.length || 0}}/50</mat-hint>
+                            <mat-error
+                              *ngIf=" customerSiteForm.controls.custContactPersonEmailId.invalid &&  customerSiteForm.controls.custContactPersonEmailId.touched">
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonEmailId.errors.required">
+                                "{{'COMMON_EMAIL_ID' | translate }}" Is Required</div> 
+                              <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonEmailId.errors.pattern">
+                                {{'COMMON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz" </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        
+                      </div>
+
+                    </div>
+                    <div fxLayout="column" fxFlex="50" fxFlexFill>
+
+                      <div class="form-group">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                          <mat-label class="example-label input-label">{{'COMMON_PHONE_NO' | translate }}</mat-label>
+                          <input matInput required formControlName="custContactPersonContactNo"
+                            (change)="formThreeValidation()" [tabIndex]=18 [maxlength]="15">
+                          <mat-hint align="end">
+                            {{ customerSiteForm.controls.custContactPersonContactNo.value?.length || 0}}/15</mat-hint>
+                          <mat-error
+                            *ngIf=" customerSiteForm.controls.custContactPersonContactNo.invalid &&  customerSiteForm.controls.custContactPersonContactNo.touched">
+                            <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonContactNo.errors.required">
+                              "{{'COMMON_PHONE_NO' | translate }}" Is Required  </div>
+                            <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonContactNo.errors.pattern">
+                              Kindly Enter Valid "{{'COMMON_PHONE_NO' | translate }}" </div>
+                            <div class="err-field" *ngIf=" customerSiteForm.controls.custContactPersonContactNo.errors.minlength">
+                              "{{'COMMON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      
+                      <div class="form-group">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                          <mat-label class="example-label input-label"> {{'COMMON_LAND_LINE_NO' | translate }} </mat-label>
+                          <input matInput formControlName="custSiteCompanyLandLineNo" [tabIndex]="19" [maxlength]="15" [minlength]="10"
+                            oninput="this.value = this.value.toUpperCase()">
+                          <mat-hint align="end">{{ customerSiteForm.controls.custSiteCompanyLandLineNo.value?.length || 0}}/15
+                          </mat-hint>
+                          <mat-error
+                          *ngIf=" customerSiteForm.controls.custSiteCompanyLandLineNo.invalid &&  customerSiteForm.controls.custSiteCompanyLandLineNo.touched">
+                          <div class="err-field" *ngIf="customerSiteForm.controls.custSiteCompanyLandLineNo.errors.pattern">
+                            Kindly Enter Valid "{{'COMMON_LAND_LINE_NO' | translate }}" </div>
+                          <div class="err-field" *ngIf="customerSiteForm.controls.custSiteCompanyLandLineNo.errors.pattern?false:customerSiteForm.controls.custSiteCompanyLandLineNo.errors.minlength">
+                            "{{'COMMON_LAND_LINE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                        </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+            </mat-tab>
+            
+            <mat-tab label="{{'SUPPLIER_REGISTRATION_INFO' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style" style="width: 100%;" >
+                    
+                    <div fxLayout="row"  fxLayoutAlign="end center">
+                      <div *ngIf="! modelCustomerSite">
+                          <button mat-raised-button class="rightbutton" color="primary" (click)="saveUpdateRegistration(0,null)"
+                              [disabled]="registationValidation">{{'COMMON_ADD'|translate}}
+                            </button>
+                      </div>
+                    </div>
+                   
+                    <div style="padding-top: 0.5%;">
+                      <table mat-table [dataSource]="customerRegistrationDataSource" matSort>
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="registrationName">
+                          <th mat-header-cell *matHeaderCellDef>{{ 'REGISTRATION_NAME' | translate }}</th>
+                          <td mat-cell *matCellDef="let element"> {{element.registrationName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="registrationNo">
+                          <th mat-header-cell *matHeaderCellDef>{{ 'REGISTRATION_NO' | translate }}</th>
+                          <td mat-cell *matCellDef="let element"> {{element.registrationNo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;">
+                            <mat-icon *ngIf="! modelCustomerSite" class="action_icon" color="primary"
+                              matTooltip="{{'COMMON_DELETE' | translate}}"
+                              (click)="deleteRegistration(element.customerSiteRegId,i)">delete </mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="customerSiteRegDispCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: customerSiteRegDispCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+          </mat-tab-group>
+  
+      </div>
+    </form>
+  </div>
+</div>

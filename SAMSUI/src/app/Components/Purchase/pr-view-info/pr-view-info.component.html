@@ -1,0 +1,215 @@
+<div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start">
+        <div>
+            <h2 matDialogTitle [class.hidden]="isContract">{{'PURCHASE_REQUEST' | translate}}</h2>
+            <h2 matDialogTitle [class.hidden]="isNotContract">{{'MENU_CONTRACT' | translate}}</h2>
+        </div>
+    </div>
+
+    <div fxFlex="row" fxLayoutAlign="end" class="btn">
+        <button mat-raised-button mat-dialog-close class="space col-md-2 rightbutton" id="backButton" color="primary"
+                (click)="close()">{{ 'COMMON_BACK' | translate }}</button> 
+    </div>
+
+    
+
+    <table class="item-request-pr-list" mat-table [dataSource]="this.srItemRequestPRData" [class.hidden]="isContract">
+
+                    
+      <ng-container matColumnDef="poLineNo">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PURCHASE_PR_LINE_NO' | translate }}</th>
+        <td mat-cell *matCellDef="let item; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="prNo">
+        <th mat-header-cell *matHeaderCellDef>{{'PR_NO' | translate}}</th>
+        <td mat-cell *matCellDef="let item">{{ item.prNo }}</td>
+      </ng-container>
+    
+      <ng-container *ngIf="prType === 'MATERIAL'" matColumnDef="newItem">
+        <th mat-header-cell *matHeaderCellDef>{{ 'NEW_ITEM' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.newItemFlag ? 'Yes' : 'No' }}</td>
+      </ng-container>
+    
+      <ng-container *ngIf="prType === 'MATERIAL'" matColumnDef="itemName">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ITEM_NAME' | translate }} / {{ 'ITEM_DESC' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.itemName }} <br /> {{ item.itemDesc }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="itemDesc">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ITEM_DESC' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.itemDesc }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="itemTypeName">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ITEM_TYPE' | translate}}</th>
+        <td mat-cell *matCellDef="let item">{{ item.itemTypeName }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="supplierInfo">
+        <th mat-header-cell *matHeaderCellDef>{{ 'SUPPLIER_NAME' | translate }} / {{ 'PURCHASE_SITE_NAME' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.supplierName }} <br /> {{ item.supplierSiteName }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="purchaseCurCode">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PURCHASE_CURRENCY_CD' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.curCd }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="unitPrice">
+        <th mat-header-cell *matHeaderCellDef>{{ 'UNIT_PRICE' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.unitPrice }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="reqQty">
+        <th mat-header-cell *matHeaderCellDef>{{ 'REQ_QTY' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.poReqQty }}</td>
+      </ng-container>
+    
+      <!-- <ng-container matColumnDef="uom">
+        <th mat-header-cell *matHeaderCellDef>{{ 'UOM' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.uomCode }}</td>
+      </ng-container> -->
+    
+      <ng-container matColumnDef="basicAmt">
+        <th mat-header-cell *matHeaderCellDef>{{ 'BASIC_AMT' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.basicAmt }}</td>
+      </ng-container>
+    
+      <!-- <ng-container matColumnDef="texInfo">
+        <th mat-header-cell *matHeaderCellDef>{{ 'TAX_CD_1' | translate }} / {{ 'TAX_CD_2' | translate }} / {{ 'TAX_CD_3' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.taxCd1 }} / {{ item.taxCd2 }} / {{ item.taxCd3 }}</td>
+      </ng-container> -->
+    
+      <ng-container matColumnDef="totalTax">
+        <th mat-header-cell *matHeaderCellDef>{{ 'TOTAL_TAX_AMT' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.itemTotalTaxAmt }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef>{{ 'TOTAL_AMT' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.totalAmt }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="remarks">
+        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_REMARKS' | translate }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.remarks }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef> {{'PR_REQUESTED_BY' | translate}} / {{'PR_DT' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.createdBy}}<br>
+          {{element?.createdDtDisp.split(" ")[0]}}
+      </ng-container>
+    
+      <!-- Define the header row -->
+      <tr mat-header-row *matHeaderRowDef="displayedPRColumns; sticky: true"></tr>
+      <!-- Define the data rows -->
+      <tr mat-row *matRowDef="let item; columns: displayedPRColumns;"></tr>
+    </table>
+
+
+          <table mat-table class="contract-list-table" [dataSource]="contractDataList" [class.hidden]="isNotContract">
+
+          <ng-container matColumnDef="contractNo">
+            <th mat-header-cell *matHeaderCellDef > {{ 'CONTRACT_NO' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractNo}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractName">
+            <th mat-header-cell *matHeaderCellDef >{{ 'CONTRACT_TITLE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="coverageType">
+            <th mat-header-cell *matHeaderCellDef > {{ 'CONTRACT_COVERAGE_TYPE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element"> {{element?.coverageType}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractType">
+            <th mat-header-cell *matHeaderCellDef > {{ 'CONTRACT_TYPE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractType}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractStatus">
+            <th mat-header-cell *matHeaderCellDef > {{ 'CONTRACT_STATUS' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" >
+              <span class="{{element?.contractStatus.replace(' ','')}}">{{element?.contractStatus | translate}}</span> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="woApprovalStatus">
+            <th mat-header-cell *matHeaderCellDef > {{ 'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" >
+              <span class="{{element?.woApprovalStatus.replace(' ','')}}">{{ element?.woApprovalStatus }}</span> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractingPartyType">
+            <th mat-header-cell *matHeaderCellDef >{{ 'CONTRACT_PARTY' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractingPartyType}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractPartyName">
+            <th mat-header-cell *matHeaderCellDef >{{ 'SUPPLIER_NAME' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractPartyName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="daysElapsed">
+            <th mat-header-cell *matHeaderCellDef  >{{ 'NO_OF_DAYS' | translate }}<br/>{{ 'TO_EXPIRE' | translate }}</th>
+            <td mat-cell  *matCellDef="let element" >
+              <span class="number-align-days {{(element?.daysElapsed) > 90 ? 'GREEN':'RED'}}">{{element?.daysElapsed}}</span> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractStartDt">
+            <th mat-header-cell *matHeaderCellDef >{{ 'CONTRACT_START_DATE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractStartDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractEndDt">
+            <th mat-header-cell *matHeaderCellDef >{{ 'CONTRACT_END_DATE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" > {{element?.contractEndDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
+            <th mat-header-cell *matHeaderCellDef  > {{ 'COMMON_ACTIVE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element" >
+                <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="netContractValue">
+            <th mat-header-cell *matHeaderCellDef >{{ 'CONTRACT_PERIOD_NET_VALUE' | translate }} </th>
+            <td mat-cell  *matCellDef="let element"class="number-align" ><span class="currency net-value-amt">{{element?.netContractValue.toLocaleString()}}</span> </td>
+          </ng-container>
+
+          <!-- <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_BY' | translate}}</th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+              {{element?.createdBy}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdDt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_DT' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+              {{element?.createdDtDisp}}</td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="updatedBy">
+            <th mat-header-cell *matHeaderCellDef >{{'COMMON_UPDATED_BY' | translate}}</th>
+            <td mat-cell  *matCellDef="let element" class="table-cell-data"> {{element?.updatedBy}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedDt">
+            <th mat-header-cell *matHeaderCellDef >{{'COMMON_UPDATED_DT' | translate}}</th>
+            <td mat-cell  *matCellDef="let element" class="table-cell-data"> {{element?.updatedDtDisp}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="contractTable;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: contractTable;"></tr>
+
+        </table>
+                  
+
+    
+</div>

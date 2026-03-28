@@ -1,0 +1,12 @@
+.space{
+    margin-right: 5px;
+  }
+
+  .popup-modal-close-button {
+      display: grid !important; 
+      justify-content: end;
+  }
+
+  .section_title {
+    margin: 0px;
+  }

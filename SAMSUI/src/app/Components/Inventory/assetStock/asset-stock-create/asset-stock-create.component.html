@@ -1,0 +1,388 @@
+<div fxLayout="column" fxFlexFill>
+ 
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayoutAlign="start center" fxFlex="60" >
+        <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb" >
+          <mat-list fxLayoutAlign="start center">
+            <mat-list-item fxLayoutAlign="start center">
+              <a href="#" [routerLink]="['/home/dashboard']">
+                <mat-icon class="small-icon">home</mat-icon>
+              </a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>      
+            <mat-list-item><a>{{'MENU_INVENTORY' | translate}}</a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item><a (click)="backToMainScreen()" style="cursor: pointer;">{{'MENU_STOCK_ALLOCATE' | translate}}</a>
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+          </mat-list>  
+        </mat-toolbar-row>
+      </div>
+   
+      <div fxLayoutAlign="end start" fxFlex="40">
+        <button mat-raised-button class="space" color="primary"
+            (click)="exitForm()">{{'COMMON_BACK' | translate}}</button>
+        <button mat-raised-button class="space" color="primary" (click)="clear()"
+            [disabled]="disableClear" *ngIf="assetStockTransferHdrForm.controls.stockTransferStatus.value != 'APPROVED'">{{'COMMON_CLEAR' | translate}}</button> 
+        <button mat-raised-button class="space"  *ngIf="assetStockTransferHdrForm.controls.stockTransferStatus.value != 'APPROVED'" color="primary" (click)="submitAssetStockTransfer()"
+            [disabled]="(assetStockTransferHdrForm.invalid && !formOneValid) || disableSubmit">Submit</button>
+      </div>
+    </div>
+   
+    <div class="content_section">
+        <div  fxLayout="column" fxFlex="100">         
+                <form [formGroup]="assetStockTransferHdrForm" fxLayout="column">
+
+                    <div  fxLayout="row" fxFlex="100" style="width:100% ;" fxHide.lt-md >
+
+                        <div fxFlex="25">
+                            <div class="form-group h-60-px">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                                            class="mandatory-style">*</span>
+                                    </span>
+                                    <ng-select [items]="locationList" autofocus required #stockTransferLocFocus
+                                        bindLabel="locDisplayField" bindValue="locDisplayField" (search)="listOfLocation($event)"
+                                        (click)="listOfLocation($event)" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfLocation({})" (keyup.backspace)="listOfLocation($event.target.value ? $event : 'back')" (clear)="listOfLocation('clear')" [loading]="scrollLocationNamesync"
+                                        loadingText="Loading..." (change)="selectedLocationData($event)"
+                                        formControlName="locationName"></ng-select>
+                                    <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.locationName.invalid && assetStockTransferHdrForm.controls.locationName.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.locationName.errors.required">
+                                            Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_NO' | translate}} </mat-label>
+                                    <input #focusSet matInput formControlName="stockTransferNo" class="input-field">
+                                    <mat-error *ngIf="assetStockTransferHdrForm.controls.stockTransferNo.invalid && assetStockTransferHdrForm.controls.stockTransferNo.touched">
+                                        <div *ngIf="assetStockTransferHdrForm.controls.stockTransferNo.errors.required">{{'STOCK_TRANSFER_NO' | translate}} is Required </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div fxFlex="25">
+                            <div class="form-group h-60-px mt-2-px">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'FROM_STORE' | translate }} <span class="mandatory-style">*</span> </span>
+                                    <ng-select #fromStoreName  formControlName="fromStoreName"
+                                        (click)="listOfFromStore({})" (search)="listOfFromStore($event)"
+                                        (scrollToEnd)="listOfFromStore({})" (keyup.backspace)="listOfFromStore($event.target.value ? $event : 'back')" (clear)="listOfFromStore('clear')" [loading]="scrollFromStoreNamesync"
+                                        (change)="getFromStoreValue($event)" [items]="fromStoreList" bindLabel="storeName"
+                                        bindValue="storeName">
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.fromStoreName.invalid && assetStockTransferHdrForm.controls.fromStoreName.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.fromStoreName.errors.required">
+                                            Kindly Select The "{{'FROM_STORE' | translate}}" </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="form-group h-60-px">
+                                <div class="example-full-width">
+                                <span class="input-label"> {{ 'TO_ASSET_CODE' | translate }} <span class="mandatory-style">{{mandatoryField}}</span>
+                                </span>
+                                <ng-select [items]="toAssetList"  bindLabel="toAssetDisplayField" bindValue="toAssetDisplayField"
+                                    (search)="loadToAssetCodeComboData($event)" (click)="loadToAssetCodeComboData($event)"
+                                    [virtualScroll]="true" (scrollToEnd)="loadToAssetCodeComboData({})" (keyup.backspace)="loadToAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadToAssetCodeComboData('clear')" [loading]="scrollToAssetNamesync"
+                                    loadingText="Loading..." (change)="selectedToAssetCodeData($event)" formControlName="toAssetCode">
+                                </ng-select>
+                                <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.toAssetCode.invalid && assetStockTransferHdrForm.controls.toAssetCode.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.toAssetCode.errors.required">
+                                            Kindly Select The "{{'TO_ASSET_CODE' | translate}}" </div>
+                                </mat-error>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div fxFlex="25">
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_STATUS' | translate}} </mat-label>
+                                    <input readonly matInput formControlName="stockTransferStatus" class="input-field">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div fxFlex="25">
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_BY' | translate}} </mat-label>
+                                    <input readonly matInput formControlName="createdBy" class="input-field">
+                                </mat-form-field>
+                            </div>
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label">{{'STOCK_TRANSFER_DT' | translate}}</mat-label>
+                                    <input matInput formControlName="createdDtDisp" required (keypress)="dateValidation($event)" class="input-field">
+                                    <mat-datepicker-toggle matSuffix [for]="doDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #doDate></mat-datepicker>
+                                    <mat-error *ngIf="assetStockTransferHdrForm.controls.createdDtDisp.invalid && assetStockTransferHdrForm.controls.createdDtDisp.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.createdDtDisp.errors.required">
+                                            {{'STOCK_TRANSFER_DT' | translate}} is Required </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div  fxLayout="row" fxFlex="100" style="width:100% ;" fxHide.gt-sm fxLayoutAlign="space-between start">
+
+                        <div fxFlex="30">
+                            <div class="form-group h-60-px mt-2-px">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                                            class="mandatory-style">*</span>
+                                    </span>
+                                    <ng-select [items]="locationList" autofocus required #stockTransferLocFocus
+                                        bindLabel="locationName" bindValue="locationName" (search)="listOfLocation($event)"
+                                        (click)="listOfLocation($event)" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfLocation({})" (keyup.backspace)="listOfLocation($event.target.value ? $event : 'back')" (clear)="listOfLocation('clear')" [loading]="scrollLocationNamesync"
+                                        loadingText="Loading..." (change)="selectedLocationData($event)"
+                                        formControlName="locationName"></ng-select>
+                                    <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.locationName.invalid && assetStockTransferHdrForm.controls.locationName.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.locationName.errors.required">
+                                            {{'LOCATION_NAME' | translate}} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="form-group h-60-px"  >
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'FROM_STORE' | translate }} <span class="mandatory-style">*</span> </span>
+                                    <ng-select #fromStoreName  formControlName="fromStoreName"
+                                        (click)="listOfFromStore({})" (search)="listOfFromStore($event)"
+                                        (scrollToEnd)="listOfFromStore({})" (keyup.backspace)="listOfFromStore($event.target.value ? $event : 'back')" (clear)="listOfFromStore('clear')" [loading]="scrollFromStoreNamesync"
+                                        (change)="getFromStoreValue($event)" [items]="fromStoreList" bindLabel="storeName"
+                                        bindValue="storeName">
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.fromStoreName.invalid && assetStockTransferHdrForm.controls.fromStoreName.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.fromStoreName.errors.required">
+                                            {{'FROM_STORE' | translate}} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="form-group h-60-px" >
+                                <div class="example-full-width">
+                                <span class="input-label"> {{ 'TO_ASSET_CODE' | translate }} <span class="mandatory-style">{{mandatoryField}}</span>
+                                </span>
+                                <ng-select [items]="toAssetList"  bindLabel="toAssetDisplayField" bindValue="toAssetDisplayField"
+                                    (search)="loadToAssetCodeComboData($event)" (click)="loadToAssetCodeComboData($event)"
+                                    [virtualScroll]="true" (scrollToEnd)="loadToAssetCodeComboData({})" (keyup.backspace)="loadToAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadToAssetCodeComboData('clear')" [loading]="scrollToAssetNamesync"
+                                    loadingText="Loading..." (change)="selectedToAssetCodeData($event)" formControlName="toAssetCode">
+                                </ng-select>
+                                <mat-error
+                                        *ngIf="assetStockTransferHdrForm.controls.toAssetCode.invalid && assetStockTransferHdrForm.controls.toAssetCode.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.toAssetCode.errors.required">
+                                            {{'TO_ASSET_CODE' | translate}} is Required </div>
+                                </mat-error>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div fxFlex="30">
+                            <div class="form-group h-60-px" >
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_NO' | translate}} </mat-label>
+                                    <input #focusSet matInput formControlName="stockTransferNo">
+                                    <mat-error *ngIf="assetStockTransferHdrForm.controls.stockTransferNo.invalid && assetStockTransferHdrForm.controls.stockTransferNo.touched">
+                                        <div *ngIf="assetStockTransferHdrForm.controls.stockTransferNo.errors.required">{{'STOCK_TRANSFER_NO' | translate}} is Required </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_STATUS' | translate}} </mat-label>
+                                    <input readonly matInput formControlName="stockTransferStatus" class="input-field">
+                                </mat-form-field>
+                            </div>
+                           
+                        </div>
+                       
+                        <div fxFlex="30">
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label"> {{'STOCK_TRANSFER_BY' | translate}} </mat-label>
+                                    <input readonly matInput formControlName="createdBy" class="input-field">
+                                </mat-form-field>
+                            </div>
+                            <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class=" input-label">{{'STOCK_TRANSFER_DT' | translate}}</mat-label>
+                                    <input matInput formControlName="createdDtDisp" required (keypress)="dateValidation($event)" class="input-field">
+                                    <mat-datepicker-toggle matSuffix [for]="doDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #doDate></mat-datepicker>
+                                    <mat-error *ngIf="assetStockTransferHdrForm.controls.createdDtDisp.invalid && assetStockTransferHdrForm.controls.createdDtDisp.touched">
+                                        <div class="err-field" *ngIf="assetStockTransferHdrForm.controls.createdDtDisp.errors.required">
+                                            {{'STOCK_TRANSFER_DT' | translate}} is Required </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+
+                    <div fxLayout="row" fxFlex="100" class="tab-content" style="padding-top: 10px;">
+                        
+                        <mat-tab-group style="width:100% ;" [@.disabled]="true">
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    {{ 'ASSET_STOCK_ITEMS' | translate }}
+                                    <div *ngIf="!modeDisplay">
+                                      <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+                                    </div>
+                                  </ng-template>
+                                <div class="Table_Section" style="overflow-x: hidden;height: 5000;" fxLayout="column">                                   
+                                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">   
+                                        <button mat-icon-button class="mat-icon-button" matTooltip="{{ 'STOCK_ADD_ITEM' | translate }}"
+                                            (click)="addStockTransferForItem()">
+                                            <!-- <mat-icon color="primary">add_circle</mat-icon> -->
+                                            <div class="plus-icon add-circle-icon"></div>
+                                        </button>
+                                    </div>
+                                    <div class="hack1">
+                                        <div class="hack2">
+                                        <table class="table table-bordered" >
+                                            <thead class="table_head" >
+                                            <tr>
+                                                <th  style="width:1%">{{'COMMON_S_NO' | translate}}</th>
+                                                <th  style="width:7%">{{'ITEM_TYPE' | translate}}
+                                                    <span class="mandatory-style">*</span></th>
+                                                <th  style="width:7%">{{'ITEM_NAME' | translate}}
+                                                    <span class="mandatory-style">*</span></th>
+                                                <th  style="width:10%">{{'ITEM_DESC' | translate}}
+                                                    <span class="mandatory-style">*</span></th>
+                                                <th  style="width:5%" *ngIf="!isAddToStore">{{'INVENTORY_AVAILABLE_QTY' | translate }}</th>
+                                                <th  style="width:5%" *ngIf="!isAddToStore">{{'STOCK_REQUEST_QTY'| translate}}
+                                                    <span class="mandatory-style">*</span></th>
+                                                <th  style="width:5%" *ngIf= "!createMode">{{'STOCK_ALLOCATE_QTY' | translate}}
+                                                    <span class="mandatory-style">*</span></th>
+                                                <th  style="width:3%" *ngIf="assetStockTransferHdrForm.controls.stockTransferHdrId.value==0">{{'COMMON_DELETE' | translate}}
+                                                </th>
+                                                <th  style="width:10%" *ngIf="assetStockTransferHdrForm.controls.stockTransferHdrId.value>0">{{'ERROR_MESSAGE' | translate}}
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container formArrayName="stockTransferDtlForm" *ngFor="let element of assetStockTransferHdrForm.get('stockTransferDtlForm')['controls']; let i = index;">
+                                                    <tr height="20" [formGroupName]="i">
+                                                        <td  style="width:1%"> {{ i+1 }} </td>
+
+                                                        <td  style="width:7%" class="Form_Select">
+                                                            <div *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value == 0">
+                                                            <ng-select  formControlName="itemTypeName"
+                                                                (click)="listofItemType({},i)" appendTo="body"
+                                                                (search)="listofItemType($event)"
+                                                                (scrollToEnd)="listofItemType({},i)" (keyup.backspace)="listofItemType($event.target.value ? $event : 'back',i)" (clear)="listofItemType('clear',i)" [loading]="scrollItemTypesync"
+                                                                (change)="getItemTypeComboValue($event,i)" [items]="itemTypeList"
+                                                                bindLabel="itemTypeName" bindValue="itemTypeName" >
+                                                            </ng-select>
+                                                            </div>
+                        
+                                                            <input *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value > 0"
+                                                            matInput formControlName="itemTypeName" readonly class="input-field">
+                                                        </td> 
+
+                                                        <td  style="width:7%" class="Form_Select">
+                                                            <div *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value == 0">
+                                                            <ng-select  formControlName="itemName"
+                                                                (click)="listOfItemFromInventory({},i)" appendTo="body" 
+                                                                (search)="listOfItemFromInventory($event)"
+                                                                (scrollToEnd)="listOfItemFromInventory({},i)" (keyup.backspace)="listOfItemFromInventory($event.target.value ? $event : 'back',i)" (clear)="listOfItemFromInventory('clear',i)" [loading]="scrollItemNamesync"
+                                                                (change)="getItemValueFromInventory($event,i)" [items]="itemList"
+                                                                bindLabel="itemName" bindValue="itemName" >
+                                                            </ng-select>
+                                                            </div>
+                        
+                                                            <input *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value > 0" class="input-field"
+                                                            matInput formControlName="itemName" readonly>
+                                                        </td>
+
+                                                        <td  style="width:10%" class="Form_Select">
+                                                            <div *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value == 0">
+                                                            <ng-select  formControlName="description"
+                                                                (click)="listOfItemDescFromInventory({},i)" appendTo="body"
+                                                                (search)="listOfItemDescFromInventory($event)"                
+                                                                (scrollToEnd)="listOfItemDescFromInventory({},i)" (keyup.backspace)="listOfItemDescFromInventory($event.target.value ? $event : 'back',i)" (clear)="listOfItemDescFromInventory('clear',i)" [loading]="scrollItemDescsync"
+                                                                (change)="getItemDescValueFromInventory($event,i)" [items]="itemDescList"
+                                                                bindLabel="itemDesc" bindValue="itemDesc" >                                              
+                                                            </ng-select>
+                                                            </div>
+                        
+                                                            <input *ngIf="assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls'].stockTransferDtlId.value > 0" class="input-field"
+                                                            matInput formControlName="description" readonly>
+                                                        </td>
+
+                                                        <td  style="width:5%; text-align: right" class="Form_Input" *ngIf="!isAddToStore">
+                                                            <strong>
+                                                            <input type="number" matInput formControlName="availQty" readonly class="input-field" style="font-weight: bold !important;"
+                                                                (change)="setAvailableQty(element,i)">
+                                                            </strong>
+                                                        </td>
+
+                                                        <td  style="width:5%; color: blue; text-align: right" class="Form_Input" *ngIf="!isAddToStore"
+                                                            [ngClass]="{'isError': this.assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls']['transferQty'].errors && !this.assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls']['transferQty'].pristine}">
+                                                            <strong>
+                                                            <input type="number" min="0" matInput formControlName="transferQty" class="input-field" style="font-weight: bold !important;"
+                                                                (change)="setTransferQty(element,i)">
+                                                            </strong>
+                                                        </td>
+                                                        <td  style="width:5%; color: #096218;text-align: right "  class="Form_Input"
+                                                            [ngClass]="{'isError': this.assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls']['issueQty'].errors && !this.assetStockTransferHdrForm.controls.stockTransferDtlForm['controls'][i]['controls']['issueQty'].pristine}" *ngIf= "!createMode">
+                                                            <strong>
+                                                            <input type="number" min="0" matInput formControlName="issueQty" (input)="validateItemQty(element,i)" style="font-weight: bold !important;" class="input-field" (change)="setIssueQty(element,i)">
+                                                            </strong>
+                                                        </td>
+
+                                                        <td  style="width:3%" *ngIf="assetStockTransferHdrForm.controls.stockTransferHdrId.value==0">
+                                                            <mat-icon class="close-icon-large-remove" (click)="delete(i)">remove_circle_outline
+                                                            </mat-icon>
+                                                        </td>
+                                                        <td  style="width:10%" *ngIf="assetStockTransferHdrForm.controls.stockTransferHdrId.value>0">
+                                                            <input style="font-size:10px !important; color:red" matInput class="input-field"
+                                                            formControlName="errorMessage" readonly>
+                                                        </td>
+
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                    </div>       
+                                </div>            
+                            </mat-tab>
+
+                            <mat-tab *ngIf="assetStockTransferHdrForm.controls.stockTransferHdrId.value > 0 && !isAddToStore" label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+                                <mat-card class="card-style">
+                                    <mat-card-content>
+                                <app-common-workflow-approval-tab 
+                                [transactionId]=stockTransferHdrId 
+                                [transactionSource]=transactionSource 
+                                [workOrderApproveButton]=approveButtonEnable
+                                [workOrderEmployeeId]=employeeId 
+                                [workOrderStatusId] =approvalId 
+                                (confirmStockAllocate) = confirmStockAllocateApprove()
+                                (StockAllocatetReject) = rejectStockAllocateApprove()>
+                                </app-common-workflow-approval-tab>
+                                </mat-card-content>
+                                </mat-card>
+                            </mat-tab>
+                        </mat-tab-group>
+                       
+                    </div>            
+                </form>          
+        </div>
+    </div>
+</div>

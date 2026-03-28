@@ -1,0 +1,125 @@
+<div fxLayout="column">
+  <div style="padding-top: 0.5%;">
+
+    <mat-expansion-panel fxLayout="column" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}} {{'DEPARTMENT_NAME'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center">
+        <div fxFlex="30" fxFlexFill class="pad-1-per">
+          <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+          <ng-select #setSearchFocus class=" example-full-width" [(ngModel)]="departmentModel.departmentName"
+            [ngModelOptions]="{standalone: true}" tabindex="1" (search)="listOfDepartment($event)"
+            (click)="listOfDepartment({})" [items]="departmentList" [virtualScroll]="true" (change)="getSubDepartmentNameComboValue($event)"
+            (scrollToEnd)="listOfDepartment({})" (keyup.backspace)="listOfDepartment($event.target.value ? $event : 'back')" (clear)="listOfDepartment('clear')" [loading]="scrollsync" loadingText="Loading..."
+            bindLabel="departmentName" bindValue="departmentName" appendTo="body">
+          </ng-select>
+        </div>
+
+        <div fxFlex="30"></div>
+
+        <div class="pad-1-per" fxFlex="40" fxLayoutAlign="end center">
+          <button mat-raised-button fxHide.sm fxHide.xs id="search" class="space" color="primary"
+            (click)="onSearchChange($event)">{{ 'COMMON_SEARCH' | translate }}</button>
+          <button mat-raised-button fxHide.md fxHide.gt-sm matTooltip="Search" id="search" class="space" color="primary"
+            (click)="onSearchChange($event)">
+            <mat-icon>search</mat-icon>
+          </button>
+
+          <button mat-raised-button fxHide.sm fxHide.xs id="clear" class="space" color="primary"
+            (click)="clearSearch()">{{
+            'COMMON_CLEAR' | translate }}</button>
+          <button mat-raised-button fxHide.md fxHide.gt-sm matTooltip="Clear" id="clear" class="space" color="primary"
+            (click)="clearSearch()">
+            <mat-icon>clear_all</mat-icon>
+          </button>
+
+          <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary"
+            (click)="generateReportOfDepartment()" [disabled]="length=='0' && !subLoader">{{ 'REPORT_EXPORT' | translate
+            }}</button>
+          <button mat-raised-button fxHide.md fxHide.gt-sm matTooltip="Export" class="space" color="primary"
+            (click)="generateReportOfDepartment()" [disabled]="length=='0' && !subLoader">
+            <mat-icon>file_download</mat-icon>
+          </button>
+
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+  </div>
+
+  <hr>
+
+  <mat-toolbar>
+    <span>{{'DEPARTMENT_NAME'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorLegalEntity [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+  [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay"
+    (click)="openDeptCreateDialog(0,'add')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openDeptCreateDialog(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+    <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openDeptCreateDialog(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+
+  <div class="org-container-table" fxLayout="column">
+
+    <table mat-table [dataSource]="deptdataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width: 6%;"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width: 6%;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectDepartment(element)" [checked]="selectedItem.departmentId == element.departmentId"></mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="departmentCode">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header style="width:12%;"> {{ 'DEPARTMENT_CODE' | translate }}</th>
+        <td mat-cell (click)="selectDepartment(element)" *matCellDef="let element" style="width:12%;" matTooltip="{{element.departmentCode}}">{{element?.departmentCode }}</td>
+      </ng-container>
+      <ng-container matColumnDef="departmentName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:46%;"> {{ 'DEPARTMENT_NAME' | translate }}</th>
+        <td mat-cell (click)="selectDepartment(element)" *matCellDef="let element" style="width:46%;" matTooltip="{{element.departmentName}}">
+          {{element?.departmentName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;"> {{ 'COMMON_UPDATED_BY' | translate }}</th>
+        <td mat-cell (click)="selectDepartment(element)" *matCellDef="let element" style="width:15%;"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;">{{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell (click)="selectDepartment(element)" *matCellDef="let element" style="width:15%;"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+    <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+
+  </div>
+
+</div>

@@ -1,0 +1,442 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="50" class="dialogue-box-header">
+            {{'MENU_BUSINESS_PARTNER_SITE' | translate }}
+        </div>
+
+        <div fxFlex="50" class="mb-5">
+        
+            <button mat-raised-button class="space" color="primary" (click)="addBusinessPartnerSite()"
+                    [disabled]="businessPartnerSiteForm.controls.partnerSiteName.invalid || 
+                    businessPartnerSiteForm.controls.partnerSiteWebSite.invalid ||
+                    businessPartnerSiteForm.controls.partnerSiteCurCd.invalid || businessPartnerSiteForm.controls.partnerSiteAddress1.invalid || 
+                    businessPartnerSiteForm.controls.partnerSiteState.invalid || businessPartnerSiteForm.controls.partnerSiteContactEmailId.invalid || 
+                    businessPartnerSiteForm.controls.partnerSiteArea.invalid || businessPartnerSiteForm.controls.partnerSiteCountry.invalid || 
+                    businessPartnerSiteForm.controls.partnerSiteCity.invalid || businessPartnerSiteForm.controls.partnerSitePinCode.invalid ||
+                    businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.invalid ">{{displayButton}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+        
+        </div>
+
+    </div>
+
+    <form [formGroup]="businessPartnerSiteForm">
+        <div class="row">
+            <div>
+                <mat-tab-group [selectedIndex]="selectedIndex" (click)="changeTabValidation('tab1')" [@.disabled]="true">
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            {{'BUSINESS_PARTNER_SITE_DETAILS' | translate }}
+                            <div *ngIf="!modelPartnerSite">
+                                <div class="tab-mini-fab-icon">
+                                    <mat-icon class="mandatory-style" *ngIf="!formOneValid" aria-hidden="true">error</mat-icon>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                                        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                                        
+                                            <div style="padding: 10px;" fxFlex="35" fxFlex.sm="35" fxFlex.xs="35">
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_NAME' | translate}}
+                                                            <span class="mandatory-style">*</span>
+                                                        </mat-label>
+                                                        <input matInput class="input-field" #partnerSiteNameFocus formControlName="partnerSiteName" [tabIndex]=1
+                                                            (input)="formOneValidation()" [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteName.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteName.invalid && businessPartnerSiteForm.controls.partnerSiteName.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteName.errors.required">
+                                                                "{{ 'BUSINESS_PARTNER_SITE_NAME' | translate}}" Is Required </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_NAME' | translate}}
+                                                        </mat-label>
+                                                        <input matInput class="input-field" #supplierSite formControlName="contactPersonName" [tabIndex]=2
+                                                            (input)="formOneValidation()" [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.contactPersonName.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_EMAIL_ID' | translate }}
+                                                        </mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteContactEmailId"
+                                                            (input)="formOneValidation(); onPartnerEmailInput($event)" [tabIndex]="3" [maxlength]="50" type="email">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteContactEmailId.value?.length || 0}}/50
+                                                        </mat-hint>
+                                                        <mat-error *ngIf="businessPartnerSiteForm.controls.partnerSiteContactEmailId.invalid && businessPartnerSiteForm.controls.partnerSiteContactEmailId.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteContactEmailId.errors.pattern">
+                                                                {{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_CONTACT_N0' | translate }}</mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSitePersonPhoneNo" (input)="formOneValidation()" [tabIndex]=4
+                                                            [maxlength]="15" [minlength]="10" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.value?.length || 0}}/15
+                                                        </mat-hint>
+                                                        <mat-error *ngIf="businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.invalid && businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.errors.pattern">
+                                                                Kindly Enter Valid "{{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_CONTACT_N0' | translate }}" </div>
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSitePersonPhoneNo.errors.pattern?false:businessPartnerSiteForm.controls.contactPersonPhoneNo.errors.minlength">
+                                                                "{{'BUSINESS_PARTNER_SITE_PRIMARY_PERSON_CONTACT_N0' | translate }}" Should Be Of Minimum 10 Digits </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">{{'COMMON_ADDRESS_1' | translate }}
+                                                            <span class="mandatory-style">*</span>
+                                                        </mat-label>
+                                                        <input #streetFocus matInput class="input-field" formControlName="partnerSiteAddress1" (input)="formOneValidation()"
+                                                            [tabIndex]=5 [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteAddress1.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteAddress1.invalid && businessPartnerSiteForm.controls.partnerSiteAddress1.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteAddress1.errors.required">
+                                                                "{{'COMMON_ADDRESS_1' | translate }}" Is Required </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">{{'COMMON_ADDRESS_2' | translate }}</mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteAddress2" (input)="formOneValidation()" [tabIndex]=6
+                                                            [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteAddress2.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error *ngIf="businessPartnerSiteForm.controls.partnerSiteAddress2.invalid && businessPartnerSiteForm.controls.partnerSiteAddress2.touched">
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label"> {{'COMMON_AREA' | translate }}
+                                                        </mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteArea" (input)="formOneValidation()" [tabIndex]=7
+                                                            [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteArea.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteArea.errors && businessPartnerSiteForm.controls.partnerSiteArea.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteArea.errors.notUnique">{{ErrorMsg}}</div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div style="padding: 10px;" fxFlex="35" fxFlex.sm="35" fxFlex.xs="35">
+                                                <div class="form-group">
+                                                    <div class="example-full-width">
+                                                        <span class="input-label"> {{'COMMON_COUNTRY' | translate }} <span class="mandatory-style">*</span> </span>
+                                                        <ng-select class=" input-field" [tabIndex]=8 required formControlName="partnerSiteCountry" [items]="countries"
+                                                            (search)="getCountryData($event)" (click)="getCountryData({})"
+                                                            (change)=" formOneValidation(); setCountryData($event)" (scrollToEnd)="getCountryData({})"
+                                                            (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                                                            [loading]="scrollCountrysync" loadingText="Loading..." bindLabel="countryName" bindValue="countryName">
+                                                        </ng-select>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteCountry.invalid && businessPartnerSiteForm.controls.partnerSiteCountry.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteCountry.errors.required">
+                                                                Kindly Select The "{{'COMMON_COUNTRY' | translate }}"</div>
+                                                        </mat-error>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="example-full-width">
+                                                        <span class="input-label"> {{'COMMON_STATE' | translate }} <span class="mandatory-style">*</span>
+                                                        </span>
+                                                        <ng-select class=" input-field" [tabIndex]=9 formControlName="partnerSiteState" [items]="states"
+                                                            bindLabel="stateName" (search)="getStateData($event)" (click)="getStateData({})" [virtualScroll]="true"
+                                                            required (scrollToEnd)="getStateData({})"
+                                                            (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')"
+                                                            [loading]="scrollStatesync" loadingText="Loading..." (change)="formOneValidation();setStateData($event)"
+                                                            bindValue="stateName">
+                                                        </ng-select>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteState.invalid && businessPartnerSiteForm.controls.partnerSiteState.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteState.errors.required">
+                                                                Kindly Select The "{{ 'COMMON_STATE' | translate }}" </div>
+                                                        </mat-error>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="example-full-width">
+                                                        <span class="input-label">{{'COMMON_CITY' | translate }}
+                                                            <span class="mandatory-style">*</span>
+                                                        </span>
+                                                        <ng-select [tabIndex]=10 formControlName="partnerSiteCity" [items]="cities"
+                                                            (search)="partnerSiteCityMethod($event)" (click)="partnerSiteCityMethod({})"
+                                                            (scrollToEnd)="partnerSiteCityMethod({})"
+                                                            (keyup.backspace)="partnerSiteCityMethod($event.target.value ? $event : 'back')"
+                                                            (clear)="partnerSiteCityMethod('clear')" required (change)="formOneValidation();setCityData($event)"
+                                                            [loading]="scrollCitysync" loadingText="Loading..." [virtualScroll]="true" bindValue="cityName"
+                                                            bindLabel="cityName">
+                                                        </ng-select>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteCity.invalid && businessPartnerSiteForm.controls.partnerSiteCity.touched">
+                                                            <div class="err-field" class="ng-select-error"
+                                                                *ngIf="businessPartnerSiteForm.controls.partnerSiteCity.errors.required">
+                                                                Kindly Select The "{{ 'COMMON_CITY' | translate }}" </div>
+                                                        </mat-error>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                                                        <mat-label class="input-label"> {{'COMMON_ZIP_CODE' | translate }} <span class="mandatory-style">*</span></mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSitePinCode" (input)="formOneValidation()"
+                                                            [tabIndex]=11 [maxlength]="10" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSitePinCode.value?.length || 0}}/10
+                                                        </mat-hint>
+                                                        <mat-error *ngIf="businessPartnerSiteForm.controls.partnerSitePinCode.invalid && businessPartnerSiteForm.controls.partnerSitePinCode.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSitePinCode.errors.required">
+                                                                Kindly Select The "{{ 'COMMON_ZIP_CODE' | translate }}"</div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="example-full-width">
+                                                        <span class="input-label">{{'CURRENCY_CD' | translate }} <span class="mandatory-style">*</span>
+                                                        </span>
+                                                        <ng-select class=" input-field" [tabIndex]=12 formControlName="partnerSiteCurCd"
+                                                            (search)="listOfCurrencyCd($event)" (click)="listOfCurrencyCd({})" [virtualScroll]="true"
+                                                            (scrollToEnd)="listOfCurrencyCd({})"
+                                                            (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')"
+                                                            (clear)="listOfCurrencyCd('clear')" [loading]="scrollCurrencyCodesync" loadingText="Loading..."
+                                                            (change)="getCurrencyCodeData($event)" [items]="currencycdList" bindLabel="curCd"
+                                                            bindValue="curCd">
+                                                        </ng-select>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteCurCd.invalid && businessPartnerSiteForm.controls.partnerSiteCurCd.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteCurCd.errors.required">
+                                                                Kindly Select The "{{ 'CURRENCY_CD' | translate }}"</div>
+                                                        </mat-error>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_MOBILE_NO' | translate }}</mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteMobileNumber" (input)="formOneValidation()"
+                                                            [tabIndex]=13 [maxlength]="15" [minlength]="10" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteMobileNumber.value?.length || 0}}/15
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteMobileNumber.invalid && businessPartnerSiteForm.controls.partnerSiteMobileNumber.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteMobileNumber.errors.pattern">
+                                                                Kindly Enter Valid "{{'BUSINESS_PARTNER_SITE_MOBILE_NO' | translate }}" </div>
+                                                            <div class="err-field"
+                                                                *ngIf="businessPartnerSiteForm.controls.partnerSiteMobileNumber.errors.pattern?false:businessPartnerSiteForm.controls.partnerSiteMobileNumber.errors.minlength">
+                                                                "{{'BUSINESS_PARTNER_SITE_MOBILE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>  
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_LAND_LINE_NO' | translate }}</mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteLandLineNumber" (input)="formOneValidation()"
+                                                            [tabIndex]=14 [maxlength]="15" [minlength]="10" oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteLandLineNumber.value?.length || 0}}/15
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteLandLineNumber.invalid && businessPartnerSiteForm.controls.partnerSiteLandLineNumber.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteLandLineNumber.errors.pattern">
+                                                                Kindly Enter Valid "{{'BUSINESS_PARTNER_SITE_LAND_LINE_NO' | translate }}" </div>
+                                                            <div class="err-field"
+                                                                *ngIf="businessPartnerSiteForm.controls.partnerSiteLandLineNumber.errors.pattern?false:businessPartnerSiteForm.controls.partnerSiteLandLineNumber.errors.minlength">
+                                                                "{{'BUSINESS_PARTNER_SITE_LAND_LINE_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                                                        <mat-label class="input-label">{{'BUSINESS_PARTNER_SITE_EMAIL_ID' | translate }}
+                                                        </mat-label>
+                                                        <input matInput class="input-field" formControlName="partnerSiteEmailId"
+                                                            (input)="formOneValidation(); onPartnerSiteEmailInput($event)" [tabIndex]="15" [maxlength]="50"
+                                                            type="email">
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteEmailId.value?.length || 0}}/50
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="businessPartnerSiteForm.controls.partnerSiteEmailId.invalid && businessPartnerSiteForm.controls.partnerSiteEmailId.touched">
+                                                            <div class="err-field" *ngIf="businessPartnerSiteForm.controls.partnerSiteEmailId.errors.pattern">
+                                                                {{'BUSINESS_PARTNER_SITE_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label"> {{'COMMON_WEBSITE' | translate }} </mat-label>
+                                                        <input type="url" class="input-field" #website matInput formControlName="partnerSiteWebSite" [tabIndex]=16
+                                                            [maxlength]="100" >
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.partnerSiteWebSite.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div style="padding: 10px;" fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+                                                <div class="form-group">
+                                                    <span class="input-label">{{'SUPPLIER_PAYMENT_METHOD' | translate }}</span>
+                                                    <ng-select class=" input-field" [tabIndex]=13 formControlName="paymentMethod" [items]="paymentMethod"
+                                                        bindLabel="name" bindValue="name" [tabIndex]=17>
+                                                    </ng-select>
+                                                    <mat-error *ngIf="businessPartnerSiteForm.controls.paymentMethod.invalid && businessPartnerSiteForm.controls.paymentMethod.touched">
+                                                    </mat-error>
+                                                </div>
+                                                <div class="form-group">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                                                        <mat-label class="input-label">{{'SUPPLIER_PAYMENT_TERMS' | translate }}</mat-label>
+                                                        <textarea matInput class="input-field" formControlName="paymentTerms" [tabIndex]=18 [maxlength]="50" style="max-height: 50px;"></textarea>
+                                                        <mat-hint align="end">{{businessPartnerSiteForm.controls.paymentTerms.value?.length || 0}}/50
+                                                        </mat-hint>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="example-full-width check-box">
+                                                        <mat-checkbox class="example-margin input-label" color="primary" formControlName="active" [tabIndex]=19>
+                                                            {{'SUPPLIER_ACTIVE' | translate }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="form-group">
+                                                    <div class="example-full-width check-box">
+                                                        <mat-checkbox class="example-margin input-label" color="primary" formControlName="isManufacturerSite" [tabIndex]=20>
+                                                            {{'BUSINESS_PARTNER_MANUFACTURER_SITE' | translate }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                    <div class="example-full-width check-box">
+                                                        <mat-checkbox class="example-margin input-label" color="primary" formControlName="isSupplierSite" [tabIndex]=21>
+                                                            {{'BUSINESS_PARTNER_SUPPLIER_SITE' | translate }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                    <div class="example-full-width check-box">
+                                                        <mat-checkbox class="example-margin input-label" color="primary" formControlName="isServiceCenterSite" [tabIndex]=22>
+                                                            {{'BUSINESS_PARTNER_SERVICE_CENTER_SITE' | translate }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div> -->
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <!-- <mat-tab label="{{'BUSINESS_PARTNER_CONTACT_PERSON_INFO' | translate }}">
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                              <div fxLayout="column" class="content-style">
+                                <div fxLayout="row">
+                                    <div fxFlex="85"></div>
+                                
+                                    <div fxFlex="15">
+                                        <button mat-raised-button class="rightbutton" color="primary" (click)="saveUpdateContactInfo(0,null)">
+                                            {{'COMMON_ADD'|translate}}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="example-container">
+                                    <table mat-table [dataSource]="partnerSiteContactInfoDataSource" matSort>
+                                      <ng-container matColumnDef="sno">
+                                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="partnerSiteContactPerson">
+                                        <th mat-header-cell *matHeaderCellDef>{{ 'LOCATION_CONTACT_PERSON' | translate }}</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.partnerSiteContactPerson}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="partnerSitePersonPhoneNo">
+                                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_PHONE_NO' | translate }}</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.partnerSitePersonPhoneNo}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="partnerSiteContactEmailId">
+                                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_EMAIL_ID' | translate }}</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.partnerSiteContactEmailId}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="partnerSitePersonDesignation">
+                                        <th mat-header-cell *matHeaderCellDef>{{ 'USER_DESIGNATION' | translate }}</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.partnerSitePersonDesignation}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                                        <td mat-cell *matCellDef="let element; let i=index;">
+                                          <mat-icon class="action_icon"
+                                            style="color: red;cursor: pointer;font-size: 17px !important;text-align:center;"
+                                            matTooltip="{{'COMMON_DELETE' | translate}}"
+                                            (click)="deleteContactInfo(element.supplierSiteContactId,i)">delete</mat-icon>
+                                        </td>
+                                      </ng-container>
+                                      <tr mat-header-row *matHeaderRowDef="partnerSiteContactInfoDispCol;sticky: true"></tr>
+                                      <tr mat-row *matRowDef="let element; columns: partnerSiteContactInfoDispCol;">
+                                    </table>
+                                  </div>
+                              </div>
+                            </mat-card-content>
+                        </mat-card>        
+                    </mat-tab>
+
+                    <mat-tab label="{{'BUSINESS_PARTNER_REGISTRATION_INFO' | translate }}">
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                                <div class="content-style" fxLayout="row">
+                                    <div class="example-container" fxFlex="75">
+                                        <table mat-table [dataSource]="partnerRegistrationDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="registrationName">
+                                                <th mat-header-cell *matHeaderCellDef>{{ 'REGISTRATION_NAME' | translate }}</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.registrationName}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="registrationNo">
+                                                <th mat-header-cell *matHeaderCellDef>{{ 'REGISTRATION_NO' | translate }}</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.registrationNo}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;">
+                                                    <mat-icon *ngIf="!modelBusinessPartnerSite" class="action_icon"
+                                                        style="color: red;cursor: pointer;font-size: 17px !important;text-align:center;"
+                                                        matTooltip="{{'COMMON_DELETE' | translate}}"
+                                                        (click)="deleteRegistration(element.supplierSiteRegId,i)">delete </mat-icon>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="partnerSiteDispCol;sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: partnerSiteDispCol;">
+                                        </table>
+                                    </div>
+                                    <div fxFlex="25" *ngIf="!modelBusinessPartnerSite" fxLayoutAlign="end start">
+                                        <button mat-raised-button class="rightbutton" color="primary" (click)="saveUpdateRegistration(0,null)"
+                                            [disabled]="modelBusinessPartnerSite"> {{'COMMON_ADD'|translate}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>        
+                    </mat-tab> -->
+
+                </mat-tab-group>
+            </div>
+        </div>
+    </form>
+</div>        

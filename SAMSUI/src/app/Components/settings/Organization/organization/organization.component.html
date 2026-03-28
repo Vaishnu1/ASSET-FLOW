@@ -1,0 +1,379 @@
+<div fxLayout="column">
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_SETTING'|
+          translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{'MENU_ORGANIZATION'| translate}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+    <div fxFlex="14" fxFlex.sm="2" fxFlex.xs="2">
+
+      <div fxLayoutAlign="center start">
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'organization_view'}"
+          (click)="Active_Tab_Change('organization_view')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'organization_view'" class="organization-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'organization_view'" class="organization-icon-white">
+          </mat-icon>
+          {{ 'MENU_ORGANIZATION' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="legalEntityModuleAccess.readFlagDisplay || legalEntityModuleAccess.createFlagDisplay || legalEntityModuleAccess.deleteFlagDisplay || legalEntityModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'legal_entity'}"
+          (click)="Active_Tab_Change('legal_entity')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'legal_entity'" class="legal-entity-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'legal_entity'" class="legal-entity-icon-white">
+          </mat-icon>
+          {{ 'MENU_LEGAL_ENTITY' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="regionModuleAccess.readFlagDisplay || regionModuleAccess.createFlagDisplay || regionModuleAccess.deleteFlagDisplay || regionModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'region_list'}"
+          (click)="Active_Tab_Change('region_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'region_list'" class="region-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'region_list'" class="region-icon-white"></mat-icon>
+          {{ 'MENU_REGION' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="locationModuleAccess.readFlagDisplay || locationModuleAccess.createFlagDisplay || locationModuleAccess.deleteFlagDisplay || locationModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'location_list'}"
+          (click)="Active_Tab_Change('location_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'location_list'" class="branch-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'location_list'" class="branch-icon-white"></mat-icon>
+          {{ 'MENU_LOCATION' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="departmentModuleAccess.readFlagDisplay || departmentModuleAccess.createFlagDisplay || departmentModuleAccess.deleteFlagDisplay || departmentModuleAccess.updateFlagDisplay" [ngClass]="{' active-menu-item':Active_Tab === 'department_list'}"
+          (click)="Active_Tab_Change('department_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'department_list'" class="department-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'department_list'" class="department-icon-white">
+          </mat-icon>
+          {{ 'MENU_DEPARTMENT' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="subDeptModuleAccess.readFlagDisplay || subDeptModuleAccess.createFlagDisplay || subDeptModuleAccess.deleteFlagDisplay || subDeptModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'subdepartment_list'}"
+          (click)="Active_Tab_Change('subdepartment_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'subdepartment_list'" class="department-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'subdepartment_list'" class="department-icon-white">
+          </mat-icon>
+          {{ 'MENU_SUB_DEPARTMENT' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="designationModuleAccess.readFlagDisplay || designationModuleAccess.createFlagDisplay || designationModuleAccess.deleteFlagDisplay || designationModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'designation_list'}"
+          (click)="Active_Tab_Change('designation_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'designation_list'" class="designation-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'designation_list'" class="designation-icon-white">
+          </mat-icon>
+          {{ 'MENU_DESIGNATION' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="taxModuleAccess.readFlagDisplay || taxModuleAccess.createFlagDisplay || taxModuleAccess.deleteFlagDisplay || taxModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'tax_list'}"
+          (click)="Active_Tab_Change('tax_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'tax_list'" class="tax-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'tax_list'" class="tax-icon-white"></mat-icon>
+          {{ 'MENU_TAX' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="currencyCodeModuleAccess.readFlagDisplay || currencyCodeModuleAccess.createFlagDisplay || currencyCodeModuleAccess.deleteFlagDisplay || currencyCodeModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'currency_list'}"
+          (click)="Active_Tab_Change('currency_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'currency_list'" class="currency-code-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'currency_list'" class="currency-code-icon-white">
+          </mat-icon>
+          {{ 'MENU_CURRENCY_CD' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="uomModuleAccess.readFlagDisplay || uomModuleAccess.createFlagDisplay || uomModuleAccess.deleteFlagDisplay || uomModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'uom_list'}"
+          (click)="Active_Tab_Change('uom_list')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'uom_list'" class="uom-code-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'uom_list'" class="uom-code-icon-white"></mat-icon>
+          {{ 'MENU_UOM' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="buildingModuleAccess.readFlagDisplay || buildingModuleAccess.createFlagDisplay || buildingModuleAccess.deleteFlagDisplay || buildingModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'building'}"
+          (click)="Active_Tab_Change('building')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'building'" class="building-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'building'" class="building-icon-white"></mat-icon>
+          {{ 'BUILDING' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="itemMasterModuleAccess.readFlagDisplay || itemMasterModuleAccess.createFlagDisplay || itemMasterModuleAccess.deleteFlagDisplay || itemMasterModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'item_master'}"
+          (click)="Active_Tab_Change('item_master')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'item_master'" class="item-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'item_master'" class="item-icon-white"></mat-icon>
+          {{ 'MENU_ITEM_MASTER' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" *ngIf="bpModuleAccess.readFlagDisplay || bpModuleAccess.createFlagDisplay || bpModuleAccess.deleteFlagDisplay || bpModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'BUSINESS_PARTNER'}"
+          (click)="Active_Tab_Change('BUSINESS_PARTNER')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'BUSINESS_PARTNER'" class="item-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'BUSINESS_PARTNER'" class="item-icon-white"></mat-icon>
+          {{ 'MENU_BUSINESS_PARTNER' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'PO_TERMS_CONDITIONS'}"
+          (click)="Active_Tab_Change('PO_TERMS_CONDITIONS')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'PO_TERMS_CONDITIONS'" class="item-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'PO_TERMS_CONDITIONS'" class="item-icon-white"></mat-icon>
+          {{ 'MENU_TERMS_CONDTIONS' | translate }}
+        </mat-list-item>
+
+      </mat-nav-list>
+
+
+      <mat-sidenav-container fxHide.gt-sm>
+        <mat-sidenav #sidenav style="margin-top: 53px;">
+          <mat-nav-list fxLayout="column" fxShow="true">
+
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'organization_view'}"
+              (click)="Active_Tab_Change('organization_view')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'organization_view'" class="organization-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'organization_view'" class="organization-icon-white">
+              </mat-icon>
+              {{ 'MENU_ORGANIZATION' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="legalEntityModuleAccess.readFlagDisplay || legalEntityModuleAccess.createFlagDisplay || legalEntityModuleAccess.deleteFlagDisplay || legalEntityModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'legal_entity'}"
+              (click)="Active_Tab_Change('legal_entity')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'legal_entity'" class="legal-entity-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'legal_entity'" class="legal-entity-icon-white">
+              </mat-icon>
+              {{ 'MENU_LEGAL_ENTITY' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="regionModuleAccess.readFlagDisplay || regionModuleAccess.createFlagDisplay || regionModuleAccess.deleteFlagDisplay || regionModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'region_list'}"
+              (click)="Active_Tab_Change('region_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'region_list'" class="region-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'region_list'" class="region-icon-white"></mat-icon>
+              {{ 'MENU_REGION' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="locationModuleAccess.readFlagDisplay || locationModuleAccess.createFlagDisplay || locationModuleAccess.deleteFlagDisplay || locationModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'location_list'}"
+              (click)="Active_Tab_Change('location_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'location_list'" class="branch-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'location_list'" class="branch-icon-white">
+              </mat-icon>
+              {{ 'MENU_LOCATION' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="departmentModuleAccess.readFlagDisplay || departmentModuleAccess.createFlagDisplay || departmentModuleAccess.deleteFlagDisplay || departmentModuleAccess.updateFlagDisplay" [ngClass]="{' active-menu-item':Active_Tab === 'department_list'}"
+              (click)="Active_Tab_Change('department_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'department_list'" class="department-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'department_list'" class="department-icon-white">
+              </mat-icon>
+              {{ 'MENU_DEPARTMENT' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="subDeptModuleAccess.readFlagDisplay || subDeptModuleAccess.createFlagDisplay || subDeptModuleAccess.deleteFlagDisplay || subDeptModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'subdepartment_list'}"
+              (click)="Active_Tab_Change('subdepartment_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'subdepartment_list'" class="department-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'subdepartment_list'" class="department-icon-white">
+              </mat-icon>
+              {{ 'MENU_SUB_DEPARTMENT' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="designationModuleAccess.readFlagDisplay || designationModuleAccess.createFlagDisplay || designationModuleAccess.deleteFlagDisplay || designationModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'designation_list'}"
+              (click)="Active_Tab_Change('designation_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'designation_list'" class="designation-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'designation_list'" class="designation-icon-white">
+              </mat-icon>
+              {{ 'MENU_DESIGNATION' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="taxModuleAccess.readFlagDisplay || taxModuleAccess.createFlagDisplay || taxModuleAccess.deleteFlagDisplay || taxModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'tax_list'}"
+              (click)="Active_Tab_Change('tax_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'tax_list'" class="tax-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'tax_list'" class="tax-icon-white"></mat-icon>
+              {{ 'MENU_TAX' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="currencyCodeModuleAccess.readFlagDisplay || currencyCodeModuleAccess.createFlagDisplay || currencyCodeModuleAccess.deleteFlagDisplay || currencyCodeModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'currency_list'}"
+              (click)="Active_Tab_Change('currency_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'currency_list'" class="currency-code-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'currency_list'" class="currency-code-icon-white">
+              </mat-icon>
+              {{ 'MENU_CURRENCY_CD' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="uomModuleAccess.readFlagDisplay || uomModuleAccess.createFlagDisplay || uomModuleAccess.deleteFlagDisplay || uomModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'uom_list'}"
+              (click)="Active_Tab_Change('uom_list')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'uom_list'" class="uom-code-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'uom_list'" class="uom-code-icon-white"></mat-icon>
+              {{ 'MENU_UOM' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="buildingModuleAccess.readFlagDisplay || buildingModuleAccess.createFlagDisplay || buildingModuleAccess.deleteFlagDisplay || buildingModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'building'}"
+              style="margin-bottom: 0%;" (click)="Active_Tab_Change('building')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'building'" class="building-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'building'" class="building-icon-white"></mat-icon>
+              {{ 'BUILDING' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab ml-25" *ngIf="itemMasterModuleAccess.readFlagDisplay || itemMasterModuleAccess.createFlagDisplay || itemMasterModuleAccess.deleteFlagDisplay || itemMasterModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'item_master'}"
+              style="margin-bottom: 0%;" (click)="Active_Tab_Change('item_master')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'item_master'" class="item-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'item_master'" class="item-icon-white"></mat-icon>
+              {{ 'MENU_ITEM_MASTER' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" *ngIf="bpModuleAccess.readFlagDisplay || bpModuleAccess.createFlagDisplay || bpModuleAccess.deleteFlagDisplay || bpModuleAccess.updateFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'BUSINESS_PARTNER'}"
+              style="margin-bottom: 0%;" (click)="Active_Tab_Change('BUSINESS_PARTNER')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'BUSINESS_PARTNER'" class="item-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'BUSINESS_PARTNER'" class="item-icon-white"></mat-icon>
+              {{ 'MENU_BUSINESS_PARTNER' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'PO_TERMS_CONDITIONS'}"
+              style="margin-bottom: 0%;" (click)="Active_Tab_Change('PO_TERMS_CONDITIONS')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'PO_TERMS_CONDITIONS'" class="item-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'PO_TERMS_CONDITIONS'" class="item-icon-white"></mat-icon>
+              {{ 'MENU_TERMS_CONDTIONS' | translate }}
+            </mat-list-item>
+
+          </mat-nav-list>
+        </mat-sidenav>
+      </mat-sidenav-container>
+
+    </div>
+
+    <div fxFlex="83" fxFlex.sm="93" fxFlex.xs="93">
+
+      <div *ngIf="Active_Tab === 'organization_view'" class="content_section pad-2-per card" fxLayout="column"
+        fxFlex="100" fxFlexFill>
+        <div class="pad-1-per">
+          <div fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" *ngIf="modelAccessModule.updateFlagDisplay"
+              (click)="editOrganization()" fxHide.sm fxHide.xs>{{'COMMON_EDIT' | translate}}
+            </button>
+            <button mat-raised-button color="primary" *ngIf="modelAccessModule.updateFlagDisplay"
+              (click)="editOrganization()" matTooltip="Edit" fxHide.gt-sm>
+              <mat-icon class="whiteicon">edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlex="100" fxFlexFill>
+
+          <div fxFlex="25" fxLayoutAlign.xs="center start" fxLayoutAlign.sm="center start">
+            <img src="{{logoUrl}}" class="logo-style" alt="Logo" />
+          </div>
+
+          <div fxLayout="column" fxFlex="75">
+
+            <div fxLayout="column">
+              <div fxLayout="row" fxLayout.xs="column" fxFlex="100" fxFlexFill>
+
+                <div fxLayout="column" fxFlex="50" class="pad-1-per" fxFlexFill>
+                  <p><strong>{{ 'ORGANIZATION_NAME' | translate }}</strong> : {{organizationModel.orgName}}</p>
+                  <p><strong>{{ 'COMMON_PHONE_NO' | translate }}</strong> : {{organizationModel.phoneNo}}</p>
+                  <p><strong>{{ 'COMMON_WEBSITE' | translate }}</strong> : {{organizationModel.orgWebURL}}</p>
+                  <p><strong>{{ 'COMMON_CURRENCY_CODE' | translate }}</strong> : {{organizationModel.orgCurCd}}</p>
+                </div>
+
+                <div fxLayout="column" fxFlex="50" class="pad-1-per" fxFlexFill>
+                  <p><strong>{{ 'ORGANIZATION_CODE' | translate }}</strong> : {{organizationModel.orgCode}}</p>
+                  <p><strong>{{ 'COMMON_EMAIL_ID' | translate }}</strong> : {{organizationModel.orgEmailId}}</p>
+                  <p><strong>{{ 'COMMON_ALT_PHONE_NO' | translate }}</strong> : {{organizationModel.altPhoneNo}}</p>
+                  <p><strong>{{ 'COMMON_COUNTRY_CODE' | translate }}</strong> : {{organizationModel.countryCode}}</p>
+                </div>
+
+              </div>
+
+              <div fxFlex="100">
+                <h3 class="address-title">{{ 'COMMON_ADDRESS' | translate }}</h3>
+              </div>
+
+              <div fxLayout="row" fxLayout.xs="column" fxFlex="100" fxFlexFill>
+
+                <div fxLayout="column" class="pad-1-per" fxFlex="50" fxFlexFill>
+                  <p><strong>{{ 'COMMON_STREET' | translate }}</strong> : {{organizationModel.orgAddress1}}</p>
+                  <p><strong>{{ 'COMMON_CITY' | translate }}</strong> : {{organizationModel.orgCity}}</p>
+                  <p><strong>{{ 'COMMON_COUNTRY' | translate }}</strong> : {{organizationModel.orgCountry}}</p>
+                </div>
+
+                <div fxLayout="column" class="pad-1-per" fxFlex="50" fxFlexFill>
+                  <p><strong>{{ 'COMMON_AREA' | translate }}</strong> : {{organizationModel.orgAddress2}}</p>
+                  <p><strong>{{ 'COMMON_STATE' | translate }}</strong> : {{organizationModel.orgState}}</p>
+                  <p><strong>{{ 'COMMON_ZIP_CODE' | translate }}</strong> : {{organizationModel.orgPinCode}}</p>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="Active_Tab === 'entity_group'" fxFlexFill>
+        <app-entity-group-list></app-entity-group-list>
+      </div>
+      <div *ngIf="Active_Tab === 'legal_entity'" fxFlexFill>
+        <app-legal-entity-list></app-legal-entity-list>
+      </div>
+      <div *ngIf="Active_Tab === 'tax_list'" fxFlexFill>
+        <app-tax-list></app-tax-list>
+      </div>
+      <div *ngIf="Active_Tab === 'region_list'" fxFlexFill>
+        <app-region-list></app-region-list>
+      </div>
+      <div *ngIf="Active_Tab === 'department_list'" fxFlexFill>
+        <app-department-list [isFromAssetCreate]=isFromAssetCreateOnly></app-department-list>
+      </div>
+      <div *ngIf="Active_Tab === 'subdepartment_list'" fxFlexFill>
+        <app-subdepartment-list></app-subdepartment-list>
+      </div>
+      <div *ngIf="Active_Tab === 'uom_list'" fxFlexFill>
+        <app-uom-list></app-uom-list>
+      </div>
+      <div *ngIf="Active_Tab === 'currency_list'" fxFlexFill>
+        <app-currency-code-list></app-currency-code-list>
+      </div>
+      <div *ngIf="Active_Tab === 'designation_list'" fxFlexFill>
+        <app-designation-list></app-designation-list>
+      </div>
+      <div *ngIf="Active_Tab === 'location_list'" fxFlexFill>
+        <app-location-list></app-location-list>
+      </div>
+      <div *ngIf="Active_Tab === 'building'" fxFlexFill>
+        <app-building></app-building>
+      </div>
+      <div *ngIf="Active_Tab === 'item_master'" fxFlexFill>
+        <app-item-master [activeTab]="activeTabNum"></app-item-master>
+      </div>
+      <div *ngIf="Active_Tab === 'BUSINESS_PARTNER'" fxFlexFill>
+        <app-business-partner-list></app-business-partner-list>
+      </div>
+      <div *ngIf="Active_Tab === 'PO_TERMS_CONDITIONS'" fxFlexFill>
+        <app-purhcase-terms-main></app-purhcase-terms-main>
+      </div>
+
+    </div>
+  </div>
+
+</div>

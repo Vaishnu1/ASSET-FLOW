@@ -1,0 +1,2321 @@
+<div fxLayout="column" fxFlex="100" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-toolbar-row class="breadcrumb-padding" fxFlex="50" fxFlex.sm="43" fxFlex.xs="43">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="end center">
+        <mat-list-item class="breadcrumb-item">
+          <a href="#" href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'MENU_SERVICE' | translate}}
+          <!-- <mat-icon>
+            keyboard_arrow_right</mat-icon> -->
+        </mat-list-item>
+        <!-- <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{'SR_SERVICE_REQUEST' | translate}}
+        </mat-list-item> -->
+      </mat-list>
+    </mat-toolbar-row>
+
+  </div>
+  <div fxLayout="column">
+    <div class="content_section_background" fxFlex="100">
+      <div fxFlex="100">
+        <div fxLayout="row">
+          <div class="table_section" fxFlex="100">
+            <mat-expansion-panel [expanded]="true" hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title class="panel-header">
+                  {{'COMMON_SEARCH'| translate}}
+                </mat-panel-title>
+                <mat-panel-description fxLayoutAlign="end end">
+                  <mat-icon>search</mat-icon>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div fxFlex="100" fxLayout="column">
+                <div fxLayout="row" fxHide.lt-md>
+                  <div fxFlex="25">
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                        <ng-select [items]="locationCombo" bindLabel="locDisplayField" tabindex="1"
+                          bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                          (click)="loadLocationComboData($event)" [virtualScroll]="true" appendTo="body"
+                          (scrollToEnd)="loadLocationComboData({})"
+                          (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                          loadingText="Loading..." (change)="selectedLocationData($event)"
+                          [(ngModel)]="serviceRequestModel.selectedLocationNames" [ngModelOptions]="{standalone: true}"
+                          multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'ASSET_CATEGORY' | translate }}</span>
+                        <ng-select [(ngModel)]="serviceRequestModel.selectedAssetCategoryNames"
+                          [ngModelOptions]="{standalone: true}" tabindex="2" (search)="listOfCategory($event)"
+                          appendTo="body" (click)="listOfCategory({})" (change)="getCategoryComboValue($event)"
+                          [virtualScroll]="true" (scrollToEnd)="listOfCategory({})"
+                          (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')"
+                          (clear)="listOfCategory('clear')" [loading]="scrollsyncAssetCategory" loadingText="Loading..."
+                          [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName"
+                          multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                        <ng-select [(ngModel)]="serviceRequestModel.selectedSubCategoryNames"
+                          [ngModelOptions]="{standalone: true}" tabindex="3" (search)="listOfSubCategory($event)"
+                          (click)="listOfSubCategory({})" [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})"
+                          (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')"
+                          (clear)="listOfSubCategory('clear')" [loading]="scrollsyncAssetSubCategory"
+                          loadingText="Loading..." appendTo="body" (change)="getSubCategoryComboValue($event)"
+                          [items]="subCategoryName" bindLabel="subCategoryName" bindValue="subCategoryName"
+                          multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                        <ng-select [(ngModel)]="serviceRequestModel.selectedAssetGroupNames"
+                          [ngModelOptions]="{standalone: true}" tabindex="4" (click)="listOfAllAssetGroup({})"
+                          [virtualScroll]="true" (search)="listOfAllAssetGroup($event)" appendTo="body"
+                          (scrollToEnd)="listOfAllAssetGroup({})"
+                          (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')"
+                          (clear)="listOfAllAssetGroup('clear')" (change)="getAssetGroupComboValue($event)"
+                          [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName"
+                          [loading]="scrollsyncAssetGroup" loadingText="Loading..." required multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'EFS' | translate }} </span>
+                        <ng-select [items]="EfsStatusList" bindLabel="efsName" bindValue="efsName" appendTo="body"
+                          (change)="selectedEfsStatus($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div fxFlex="25">
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                        <ng-select [(ngModel)]="serviceRequestModel.selectedModelNames"
+                          [ngModelOptions]="{standalone: true}" tabindex="5" (click)="listOfAllModel({})"
+                          [virtualScroll]="true" (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})"
+                          (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"
+                          (clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)" [items]="modelCombo"
+                          bindLabel="modelName" appendTo="body" bindValue="modelName" [loading]="scrollsyncModel"
+                          loadingText="Loading..." required multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_NO' | translate }}</mat-label>
+                        <input matInput tabindex="6" [(ngModel)]="serviceRequestModel.srNo" class="input-field"
+                          [ngModelOptions]="{standalone: true}" oninput="this.value = this.value.toUpperCase()">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group asset-code-field">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_CODE' | translate }}</span>
+                        <ng-select [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+                          (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})"
+                          (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                          loadingText="Loading..." tabindex="9" (change)="selectedAssetCodeData($event)" appendTo="body"
+                          [(ngModel)]="serviceRequestModel.selectedAssetCodes" [ngModelOptions]="{standalone: true}"
+                          multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxLayout="row">
+                      <div class="form-group" fxFlex="60">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }}</span>
+                          <ng-select [items]="['YES', 'NO']" [(ngModel)]="serviceRequestModel.physicalDamage"
+                            [ngModelOptions]="{standalone: true}">
+                          </ng-select>
+                        </div>
+                      </div>
+
+                      <div class="form-group" fxFlex="40" style="margin-top:20px;margin-left: 10px;">
+                        <div class="example-full-width">
+                          <mat-checkbox color="primary" [(ngModel)]="serviceRequestModel.reOpenBtn"
+                            [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange($event)">
+                            <span class="input-label">{{ 'SR_IS_REOPENED' | translate }}</span>
+                          </mat-checkbox>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div fxFlex="25">
+
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'SR_STATUS' | translate }} </span>
+                        <ng-select [items]="srStatusCombo" bindLabel="srStatusName" bindValue="srStatusName"
+                          appendTo="body" (search)="loadSrStatusComboData($event)"
+                          (click)="loadSrStatusComboData($event)" [virtualScroll]="true"
+                          (scrollToEnd)="loadSrStatusComboData({})"
+                          (keyup.backspace)="loadSrStatusComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadSrStatusComboData('clear')" (change)="getsrStausComboValue($event)"
+                          [loading]="scrollSrStatusSync" loadingText="Loading..."
+                          [(ngModel)]="serviceRequestModel.srStatus" tabindex="10"
+                          [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <!-- <div class="form-group order-type">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                        <ng-select  [(ngModel)]="serviceRequestModel.functionality" tabindex="8"
+                          appendTo="body" [ngModelOptions]="{standalone: true}" [items]="functionalStatus"
+                          bindLabel="name" bindValue="name">
+                        </ng-select>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="form-group order-type">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                        <ng-select tabindex="13" (click)="srFunctionalityStatusComboData($event)" [virtualScroll]="true"
+                          (search)="srFunctionalityStatusComboData($event)"
+                          (scrollToEnd)="srFunctionalityStatusComboData({})"
+                          (keyup.backspace)="srFunctionalityStatusComboData($event.target.value ? $event : 'back')"
+                          (clear)="srFunctionalityStatusComboData('clear')" [loading]="scrollsyncSRFunctionlityPriority"
+                          loadingText="Loading..." (change)="selectedSRFunctionalityStatusComboData($event)">
+                          <ng-option *ngFor="let functionalStatus of functionlityCombo" [value]="functionalStatus"> {{
+                            functionalStatus.functionalityName | translate}}</ng-option>
+                        </ng-select>
+                      </div>
+                    </div> -->
+                    <div class="form-group order-type">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                        <ng-select tabindex="13" [(ngModel)]="serviceRequestModel.functionality"
+                         [ngModelOptions]="{standalone: true}" [items]="functionalStatus" bindLabel="name" bindValue="name">
+                        </ng-select>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group order-type">
+                      <div class="example-full-width high-light">
+                        <span class="input-label"> {{ 'SR_TYPE' | translate }} </span>
+                        <ng-select [virtualScroll]="true" (scrollToEnd)="loadSrTypeComboData({})"
+                          (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadSrTypeComboData('clear')" [loading]="scrollsyncSrType" [items]="srTypeCombo"
+                          bindLabel="srTypeName" bindValue="srTypeName" appendTo="body"
+                          (search)="loadSrTypeComboData($event)" (click)="loadSrTypeComboData($event)"
+                          (change)="setSrTypeValue($event);" loadingText="Loading..."
+                          [(ngModel)]="serviceRequestModel.srTypeName" tabindex="10"
+                          [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class="input-label">{{ 'SR_TOTAL_DOWN_HOURS' | translate }}</mat-label>
+                        <input matInput type="number" [(ngModel)]="serviceRequestModel.totalDownHrs"
+                          [ngModelOptions]="{standalone: true}" class="input-field">
+                      </mat-form-field>
+                    </div>
+
+
+                  </div>
+
+                  <div fxFlex="25">
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                        <ng-select [items]="departmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                          (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})"
+                          (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadDepartmentComboData('clear')" [loading]="scrollDepartmentsync"
+                          loadingText="Loading..." [(ngModel)]="serviceRequestModel.selectedDepartmentNames"
+                          appendTo="body" [ngModelOptions]="{standalone: true}"
+                          (change)="selectedDepartmentData($event)" multiple="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSIGNED_TO' | translate }} </span>
+                        <ng-select [items]="serviceEngineerCombo" bindLabel="displayName" bindValue="displayName"
+                          (search)="loadServiceEngineerData($event)" (click)="loadServiceEngineerData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadServiceEngineerData({})"
+                          (keyup.backspace)="loadServiceEngineerData($event.target.value ? $event : 'back')"
+                          (clear)="loadServiceEngineerData('clear')" [loading]="scrollServiceEngineersync"
+                          loadingText="Loading..." appendTo="body"
+                          [(ngModel)]="serviceRequestModel.selectedAssignedToNames" tabindex="10"
+                          [ngModelOptions]="{standalone: true}" (change)="selectedAssignedToData($event)"
+                          multiple="true" >
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group sr-date-field ">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+                        <input matInput (click)="fromDt.open()" [matDatepicker]="fromDt" (dateChange)="fromDateValidation($event)"
+                          [(ngModel)]="serviceRequestModel.fromDt" [ngModelOptions]="{standalone: true}"
+                          (keypress)="dateValidationinstall($event)" tabindex="11">
+                        <mat-datepicker-toggle matSuffix [for]="fromDt" ></mat-datepicker-toggle>
+                        <mat-datepicker #fromDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+
+                    <div class="form-group sr-date-field " style="margin-top: -8px;">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+                        <input matInput (click)="endDt.open()" [matDatepicker]="endDt" (dateChange)="endDateValidation($event)"
+                          [(ngModel)]="serviceRequestModel.endDt" [ngModelOptions]="{standalone: true}"
+                          (keypress)="dateValidationinstall($event)" tabindex="12">
+                        <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                        <mat-datepicker #endDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                </div>
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end end" fxHide.lt-md>
+
+                  <button mat-raised-button color="primary" [disabled]="!(serviceRequestModel.srType)" tabindex="13"
+                    (click)="searchSR()">{{'COMMON_SEARCH' | translate}}</button>
+                  <button mat-raised-button class="space " color="primary" tabindex="14"
+                    (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+                  <button mat-raised-button color="primary" class="space " (click)="openSRReport()"
+                    style="margin-right: 10px;" [disabled]="!(serviceRequestModel.srType)">
+                    {{ 'REPORT_EXPORT' | translate }}
+                  </button>
+                </div>
+
+
+                <div fxLayout="row" fxHide.gt-sm>
+                  <div fxFlex="30">
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                        <ng-select [items]="locationCombo" bindLabel="locDisplayField" tabindex="1"
+                          bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                          (click)="loadLocationComboData($event)" [virtualScroll]="true" appendTo="body"
+                          (scrollToEnd)="loadLocationComboData({})"
+                          (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                          loadingText="Loading..." (change)="selectedLocationData($event)"
+                          [(ngModel)]="serviceRequestModel.locationName" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'ASSET_CATEGORY' | translate }}</span>
+                        <ng-select [(ngModel)]="serviceRequestModel.assetCategoryName"
+                          [ngModelOptions]="{standalone: true}" tabindex="2" (search)="listOfCategory($event)"
+                          appendTo="body" (click)="listOfCategory({})" (change)="getCategoryComboValue($event)"
+                          [virtualScroll]="true" (scrollToEnd)="listOfCategory({})"
+                          (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')"
+                          (clear)="listOfCategory('clear')" [loading]="scrollsyncAssetCategory" loadingText="Loading..."
+                          [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                        <ng-select [(ngModel)]="serviceRequestModel.subCategoryName"
+                          [ngModelOptions]="{standalone: true}" tabindex="3" (search)="listOfSubCategory($event)"
+                          (click)="listOfSubCategory({})" [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})"
+                          (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')"
+                          (clear)="listOfSubCategory('clear')" [loading]="scrollsyncAssetSubCategory"
+                          loadingText="Loading..." appendTo="body" (change)="getSubCategoryComboValue($event)"
+                          [items]="subCategoryName" bindLabel="subCategoryName" bindValue="subCategoryName">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                        <ng-select [(ngModel)]="serviceRequestModel.assetGroupName"
+                          [ngModelOptions]="{standalone: true}" tabindex="4" (click)="listOfAllAssetGroup({})"
+                          [virtualScroll]="true" (search)="listOfAllAssetGroup($event)" appendTo="body"
+                          (scrollToEnd)="listOfAllAssetGroup({})"
+                          (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')"
+                          (clear)="listOfAllAssetGroup('clear')" (change)="getAssetGroupComboValue($event)"
+                          [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName"
+                          [loading]="scrollsyncAssetGroup" loadingText="Loading..." required>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                        <ng-select [items]="departmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                          (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})"
+                          (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadDepartmentComboData('clear')" [loading]="scrollDepartmentsync"
+                          loadingText="Loading..." [(ngModel)]="serviceRequestModel.departmentName" appendTo="body"
+                          [ngModelOptions]="{standalone: true}" (change)="selectedDepartmentData($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group sr-date-field ">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+                        <input matInput (click)="fromDt.open()" [matDatepicker]="fromDt" class="input-field"
+                          [(ngModel)]="serviceRequestModel.fromDt" [ngModelOptions]="{standalone: true}"
+                          (keypress)="dateValidationinstall($event)" tabindex="11">
+                        <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'EFS' | translate }} </span>
+                        <ng-select [items]="EfsStatusList" bindLabel="efsName" bindValue="efsName" appendTo="body"
+                          (change)="selectedEfsStatus($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div fxFlex="5"> </div>
+
+                  <div fxFlex="30">
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                        <ng-select [(ngModel)]="serviceRequestModel.modelName" [ngModelOptions]="{standalone: true}"
+                          tabindex="5" (click)="listOfAllModel({})" [virtualScroll]="true"
+                          (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})"
+                          (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"
+                          (clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)" [items]="modelCombo"
+                          bindLabel="modelName" appendTo="body" bindValue="modelName" [loading]="scrollsyncModel"
+                          loadingText="Loading..." required>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group sr-no-field">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_NO' | translate }}</mat-label>
+                        <input matInput tabindex="6" [(ngModel)]="serviceRequestModel.srNo" class="input-field"
+                          [ngModelOptions]="{standalone: true}">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group asset-code-field">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_CODE' | translate }}</span>
+                        <ng-select [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+                          (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})"
+                          (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                          loadingText="Loading..." tabindex="9" (change)="selectedAssetCodeData($event)" appendTo="body"
+                          [(ngModel)]="serviceRequestModel.assetCode" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'WO_CONSUMED_SPARES_ITEM' | translate }}</span>
+                        <ng-select [items]="consumedItemsList" bindLabel="itemDisplayName" bindValue="itemName"
+                          (search)="consumedItemsCombo($event)" (click)="consumedItemsCombo($event)" appendTo="body"
+                          [virtualScroll]="true" (scrollToEnd)="consumedItemsCombo({})"
+                          (keyup.backspace)="consumedItemsCombo($event.target.value ? $event : 'back')"
+                          (clear)="consumedItemsCombo('clear')" [loading]="scrollsyncConsumedSpares"
+                          loadingText="Loading..." tabindex="9" (change)="selectedConsumedItemName($event)"
+                          [(ngModel)]="serviceRequestModel.itemName" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSIGNED_TO' | translate }} </span>
+                        <ng-select [items]="serviceEngineerCombo" bindLabel="displayName" bindValue="displayName"
+                          (search)="loadServiceEngineerData($event)" (click)="loadServiceEngineerData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadServiceEngineerData({})"
+                          (keyup.backspace)="loadServiceEngineerData($event.target.value ? $event : 'back')"
+                          (clear)="loadServiceEngineerData('clear')" [loading]="scrollServiceEngineersync"
+                          loadingText="Loading..." appendTo="body" [(ngModel)]="serviceRequestModel.assignedTo"
+                          tabindex="10" [ngModelOptions]="{standalone: true}" (change)="selectedAssignedToData($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group sr-date-field">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+                        <input matInput (click)="endDt.open()" [matDatepicker]="endDt" class="input-field"
+                          [(ngModel)]="serviceRequestModel.endDt" [ngModelOptions]="{standalone: true}"
+                          (keypress)="dateValidationinstall($event)" tabindex="12">
+                        <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                        <mat-datepicker #endDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+
+                  <div fxFlex="5"> </div>
+                  <div fxFlex="30">
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'SR_STATUS' | translate }} </span>
+                        <ng-select [items]="srStatusCombo" bindLabel="srStatusName" bindValue="srStatusName"
+                          appendTo="body" (search)="loadSrStatusComboData($event)"
+                          (click)="loadSrStatusComboData($event)" [virtualScroll]="true"
+                          (scrollToEnd)="loadSrStatusComboData({})"
+                          (keyup.backspace)="loadSrStatusComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadSrStatusComboData('clear')" (change)="getsrStausComboValue($event)"
+                          [loading]="scrollSrStatusSync" loadingText="Loading..."
+                          [(ngModel)]="serviceRequestModel.srStatus" tabindex="10"
+                          [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <!-- <div class="form-group order-type">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                        <ng-select  [(ngModel)]="serviceRequestModel.functionality" tabindex="8"
+                          appendTo="body" [ngModelOptions]="{standalone: true}" [items]="functionalStatus"
+                          bindLabel="name" bindValue="name">
+                        </ng-select>
+                      </div>
+                    </div> -->
+
+                    <div class="form-group order-type">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                        <ng-select tabindex="13" (click)="srFunctionalityStatusComboData($event)" [virtualScroll]="true"
+                          (search)="srFunctionalityStatusComboData($event)"
+                          (scrollToEnd)="srFunctionalityStatusComboData({})"
+                          (keyup.backspace)="srFunctionalityStatusComboData($event.target.value ? $event : 'back')"
+                          (clear)="srFunctionalityStatusComboData('clear')" [loading]="scrollsyncSRFunctionlityPriority"
+                          loadingText="Loading..." (change)="selectedSRFunctionalityStatusComboData($event)">
+                          <ng-option *ngFor="let functionalStatus of functionlityCombo"> {{
+                            functionalStatus.functionalityName | translate}}</ng-option>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group order-type">
+                      <div class="example-full-width high-light">
+                        <span class="input-label"> {{ 'SR_TYPE' | translate }} </span>
+                        <ng-select [items]="srTypeCombo" bindLabel="srTypeName" bindValue="srTypeName"
+                          (search)="loadSrTypeComboData($event)" (click)="loadSrTypeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadSrTypeComboData({})"
+                          (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')"
+                          (clear)="loadSrTypeComboData('clear')" [loading]="scrollsyncSrType" loadingText="Loading..."
+                          [(ngModel)]="serviceRequestModel.srTypeName" tabindex="10"
+                          [ngModelOptions]="{standalone: true}" (change)="setSrTypeValue($event);" appendTo="body">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'CONTRACT_TYPE' | translate }}</span>
+                        <ng-select [items]="contractTypeList" bindLabel="contractTypeName" bindValue="contractTypeName"
+                          (search)="listOfContractType($event)" (click)="listOfContractType({})" [virtualScroll]="true"
+                          (scrollToEnd)="listOfContractType({})"
+                          (keyup.backspace)="listOfContractType($event.target.value ? $event : 'back')"
+                          (clear)="listOfContractType('clear')" [loading]="scrollContractTypeSync"
+                          loadingText="Loading..." [(ngModel)]="serviceRequestModel.contractType" tabindex="8"
+                          [ngModelOptions]="{standalone: true}" (change)="setContractType($event);" appendTo="body">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+
+
+                      <button mat-raised-button class="space for-mobile" color="primary"
+                        [disabled]="!(serviceRequestModel.srType)" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="searchSR()">
+                        <mat-icon>search</mat-icon>
+                      </button>
+
+                      <button mat-raised-button class="space  for-mobile" color="primary"
+                        matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" (click)="clear()">
+                        <mat-icon>clear_all</mat-icon>
+                      </button>
+
+                      <button mat-raised-button color="primary" class="space for-mobile" (click)="openSRReport()"
+                        [disabled]="!(serviceRequestModel.srType)">
+                        <mat-icon>file_download</mat-icon>
+                      </button>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </mat-expansion-panel>
+          </div>
+        </div>
+
+        <hr />
+
+        <mat-toolbar>
+          <span class="example-spacer"></span>
+
+          <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length"
+            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+          <span class="example-spacer"></span>
+
+          <!-- custom column -->
+          <button mat-raised-button class="space sqr-btn" color="primary"
+            matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'"
+            (click)="editManageColumns()">
+            <mat-icon>view_week</mat-icon>
+          </button>
+
+          <div class="custom-dialog" *ngIf="showManageColumns">
+            <div>
+              <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+            </div>
+            <hr>
+            <div class="custom-dialog-body" *ngIf="showManageColumns">
+              <div id="column1">
+                <input type="checkbox" [checked]="displayedColumns.includes('locationName')"
+                  (change)="toggleColumn('locationName')">
+                <span>{{'LOCATION_NAME' | translate}}</span>
+                <br>
+
+                <input type="checkbox" [checked]="displayedColumns.includes('srNo')" (change)="toggleColumn('srNo')">
+                <span>{{ 'WO_NO' | translate }}</span>
+                <br>
+
+                <input type="checkbox" [checked]="displayedColumns.includes('srType')"
+                  (change)="toggleColumn('srType')">
+                <span>{{ 'SR_TYPE' | translate }}</span>
+                <br>
+
+                <input type="checkbox" [checked]="displayedColumns.includes('assetCode')"
+                  (change)="toggleColumn('assetCode')">
+                <span>{{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}}</span>
+                <br>
+              </div>
+
+              <div id="column2">
+                <input type="checkbox" (change)="toggleColumn('assetGroupDesc')"
+                  [checked]="displayedColumns.includes('assetGroupDesc')">
+                <span>{{'SR_ASSET_COMMON_NAME_GRID' | translate}}</span> <br>
+
+                <input type="checkbox" (change)="toggleColumn('modelName')"
+                  [checked]="displayedColumns.includes('modelName')">
+                <span>{{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</span> <br>
+
+                <input type="checkbox" (change)="toggleColumn('departmentName')"
+                  [checked]="displayedColumns.includes('departmentName')">
+                <span>{{'SR_DEPART_SUB_DEPART_GRID' | translate}}</span> <br>
+
+                <input type="checkbox" (change)="toggleColumn('srStatusName')"
+                  [checked]="displayedColumns.includes('srStatusName')">
+                <span>{{ 'SR_STATUS' | translate }}</span> <br>
+              </div>
+
+              <div id="column3">
+                <input type="checkbox" (change)="toggleColumn('assignedTo')"
+                  [checked]="displayedColumns.includes('assignedTo')">
+                <span>{{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }}</span><br>
+
+                <input type="checkbox" (change)="toggleColumn('maintenanceStrategy')"
+                  [checked]="displayedColumns.includes('maintenanceStrategy')">
+                <span>{{'MAINTENANCE_STRATEGY' | translate}}</span><br>
+
+                <input type="checkbox" (change)="toggleColumn('updatedBy')"
+                  [checked]="displayedColumns.includes('updatedBy')">
+                <span>{{'SR_UPDATE_INFO_GRID' | translate}}</span><br>
+
+                <div>
+                  <input type="checkbox" (change)="toggleColumn('totalDownHrsStr')"
+                    [checked]="displayedColumns.includes('totalDownHrsStr')">
+                  <span>{{ 'SR_TOTAL_DOWN_HOURS' | translate }}</span><br>
+                </div>
+
+                <div>
+                  <input type="checkbox" (change)="toggleColumn('pmMaintenanceStrategy')"
+                    [checked]="displayedColumns.includes('pmMaintenanceStrategy')">
+                  <span>{{ 'PM_STRATEGY' | translate }}</span><br>
+                </div>
+
+                <div>
+                  <input type="checkbox" (change)="toggleColumn('paMaintenanceStrategy')"
+                    [checked]="displayedColumns.includes('paMaintenanceStrategy')">
+                  <span>{{ 'PA_STRATEGY' | translate }}</span><br>
+                </div>
+
+                <div>
+                  <input type="checkbox" (change)="toggleColumn('qaMaintenanceStrategy')"
+                    [checked]="displayedColumns.includes('qaMaintenanceStrategy')">
+                  <span>{{ 'QA_STRATEGY' | translate }}</span><br>
+                </div>
+
+              </div>
+
+              <div id="column4">
+                <input type="checkbox" (change)="toggleColumn('callerName')"
+                  [checked]="displayedColumns.includes('callerName')">
+                <span>{{ 'SR_REQUESTOR_INFO_GRID' | translate }}</span><br>
+
+                <input type="checkbox" (change)="toggleColumn('subTicketDetails')"
+                  [checked]="displayedColumns.includes('subTicketDetails')">
+                <span>{{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}}</span><br>
+
+              </div>
+            </div>
+
+            <hr>
+
+            <div fxLayoutAlign="end end">
+              <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                {{'COMMON_OK' | translate}}
+              </button>
+              <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                {{'COMMON_RESET' | translate}}
+              </button>
+            </div>
+
+          </div>
+          <!-- custom column end -->
+
+          <button mat-raised-button color="primary" *ngIf="moduleAccessModel.createFlagDisplay" class="space sqr-btn"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            (click)="createService()"><mat-icon>add</mat-icon></button>
+
+          <button [disabled]=" selectedItem == 0 || srStatusId == '7'" mat-raised-button
+            *ngIf="moduleAccessModel.updateFlagDisplay" color="primary" class="space sqr-btn"
+            (click)="viewServiceRequestDtl(srType,selectedItem,'edit')" matTooltip="{{ 'COMMON_EDIT' | translate }}">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn"
+            (click)="viewServiceRequestDtl(srType,selectedItem,'view')" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+            *ngIf="moduleAccessModel.readFlagDisplay">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <!-- <button [disabled]=" selectedItem == 0" mat-raised-button *ngIf="srType != 'RFS' && srType != 'INSTALLATION'"
+            color="primary" class="space sqr-btn" matTooltip="{{ 'COMMON_PDF' | translate }}"
+            (click)="generateSRPDF(selectedItem)">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+
+          <button [disabled]=" selectedItem == 0" mat-raised-button *ngIf="srType != 'RFS' && srType === 'INSTALLATION'"
+            color="primary" class="space sqr-btn" matTooltip="{{ 'SR_INSTALLATION_REPORT' | translate }}"
+            (click)="generateSRPDFInstallationReport(selectedItem)">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button> -->
+
+          <button [disabled]=" selectedItem == 0" mat-raised-button *ngIf="srType != 'RFS'" color="primary"
+            class="space sqr-btn" matTooltip="{{ 'COMMON_EMAIL' | translate }}"
+            (click)="sendEmailSR(selectedItem, selectedSrNo, selectedLocationId)">
+            <mat-icon>email</mat-icon>
+          </button>
+
+          <button mat-raised-button color="primary" *ngIf="woReassignModuleAccess.createFlagDisplay"
+            class="space sqr-btn" matTooltip="{{ 'GROUPACCESS_WO_REASSIGN' | translate }}"
+            [matTooltipPosition]="'below'" (click)="bulkSrReassign()"
+            [disabled]="disableSrReassign"><mat-icon>transfer_within_a_station</mat-icon></button>
+
+          <button [disabled]="selectedElement.srStatusName != 'COMPLETED'" mat-raised-button color="primary"
+            class="space sqr-btn" matTooltip="{{ 'FEEDBACK' | translate }}" (click)="openFeedback(selectedElement)">
+            <mat-icon>feedback</mat-icon>
+          </button>
+
+          <button [disabled]="selectedSrList.length <= 0" color="primary" mat-raised-button class="space sqr-btn"
+            (click)="updateSrStatus()" matTooltip="{{ 'ACKNOWLEDGE' | translate }}">
+            <mat-icon>spellcheck</mat-icon>
+          </button>
+
+
+        </mat-toolbar>
+
+        <!-- <div fxLayout="column" *ngIf="srTypeId == 1">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                 <ng-container matColumnDef="srDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_DATE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element.createdDtDisp.split(' ')[0]}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srTime">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_TIME' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                     {{element.createdDtDisp.split(' ')[1]}} </td>
+                </ng-container> -->
+
+
+        <!-- <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} / <br /> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}  / <br />  </span>
+                    <span style="color:red"> {{element.physicalDamageDisp}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+              </ng-container>  -->
+
+        <!-- <ng-container matColumnDef="srSubStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SR_SUB_STATUS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    <span class="{{element?.srSubStatusName.replace(' ','')}}">{{element.srSubStatusName}}</span>
+                  </td>
+                </ng-container> -->
+
+        <!-- <ng-container matColumnDef="srPriority">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_PRIORITY_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element.srPriority}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srSeverity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_SEVERITY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.srSeverity}} </td>
+                </ng-container> -->
+        <!-- 
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="callerName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_REQUESTOR_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.callerName}} <br />
+                    <span style="color:brown">{{element?.callerContactNo}}</span>
+                  </td>
+                </ng-container> -->
+
+        <!-- <ng-container matColumnDef="assignedToContact">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_CONTACT_NO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignedToContactNo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assignedToDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                   {{ 'SR_ASSIGNED_TO_DATE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignToTimeDisp.split(' ')[0]}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assignedToTime">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_TIME' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignToTimeDisp.split(' ')[1]}} </td>
+                </ng-container> -->
+
+        <!-- <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.maintenanceStrategy}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container> -->
+
+        <!-- <ng-container matColumnDef="contractType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'CONTRACT_TYPE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)"> 
+                    {{element?.contractType}} </td>
+                </ng-container> -->
+
+        <!-- <tr mat-header-row *matHeaderRowDef="displayedColumnsForBM;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForBM;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' |
+                translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div> -->
+
+        <!-- <div fxLayout="column" *ngIf="srTypeId == 2">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                    [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="pmMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PM_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.pmMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.pmFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForPM;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForPM;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div fxLayout="column" *ngIf="srTypeId == 3">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="paMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.paMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.paFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForPA;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForPA;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div fxLayout="column" *ngIf="srTypeId == 7">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="qaMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'QA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.qaMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.qaFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForDR;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForDR;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div fxLayout="column" *ngIf="srTypeId == 4">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="qaMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'QA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.qaMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.paFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForQA;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForQA;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div fxLayout="column" *ngIf="srTypeId == 5">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="paMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.paMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.paFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForPA;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForPA;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div> -->
+
+        <!-- <div fxLayout="column" *ngIf="srTypeId == 6">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin" (change)="selectedAllSrs($event)">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element" >
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                     [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.srNo}} <br /> 
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span>  <br /> 
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}}  </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}}  <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                      {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                      <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                      <ng-container *ngIf="element.srSubStatusInfo">
+                          <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                              <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                          </span>
+                      </ng-container>
+                      {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="paMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element.paMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.paFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.contractType}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)"> 
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForPA;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsForPA;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div> -->
+
+        <div fxLayout="column">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table mat-table class="service-request-list" fxFlex="100" [dataSource]="dataSource" matSort
+                (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data">
+                    <mat-checkbox color="primary" [checked]="selectedAllSr" class="example-margin"
+                      (change)="selectedAllSrs($event)" [(ngModel)]="multiSelectFlag">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectSrs(element)"
+                      [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' |
+                    translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element?.locationName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="srNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element.srNo}} <br />
+                    <span style="color:brown"> {{element.createdDtDisp.split(' ')[0]}} </span> <br />
+                    <span style="color:green"> {{element.createdDtDisp.split(' ')[1]}} </span>
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="srDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_DATE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element.createdDtDisp.split(' ')[0]}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srTime">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'WO_TIME' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                     {{element.createdDtDisp.split(' ')[1]}} </td>
+                </ng-container> -->
+
+
+                <ng-container matColumnDef="srType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srTypeName.replace(' ','')}}">{{element.srTypeName}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalDownHrsStr">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SR_TOTAL_DOWN_HOURS' | translate }} / <br /> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span>{{element.totalDownHrsStr}} / <br /> </span>
+                    <span style="color:red"> {{element.physicalDamageDisp}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subTicketDetails">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SUB_TICKET' | translate }} {{'STATUS'|translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{ element.subTicketCount}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_CODE_SERIAL_NO_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetCode}} <br />
+                    <span style="color:brown"> {{element?.assetSerialNo}} </span> <br />
+                    <span class="{{element?.functionality.replace(' ','')}}">{{element.functionality}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupDesc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_COMMON_NAME_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.assetGroupDesc}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.modelName}} <br />
+                    <span style="color:brown">{{element?.manufacturerName}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SR_DEPART_SUB_DEPART_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.departmentName}} <br />
+                    <span style="color:brown">{{element?.subDepartment}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srStatusName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_STATUS' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span> <br />
+                    <ng-container *ngIf="element.srSubStatusInfo">
+                      <span *ngFor="let status of element.srSubStatusInfo.split(' - ')">
+                        <span class="link" (click)="handleStatusClick(status,element)">{{ status }}</span> <br />
+                      </span>
+                    </ng-container>
+                    {{element.woApprovalStatus}}
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="srSubStatusName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'SR_SUB_STATUS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    <span class="{{element?.srSubStatusName.replace(' ','')}}">{{element.srSubStatusName}}</span>
+                  </td>
+                </ng-container> -->
+
+                <!-- <ng-container matColumnDef="srPriority">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_PRIORITY_GRID' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element.srPriority}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="srSeverity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_SEVERITY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.srSeverity}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="assignedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element.assignedTo}} <br />
+                    <span style="color:brown">{{element?.assignedToContactNo}} </span><br />
+                    <span style="color:green">{{element?.assignToTimeDisp.split(' ')[0]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="callerName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_REQUESTOR_INFO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.callerName}} <br />
+                    <span style="color:brown">{{element?.callerContactNo}}</span>
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="assignedToContact">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_CONTACT_NO_GRID' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignedToContactNo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assignedToDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                   {{ 'SR_ASSIGNED_TO_DATE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignToTimeDisp.split(' ')[0]}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assignedToTime">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'SR_ASSIGNED_TO_TIME' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)">
+                    {{element?.assignToTimeDisp.split(' ')[1]}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="pmMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PM_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element.pmMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.pmFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="paMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'PA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element.paMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.paFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="qaMaintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'QA_STRATEGY' | translate }} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element.qaMaintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.qaFrequency}} </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="maintenanceStrategy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'MAINTENANCE_STRATEGY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.maintenanceStrategy}} <br />
+                    <span style="color:brown">{{element?.maintenanceStrategy}}</span><br />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SR_UPDATE_INFO_GRID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSrs(element)">
+                    {{element?.updatedBy}} <br />
+                    <span style="color:brown">{{element?.updatedDtDisp.split(' ')[0]}} </span><br />
+                    <span style="color:green">{{element?.updatedDtDisp.split(' ')[1]}} </span><br />
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="contractType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'CONTRACT_TYPE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectSR(element)"> 
+                    {{element?.contractType}} </td>
+                </ng-container> -->
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                </tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader"
+                fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' |
+                translate}}
+              </mat-card>
+              <mat-card class="no_records_found" *ngIf="subloader" class="no_records_found"
+                fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

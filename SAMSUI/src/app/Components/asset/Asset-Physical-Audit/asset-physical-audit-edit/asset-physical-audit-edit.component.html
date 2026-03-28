@@ -1,0 +1,982 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page" (click)="OpenassetPage()">{{'MENU_ASSET_PHYSICAL_AUDIT' | translate}} <mat-icon>keyboard_arrow_right</mat-icon></mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{headingDisplay}} </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+
+      <button mat-raised-button color="primary"
+      (click)="back()" class="space">{{'COMMON_BACK' | translate }}</button>
+      <button *ngIf="buttonDisplay" mat-raised-button color="primary"  class="submit-btn"
+        (click)="saveAssetDtl();" [disabled] ="enableSubmitFlag" >{{'COMMON_SUBMIT' | translate }}</button>
+
+      </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row">
+    <form class="margin-fix" fxFlex="100">
+
+      <div fxLayout="row" class="content-section">
+        <div fxFlex="25">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{ 'ASSET_CODE' | translate }}</mat-label>
+              <input matInput [(ngModel)]="assetPhysicalAuditDtlModel.assetCode" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxFlex="2">
+        </div>
+        <div fxFlex="25">
+          <div class="form-group">
+              <span class="input-label"> {{ 'ASSET_PHY_AUDIT_STATUS' | translate }} </span>
+              <ng-select class=" input-field" [(ngModel)]="assetPhysicalAuditDtlModel.auditStatus" [ngModelOptions]="{standalone: true}"
+                [items]="auditStatus" bindLabel="name" bindValue="name" (change)="searchAssetAuditWise()">
+              </ng-select>
+          </div>
+        </div>
+
+        <div fxFlex="2">
+        </div>
+
+        <div fxFlex="25">
+          <div class="form-group " *ngIf="auditType == 'LOCATION'">
+                        <span class="input-label"> {{ 'BUILDING_ROOM' | translate }}</span>
+                        <ng-select [items]="roomNameCombo" class="input-field" bindLabel="roomName" bindValue="buildingRoomId"
+                          (search)="loadRoomNameComboData($event)" (click)="loadRoomNameComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadRoomNameComboData({})" (keyup.backspace)="loadRoomNameComboData($event.target.value ? $event : 'back')" (clear)="loadRoomNameComboData('clear')" [loading]="scrollsyncRoom"
+                          loadingText="Loading..." (change)="selectedRoomData($event)"  [(ngModel)]="assetPhysicalAuditDtlModel.roomId"
+                          appendTo="body"></ng-select>
+          </div>
+        </div>
+
+        <div fxFlex="2">
+        </div>
+        <div fxFlex="25" fxLayoutAlign="end center">
+          <button mat-raised-button class="space" color="primary" (click)="searchAssetWise()"> {{'COMMON_SEARCH' | translate}} </button>
+
+          <button mat-raised-button color="primary" class="space" (click)="clear()">{{ 'COMMON_CLEAR' | translate }}</button>
+
+          <button mat-raised-button color="primary" (click)="generateReport()" matTooltip="{{'REPORT_EXPORT' | translate}}">
+          {{'REPORT_EXPORT' | translate}} </button>
+        </div>
+      </div>
+
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{ 'ASSET_PHY_AUDIT_DETAILS' | translate }}
+        </ng-template>
+        <mat-toolbar>
+          <span class="example-spacer"></span>
+          <mat-paginator class="asset-list-paginator"  #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+          <span class="example-spacer"></span>
+        </mat-toolbar>
+        
+        <!-- <div fxLayout="column" class="mt-10">
+          <div class="example-container">
+            <div fxLayout="row">
+              <table class="ast-phy-adt-tbl" mat-table fxFlex="100" [dataSource]="auditDtlDataSource" multiTemplateDataRows>
+
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell class="td-sl" *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i=dataIndex;"> {{(i+1)}} </td>
+                </ng-container>
+
+              <ng-container matColumnDef="select">
+                <th mat-header-cell class="td-sl" *matHeaderCellDef>{{'COMMON_SELECT' | translate}}</th>
+                <td mat-cell *matCellDef="let element;">
+                  <mat-checkbox [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}" color="primary"
+                    class="example-margin" [disabled] ="isViewMode || element.auditedFlag" (change)="checkAsset(element)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{element?.assetCode}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{element?.departmentName}}</td>
+                </ng-container>
+
+              <ng-container matColumnDef="newDepartmentName">
+                <th mat-header-cell *matHeaderCellDef style="width:20%;">{{'ASSET_PHY_NEW_DEPARTMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="departmentCombo" bindLabel="departmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="departmentName" (search)="loadDepartmentComboData($event)"
+                      (click)="loadDepartmentComboData($event)" [virtualScroll]="true"
+                      (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')" [loading]="scrollsyncDepartment"
+                      loadingText="Loading..." (change)="selectedDepartmentData($event,i)"
+                      [(ngModel)]="element.newDepartmentName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="subDepartment">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SUB_DEPARTMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.subDepartment}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newSubDepartment">
+                <th mat-header-cell *matHeaderCellDef style="width:20%;">
+                  {{'ASSET_PHY_NEW_SUB_DEPARTMENT_NAME' | translate}} </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="subDepartmentCombo" bindLabel="subDepartmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" class="input-field"
+                      bindValue="subDepartmentName" (search)="loadSubDepartmentComboData($event,i)"
+                      (click)="loadSubDepartmentComboData($event,i)" [virtualScroll]="true"
+                      (scrollToEnd)="loadSubDepartmentComboData($event,i)" (keyup.backspace)="loadSubDepartmentComboData($event,i)" (clear)="loadSubDepartmentComboData('clear',i)" [loading]="scrollsyncSubDepartment" appendTo="body"
+                      loadingText="Loading..." (change)="selectedSubDepartmentData($event,i)"
+                      [(ngModel)]="element.newSubDepartment" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="statusType">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'STATUS_TYPE' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.statusType | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newstatusType">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_PHY_NEW_STATUS_TYPE' | translate}}</th>
+                <td mat-cell mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [disabled]="!element.active || isViewMode || element.auditedFlag" (search)="loadAssetStatusTypeComboData($event,i)"
+                      (click)="loadAssetStatusTypeComboData($event,i)" [virtualScroll]="true" appendTo="body" class="input-field"
+                      [loading]="scrollsyncAssetStatusType" loadingText="Loading..." (change)="selectedAssetStatusType($event,i)"
+                      [value]="element.newStatusType | translate"
+                      [ngModel]="element.newStatusType | translate" [ngModelOptions]="{standalone: true}">
+                      <ng-option  *ngFor="let list of assetStatusTypeCombo" [value]="list" > {{list.statusType | translate}}</ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetStatus">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.assetStatus | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newAssetStatus">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'ASSET_PHY_NEW_ASSET_STATUS' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [disabled]="!element.active || isViewMode || element.auditedFlag || (element.newStatusTypeId == unassignedStatusType) || (element.trackedLicence && element.statusTypeId === assignedStatusType && element.statusTypeId !== assignedStatusType)" (search)="loadAssetStatusComboData($event,i)"
+                      (click)="loadAssetStatusComboData($event,i)" [virtualScroll]="true" appendTo="body" class="input-field"
+                      (scrollToEnd)="loadAssetStatusComboData({},i)" (keyup.backspace)="loadAssetStatusComboData($event.target.value ? $event : 'back',i)" (clear)="loadAssetStatusComboData('clear',i)" [loading]="scrollsyncAssetStatus"
+                      loadingText="Loading..." (change)="selectedAssetStatusList($event,i)"  [value]="element.newAssetStatus | translate"
+                      [ngModel]="element.newAssetStatus | translate" [ngModelOptions]="{standalone: true}" >
+                      <ng-option  *ngFor="let list of assetStatusCombo" [value]="list" > {{list.assetStatusName | translate}}</ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetCondition">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CONDITION' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.assetCondition | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newAssetCondition">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'ASSET_PHY_NEW_ASSET_CONDITION' | translate}}</th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [virtualScroll]="true" loadingText="Loading..." [disabled]="!element.active || isViewMode || element.auditedFlag"
+                    (search)="loadAssetConditionComboData($event,i)" (click)="loadAssetConditionComboData($event,i)" [loading]="scrollsyncAssetCondition"
+                     (change)="selectedAssetCondition($event,i)" [value]="element.newAssetCondition | translate" [ngModel]="element.newAssetCondition | translate"
+                     [ngModelOptions]="{standalone: true}" appendTo="body"  class="input-field" >
+                        <ng-option *ngFor="let assetConditionList of assetConditionCombo" [value]="assetConditionList">
+                            {{ assetConditionList.assetCondition | translate}}
+                        </ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="blockName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'BLOCK_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.blockName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newBlockName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_BLOCK_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="blockComboList" bindLabel="blockName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="blockName" (search)="getBlockNameComboData($event)"
+                      (click)="getBlockNameComboData($event)" [virtualScroll]="true"
+                      (scrollToEnd)="getBlockNameComboData({})"  (keyup.backspace)="getBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="getBlockNameComboData('clear')" [loading]="blockScrollSync"
+                      loadingText="Loading..." (change)="selectedBlockName($event, i)"
+                      [(ngModel)]="element.newBlockName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="floorName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'FLOOR_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.floorName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newFloorName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_FLOOR_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="floorComboList" bindLabel="floorName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="floorName" (search)="getFloorNameComboData($event, i)"
+                      (click)="getFloorNameComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getFloorNameComboData({}, i)" (keyup.backspace)="getFloorNameComboData($event.target.value ? $event : 'back', i)" (clear)="getFloorNameComboData('clear', i)" [loading]="floorSrcollSync"
+                      loadingText="Loading..." (change)="selectedFloorName($event,i)"
+                      [(ngModel)]="element.newFloorName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="segmentName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SEGMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.segmentName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newSegmentName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_SEGMENT_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="segmentComboList" bindLabel="segmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="segmentName" (search)="getSegmentNameComboData($event, i)"
+                      (click)="getSegmentNameComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getSegmentNameComboData({}, i)" (keyup.backspace)="getSegmentNameComboData($event.target.value ? $event : 'back', i)" (clear)="getSegmentNameComboData('clear', i)" [loading]="segmentSrcollSync"
+                      loadingText="Loading..." (change)="selectedSegmentName($event,i)"
+                      [(ngModel)]="element.newSegmentName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="roomName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ROOM_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.roomName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newRoomName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_ROOM_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="roomComboList" bindLabel="roomName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="roomName" (search)="getRoomComboData($event, i)"
+                      (click)="getRoomComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getRoomComboData({}, i)" (keyup.backspace)="getRoomComboData($event.target.value ? $event : 'back', i)" (clear)="getRoomComboData('clear', i)" [loading]="roomSrcollSync"
+                      loadingText="Loading..." (change)="selectedRoomName($event,i)"
+                      [(ngModel)]="element.newRoomName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+                <ng-container matColumnDef="assetAuditStatus">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'ASSET_PHY_ASSET_AUDIT_STATUS' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center">
+                   {{ (element?.verificationStatus === 'CNL') ? 'CNL' : ((element?.active === true) ? 'AUDITED': 'UNAUDITED') }}</td> 
+                    {{ (element?.verificationStatus) }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'COMMON_ACTION' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center">
+                    <mat-checkbox [(ngModel)]="element.cnlFlag" [ngModelOptions]="{standalone: true}" color="primary"
+                    class="example-margin" [disabled] ="element.verificationStatus == 'AUDITED' "  matTooltip="{{'COULD_NOT_LOCATE' | translate}}">
+                  </mat-checkbox> {{ ' CNL ?' }}
+                </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetAssignee">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'ASSET_ASSIGNEE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element;let i=dataIndex;" style="text-align: center">
+
+                    <button [disabled]="!element.active || element.newStatusTypeId == discardedStatusType || enableSubmitFlag" style="text-align: center" mat-icon-button color="primary"  matTooltip="{{ 'COMMON_ADD' | translate }}/
+                    {{ 'COMMON_EDIT' | translate }} {{ 'ASSET_ASSIGNEE' | translate }}" (click)="addAssignee(i)">
+                     <mat-icon>add_circle</mat-icon> 
+                    <div class="plus-icon add-circle-icon"></div>
+                  </button>
+
+                </td>
+                </ng-container>
+
+              <ng-container matColumnDef="assetAuditBy">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                  {{'ASSET_PHY_AUDITED_BY' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center">
+                  {{element?.updatedBy }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="auditDtlDisplayedColumns.length">
+                  <div class="col-md-12 row example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'expanded'">
+
+                      <div class="col-md-8 expanison-style">
+                        {{element?.assetCategoryName}}/{{element?.subCategoryName}}/{{element?.assetGroupName}}/{{element?.modelName}}</div>
+                      <div class="col-md-4 expanison-style">{{element?.supplierName}}</div>
+
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="auditDtlDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: auditDtlDisplayedColumns;" class="example-element-row"
+                  [class.example-expanded-row]="expandedElement === element"
+                  (click)="expandedElement = expandedElement === element ? null : element">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+
+              <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+          </div>
+        </div> -->
+
+        <div fxLayout="column" class="mt-10">
+          <div class="example-container" class="scrollable-vertical-wrapper table-wrapper">
+            <div fxLayout="row">
+              <table class="ast-phy-adt-tbl" mat-table fxFlex="100" [dataSource]="auditDtlDataSource" multiTemplateDataRows>
+
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell class="td-sl" *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i=dataIndex;"> {{(i+1)}} </td>
+                </ng-container>
+
+              <ng-container matColumnDef="select">
+                <th mat-header-cell class="td-sl" *matHeaderCellDef><mat-checkbox color="primary" [checked]="selectAllAsset" class="example-margin" (change)="selectAllAssetPhyAudits($event)">
+                </mat-checkbox> {{'COMMON_SELECT_ALL' | translate}} </th>
+                <td mat-cell *matCellDef="let element;">
+                  <mat-checkbox [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}" color="primary"
+                    class="example-margin" [disabled] ="isViewMode || element.auditedFlag || element.verificationStatus == 'APPROVED'" (change)="checkAsset()">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{element?.assetCode}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="serialNo">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SERIAL_NO' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{element?.serialNumber}}</td>
+                </ng-container>
+
+              <ng-container matColumnDef="newSerialNo">
+                <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'NEW_SERIAL_NO' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i=dataIndex;">
+                  <div class="input-label">
+                   
+                    <input matInput class="input-field" type="text"
+                      style="font-size:12px;border-bottom: 1px solid black;" 
+                      (change)="setNewSerialNo($event, i)"
+                      [value]="element.newSerialNo"
+                      [disabled]="(!element.active || isViewMode || element.auditedFlag)">
+                      
+                  </div>
+                </td>
+              </ng-container>
+
+
+
+
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">{{element?.departmentName}}</td>
+                </ng-container>
+
+              <ng-container matColumnDef="newDepartmentName">
+                <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'ASSET_PHY_NEW_DEPARTMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="departmentCombo" bindLabel="departmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="departmentName" (search)="loadDepartmentComboData($event)"
+                      (click)="loadDepartmentComboData($event)" [virtualScroll]="true"
+                      (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')" [loading]="scrollsyncDepartment"
+                      loadingText="Loading..." (change)="selectedDepartmentData($event,i)"
+                      [(ngModel)]="element.newDepartmentName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="subDepartment">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SUB_DEPARTMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.subDepartment}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newSubDepartment">
+                <th mat-header-cell *matHeaderCellDef style="width:15%;">
+                  {{'ASSET_PHY_NEW_SUB_DEPARTMENT_NAME' | translate}} </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="subDepartmentCombo" bindLabel="subDepartmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" class="input-field"
+                      bindValue="subDepartmentName" (search)="loadSubDepartmentComboData($event,i)"
+                      (click)="loadSubDepartmentComboData($event,i)" [virtualScroll]="true"
+                      (scrollToEnd)="loadSubDepartmentComboData($event,i)" (keyup.backspace)="loadSubDepartmentComboData($event,i)" (clear)="loadSubDepartmentComboData('clear',i)" [loading]="scrollsyncSubDepartment" appendTo="body"
+                      loadingText="Loading..." (change)="selectedSubDepartmentData($event,i)"
+                      [(ngModel)]="element.newSubDepartment" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="statusType">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'STATUS_TYPE' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.statusType | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newstatusType">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_PHY_NEW_STATUS_TYPE' | translate}}</th>
+                <td mat-cell mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [disabled]="!element.active || isViewMode || element.auditedFlag" (search)="loadAssetStatusTypeComboData($event,i)"
+                      (click)="loadAssetStatusTypeComboData($event,i)" [virtualScroll]="true" appendTo="body" class="input-field"
+                      [loading]="scrollsyncAssetStatusType" loadingText="Loading..." (change)="selectedAssetStatusType($event,i)"
+                      [value]="element.newStatusType | translate"
+                      [ngModel]="element.newStatusType | translate" [ngModelOptions]="{standalone: true}">
+                      <ng-option  *ngFor="let list of assetStatusTypeCombo" [value]="list" > {{list.statusType | translate}}</ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="assetStatus">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.assetStatus | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newAssetStatus">
+                <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'ASSET_PHY_NEW_ASSET_STATUS' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [disabled]="!element.active || isViewMode || element.auditedFlag" (search)="loadAssetStatusComboData($event,i)"
+                      (click)="loadAssetStatusComboData($event,i)" [virtualScroll]="true" appendTo="body" class="input-field"
+                      (scrollToEnd)="loadAssetStatusComboData({},i)" (keyup.backspace)="loadAssetStatusComboData($event.target.value ? $event : 'back',i)" (clear)="loadAssetStatusComboData('clear',i)" [loading]="scrollsyncAssetStatus"
+                      loadingText="Loading..." (change)="selectedAssetStatusList($event,i)"  [value]="element.newAssetStatus | translate"
+                      [ngModel]="element.newAssetStatus | translate" [ngModelOptions]="{standalone: true}" >
+                      <ng-option  *ngFor="let list of assetStatusCombo" [value]="list" > {{list.assetStatusName | translate}}</ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+
+            <ng-container matColumnDef="auditRemarks">
+              <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'AUDIT_REMARKS' | translate}}</th>
+              <td mat-cell *matCellDef="let element; let i=dataIndex;">
+                <div class="input-label">
+                 
+                  <input matInput class="input-field" type="text"
+                    style="font-size:12px;border-bottom: 1px solid black;" 
+                    (change)="setAuditRemarks($event, i)"
+                    [value]="element.auditRemarks"
+                    [disabled]="(!element.active || isViewMode || element.auditedFlag)" oninput="this.value = this.value.toUpperCase()">
+                    
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="notFoundRemarks">
+              <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'NOT_FOUND_REMARKS' | translate}}</th>
+              <td mat-cell *matCellDef="let element; let i=dataIndex;">
+                <div class="input-label">
+                 
+                  <input matInput class="input-field" type="text"
+                    style="font-size:12px;border-bottom: 1px solid black;" 
+                    (change)="setAuditRemarks($event, i)"
+                    [value]="element.notFoundRemarks"
+                    [disabled]="(!element.active || isViewMode || true)" oninput="this.value = this.value.toUpperCase()">
+                    
+                </div>
+              </td>
+            </ng-container>
+
+              <ng-container matColumnDef="assetCondition">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CONDITION' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.assetCondition | translate}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newAssetCondition">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'ASSET_PHY_NEW_ASSET_CONDITION' | translate}}</th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [virtualScroll]="true" loadingText="Loading..." [disabled]="!element.active || isViewMode || element.auditedFlag"
+                    (search)="loadAssetConditionComboData($event,i)" (click)="loadAssetConditionComboData($event,i)" [loading]="scrollsyncAssetCondition"
+                     (change)="selectedAssetCondition($event,i)" [value]="element.newAssetCondition | translate" [ngModel]="element.newAssetCondition | translate"
+                     [ngModelOptions]="{standalone: true}" appendTo="body"  class="input-field" >
+                        <ng-option *ngFor="let assetConditionList of assetConditionCombo" [value]="assetConditionList">
+                            {{ assetConditionList.assetCondition | translate}}
+                        </ng-option>
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="blockName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'BLOCK_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.blockName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newBlockName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_BLOCK_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="blockComboList" bindLabel="blockName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="blockName" (search)="getBlockNameComboData($event)"
+                      (click)="getBlockNameComboData($event)" [virtualScroll]="true"
+                      (scrollToEnd)="getBlockNameComboData({})"  (keyup.backspace)="getBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="getBlockNameComboData('clear')" [loading]="blockScrollSync"
+                      loadingText="Loading..." (change)="selectedBlockName($event, i)"
+                      [(ngModel)]="element.newBlockName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="floorName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'FLOOR_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.floorName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newFloorName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_FLOOR_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="floorComboList" bindLabel="floorName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="floorName" (search)="getFloorNameComboData($event, i)"
+                      (click)="getFloorNameComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getFloorNameComboData({}, i)" (keyup.backspace)="getFloorNameComboData($event.target.value ? $event : 'back', i)" (clear)="getFloorNameComboData('clear', i)" [loading]="floorSrcollSync"
+                      loadingText="Loading..." (change)="selectedFloorName($event,i)"
+                      [(ngModel)]="element.newFloorName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="segmentName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SEGMENT_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.segmentName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newSegmentName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_SEGMENT_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="segmentComboList" bindLabel="segmentName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="segmentName" (search)="getSegmentNameComboData($event, i)"
+                      (click)="getSegmentNameComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getSegmentNameComboData({}, i)" (keyup.backspace)="getSegmentNameComboData($event.target.value ? $event : 'back', i)" (clear)="getSegmentNameComboData('clear', i)" [loading]="segmentSrcollSync"
+                      loadingText="Loading..." (change)="selectedSegmentName($event,i)"
+                      [(ngModel)]="element.newSegmentName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="roomName">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ROOM_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element?.roomName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="newRoomName">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'ASSET_PHY_NEW_ROOM_NAME' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element;let i=dataIndex;">
+                  <div class="input-label">
+                    <ng-select [items]="roomComboList" bindLabel="roomName" [disabled]="!element.active || isViewMode || element.auditedFlag" appendTo="body" class="input-field"
+                      bindValue="roomName" (search)="getRoomComboData($event, i)"
+                      (click)="getRoomComboData($event, i)" [virtualScroll]="true"
+                      (scrollToEnd)="getRoomComboData({}, i)" (keyup.backspace)="getRoomComboData($event.target.value ? $event : 'back', i)" (clear)="getRoomComboData('clear', i)" [loading]="roomSrcollSync"
+                      loadingText="Loading..." (change)="selectedRoomName($event,i)"
+                      [(ngModel)]="element.newRoomName" [ngModelOptions]="{standalone: true}">
+                    </ng-select>
+                  </div>
+                </td>
+              </ng-container>
+
+                <ng-container matColumnDef="assetAuditStatus">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'ASSET_PHY_ASSET_AUDIT_STATUS' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center">
+                    <!-- {{ (element?.verificationStatus === 'CNL') ? 'CNL' : ((element?.active === true) ? 'AUDITED': 'UNAUDITED') }}</td> -->
+                    {{ (element?.verificationStatus) }}</td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="action">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'COMMON_ACTION' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center">
+                    <mat-checkbox [(ngModel)]="element.cnlFlag" [ngModelOptions]="{standalone: true}" color="primary"
+                    class="example-margin" [disabled] ="element.verificationStatus == 'AUDITED' "  matTooltip="{{'COULD_NOT_LOCATE' | translate}}">
+                  </mat-checkbox> {{ ' CNL ?' }}
+                </td>
+                </ng-container> -->
+
+                <!-- <ng-container matColumnDef="assetAssignee">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'ASSET_ASSIGNEE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element;let i=dataIndex;" style="text-align: center">
+
+                    <button [disabled]="!element.active || element.newStatusTypeId == discardedStatusType || enableSubmitFlag" style="text-align: center" mat-icon-button color="primary"  matTooltip="{{ 'COMMON_ADD' | translate }}/
+                    {{ 'COMMON_EDIT' | translate }} {{ 'ASSET_ASSIGNEE' | translate }}" (click)="addAssignee(i)">
+                    <mat-icon>add_circle</mat-icon></button>
+
+                </td>
+                </ng-container> -->
+
+              <ng-container matColumnDef="assetAuditBy">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center;width: 15%;">
+                  {{'ASSET_PHY_AUDITED_BY' | translate}} / {{'ASSET_PHY_AUDITED_DT' | translate}} / {{'ASSET_PHY_AUDITED_TIME' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center">
+                  {{element?.pvUpdatedBy }} / {{element?.pvUpdatedDisp.split(' ')[0] }} / {{element?.pvUpdatedDisp.split(' ')[1] }}
+                </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="assetAuditDt">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                  {{'ASSET_PHY_AUDITED_DT' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center">
+                  {{element?.pvUpdatedDisp.split(' ')[0] }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetAuditTime">
+                <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                  {{'ASSET_PHY_AUDITED_TIME' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center">
+                  {{element?.pvUpdatedDisp.split(' ')[1] }}
+                </td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="auditDtlDisplayedColumns.length">
+                  <div class="col-md-12 row example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'expanded'">
+
+                      <div class="col-md-8 expanison-style">
+                        {{element?.assetCategoryName}}/{{element?.subCategoryName}}/{{element?.assetGroupName}}/{{element?.modelName}}</div>
+                      <div class="col-md-4 expanison-style">{{element?.supplierName}}</div>
+
+                    </div>
+                  </td>
+                </ng-container>
+
+                 <ng-container matColumnDef="assetAssignee">
+                  <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                    {{'ASSET_ASSIGNEE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element;let i=dataIndex;" style="text-align: center">
+
+                    <button [disabled]="!element.active || element.newStatusTypeId == discardedStatusType || enableSubmitFlag" style="text-align: center" mat-icon-button color="primary"  matTooltip="{{ 'COMMON_ADD' | translate }}/
+                    {{ 'COMMON_EDIT' | translate }} {{ 'ASSET_ASSIGNEE' | translate }}" (click)="addAssignee(i)">
+                    <!-- <mat-icon>add_circle</mat-icon> -->
+                    <div class="plus-icon add-circle-icon"></div>
+                  </button>
+
+                </td>
+                </ng-container>
+
+                <ng-container matColumnDef="auditImages">
+                  <th mat-header-cell *matHeaderCellDef > {{'IMAGES' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                      (click)="viewAuditImages(element)" [disabled]="!element.assetImageFilePath" style="cursor: pointer;">
+                      <mat-icon>info</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="auditDtlDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: auditDtlDisplayedColumns;" class="example-element-row"
+                  [class.example-expanded-row]="expandedElement === element"
+                  (click)="expandedElement = expandedElement === element ? null : element">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+              </table>
+            </div>
+
+            <div fxLayout="row">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+
+              <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{ 'NEWLY_FOUND_ASSET' | translate }}
+        </ng-template>
+        <mat-toolbar>
+          <span class="example-spacer"></span>
+          <mat-paginator class="asset-list-paginator"  #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="newlyFoundLength" [pageIndex]="newlyFoundPageIndex"
+          [pageSize]="newlyFoundPageSize" (page)="getServerDataForNF($event)"></mat-paginator>
+          <span class="example-spacer"></span>
+        </mat-toolbar>
+        <!-- <div class="example-container">
+          <div fxLayout="row">
+            <table class="ast-phy-adt-newly-found-tbl" mat-table fxFlex="100" [dataSource]="pysicalAuditNewlyFoundDataSource" multiTemplateDataRows>
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell class="td-sl" *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+              <td mat-cell *matCellDef="let element; let i=dataIndex;"> {{(i+1)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetCode">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetCode}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="model">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'MODEL' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.model}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="manufacturer">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'MANUFACTURER' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.manufacturer}}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.departmentName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="subDepartment">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SUB_DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.subDepartment}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetStatus | translate}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetCondition">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CONDITION' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetCondition | translate}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="blockName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'BLOCK_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.blockName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="floorName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'FLOOR_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.floorName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="roomName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ROOM_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.roomName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="remarks">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'COMMON_REMARKS' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.remarks}}</td>
+            </ng-container>    
+
+            <ng-container matColumnDef="createdDt">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                {{'COMMON_CREATED_BY_DT' | translate}}</th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                {{element?.createdBy }} <br />
+                <span style="color:brown">{{element?.createdDtDisp}} </span>
+              </td>
+            </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="newlyFoundDisplayColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: newlyFoundDisplayColumns;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+              </tr>
+            </table>
+          </div>
+
+          <div fxLayout="row">
+            <mat-card class="no_records_found" *ngIf="newlyFoundLength=='0' && !newlyFoundSubLoader">
+              {{'COMMON_NO_RECORDS_FOUND' | translate}}
+            </mat-card>
+
+            <mat-card class="no_records_found" *ngIf="newlyFoundSubLoader" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+          </div>
+        </div> -->
+        <div class="example-container">
+          <div fxLayout="row">
+            <table class="ast-phy-adt-newly-found-tbl" mat-table fxFlex="100" [dataSource]="pysicalAuditNewlyFoundDataSource" multiTemplateDataRows>
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell class="td-sl" *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+              <td mat-cell *matCellDef="let element; let i=dataIndex;"> {{(i+1)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'LOCATION_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element" style="font-size: 13;color: red;">{{element?.locationName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetCode">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetCode}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="serialNo">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SERIAL_NO' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.serialNumber}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="model">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'MODEL' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.model}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="manufacturer">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'MANUFACTURER' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.manufacturer}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'COMMON_DESC' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetGroup}}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.departmentName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="subDepartment">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'SUB_DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.subDepartment}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetStatus | translate}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetCondition">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ASSET_CONDITION' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.assetCondition | translate}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="blockName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'BLOCK_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.blockName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="floorName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'FLOOR_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.floorName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="roomName">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'ROOM_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.roomName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="remarks">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef>{{'COMMON_REMARKS' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element?.remarks}}</td>
+            </ng-container>    
+
+            <ng-container matColumnDef="createdDt">
+              <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                {{'COMMON_CREATED_BY_DT' | translate}}</th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                {{element?.createdBy }} <br />
+                <span style="color:brown">{{element?.createdDtDisp}} </span>
+              </td>
+            </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="newlyFoundDisplayColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: newlyFoundDisplayColumns;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+              </tr>
+            </table>
+          </div>
+
+          <div fxLayout="row">
+            <mat-card class="no_records_found" *ngIf="newlyFoundLength=='0' && !newlyFoundSubLoader">
+              {{'COMMON_NO_RECORDS_FOUND' | translate}}
+            </mat-card>
+
+            <mat-card class="no_records_found" *ngIf="newlyFoundSubLoader" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+          </div>
+        </div>
+        
+      </mat-tab>
+
+      <mat-tab *ngIf="phyAuditId > 0 && phyAuditStatus >= 3">
+        <ng-template mat-tab-label>
+          {{ 'MENU_WORKFLOW_APPROVAL' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content>
+        <app-common-workflow-approval-tab
+         [transactionId]=phyAuditId [transactionSource]=transactionSource
+         [physicalAuditEmpId]=employeeId [physicalAuditStatus]=phyAuditStatus
+         [phyAuditAprroveButton]=approvebuttonEnable
+         (physicalAuditConfirm)=PhyAuditWorkflowApproval(true)
+         (physicalAuditReject)= PhyAuditWorkflowApproval(false) >
+        </app-common-workflow-approval-tab>
+        </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+    </mat-tab-group>
+  </form>
+  </div>
+</div>

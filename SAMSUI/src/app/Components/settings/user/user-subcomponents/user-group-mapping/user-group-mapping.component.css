@@ -1,0 +1,16 @@
+::ng-deep .mat-elevation-z8 {
+    box-shadow:none;
+ }
+
+ .space {
+    margin-right: 15px;
+}
+
+.section_title{
+    font-weight: 500;
+}
+
+.add-group-container-table {
+    max-height: 60vh !important;
+    overflow: auto;
+  }

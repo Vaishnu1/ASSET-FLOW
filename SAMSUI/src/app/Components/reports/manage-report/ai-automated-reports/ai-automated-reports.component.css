@@ -1,0 +1,92 @@
+.auto-report-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .header {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+  }
+  
+  .close-icon {
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+  }
+  
+  .close-icon:hover {
+    color: #d32f2f;
+  }
+  
+  .subtext {
+    font-size: 15px;
+    color: #373737;
+    margin: 0 auto 24px auto;
+    max-width: 500px;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+  }
+  
+  .report-grid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .report-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.515);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+  }
+  
+  .card-content {
+    font-size: 15px;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+  }
+  
+  .card-actions {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  button[mat-raised-button] {
+    min-width: 120px;
+    padding: 6px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-family: Roboto,Helvetica Neue,sans-serif;
+  }

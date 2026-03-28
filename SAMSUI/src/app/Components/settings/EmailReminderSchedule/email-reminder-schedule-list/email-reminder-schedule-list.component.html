@@ -1,0 +1,237 @@
+<div fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+      <mat-toolbar-row>
+        <mat-list aria-label="breadcrumb" fxLayout="row">
+          <mat-list-item class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content">{{ 'MENU_SETTING' | translate }}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content active" aria-current="page">{{ 'EMAIL_REMINDER' | translate }}
+          </mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+  
+    <div class="content_section_inner bg-grey">
+      <div fxLayout="column">
+  
+        <div class="Page_Content organization_settings">
+          <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+  
+            <div fxFlex="14" fxFlex.sm="2" fxFlex.xs="2">
+  
+              <div fxLayoutAlign="center start">
+                <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+                  <mat-icon>menu</mat-icon>
+                </button>
+              </div>
+  
+              <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+                <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'reminder'}"
+                  (click)="Active_Tab_Change('reminder')" fxLayoutAlign="start center">
+                  <mat-icon *ngIf="Active_Tab != 'reminder'" class="schedule-email-icon-blue"></mat-icon>
+                  <mat-icon *ngIf="Active_Tab === 'reminder'" class="schedule-email-icon-white"></mat-icon>
+                  {{ 'EMAIL_REMINDER' | translate }}
+                </mat-list-item>
+              </mat-nav-list>
+  
+              <mat-sidenav-container fxHide.gt-sm>
+                <mat-sidenav #sidenav>
+                  <mat-nav-list style="padding-top: 0%; margin-top: 63px;" fxLayout="column" fxShow="true">
+                    <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'reminder'}"
+                      (click)="Active_Tab_Change('reminder')" fxLayoutAlign="start center">
+                      <mat-icon *ngIf="Active_Tab != 'reminder'" class="schedule-email-icon-blue"></mat-icon>
+                      <mat-icon *ngIf="Active_Tab === 'reminder'" class="schedule-email-icon-white"></mat-icon>
+                      {{ 'EMAIL_REMINDER' | translate }}
+                    </mat-list-item>
+                  </mat-nav-list>
+                </mat-sidenav>
+              </mat-sidenav-container>
+            </div>
+  
+            <div fxFlex="83" fxFlex.sm="93" fxFlex.sm="93">
+              <div *ngIf="Active_Tab === 'reminder'">
+  
+                <div fxLayout="column" fxFlex="100">
+                  <div style="padding-top: 0.5%;">
+                    <mat-expansion-panel fxFlex="100" hideToggle>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title class="panel-header">
+                          {{'COMMON_SEARCH'| translate}} {{'EMAIL_REMINDER'| translate}}
+                        </mat-panel-title>
+                        <mat-panel-description fxLayoutAlign="end end">
+                          <mat-icon>search</mat-icon>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <div fxFlex="100">
+                        <form fxLayout="row" fxLayoutAlign="space-between center">
+              
+                          <div fxFlex="25">
+                            <div class="example-full-width">
+                              <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                              <ng-select class=" input-field" [items]="locationCombo" bindLabel="locDisplayField"
+                                bindValue="locDisplayField" [(ngModel)]="emailReminderScheduleHdrModel.locationName"
+                                [ngModelOptions]="{standalone: true}" appendTo="body" (search)="loadLocationComboData($event)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')"
+                                (click)="loadLocationComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})"  (clear)="loadLocationComboData('clear')"
+                                [loading]="scrollsyncLocation" loadingText="Loading..." (change)="selectedLocationData($event)">
+                              </ng-select>
+                            </div>
+                          </div>
+              
+                          <div fxFlex="25">
+                            <div class="example-full-width">
+                              <span class="input-label"> {{ 'PROCESS_NAME' | translate }}</span>
+                              <ng-select [ngModelOptions]="{standalone: true}"
+                              (search)="loadProcessComboData($event)" (click)="loadProcessComboData($event)"
+                              [virtualScroll]="true" (scrollToEnd)="loadProcessComboData({})" 
+                              (keyup.backspace)="loadProcessComboData($event.target.value ? $event : 'back')" 
+                              (clear)="loadProcessComboData('clear')" [loading]="scrollsyncProcess"
+                              loadingText="Loading..." (change)="selectedProcessData($event)" appendTo="body"
+                              class="input-field" [(ngModel)]="emailReminderScheduleHdrModel.processName">
+                              <ng-option *ngFor="let processNameList of processCombo" [value]="processNameList">
+                                {{ processNameList.processName | translate }}
+                              </ng-option>
+                            </ng-select>
+                            </div>
+                          </div>
+                          
+                          <div fxFlex="25" class="form-group">
+                            <div class="example-full-width" style="margin-top: 4%;">
+                              <span class="input-label"> {{'COMMON_ACTIVE' | translate }} </span>
+                              <ng-select class="input-field"
+                                [(ngModel)]="emailReminderScheduleHdrModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                                [items]="emailReminderActiveList" bindLabel="name" bindValue="name"
+                                (change)="selectedemailReminderActiveList($event)" appendTo="body">
+                              </ng-select>
+                            </div>
+                          </div>
+              
+                          <div fxFlex="25" fxLayoutAlign="end center">
+                            <button mat-raised-button class="space" color="primary" (click)="fetchList()" fxHide.sm
+                              fxHide.xs>{{'COMMON_SEARCH' | translate}}</button>
+                            <button mat-raised-button matTooltio="Search  " class="space" color="primary" (click)="fetchList()" fxHide.gt-sm>
+                              <mat-icon>search</mat-icon>
+                            </button>
+              
+                            <button mat-raised-button class="space" color="primary" (click)="clear()" fxHide.sm
+                              fxHide.xs>{{'COMMON_CLEAR' | translate}}</button>
+                            <button mat-raised-button matTooltio="Clear" class="space" color="primary" (click)="clear()" fxHide.gt-sm>
+                              <mat-icon>clear_all</mat-icon>
+                            </button>
+                          </div>
+              
+                        </form>
+                      </div>
+                    </mat-expansion-panel>
+                  </div>
+                  <hr>
+                  <mat-toolbar>
+                    <span>{{'EMAIL_REMINDER' | translate}} List</span>
+                    <span class="example-spacer"></span>
+  
+                    <mat-paginator class="example-spacer" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+                    <span class="example-spacer"></span>
+                    
+                    <button mat-raised-button class="space sqr-btn" color="primary" 
+                      *ngIf="modelAccessModule.createFlagDisplay" (click)="emailReminderAddEdit(0,'add')">
+                      <mat-icon>add</mat-icon>
+                    </button>
+  
+                    <button mat-raised-button class="space sqr-btn" [disabled]="selectedItem == 0" color="primary" 
+                      matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="modelAccessModule.updateFlagDisplay" 
+                      (click)="emailReminderAddEdit(selectedItem,'edit')">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    
+                    <button mat-raised-button class="space sqr-btn" [disabled]="selectedItem == 0" color="primary" 
+                      matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="modelAccessModule.readFlagDisplay" 
+                      (click)="emailReminderAddEdit(selectedItem,'view')">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </mat-toolbar>
+  
+                <div class="email-reminder-container-table" fxFlex="100">
+                  <table mat-table [dataSource]="emailReminderdataSource" matSort (matSortChange)="customSort($event)"
+                    matSortActive="name" matSortDirection="asc" matSortDisableClear style="width: 100%;">
+  
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width: 5%;"><span>Select</span></th>
+                      <td mat-cell *matCellDef="let element" >
+                        <mat-checkbox color="primary" class="example-margin" (change)="selectEmailReminder(element)"
+                         [checked]="selectedItem.emailReminderScheduleHdrId == element?.emailReminderScheduleHdrId"></mat-checkbox></td>
+                    </ng-container>
+  
+                    <ng-container matColumnDef="locationTO.locationName">
+                      <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header style="width: 30%;"> 
+                        {{'LOCATION_NAME' | translate}} </th>
+                      <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectEmailReminder(element)">
+                        {{ element?.locationName }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="processName">
+                      <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width: 15%;"> 
+                        {{ 'PROCESS_NAME' | translate }} </th>
+                      <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectEmailReminder(element)"> 
+                        {{element.processName | translate}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="active">
+                      <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width: 10%;">
+                        {{ 'COMMON_ACTIVE' | translate }}</th>
+                        <td mat-cell *matCellDef="let element ; let i=index" (click)="selectEmailReminder(element)">
+                          <mat-icon class="activeicon" *ngIf="element.active">check_circle</mat-icon>
+                          <mat-icon class="inactiveicon" *ngIf="!element.active">cancel</mat-icon></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedBy">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;"> 
+                        {{ 'COMMON_UPDATED_BY' | translate }}</th>
+                      <td mat-cell (click)="selectEmailReminder(element)" *matCellDef="let element" style="width:10%;"> 
+                        {{element.updatedBy}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDt">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;">
+                        {{ 'COMMON_UPDATED_DT' | translate }}</th>
+                      <td mat-cell (click)="selectEmailReminder(element)" *matCellDef="let element" style="width:10%;">
+                        {{element.updatedDtDisp}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdBy">
+                      <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header style="width: 10%;">
+                          {{'COMMON_CREATED_BY' | translate }}</th>
+                      <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectEmailReminder(element)"> 
+                        {{element.createdBy}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdDt">
+                      <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header style="width: 10%;">
+                        {{ 'COMMON_CREATED_DT' | translate }} </th>
+                      <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectEmailReminder(element)">
+                         {{element.createdDtDisp}}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                  </table>
+                  <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderEmailReminder" fxLayoutAlign="center center">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                  <mat-card class="no_records_found" *ngIf="subLoaderEmailReminder" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                  </mat-card>
+                </div>
+              </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>

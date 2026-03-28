@@ -1,0 +1,299 @@
+table{
+  width:100%;
+}
+.mat-form-field
+{
+  width:80% !important;
+  font-size: 11px; 
+}
+.section_title h3{
+  color:#7f8286 !important;
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  margin-bottom: 1%;
+}
+
+.example-header {
+  min-height: 20px;
+  padding: 0px;
+}
+ 
+
+.mat-table {
+ 
+  max-height: 500px;
+}
+.frm-search
+{
+    width:100% !important;
+}
+.searchicon
+{
+  position: absolute;
+  top: 24px !important;
+  left: 400px;
+}
+.searchicondet
+{
+  background: transparent !important;
+  top:8px !important;
+  margin-left:46px !important;
+}
+.searchlist li 
+{
+list-style-type: none !important;
+line-height: 25px !important;
+}
+.search-reference 
+{
+margin-top:-14px;
+margin-bottom: 10px;
+top: 2px;
+z-index: 150;
+
+}
+.searchlist li a{
+color:#5d5e61 !important;
+font-size: 13px;
+}
+.searchlist{
+padding: 0 !important;
+}
+.breadcrumbicon
+{
+padding-top:2px !important;
+}
+.rightbutton
+{
+text-align: right;
+}
+.actionicon
+{
+margin-right:10px;
+margin-top:3px;
+}
+.mat-button, .mat-raised-button a{
+color:#ffffff !important;
+font-size: 13px !important;
+}
+
+.filterdate
+{
+position: absolute;
+top:3px;
+left: 44px;
+}
+.filtericon{
+padding-top: 14px;
+  font-size: 20px;
+  padding-left: 40px;
+  z-index: 1000;
+  display: block;
+  position: relative;
+}
+
+.filterdet{
+padding-right:5px;
+}
+.filterdeticon
+{
+font-size: 2px;
+}
+
+.demo-md-panel {
+min-height: 500px;
+}
+
+.demo-dialog-example {
+background: white;
+border-radius: 4px;
+box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2),
+    0 13px 19px 2px rgba(0, 0, 0, 0.14),
+    0 5px 24px 4px rgba(0, 0, 0, 0.12);
+width: 500px;
+}
+
+.demo-dialog-content {
+padding: 0 15px;
+width: 100%;
+}
+
+.demo-dialog-content img {
+height: 300px;
+margin: auto;
+}
+
+.demo-dialog-button {
+width: 100%;
+}
+
+.demo-dialog-custom-animation-open {
+opacity: 1;
+transition: all 1s linear, opacity 1ms;
+transform: rotate(390deg);
+}
+
+.demo-dialog-custom-animation-close {
+opacity: 0;
+transition: all 1s linear, opacity 1ms;
+transform: rotate(0deg);
+}
+.srch-adv {
+width: 500px;
+height: 300px;
+background: #ffffff;
+}
+
+
+.example-sidenav-content {
+display: flex;
+height: 100%;
+align-items: center;
+justify-content: center;
+}
+
+.example-sidenav {
+padding: 20px;
+}
+.header {
+height: 250px;
+width: 100%;
+position: fixed;
+top: 0;
+left: 150px;
+background: rgba(0,0,255,.1);
+}
+
+.rightSidenav_toggle {
+width: 300px;
+height: 50px;
+background-color: #eee;
+}
+.mt-15
+{
+margin-top:-15px;
+}
+.breadcrumblink{
+float: left;
+}
+
+.search-container {
+position: absolute;
+right: 0;
+left: 0; 
+}
+
+.sidenav-content {
+margin-left: 30px;
+}
+
+/*  */
+
+
+
+.mat-select-value-text
+{
+font-size: 13px !important;
+}
+
+.mat-drawer-container
+{
+background: #ffffff !important;
+}
+
+.content_section_background{ 
+     min-height: 500px
+}
+
+.mat-tooltip {
+  color: #000 !important;
+  background: #fff;
+  border:1px solid #ccc;
+  padding:7px;
+  font-size: 12px;
+}
+
+.example-full-width {
+  width: 95% !important; 
+}
+
+.space{
+  margin: 0px 5px;
+}
+
+.example-label{
+  font-size: 20px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  color:#000000;
+}
+
+.form-group{  
+  margin-bottom: 0.5rem !important;
+  font-size: 15px !important;
+  /* margin-top:2%; */
+  font-weight: 400;
+}
+
+input.mat-input-element {
+  margin-top: 0.375em;
+}
+
+.example-width{
+  width: 95%;
+}
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 10px;
+}
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type{
+  padding-right: 10px;
+}
+th.mat-header-cell,td.mat-cell, td.mat-footer-cell{
+  word-break: break-word;
+}
+
+.asset-list-table{
+  min-width: 150%;
+    overflow-x: scroll;
+}
+
+.asset-list-table td.mat-cell{
+  max-width: 115px;
+}
+
+tr th:not(:first-child) {
+  min-width: 115px;
+}
+
+::ng-deep .ast-grp .ng-dropdown-panel-items{
+  max-height: 190px !important;
+}
+
+.contract-container {
+  max-height: 70vh !important;
+  overflow: auto;
+}
+
+[class*="NO"] {
+  color: red !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="YES"] {
+  color: #1b910e !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.high-light{
+  background-color: #d4f3f4;
+}
+
+/* ::ng-deep .contract-asset-list-page .ng-dropdown-panel{
+  opacity: 1;
+  width: 320px;
+  position:fixed;
+} */

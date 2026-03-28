@@ -1,0 +1,322 @@
+<div fxLayout="column" fxFlexFill>
+ 
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayoutAlign="start center" fxFlex="35">
+        <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb" >
+          <mat-list fxLayoutAlign="start center">
+            <mat-list-item fxLayoutAlign="start center">
+              <a href="#" [routerLink]="['/home/dashboard']">
+                <mat-icon class="small-icon">home</mat-icon>
+              </a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>      
+            <mat-list-item><a>{{'MENU_INVENTORY' | translate}}</a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item class="active" aria-current="page">{{'MENU_STOCK_TRANSFER' | translate}}</mat-list-item>
+          </mat-list>  
+        </mat-toolbar-row>
+      </div>     
+    </div>
+   
+    <div class="content_section_background">
+        <div fxLayout="column">
+            <div class="table_section">
+
+                <mat-expansion-panel [expanded]="false" hideToggle>
+                    <mat-expansion-panel-header >
+                        <mat-panel-title class="panel-header">
+                            {{'COMMON_SEARCH'| translate}}
+                        </mat-panel-title>
+                        <mat-panel-description fxLayoutAlign="end end">
+                            <mat-icon>search</mat-icon>
+                          </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div fxFlex="100" >
+                        <form fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxFlex.lt-md="100" >
+                            <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                            <div fxFlex="34">
+                                <div class="form-group">
+                                    <div class="example-full-width">
+                                        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                                        <ng-select [items]="locationCombo" bindLabel="locDisplayField" tabindex="1"
+                                            bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                                            (click)="loadLocationComboData($event)" [virtualScroll]="true" appendTo="body"
+                                            (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                                            loadingText="Loading..." (change)="selectedLocationData($event)"
+                                            [(ngModel)]="stockTransferModel.locationName"
+                                            [ngModelOptions]="{standalone: true}"></ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div fxFlex="33">
+                                <div class="form-group mt-11-px">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="example-label input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+                                        <input matInput (click)="fromDt.open()" [matDatepicker]="fromDt" [(ngModel)]="stockTransferModel.fromDt"
+                                        [ngModelOptions]="{standalone: true}" (dateChange)="srStartDateValidation($event)">
+                                        <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+                                        <mat-datepicker #fromDt></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div fxFlex="33">
+                                                  
+                                <div class="form-group mt-11-px">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="example-label input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+                                        <input matInput (click)="endDt.open()" [matDatepicker]="endDt" [(ngModel)]="stockTransferModel.endDt"
+                                        [ngModelOptions]="{standalone: true}" (dateChange)="srEndDateValidation($event)">
+                                        <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                                        <mat-datepicker #endDt></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            </div>
+                            <div fxLayout="row" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                            <div fxFlex="100" fxLayoutAlign="end center">
+                                <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                                    [matTooltipPosition]="'below'" tabindex="13"
+                                    (click)="searchStockTransfer()"  fxHide.sm fxHide.xs>{{'COMMON_SEARCH' | translate}}</button>
+                            
+                                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                                [matTooltipPosition]="'below'" (click)="searchStockTransfer()"  fxHide.gt-sm><mat-icon>search</mat-icon></button>
+               
+                                <button mat-raised-button class="space" color="primary"
+                                    matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="14"
+                                    (click)="clearStockTransfer()"  fxHide.sm fxHide.xs>{{'COMMON_CLEAR' | translate}}</button>
+
+                                
+                                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                                [matTooltipPosition]="'below'" (click)="clearStockTransfer()" fxHide.gt-sm><mat-icon>clear_all</mat-icon></button>
+               
+                                <button mat-raised-button color="primary" class="space"
+                                    (click)="generateStockTransferReport()" fxHide.sm fxHide.xs>{{ 'REPORT_EXPORT' | translate }} </button>
+
+                                
+                                <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                                [matTooltipPosition]="'below'" (click)="generateStockTransferReport()" fxHide.gt-sm><mat-icon>file_download</mat-icon></button>
+               
+                            </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </mat-expansion-panel>
+
+                <hr />
+
+          <mat-toolbar>
+            <!-- <span>{{'MENU_STOCK_TRANSFER'| translate}} List</span> -->
+            <span class="example-spacer"></span>
+      
+            <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+            </mat-paginator>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+                <mat-icon>view_week</mat-icon>
+              </button>
+        
+              <div class="custom-dialog" *ngIf="showManageColumns">
+                <div>
+                  <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+                </div>
+                <hr>
+                <div class="custom-dialog-body" *ngIf="showManageColumns">
+                  <div id="column1">        
+                    <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+                    <span>{{'LOCATION_NAME' | translate}}</span>
+                    <br>
+                    
+                    <input type="checkbox" [checked]="displayedColumns.includes('stockTransferNo')"(change)="toggleColumn('stockTransferNo')">
+                    <span>{{'STOCK_TRANSFER_NO' | translate}}</span>
+                    <br>
+                    
+                    <input type="checkbox" [checked]="displayedColumns.includes('fromStoreName')" (change)="toggleColumn('fromStoreName')">
+                    <span>{{'FROM_STORE' | translate}}</span>
+                    <br>
+                    
+                    <input type="checkbox" [checked]="displayedColumns.includes('toStoreName')" (change)="toggleColumn('toStoreName')">
+                    <span>{{'TO_STORE' | translate}}</span>
+                    <br>
+                  </div>
+            
+                  <div id="column2">
+                    <input type="checkbox" (change)="toggleColumn('fromAssetCode')" [checked]="displayedColumns.includes('fromAssetCode')">
+                    <span>{{'FROM_ASSET_CODE' | translate}}</span> <br>
+            
+                    <input type="checkbox" (change)="toggleColumn('toAssetCode')" [checked]="displayedColumns.includes('toAssetCode')">
+                    <span>{{'TO_ASSET_CODE' | translate}}</span> <br>
+            
+                    <input type="checkbox" (change)="toggleColumn('stockTransferStatus')" [checked]="displayedColumns.includes('stockTransferStatus')">
+                    <span>{{'STOCK_TRANSFER_STATUS' | translate}}</span> <br>
+            
+                    <input type="checkbox" (change)="toggleColumn('transferApprovalStatus')" [checked]="displayedColumns.includes('transferApprovalStatus')">
+                    <span>{{'APPROVAL_STATUS' | translate}}</span> <br>
+                  </div>
+            
+                  <div id="column3">
+                    <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+                    <span>{{'STOCK_TRANSFER_BY' | translate}}</span><br>
+
+                    <input type="checkbox" (change)="toggleColumn('createdDtDisp')" [checked]="displayedColumns.includes('createdDtDisp')">
+                    <span>{{'STOCK_TRANSFER_DT' | translate}}</span>
+                  </div>
+                </div>
+            
+                <hr>
+                
+                <div fxLayoutAlign="end end">
+                  <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                    {{'COMMON_OK' | translate}}
+                  </button>
+                  <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                    {{'COMMON_RESET' | translate}}
+                  </button>
+                </div>
+                
+              </div>
+                  
+            <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay"  class="space sqr-btn"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            (click)="createStockTransfer('add')"><mat-icon>add</mat-icon></button>
+
+            <button [disabled]="enableActionBtn || checkApprovalValid() "  mat-raised-button color="primary" class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}"  *ngIf="modelAccessModule.updateFlagDisplay "
+            (click)="createStockTransfer('edit')">
+            <mat-icon>edit</mat-icon></button>
+      
+            <button [disabled]="enableActionBtn" mat-raised-button color="primary" class="space sqr-btn"
+            *ngIf="modelAccessModule.readFlagDisplay"  matTooltip="{{ 'COMMON_VIEW' | translate }}"
+            (click)="createStockTransfer('view')">
+            <mat-icon>visibility</mat-icon></button>  
+            
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn" 
+            matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="confirmStockTransferApprove()">
+            <mat-icon>spellcheck</mat-icon>
+            </button>
+      
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn" 
+            matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rejectStockTransferApprove()">
+            <mat-icon>cancel</mat-icon>
+            </button>
+      
+          </mat-toolbar>
+
+                <div class="example-container">
+                    <table class="stock-transfer-table" mat-table [dataSource]="stockTrnasferMainDataSource" matSort (matSortChange)="customSort($event)"
+                        matSortActive="name" matSortDirection="asc" matSortDisableClear>
+                        <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef class="table-head-data"  style="text-align: left"><mat-checkbox color="primary" [checked]="selectAllTransfer" class="example-margin" (change)="selectAllTransfers($event)">
+                            </mat-checkbox>  </th>
+                            <td mat-cell *matCellDef="let element;let i = index;"  style="text-align: left">
+                              <mat-checkbox color="primary" class="example-margin" (change)="selectStockTransfer(element)" [checked]="compareValue(element)">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>
+                        <ng-container matColumnDef="locationName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{'LOCATION_NAME' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left" (click)="selectStockTransfer(element)" style="width: 10%;text-align: left">
+                                {{ element?.locationName }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="stockTransferNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'STOCK_TRANSFER_NO' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left" 
+                            (click)="selectStockTransfer(element)"> {{element.stockTransferNo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="fromStoreName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'FROM_STORE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left" 
+                            (click)="selectStockTransfer(element)">
+                                <span class="{{element?.fromStoreName.replace(' ','')}}">{{element.fromStoreName}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="toStoreName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'TO_STORE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left"
+                             (click)="selectStockTransfer(element)">
+                                {{ element.toStoreName}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fromAssetCode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'FROM_ASSET_CODE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left"
+                            (click)="selectStockTransfer(element)">
+                                <span class="{{element?.fromAssetCode.replace(' ','')}}">{{element.fromAssetCode}}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="toAssetCode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'TO_ASSET_CODE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left"
+                            (click)="selectStockTransfer(element)">
+                                {{ element.toAssetCode}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="stockTransferStatus">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'STOCK_TRANSFER_STATUS' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left"
+                             (click)="selectStockTransfer(element)">
+                                <span class="{{element?.stockTransferStatus.replace(' ','')}}">{{element.stockTransferStatus}}</span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="transferApprovalStatus">
+                            <th  mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left"> 
+                                {{ 'APPROVAL_STATUS' | translate }}</th>
+                            <td  mat-cell *matCellDef="let element; let i=index;" class="{{element?.transferApprovalStatus.replace(' ','')}}"
+                            (click)="selectStockTransfer(element)" style="text-align: left">
+                            {{element?.transferApprovalStatus}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdBy">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'STOCK_TRANSFER_BY' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left" 
+                            (click)="selectStockTransfer(element)">
+                                {{element.createdBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdDtDisp">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: left">
+                                {{ 'STOCK_TRANSFER_DT' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left" 
+                            (click)="selectStockTransfer(element)">
+                                {{element.createdDtDisp}} </td>
+                        </ng-container>
+                        
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-card class="no_records_found"  fxLayoutAlign="center center" *ngIf="length=='0' && !subLoader">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+                    <mat-card class="no_records_found" *ngIf="subLoader"  fxLayoutAlign="center center">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

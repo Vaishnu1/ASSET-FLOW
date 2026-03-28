@@ -1,0 +1,96 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'CERTIFICATE' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="certificatesFormGroup">
+    <div fxLayout="column">
+
+      <div>
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="input-label"> {{ 'CERTIFICATE_NAME' | translate }} </mat-label>
+          <input autofocus matInput required class="input-field" formControlName="certificateName"
+            oninput="this.value = this.value.toUpperCase()" (input)="checkUniqueConstrainForcertificateName()" [maxlength]="100">
+          <mat-hint align="end">
+            {{certificatesFormGroup.controls.certificateName.value?.length || 0}}/100</mat-hint>
+          <mat-error
+            *ngIf="certificatesFormGroup.controls.certificateName.invalid && certificatesFormGroup.controls.certificateName.touched">
+            <div class="err-field"  *ngIf="certificatesFormGroup.controls.certificateName.errors.required">
+              "{{ 'CERTIFICATE_NAME' | translate }}" Is Required </div>
+            <div class="err-field"  *ngIf="certificatesFormGroup.controls.certificateName.errors.maxlength">Certificate
+              {{ 'CERTIFICATE_NAME' | translate }}
+              Maximum Length is 100 </div>
+              <div class="err-field" *ngIf="certificatesFormGroup.controls.certificateName.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <div class="example-full-width">
+          <span class="input-label"> {{ 'CERTIFICATION_AUTHORITY_NAME' | translate }} <span class="mandatory-style">*</span>
+          </span>
+          <ng-select [items]="certificationAuthorityNameList" required
+            bindLabel="certificationAuthorityName" bindValue="certificationAuthorityName"
+            (search)="loadCertificationComboData($event)" (click)="loadCertificationComboData($event)"
+            [virtualScroll]="true" (scrollToEnd)="loadCertificationComboData({})" (keyup.backspace)="loadCertificationComboData($event.target.value ? $event : 'back')" (clear)="loadCertificationComboData('clear')" [loading]="scrollsyncCertification"
+            loadingText="Loading..." (change)="selectedCertificationAuthorityData($event)"
+            formControlName="certificationAuthorityName">
+          </ng-select>
+          <mat-error
+            *ngIf="certificatesFormGroup.controls.certificationAuthorityName.invalid && certificatesFormGroup.controls.certificationAuthorityName.touched">
+            <div class="err-field"
+              *ngIf="certificatesFormGroup.controls.certificationAuthorityName.errors.required">
+              Kindly Select The "{{ 'CERTIFICATION_AUTHORITY_NAME' | translate }}" </div>
+          </mat-error>
+        </div>
+
+      </div>
+
+      <div>
+
+        <div style="margin-top:10px;">
+          <div class="example-full-width">
+            <span class="input-label"> {{ 'CERTIFICATE_RENEWAL_REQUIRED' | translate }} <span
+                class="mandatory-style">*</span>
+            </span>
+            <ng-select class="input-field" [items]="decisionListForRenewal" required bindLabel="value" bindValue="value"
+              formControlName="renewalRequired">
+            </ng-select>
+            <mat-error
+              *ngIf="certificatesFormGroup.controls.renewalRequired.invalid && certificatesFormGroup.controls.renewalRequired.touched">
+              <div class="err-field" *ngIf="certificatesFormGroup.controls.renewalRequired.errors.required">
+                "{{ 'CERTIFICATE_RENEWAL' | translate }}" Is Required </div>
+            </mat-error>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div>
+
+        <div class="checkBox" style="margin-top:15px;">
+          <mat-checkbox color="primary" class="input-label" formControlName="active">{{ 'COMMON_ACTIVE' | translate }}</mat-checkbox>
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top:20px;">
+      <div *ngIf="mode != 'view'">
+        <button mat-raised-button class="space" color="primary" (click)="submit()"
+          [disabled]="certificatesFormGroup.invalid || !certificatesFormGroup.dirty">{{ displayButton }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

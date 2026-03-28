@@ -1,0 +1,456 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <mat-toolbar-row fxFlex="50">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="start center">
+        <mat-list-item><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item>{{'MENU_PURCHASE' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item aria-current="page" (click)="backTOPRScreen()" style="cursor: pointer;">{{'PURCHASE_REQUEST' |
+          translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+    <div fxFlex="50" fxLayoutAlign="end center">
+      <button mat-raised-button class="space" color="primary" (click)="prUpdateStatus('Approve')" tabindex="46"
+        *ngIf="approveBtnFlg && poModelAccessModule.createFlagDisplay && headingDisplay != 'View' && approveRejectBtn">{{'COMMON_APPROVE'
+        | translate}}</button>
+      <button mat-raised-button color="primary" class="space" (click)="prUpdateStatus('Reject')" tabindex="47"
+        *ngIf="rejectBtnFlg  && prModelAccessModule.deleteFlagDisplay && headingDisplay != 'View' && approveRejectBtn">{{
+        'COMMON_REJECT' | translate }}</button>
+      <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+      <button mat-raised-button color="primary" class="space" (click)="clear()"
+        *ngIf="prMainForm.controls.poReqId.value == 0">{{ 'COMMON_CLEAR' | translate }}</button>
+      <button mat-raised-button class="space" color="primary" (click)="updateAndApprove(headingDisplay)"
+        *ngIf="!viewMode" [disabled]="prMainForm.invalid || uploadAssetFlag ">
+        <span *ngIf="!uploadAssetFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadAssetFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+      <button mat-raised-button color="primary" class="space" (click)="cancelPR()" tabindex="47"
+        *ngIf="prMainForm.controls.poReqId.value != 0 && prMainForm.controls.poReqStatus.value == 'REQUEST RAISED' && !viewMode">{{
+        'COMMON_CANCEL' | translate }}</button>
+      <button *ngIf="prMainForm.controls.poReqStatus.value == 'CONVERT PO'" mat-raised-button class="space"
+        color="primary" (click)="validatePrPoConversion()">Convert Po</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <form fxLayout="column" [formGroup]="prMainForm">
+      <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select #focusLocationName class=" input-field" formControlName="locationName"
+                  (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                  (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                  (scrollToEnd)="listofLocationName({})"
+                  (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                  (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                  bindValue="locDisplayField" tabindex="1" required>
+                </ng-select>
+                <mat-error *ngIf="prMainForm.controls.locationName.invalid && prMainForm.controls.locationName.touched">
+                  <div style="font-size: 10px " *ngIf="prMainForm.controls.locationName.errors.required">
+                    {{'LOCATION_NAME' | translate }} isRequired </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <mat-label class="input-label">{{'COMMON_REMARKS' | translate}}</mat-label>
+                <textarea matInput (keyup)="onChangeRemarks()" class="input-field" formControlName="remarks"
+                  oninput="this.value = this.value.toUpperCase().trim()"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group h-55" *ngIf="prMainForm.controls.poReqStatus.value == 'CANCELLED' ">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <mat-label class="input-label">{{'COMMON_CANCEL_REASON' | translate}}</mat-label>
+                <textarea matInput class="input-field" formControlName="cancelReason"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group h-55" *ngIf="prMainForm.controls.poReqStatus.value == 'REJECTED' ">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <mat-label class="input-label">{{'COMMON_REJECT_REASON' | translate}}</mat-label>
+                <textarea matInput class="input-field" formControlName="rejectReason"></textarea>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SR_NO' | translate }} </span>
+                <ng-select [items]="srNoCombo" bindLabel="srNo" bindValue="srNo"
+                  (search)="loadServiceRequestNumbers($event)" (click)="loadServiceRequestNumbers($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadServiceRequestNumbers({})"
+                  (keyup.backspace)="loadServiceRequestNumbers($event.target.value ? $event : 'back')"
+                  (clear)="loadServiceRequestNumbers('clear')" [loading]="scrollSRNosync" loadingText="Loading..."
+                  (change)="selectedSRNo($event)" formControlName="srNo" class="input-field"></ng-select>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'ASSET_CODE' | translate }} </span>
+                <ng-select [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+                  (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})"
+                  (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')"
+                  (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode" loadingText="Loading..."
+                  (change)="selectedAssetCodeData($event)" formControlName="assetCode" class="input-field">
+                </ng-select>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_NO' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="poReqNo">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_REQUESTED_BY' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="createdBy">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_STATUS' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="poReqStatus">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{'PR_DT' | translate}}
+                  <span class="mandatory-style">*</span>
+                </mat-label>
+                <input matInput formControlName="poReqDtDisp" tabindex="2" readonly (dateChange)="dateChange()"
+                  [max]="prMainForm.controls.poReqDtDisp.value" (click)="picker1.open()" [matDatepicker]="picker1">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 [readonly]="false"></mat-datepicker>
+
+                <mat-error *ngIf="prMainForm.controls.poReqDtDisp.invalid && prMainForm.controls.poReqDtDisp.touched">
+                  <div style="font-size: 10px" *ngIf="prMainForm.controls.poReqDtDisp.errors.required">
+                    {{'PR_DT' | translate}} is Required </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PR_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" [items]="purchaseTypeCombo" bindLabel="purchasingTypeName"
+                  bindValue="purchasingTypeName" tabindex="2" (search)="listofPurchaseType($event)"
+                  (click)="listofPurchaseType($event)" [virtualScroll]="true" (scrollToEnd)="listofPurchaseType({})"
+                  (keyup.backspace)="listofPurchaseType($event.target.value ? $event : 'back')"
+                  (clear)="listofPurchaseType('clear')" [loading]="scrollPurchaseTypesync" loadingText="Loading..."
+                  (change)="setPurchaseType($event)" formControlName="prType" [ngModelOptions]="{standalone: true}"
+                  appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PURCHASE_PR_REASON' | translate }} </span>
+                <ng-select [items]="prReasonList" bindLabel="prReasonName" bindValue="prReasonName"
+                  (search)="loadPRReasonComboData($event)" (click)="loadPRReasonComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadPRReasonComboData({})"
+                  (keyup.backspace)="loadPRReasonComboData($event.target.value ? $event : 'back')"
+                  (clear)="loadPRReasonComboData('clear')" [loading]="scrollPRReasonsync" loadingText="Loading..."
+                  (change)="selectedPRReasonData($event)" formControlName="prReason" class="input-field">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PR_USAGE' | translate }} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" [items]="purchaseUsageCombo" bindLabel="purchasingUsageName"
+                  bindValue="purchasingUsageName" tabindex="" (search)="listofPurchaseUsage($event)"
+                  (click)="listofPurchaseUsage($event)" [virtualScroll]="true" (scrollToEnd)="listofPurchaseUsage({})"
+                  (keyup.backspace)="listofPurchaseUsage($event.target.value ? $event : 'back')"
+                  (clear)="listofPurchaseUsage('clear')" [loading]="scrollPurchaseUsagesync" loadingText="Loading..."
+                  (change)="setPurchaseUsage($event)" formControlName="prUsage" [ngModelOptions]="{standalone: true}"
+                  appendTo="body">
+                </ng-select>
+                <mat-error *ngIf="prMainForm.controls.prUsage.invalid && prMainForm.controls.prUsage.touched">
+                  <div style="font-size: 10px " *ngIf="prMainForm.controls.prUsage.errors.required"> {{'PO_USAGE' |
+                    translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <button mat-raised-button color="primary" class="space" style="margin-top: 5px;margin-bottom: 5px;"
+                  [disabled]="prMainForm.invalid || viewMode" (click)="addPRItem(null,'add',0)">{{'PURCHASE_ADD_ITEM' |
+                  translate }}
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_TOTAL_AMT' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="totalBasicAmt" style="font-size:12px;color:red">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_TOTAL_TAX_AMT' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="totalTaxAmt" style="font-size:12px;color:red">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PR_GRAND_AMT' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="grandTotal" style="font-size:12px;color:red">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'LOCAL_GRAND_AMT' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="localGrandTotal" readonly
+                    style="font-size:12px;color:red">
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div fxLayout="column" fxLayout.sm="column" fxLayout.xs="column" *ngIf="notesEnable">
+        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+          <span class="input-label" style="font-size: 14px; font-weight: bold; color: brown; padding-left: 2%;">
+            {{'NOTE' | translate}} <span class="mandatory-style">: {{notesText}}</span>
+          </span>
+        </div>
+      </div>
+
+      <hr>
+
+
+      <div style="margin-bottom:5%;">
+        <div [@.disabled]="true">
+          <mat-tab-group>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                {{'PURCHASE_REQUEST_INFO' | translate }}
+              </ng-template>
+              <mat-card>
+                <mat-card-content>
+                  <div style="overflow: auto">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th class="input-label" style="width:5%">{{'PURCHASE_PR_LINE_NO' | translate}}</th>
+                          <th class="input-label" style="width:5%" *ngIf="prTypeDisp === 'MATERIAL'">{{'NEW_ITEM' |
+                            translate}} </th>
+                          <th class="input-label" style="width:20%" *ngIf="prTypeDisp === 'MATERIAL'">{{'ITEM_NAME' |
+                            translate}} <span class="mandatory-style">*</span>/ {{'ITEM_DESC' | translate}}<span
+                              class="mandatory-style">*</span> / {{'ITEM_TYPE' | translate}}<span
+                              class="mandatory-style">*</span></th>
+                          <th class="input-label" style="width:20%"
+                            *ngIf="prTypeDisp === 'SERVICE' || prTypeDisp === 'CONTRACT'">{{'ITEM_DESC' |
+                            translate}}/{{'ITEM_TYPE' | translate}}</th>
+                          <th class="input-label" style="width:20%">{{'SUPPLIER_NAME' | translate}} <span
+                              class="mandatory-style">*</span>/ {{'PURCHASE_SITE_NAME' | translate}} <span
+                              class="mandatory-style">*</span></th>
+                          <th class="input-label" style="width:5%">{{'PURCHASE_CURRENCY_CD' | translate}}</th>
+                          <th class="input-label" style="width:6%">{{'UNIT_PRICE' | translate}} <span
+                              class="mandatory-style">*</span></th>
+                          <th class="input-label" style="width:5%">{{'REQ_QTY' | translate}} <span
+                              class="mandatory-style">*</span></th>
+                          <th class="input-label" style="width:5%">{{'UOM' | translate}}</th>
+                          <th class="input-label" style="width:6%">{{'BASIC_AMT' | translate}}</th>
+                          <th class="input-label" style="width:5%">{{'TAX_CD_1' | translate}} / {{'TAX_CD_2' |
+                            translate}} / {{'TAX_CD_3' | translate}}</th>
+                          <th class="input-label" style="width:6%">{{'TOTAL_TAX_AMT' | translate}}</th>
+                          <th class="input-label" style="width:10%">{{'TOTAL_AMT' | translate}}</th>
+                          <th class="input-label" style="width:10%" *ngIf="!viewMode"> {{'COMMON_ACTION' | translate}}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container formArrayName="poItemList"
+                          *ngFor="let element of prMainForm.get('poItemList')['controls']; let i = index;">
+                          <tr [formGroupName]="i">
+
+                            <td class="input-label" style="width:5%;border-bottom: none;">
+                              <input style="text-align: left; font-size:12px;color:brown" matInput
+                                formControlName="prLineNo" readonly>
+                            </td>
+
+                            <td class="input-label" style="width:5%;border-bottom: none;"
+                              *ngIf="prTypeDisp === 'MATERIAL'">
+                              <mat-icon class="bread-crumb-link" matTooltip="{{ 'NEW_ITEM' | translate }}"
+                                color="primary"
+                                *ngIf="prMainForm.get('poItemList')['controls'][i]['controls'].newItemFlag.value"
+                                (click)="addNewPRItem(i,'edit',element)">info</mat-icon>
+                            </td>
+
+                            <td class="Form_Input" class="input-label"
+                              style="width:15%;border-bottom: none;text-overflow: ellipsis;"
+                              *ngIf="prTypeDisp === 'MATERIAL'">
+                              <input style="text-align: left; font-size:12px;color:brown" matInput
+                                formControlName="itemName" readonly>
+                              <input style="text-align: left; font-size:12px;color:black" matInput
+                                formControlName="manufacturerPartNo" readonly>
+                              <input style="text-align: left; font-size:12px;color:black" matInput
+                                formControlName="itemDesc" readonly>
+                              <input style="text-align: left; font-size:12px;color:black" matInput
+                                formControlName="itemTypeName" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label"
+                              style="width:15%;border-bottom: none;text-overflow: ellipsis;"
+                              *ngIf="prTypeDisp === 'SERVICE' || prTypeDisp === 'CONTRACT'">
+                              <input style="text-align: left; font-size:12px;color:black" matInput
+                                formControlName="itemDesc" readonly>
+
+                              <input style="text-align: left; font-size:12px;color:black" matInput
+                                formControlName="itemTypeName" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: left;" matInput
+                                formControlName="supplierName" readonly>
+                              <input style="font-size:12px !important; color:black; text-align: left;" matInput
+                                formControlName="supplierSiteName" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: left;" matInput
+                                formControlName="curCd" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label"
+                              style="border-bottom: none;background-color:powderblue;">
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="unitPrice" (input)="calculation(element,i)">
+                            </td>
+
+                            <td class="Form_Input" class="input-label"
+                              style="border-bottom: none;background-color:powderblue;">
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="poReqQty" (input)="calculation(element,i)">
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: left;" matInput
+                                formControlName="uomCode" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="basicAmt" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="taxCd1" readonly>
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="taxCd2" readonly>
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="taxCd3" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label">
+                              <input style="font-size:12px !important; color:red; text-align: right;" matInput
+                                formControlName="itemTotalTaxAmt" readonly>
+                            </td>
+
+                            <td class="Form_Input" class="input-label" style="border-bottom: none;">
+                              <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                formControlName="totalAmt" readonly>
+                            </td>
+
+                            <td style="width:5%;border-bottom: none;">
+                              <mat-icon class="bread-crumb-link" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                                *ngIf="!prMainForm.get('poItemList')['controls'][i]['controls'].newItemFlag.value && !viewMode"
+                                color="primary" (click)="addPRItem(i,'edit',element)">edit</mat-icon>
+                              <mat-icon class="close-icon bread-crumb-link" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                                *ngIf="!prMainForm.get('poItemList')['controls'][i]['controls'].newItemFlag.value"
+                                color="primary" (click)="addPRItem(i,'view',element)">visibility</mat-icon>
+                              <mat-icon class="close-icon bread-crumb-link" matTooltip="{{ 'REMOVE_ITEM' | translate }}"
+                                *ngIf="!viewMode" (click)="delete(i)">delete</mat-icon>
+                            </td>
+
+
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+            <mat-tab *ngIf="prMainForm.controls.poReqId.value > 0" label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <app-common-workflow-approval-tab [transactionId]=poReqId [transactionSource]=transactionSource
+                    [PREmployeeId]=employeeId [prStatusId]=prMainForm.controls.poReqStatus.value
+                    [PRApproveButtonEnable]=approvebuttonEnable (prConfirm)=prWorkflowApproval(true)
+                    (prReject)=prWorkflowReject()>
+                  </app-common-workflow-approval-tab>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>

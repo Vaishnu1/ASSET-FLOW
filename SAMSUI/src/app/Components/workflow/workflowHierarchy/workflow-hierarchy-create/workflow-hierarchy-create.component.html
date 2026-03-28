@@ -1,0 +1,181 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+          {{ 'MENU_WORKFLOW' | translate }}
+        </mat-list-item>
+        <mat-icon>keyboard_arrow_right</mat-icon>
+        <mat-list-item class="breadcrumb-padding-0 bread-crumb-link" (click)="back()" fxLayoutAlign="start center"
+          aria-current="page">
+          {{ 'MENU_WORKFLOW_HIERARCHY' | translate }}<mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+          {{headingDisplay}}
+        </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+      <button mat-raised-button class="space" color="primary" (click)="back()">{{'COMMON_BACK' |
+        translate}}</button>
+      <button *ngIf="!isViewMode" mat-raised-button color="primary" class="space" (click)="clearWorkflowHierarchy()"
+        [disabled]="disableClear">{{ 'COMMON_CLEAR' | translate }}</button>
+      <button *ngIf="!isViewMode" mat-raised-button class="space" color="primary" (click)="saveWorkflowHierarchy()"
+        [disabled]="workflowHierarchyHdrForm.invalid || !(workHierarchyDtlDataSource.data.length > 0) || uploadFlag">
+        <span *ngIf="!uploadFlag">{{displayButton}}</span>
+        <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+
+    </mat-toolbar-row>
+  </div>
+  <div fxLayout="column" fxFlex="100" style="padding-top: 0.5%;">
+    <div class="content_section" fxLayout="column">
+      <div fxLayout="row" fxFlex="100" class="create-exp-panel-form">
+        <form [formGroup]="workflowHierarchyHdrForm"  fxFlex="100">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlex="25" class="h-60-px">
+              <span class="input-label">{{'LOCATION_NAME' | translate}}<span
+                  class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="locationName"
+                (search)="listOfLocationName($event)" (click)="listOfLocationName({})"
+                (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                (scrollToEnd)="listOfLocationName({})" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')" (clear)="listOfLocationName('clear')" [loading]="scrollLocationNameSync" bindLabel="locDisplayField"
+                bindValue="locDisplayField">
+              </ng-select>
+              <mat-error
+                *ngIf="workflowHierarchyHdrForm.controls.locationName.invalid && workflowHierarchyHdrForm.controls.locationName.touched">
+                <div class="err-field" *ngIf="workflowHierarchyHdrForm.controls.locationName.errors.required">
+                  {{'LOCATION_NAME' | translate}} is Required </div>
+              </mat-error>
+            </div>
+            <div fxFlex="2"> </div>
+            <div fxFlex="25" class="h-60-px">
+              <span class="input-label">{{'WORKFLOW_PROCESS_NAME' | translate}}<span
+                  class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="workflowProcessName"
+                (search)="listOfWorkflowProcess($event)" (click)="listOfWorkflowProcess({})"
+                (change)="setWorkflowProcess($event)"  [virtualScroll]="true" [readonly]="workflowHierarchyHdrForm.controls.locationName.value == ''"
+                (scrollToEnd)="listOfWorkflowProcess({})" (keyup.backspace)="listOfWorkflowProcess($event.target.value ? $event : 'back')" (clear)="listOfWorkflowProcess('clear')" [loading]="scrollProcessSync">
+                <ng-option  *ngFor="let list of processCombo" [value]="list" > {{list.workflowProcessName | translate}}</ng-option>
+              </ng-select>
+              <mat-error
+                *ngIf="workflowHierarchyHdrForm.controls.workflowProcessName.invalid && workflowHierarchyHdrForm.controls.workflowProcessName.touched">
+                <div class="err-field"
+                  *ngIf="workflowHierarchyHdrForm.controls.workflowProcessName.errors.required">
+                  {{'WORKFLOW_PROCESS_NAME' | translate}} is Required </div>
+              </mat-error>
+            </div>
+            <div fxFlex="2"></div>
+            <div fxFlex="25" class="h-60-px">
+              <span class="input-label">{{'WORKFLOW_DESCRIPTION' | translate}}<span
+                  class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="workflowName"
+                (search)="listOfWorkflowDescription($event)" (click)="listOfWorkflowDescription({})"
+                (change)="setWorkflowDescription($event)" [items]="workflowDescriptionCombo" [virtualScroll]="true" [readonly]="workflowHierarchyHdrForm.controls.workflowProcessName.value == ''"
+                (scrollToEnd)="listOfWorkflowDescription({})" (keyup.backspace)="listOfWorkflowDescription($event.target.value ? $event : 'back')" (clear)="listOfWorkflowDescription('clear')" [loading]="scrollWorkflowDescriptionSync"
+                bindLabel="workflowName" bindValue="workflowName">
+              </ng-select>
+              <mat-error
+                *ngIf="workflowHierarchyHdrForm.controls.workflowName.invalid && workflowHierarchyHdrForm.controls.workflowName.touched">
+                <div class="err-field" *ngIf="workflowHierarchyHdrForm.controls.workflowName.errors.required">
+                  {{'WORKFLOW_DESCRIPTION' | translate}} is Required </div>
+              </mat-error>
+            </div>
+            <div fxFlex="2"></div>
+            <div fxFlex="19">
+              <section class="example-section">
+                <mat-checkbox [checked]="true" color="primary" class="example-margin" formControlName="active">
+                  <label>{{ 'COMMON_ACTIVE' | translate }}</label>
+                </mat-checkbox>
+              </section>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div fxLayout="row">
+        <div fxFlex="100" class="edit-hirarchy-button">
+          <button mat-raised-button color="primary" class="rightbutton" (click)="addLevelInfo(0,'add',0)"
+            [disabled]="workflowHierarchyHdrForm.invalid">
+            {{'COMMON_ADD' | translate}}</button>
+        </div>
+      </div>
+
+      <div fxLayout="column" class="content_section">
+        <table mat-table #matWorkflow [dataSource]="workHierarchyDtlDataSource" fxFlex="100">
+
+          <ng-container matColumnDef="sNo">
+            <th mat-header-cell *matHeaderCellDef>{{'COMMON_S_NO' | translate }}</th>
+            <td mat-cell *matCellDef="let element;let i = index;"> {{i+1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="levelName">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_LEVEL_NAME' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.levelName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="levelSeqNo">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_LEVEL_SEQ' | translate }}</th>
+            <td mat-cell *matCellDef="let element;let i = index;"> {{i+1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employeeName1">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_EMP_1' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.employeeName1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="condition1">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_CONDITION_1' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.condition1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employeeName2">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_EMP_2' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.employeeName2}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="condition2">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_CONDITION_2' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.condition2}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employeeName3">
+            <th mat-header-cell *matHeaderCellDef>{{'WORKFLOW_EMP_3' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.employeeName3}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
+            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+              <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_ACTION' | translate }}</th>
+            <td mat-cell *matCellDef="let element;let i = index;">
+              <button mat-icon-button *ngIf="!isViewMode"matTooltip="{{ 'COMMON_EDIT' | translate }}" color="primary"
+                (click)="addLevelInfo(element,'edit',i)">
+                <mat-icon color="primary"><a>edit</a></mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="{{ 'COMMON_VIEW' | translate }}" color="primary"
+                (click)="addLevelInfo(element,'view',i)">
+                <mat-icon color="primary"><a>visibility</a></mat-icon>
+              </button> 
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="dispColWorkHierarchyDtl; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: dispColWorkHierarchyDtl;let i = index"></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

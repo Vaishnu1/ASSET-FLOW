@@ -1,0 +1,39 @@
+.example-full-width {
+width: 95%;
+}
+
+.check-box{
+margin-top:1rem;
+font-size:16px;
+}
+
+.mb-12{
+margin-bottom: 12px;
+}
+
+.mat-card{
+padding: 16px !important;
+}
+
+.mt-5 {
+margin-top: 5px;
+}
+
+.rightbutton{
+text-align: center;
+margin-left: 10px;
+}
+
+.mat-input-element:disabled{
+padding: 0px;
+}
+
+.h-60-px{
+height: 65px;
+margin-bottom: 10px;
+}
+
+.item-purchase-inner-table{
+max-height: 31vh !important;
+overflow: auto;
+}

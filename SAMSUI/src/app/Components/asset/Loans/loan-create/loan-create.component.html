@@ -1,0 +1,845 @@
+<div fxLayout="column" fxFlex="100">
+
+  <div fxFlex="100" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayout.md="column" fxLayoutAlign="start center">
+
+      <mat-toolbar-row class="breadcrumb-list" aria-label="breadcrumb" fxLayoutAlign="start center"
+        fxFlex="30">
+        <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET'| translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0 link" fxLayoutAlign="start center" aria-current="page">
+            <a (click)="exit()">{{'MENU_ASSET_EXTERNAL_LOANS'| translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{headingDisplay}}
+          </mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+
+      <div fxLayout="row" fxFlex="70" style="width: 100%;">
+        <div fxFlex="100">
+          <div fxLayoutAlign="center center" fxFlex="60">
+            <!-- <div class="status-style mandatory-style">
+              {{ 'COMMON_CREATED_BY_DT' | translate }} : {{loanCreateForm.controls.createdBy.value}} &nbsp;&nbsp;
+              {{loanCreateForm.controls.createdDtDisp.value}}
+            </div> -->
+          </div>
+
+          <div fxLayoutAlign="end center" fxFlex="40">
+            <button mat-raised-button color="primary" class="space" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+            <button mat-raised-button *ngIf="!modeDisplay" color="primary" [disabled]="disbleClear" class="space"
+                (click)="clear()">{{ 'COMMON_CLEAR' |translate }}</button>
+              <button *ngIf="!modeDisplay" mat-raised-button class="space" color="primary" (click)="save()"
+                [disabled]="loanCreateForm.invalid || uploadLoanFlag || loanCreateForm.controls.assetTransactionSrc.value == 'INTERNAL LOAN' 
+                || loanCreateForm.controls.assetTransactionSrc.value == 'ASSET RELOCATE' || loanCreateForm.controls.assetTransactionSrc.value == 'GATE PASS'">
+                <span *ngIf="!uploadLoanFlag">{{displayButton}}</span>
+                <span *ngIf="uploadLoanFlag">{{'COMMON_LOADING' |translate }}</span>
+              </button>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="card-design-1" fxFlex="100">
+      <form [formGroup]="loanCreateForm" style="padding-left: 10px;">
+        <div fxLayout="row">
+          <div fxFlex="28">
+            <div class="form-group h-45">
+              <span class="input-label"> {{ 'LOCATION_NAME' | translate }}
+                <span class="mandatory-style">*</span> </span>
+              <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField"
+                (search)="loadLocationComboData($event,true)" (click)="loadLocationComboData($event,true)" [virtualScroll]="true"
+                (scrollToEnd)="loadLocationComboData({},true)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',true)" (clear)="loadLocationComboData('clear',true)" [loading]="scrollsyncLocation" loadingText="Loading..."
+                (change)="selectedLocationData($event)" formControlName="locationName" required></ng-select>
+              <mat-error
+                *ngIf="loanCreateForm.controls.locationName.invalid && loanCreateForm.controls.locationName.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.locationName.errors.required">
+                  Kindly Select The "{{'LOCATION_NAME' | translate }}"</div>
+              </mat-error>
+            </div>
+
+            <div fxLayout="row">
+              <div fxFlex="48">
+                <div class="form-group">
+                  <mat-form-field fxFlex="100" [floatLabel]="'always'">
+                    <mat-label class="input-label">{{'LOAN_CODE'| translate}}</mat-label>
+                    <input matInput class="input-field"  formControlName="loanNumber" readonly>
+                  </mat-form-field>
+                </div>
+                </div>
+                <div fxFlex="4">
+                </div>
+                <div fxFlex="48">
+                  <div class="form-group">
+                    <mat-form-field fxFlex="100" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{'EXTERNAL_LOAN_STATUS'| translate}}</mat-label>
+                      <input matInput class="input-field" formControlName="loanStatus" readonly>
+                    </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="loan-date-fields">
+              <div fxFlex="48">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'START_DATE' | translate}}
+                    <span class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="fromDtDisp" tabindex="6" (click)="picker1.open()"
+                    [matDatepicker]="picker1" [max]="loanCreateForm.controls.toDtDisp.value"
+                    (keypress)="dateValidationinstall($event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error
+                    *ngIf="loanCreateForm.controls.fromDtDisp.invalid && loanCreateForm.controls.fromDtDisp.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.fromDtDisp.errors.required">
+                      Kindly Select The "{{ 'START_DATE' | translate }}"</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex="4">
+              </div>
+              <div fxFlex="48">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'LOAN_EXPECTED_END_DATE' | translate}}
+                    <span class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="toDtDisp" tabindex="7" (click)="picker2.open()"
+                    [matDatepicker]="picker2" [min]="loanCreateForm.controls.fromDtDisp.value"
+                    (keypress)="dateValidationinstall($event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="loanCreateForm.controls.toDtDisp.invalid && loanCreateForm.controls.toDtDisp.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.toDtDisp.errors.required">
+                      Kindly Select The "{{ 'LOAN_EXPECTED_END_DATE' | translate }}"</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group  h-45">
+              <span class="input-label"> {{ 'LOAN_ASSET_CONDITION' | translate }} </span>
+              <ng-select tabindex="7" appendTo="body" loadingText="Loading..."
+              (search)="loadAssetConditionComboData($event)" (click)="loadAssetConditionComboData($event)"
+               [virtualScroll]="true" (change)="selectedAssetCondition1($event)"
+                (scrollToEnd)="loadAssetConditionComboData({})" (clear)="loadAssetConditionComboData('clear')" [loading]="scrollsyncAssetCondition"
+                formControlName="loanedAssetCondition">
+                <ng-option *ngFor="let assetConditionList of assetConditionCombo" [value]="assetConditionList">
+                  {{ assetConditionList.assetCondition | translate}}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div fxFlex="2">
+          </div>
+          <div fxFlex="35">
+            <div class="form-group h-45" >
+              <span class="input-label"> {{ 'LOAN_ASSET_CODE_DESCRIPTION' | translate }} <span
+                class="mandatory-style">*</span> </span>
+              <ng-select [items]="assetCodeCombo" class="input-field" bindLabel="comboDisp" bindValue="comboDisp" #assetCode
+                (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)" [virtualScroll]="true"
+                (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode" loadingText="Loading..."
+                (change)="selectedAssetCodeData($event)" formControlName="assetCode" required>
+              </ng-select>
+              <mat-error *ngIf="loanCreateForm.controls.assetCode.invalid && loanCreateForm.controls.assetCode.touched">
+                <div *ngIf="loanCreateForm.controls.assetCode.errors.required">
+                  Kindly Select The "{{'LOAN_ASSET_CODE' | translate }}" </div>
+              </mat-error>
+            </div>
+
+            <div fxLayout="row" class="h-45 mt-10-px">
+              <div fxFlex="50">
+                <div class="form-group h-55">
+                  <span class="input-label">{{ 'LOAN_TYPE' | translate }} <span
+                    class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" formControlName="loanType" [items]="loanTypeList" bindLabel="name"
+                    bindValue="name" required (change)="setLoanType($event)">
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanType.invalid && loanCreateForm.controls.loanType.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanType.errors.required">
+                      Kindly Select The "{{ 'LOAN_TYPE' | translate }}"
+                    </div>
+                  </mat-error>
+                </div>
+              </div>
+              <div fxFlex="4">
+              </div>
+              <div fxFlex="46">
+                <div class="form-group" *ngIf="loanCreateForm.controls.loanType.value=='LEASE' || loanCreateForm.controls.loanType.value=='RENTAL'">
+                  <span class="input-label">{{'CONTRACT_NO' | translate}} </span>
+                  <ng-select class=" input-field" formControlName="contractNo"
+                    (search)="listOfContractNumber($event)"
+                    (click)="listOfContractNumber({})" (change)="setContractNumber($event)" [virtualScroll]="true"
+                    (scrollToEnd)="listOfContractNumber({})" (keyup.backspace)="listOfContractNumber($event.target.value ? $event : 'back')" (clear)="listOfContractNumber('clear')" [loading]="scrollContractNumberSync"
+                    [items]="contractNumberList" bindLabel="contractNo" bindValue="contractNo">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="h-45 mt-10">
+              <div fxFlex="28">
+                <div class="form-group h-55"
+                  *ngIf="loanCreateForm.controls.loanType.value=='LEASE' || loanCreateForm.controls.loanType.value=='RENTAL'">
+                  <span class="input-label"> {{ 'LOAN_TO' | translate }}<span class="mandatory-style">*</span> </span>
+                  <ng-select class=" input-field" bindLabel="name" bindValue="name"
+                    [items]="loanToOptionsemp" formControlName="loanedTo" (change)="selectedUserType($event)" required>
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanedTo.invalid && loanCreateForm.controls.loanedTo.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedTo.errors.required">
+                      Kindly Select The "{{'LOAN_TO' | translate}}"</div>
+                  </mat-error>
+                </div>
+
+                <div class="form-group"
+                  *ngIf="loanCreateForm.controls.loanType.value=='LOAN'">
+                  <span class="input-label"> {{ 'LOAN_TO' | translate }}<span class="mandatory-style">*</span> </span>
+                  <ng-select class=" input-field" bindLabel="name" bindValue="name" required
+                    [items]="loanToOptions" formControlName="loanedTo" (change)="selectedUserType($event)">
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanedTo.invalid && loanCreateForm.controls.loanedTo.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedTo.errors.required">
+                      Kindly Select The "{{'LOAN_TO' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+              <div fxFlex="2">
+              </div>
+              <div fxFlex="70" class="mt--4-px">
+                <div class="form-group" *ngIf="loanCreateForm.controls.loanedTo.value=='SUPPLIER'">
+                  <span class="input-label">{{'SUPPLIER_NAME' | translate}}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" formControlName="loanedToName"
+                    (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                    [items]="supplierList" bindLabel="businessPartnerName" bindValue="businessPartnerName" required>
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanedToName.invalid && loanCreateForm.controls.loanedToName.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedToName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_NAME' | translate}}" </div>
+                  </mat-error>
+                </div>
+                <div class="form-group" *ngIf="loanCreateForm.controls.loanedTo.value=='MANUFACTURER'">
+                  <span class="input-label">{{'MANUFACTURER' | translate}}<span class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" formControlName="loanedToName"
+                    (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                    (change)="setManufacturerData($event)" [virtualScroll]="true" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')"
+                    [loading]="scrollManufacturersync" [items]="manufacturerList" bindLabel="businessPartnerName"
+                    bindValue="businessPartnerName" required>
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanedToName.invalid && loanCreateForm.controls.loanedToName.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedToName.errors.required">
+                      Kindly Select The "{{'MANUFACTURER' | translate}}"</div>
+                  </mat-error>
+                </div>
+                <div class="form-group" *ngIf="loanCreateForm.controls.loanedTo.value === 'CUSTOMER'">
+                  <span class="input-label">{{'CUSTOMER_NAME' | translate}}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" formControlName="loanedToName"
+                    (search)="listOfCustomer($event)" (click)="listOfCustomer({})" (change)="setCustomerData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfCustomer({})" (keyup.backspace)="listOfCustomer($event.target.value ? $event : 'back')" (clear)="listOfCustomer('clear')" [loading]="scrollCustomersync"
+                    [items]="customerList" bindLabel="customerName" bindValue="customerName" required>
+                  </ng-select>
+                  <mat-error *ngIf="loanCreateForm.controls.loanedToName.invalid && loanCreateForm.controls.loanedToName.touched">
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedToName.errors.required">
+                      Kindly Select The "{{'CUSTOMER_NAME' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+            </div>
+            <div class="form-group customer-sitename-field mt-6-px" *ngIf="loanCreateForm.controls.loanedTo.value=='SUPPLIER' && loanCreateForm.controls.loanedToName.value != null">
+              <span class="input-label">{{'SUPPLIER_SITE_NAME' | translate}}
+                <span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" formControlName="loanedToSiteName"
+                (search)="listOfSupplierLocation($event)" (click)="listOfSupplierLocation({})"
+                (change)="setSupplierSiteData($event)" [virtualScroll]="true" (scrollToEnd)="listOfSupplierLocation({})" (keyup.backspace)="listOfSupplierLocation($event.target.value ? $event : 'back')" (clear)="listOfSupplierLocation('clear')"
+                [loading]="scrollSupplierLocationSync" [items]="supplierLocationCombo" bindLabel="partnerSiteName"
+                bindValue="partnerSiteName" required>
+              </ng-select>
+              <mat-error *ngIf="loanCreateForm.controls.loanedToSiteName.invalid && loanCreateForm.controls.loanedToSiteName.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.loanedToSiteName.errors.required">
+                  Kindly Select The "{{'SUPPLIER_SITE_NAME' | translate}}" </div>
+              </mat-error>
+            </div>
+            <div class="form-group customer-sitename-field mt-6-px" *ngIf="loanCreateForm.controls.loanedTo.value=='CUSTOMER' && loanCreateForm.controls.loanedToName.value != null">
+              <span class="input-label">{{'CUSTOMER_SITE_NAME' | translate}}
+                <span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" formControlName="loanedToSiteName"
+                (search)="listOfCustomerLocation($event)" (click)="listOfCustomerLocation({})"
+                (change)="selectedCustomerLocationData($event)" [virtualScroll]="true" required
+                (scrollToEnd)="listOfCustomerLocation({})" (keyup.backspace)="listOfCustomerLocation($event.target.value ? $event : 'back')" (clear)="listOfCustomerLocation('clear')" [loading]="scrollCustomerLocationSync"
+                [items]="customerLocationCombo" bindLabel="customerSiteName" bindValue="customerSiteName" tabindex="3">
+              </ng-select>
+              <mat-error *ngIf="loanCreateForm.controls.loanedToSiteName.invalid && loanCreateForm.controls.loanedToSiteName.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.loanedToSiteName.errors.required">
+                  Kindly Select The "{{'CUSTOMER_SITE_NAME' | translate}}" </div>
+              </mat-error>
+            </div>
+            <div class="form-group customer-sitename-field mt-6-px" *ngIf="loanCreateForm.controls.loanedTo.value=='MANUFACTURER' && loanCreateForm.controls.loanedToName.value != null">
+              <span class="input-label">{{'SERVICE_CENTER' | translate}}<span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" formControlName="loanedToSiteName"
+                (search)="listOfManuServiceLocation($event)" (click)="listOfManuServiceLocation({})"
+                (change)="setManuServiceCenterData($event)" [virtualScroll]="true" required
+                (scrollToEnd)="listOfManuServiceLocation({})" (keyup.backspace)="listOfManuServiceLocation($event.target.value ? $event : 'back')" (clear)="listOfManuServiceLocation('clear')" [loading]="scrollManuServiceLocationSync"
+                [items]="manuServiceLocationList" bindLabel="partnerSiteName" bindValue="partnerSiteName">
+              </ng-select>
+              <mat-error *ngIf="loanCreateForm.controls.loanedToSiteName.invalid && loanCreateForm.controls.loanedToSiteName.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.loanedToSiteName.errors.required">
+                  Kindly Select The "{{'SERVICE_CENTER' | translate}}" </div>
+              </mat-error>
+            </div>
+            <div class="form-group mt-6-px" *ngIf="loanCreateForm.controls.loanedTo.value=='EMPLOYEE'">
+              <span class="input-label"> {{ 'EMPLOYEE_NAME' | translate }} <span class="mandatory-style">*</span>
+              </span>
+              <ng-select [items]="employeeCombo" class="input-field" bindLabel="displayName" bindValue="displayName"
+                (search)="listOfEmployeeName($event,1)" (click)="listOfEmployeeName($event,1)" [virtualScroll]="true"
+                (scrollToEnd)="listOfEmployeeName({},1)" (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back',1)" (clear)="listOfEmployeeName('clear',1)" [loading]="scrollsyncEmployee1" loadingText="Loading..."
+                (change)="selectedEmployee($event)" formControlName="loanedToName" required>
+              </ng-select>
+              <mat-error *ngIf="loanCreateForm.controls.loanedToName.invalid && loanCreateForm.controls.loanedToName.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.loanedToName.errors.required">
+                  Kindly Select The "{{'EMPLOYEE_NAME' | translate}}"</div>
+              </mat-error>
+            </div>
+            <div class="form-group" *ngIf="this.loanCreateForm.controls.loanedTo.value=='OTHERS'">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                <mat-label class="input-label"> {{ 'COMMON_REMARKS' | translate }}<span class="mandatory-style">*</span>
+                </mat-label>
+                <textarea matInput class="input-field" formControlName="remarks" [maxlength]="500"></textarea>
+                <mat-hint align="end">{{loanCreateForm.controls.remarks.value?.length || 0}}/500</mat-hint>
+              </mat-form-field>
+              <mat-error *ngIf="loanCreateForm.controls.remarks.invalid && loanCreateForm.controls.remarks.touched">
+                <div class="err-field" *ngIf="loanCreateForm.controls.remarks.errors.required">
+                  "{{'COMMON_REMARKS' | translate}}" Required</div>
+              </mat-error>
+            </div>
+            <div class="form-group mt-6-px" *ngIf="this.loanCreateForm.controls.loanedTo.value=='BRANCH'">
+              <span class="spacing input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                  class="mandatory-style">*</span> </span>
+              <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField"
+                (search)="loadLocationComboData($event,false)" (click)="loadLocationComboData($event,false)" [virtualScroll]="true"
+                (scrollToEnd)="loadLocationComboData({},false)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',false)" (clear)="loadLocationComboData('clear',false)" [loading]="scrollsyncLocation1" loadingText="Loading..."
+                (change)="selectedLocationLoanData($event)" formControlName="loanedToName"></ng-select>
+                <mat-error *ngIf="loanCreateForm.controls.loanedToName.invalid && loanCreateForm.controls.loanedToName.touched">
+                  <div class="err-field" *ngIf="loanCreateForm.controls.loanedToName.errors.required">
+                    Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+                </mat-error>
+            </div>
+          </div>
+          <div fxFlex="2">
+          </div>
+          <div fxFlex="32">
+            <div fxLayout="row" class="loanperson-field">
+              <div fxFlex="49">
+                <div class="form-group">
+                  <mat-form-field fxFlex="100" [floatLabel]="'always'">
+                    <mat-label class="input-label">{{'LOAN_PERSON_NAME'| translate}}</mat-label>
+                    <input matInput formControlName="loanedPersonName" class="input-field">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxFlex="2">
+              </div>
+              <div fxFlex="49">
+                <div class="form-group">
+                  <mat-form-field fxFlex="100" [floatLabel]="'always'">
+                    <mat-label class="input-label">{{'LOAN_PERSON_CONTACT_NO'| translate}}</mat-label>
+                    <input matInput class="input-field" formControlName="loanedPersonContactNo"  [maxlength]="15">
+                    <mat-hint align="end">{{loanCreateForm.controls.loanedPersonContactNo.value?.length || 0}}/15</mat-hint>
+                    <mat-error *ngIf="loanCreateForm.controls.loanedPersonContactNo.invalid && loanCreateForm.controls.loanedPersonContactNo.touched">
+                      <div class="err-field" *ngIf="loanCreateForm.controls.loanedPersonContactNo.errors.pattern?false:loanCreateForm.controls.loanedPersonContactNo.errors.minlength">
+                        "{{ 'LOAN_PERSON_CONTACT_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+                    <div class="err-field" *ngIf="loanCreateForm.controls.loanedPersonContactNo.errors.pattern">
+                      Kindly Enter Valid "{{ 'LOAN_PERSON_CONTACT_NO' | translate }}" </div>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" >
+              <div fxFlex="50">
+                <div class="form-group">
+                  <mat-form-field fxFlex="100" [floatLabel]="'always'">
+                    <mat-label class="input-label">{{'LOAN_PERSON_EMAIL_ID'| translate}}</mat-label>
+                    <input matInput class="input-field" formControlName="loanedPersonEmailId" [maxlength]="50">
+                    <mat-hint align="end">{{loanCreateForm.controls.loanedPersonEmailId.value?.length || 0}}/50</mat-hint>
+                    <mat-error
+                      *ngIf="loanCreateForm.controls.loanedPersonEmailId.invalid && loanCreateForm.controls.loanedPersonEmailId.touched">
+                      <div class="err-field" *ngIf="loanCreateForm.controls.loanedPersonEmailId.errors.pattern">
+                        {{ 'LOAN_PERSON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                <mat-label class="input-label"> {{ 'COMMON_REMARKS' | translate }}
+                </mat-label>
+                <textarea matInput class="input-field" formControlName="loanedRemarks" rows="5" [maxlength]="500"></textarea>
+                <mat-hint align="end">{{loanCreateForm.controls.loanedRemarks.value?.length || 0}}/500</mat-hint>
+              </mat-form-field>
+            </div>
+
+          </div>
+        </div>
+
+        <div fxLayout="row">
+          <mat-tab-group fxFlex="100"
+          [@.disabled]="true"
+          >
+            <mat-tab label="{{ 'ASSET_INFO' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style">
+                    <div fxLayout="row">
+                      <div fxFlex="23">
+                          <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="input-label">
+                                {{ 'ASSET_CATEGORY' | translate }}
+                              </mat-label>
+                              <input matInput class="input-field" formControlName="assetCategoryName" readonly>
+                            </mat-form-field>
+                          </div>
+                          <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="input-label">
+                                {{ 'ASSET_SUB_CATEGORY' | translate }}
+                              </mat-label>
+                              <input matInput class="input-field" formControlName="subCategoryName" readonly>
+                            </mat-form-field>
+                          </div>
+                          <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="input-label">
+                                {{ 'ASSET_GROUP' | translate }}
+                              </mat-label>
+                              <input matInput class="input-field" formControlName="assetGroupName" readonly>
+                            </mat-form-field>
+                          </div>
+                      </div>
+                      <div fxFlex="3"></div>
+                      <div fxFlex="23">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'ASSET_NAME_LIST' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="description" readonly>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'MODEL_NAME' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="modelName" readonly>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'MANUFACTURER' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="manufacturerName" readonly>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div fxFlex="3"></div>
+                      <div fxFlex="23">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'ASSET_STATUS' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="assetStatus" readonly>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'ASSET_SERIAL_NO' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="serialNo" readonly>
+                          </mat-form-field>
+                        </div>
+
+                         <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <!-- <mat-label class="input-label">
+                              {{ 'ASSET_TRANSACTION_SRC_DESC' | translate }}
+                            </mat-label> -->
+                            <input matInput class="input-field" style="color:red" formControlName="assetTransactionSrcDesc" readonly>
+                          </mat-form-field>
+                        </div>
+
+                      </div>
+                      <div fxFlex="3"></div>
+                      <div fxFlex="23">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'DEPARTMENT_NAME' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="departmentName" readonly>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">
+                              {{ 'SUB_DEPARTMENT_NAME' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="subDepartment" readonly>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+
+            <!-- <mat-tab label="{{ 'MODEL_ACCESSORIES' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style">
+                    <div class="example-container">
+                      <table mat-table [dataSource]="accessoriesDataSource">
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_NAME' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemType">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_TYPE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.itemType}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemDesc">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_DESC' | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element" matTooltip="{{element.itemDesc}}">
+                            {{ (element?.itemDesc.length>15) ? (element.itemDesc | slice:0:30)+'...' : (element.itemDesc) }}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="accessoriesIssued">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_ACCESSORIED_ISSUED' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [(ngModel)]="element.accessoriesIssued" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="accessoriesReturned">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_ACCESSORIED_RETURNED' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [disabled]="!element.accessoriesIssued"
+                              [(ngModel)]="element.accessoiredReturned" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rightof">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_RIGHT_OF' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [(ngModel)]="element.writtenoff" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rightofRemarks">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_RIGHT_OF_REMARKS' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <textarea matInput [(ngModel)]="element.writtenoffRemarks" [ngModelOptions]="{standalone: true}" [maxlength]="500"></textarea>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="accessoriesDispCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: accessoriesDispCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab> -->
+
+            <mat-tab label="{{ 'ASSETGROUP_CHILD_ASSET' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style">
+                    <div class="example-container">
+                      <table mat-table [dataSource]="childAssetDataSource">
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="childAssetCode">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'ASSETGROUP_CHILD_ASSET' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.childAssetCode}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="ChildAssetModel">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'ASSET_CHILD_ASSET_MODEL' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.childAssetModel}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="childAssetIssued">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_CHILD_ASSET_ISSUED' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [(ngModel)]="element.childAssetIssued" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="childAssetReturned">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_CHILD_ASSET_RETURN' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [disabled]="!element.childAssetIssued"
+                              [(ngModel)]="element.childAssetReturned" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rightof">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_RIGHT_OF' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <mat-checkbox [(ngModel)]="element.writtenoff" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="rightofRemarks">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'LOAN_RIGHT_OF_REMARKS' | translate }} </th>
+                          <td mat-cell *matCellDef="let element;let i = index;">
+                            <textarea matInput [(ngModel)]="element.writtenoffRemarks" [ngModelOptions]="{standalone: true}" [maxlength]="500"></textarea>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="childAssetDispCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: childAssetDispCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+
+            <mat-tab *ngIf="returnInfoTabEnable">
+              <ng-template mat-tab-label>
+                {{'LOAN_RETURN_INFO' | translate }}
+                <div *ngIf="returnInfoTabvalid">
+                  <div class="tab-mini-fab-icon">
+                    <mat-icon class="mandatory-style" aria-hidden="true">error</mat-icon>
+                  </div>
+                </div>
+              </ng-template>
+              <mat-card class="card-style">
+                <mat-card-content>
+                  <div class="content-style">
+                    <div fxLayout="row">
+                      <div fxFlex="23">
+                        <div class="form-group dateofreturn-field" style="margin-top: 7px;">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label"> {{ 'LOAN_DATE_OF_RETURN' | translate }} </span>
+                            <input matInput formControlName="dateOfReturnDisp" (click)="return.open()" class="input-field"
+                              (dateChange)="loanReturnDateValidation($event)" [min]="loanCreateForm.controls.fromDtDisp.value"
+                              [max]="currentDate" [matDatepicker]="return">
+                            <mat-datepicker-toggle matSuffix [for]="return"></mat-datepicker-toggle>
+                            <mat-datepicker #return></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                        <!-- <div class="form-group returncondition-field">
+                                      <span class="input-label"> {{ 'LOAN_RETURN_CONDITION' | translate }}
+                                        <span class="mandatory-style">*</span> </span>
+                                      <ng-select class=" input-field" bindLabel="name" bindValue="name"
+                                        formControlName="returnAssetCondition">
+                                      </ng-select>
+                                    </div> -->
+                        <div class="form-group example-width">
+                          <span class="input-label"> {{ 'LOAN_RETURN_CONDITION' | translate }} <span
+                              class="mandatory-style">*</span></span>
+                          <ng-select tabindex="9" appendTo="body" loadingText="Loading..."
+                            (search)="loadAssetConditionComboData($event)" (click)="loadAssetConditionComboData($event)"
+                            [virtualScroll]="true" (change)="selectedAssetCondition($event)"
+                            (scrollToEnd)="loadAssetConditionComboData({})" (clear)="loadAssetConditionComboData('clear')"
+                            [loading]="scrollsyncAssetCondition" formControlName="returnAssetCondition">
+                            <ng-option *ngFor="let assetConditionList of assetConditionCombo" [value]="assetConditionList">
+                              {{ assetConditionList.assetCondition | translate}}
+                            </ng-option>
+                          </ng-select>
+                          <mat-error
+                            *ngIf="loanCreateForm.controls.returnAssetCondition.invalid && loanCreateForm.controls.returnAssetCondition.touched">
+                            <div class="err-field" *ngIf="loanCreateForm.controls.returnAssetCondition.errors.required">
+                              Kindly Select "{{'LOAN_RETURN_CONDITION' | translate}}"</div>
+                          </mat-error>
+                        </div>
+                        <div class="form-group deptname-field" style="margin-top: 32px;">
+                          <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                          <ng-select [items]="departmentList" class="input-field" bindLabel="departmentName"
+                            bindValue="departmentName" (search)="loadDepartmentComboData($event)"
+                            (click)="loadDepartmentComboData($event)" [virtualScroll]="true"
+                            (scrollToEnd)="loadDepartmentComboData({})"
+                            (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')"
+                            (clear)="loadDepartmentComboData('clear')" [loading]="scrollsyncDept" loadingText="Loading..."
+                            (change)="selectedDepartmentData($event)" formControlName="returnToDeptName"
+                            appendTo="body"></ng-select>
+                        </div>
+                      </div>
+                      <div fxFlex="2">
+                      </div>
+                      <div fxFlex="23">
+            
+                        <div class="form-group">
+                          <mat-form-field fxFlex="100" class="input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label"> {{ 'LOAN_RETURN_BY' | translate }} <span
+                                class="mandatory-style">*</span></span>
+                            <input matInput formControlName="returnedByName" class="input-field" (blur)="validateReturnInfoTab()">
+                            <mat-error
+                              *ngIf="loanCreateForm.controls.returnedByName.invalid && loanCreateForm.controls.returnedByName.touched">
+                              <div class="err-field" *ngIf="loanCreateForm.controls.returnedByName.errors.required">
+                                "{{'LOAN_RETURN_BY' | translate}}" Is Required </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group contactno-field" style="margin-top: -2px;">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label"> {{ 'LOAN_RETURN_BY_CONTACT_NO' | translate }} </span>
+                            <input matInput formControlName="returnedByContactNo" maxlength="15" (blur)="validateReturnInfoTab()">
+                            <mat-hint align="end">{{loanCreateForm.controls.returnedByContactNo.value?.length || 0}}/15</mat-hint>
+                            <mat-error
+                              *ngIf="loanCreateForm.controls.returnedByContactNo.invalid && loanCreateForm.controls.returnedByContactNo.touched">
+                              <div
+                                *ngIf="loanCreateForm.controls.returnedByContactNo.errors.minlength && !loanCreateForm.controls.returnedByContactNo.errors.pattern">
+                                "{{ 'LOAN_RETURN_BY_CONTACT_NO' | translate }}" Should Be Of Minimum 10 Digits </div>
+                              <div *ngIf="loanCreateForm.controls.returnedByContactNo.errors.pattern">
+                                {{'COMMON_KINDLY_ENTER_VALID' | translate}} "{{ 'LOAN_RETURN_BY_CONTACT_NO' | translate }}"</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label"> {{ 'LOAN_RETURN_BY_EMAIL_ID' | translate }} </span>
+                            <input matInput class="input-field" [maxlength]="50" formControlName="returnedByEmailId"
+                              (blur)="validateReturnInfoTab()">
+                            <mat-hint align="end">{{loanCreateForm.controls.returnedByEmailId.value?.length || 0}}/50</mat-hint>
+                            <mat-error
+                              *ngIf="loanCreateForm.controls.returnedByEmailId.invalid && loanCreateForm.controls.returnedByEmailId.touched">
+                              <div *ngIf="loanCreateForm.controls.returnedByEmailId.errors.pattern">
+                                {{ 'COMMON_EMAIL_FORMAT' | translate }}</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div fxFlex="2">
+                      </div>
+                      <div fxFlex="23">
+                        <div class="form-group rcvd-by-fld" style="margin-top: 10px;">
+                          <span class="input-label"> {{ 'LOAN_RETURN_REVEICED_BY' | translate }}
+                            <span class="mandatory-style">*</span> </span>
+                          <ng-select [items]="employeeCombo" class="input-field" bindLabel="displayName" bindValue="displayName"
+                            (search)="listOfEmployeeName($event,3)" (click)="listOfEmployeeName($event,3)" [virtualScroll]="true"
+                            (scrollToEnd)="listOfEmployeeName({},3)"
+                            (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back',3)"
+                            (clear)="listOfEmployeeName('clear',3)" [loading]="scrollsyncEmployee3" loadingText="Loading..."
+                            formControlName="returnReceivedBy" (change)="returnReceivedByDtl($event)">
+                          </ng-select>
+                          <mat-error
+                            *ngIf="loanCreateForm.controls.returnReceivedBy.invalid && loanCreateForm.controls.returnReceivedBy.touched">
+                            <div class="err-field" *ngIf="loanCreateForm.controls.returnReceivedBy.errors.required">
+                              Kindly Select "{{'LOAN_RETURN_REVEICED_BY' | translate}}" </div>
+                          </mat-error>
+                        </div>
+                        <div class="form-group" style="margin-top: -10px;">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label"> {{ 'LOAN_RETURN_RECEIVED_BY_CONTACT_NO' | translate }} </span>
+                            <input matInput class="input-field" maxlength="15" formControlName="returnReceivedContactNo"
+                              (blur)="validateReturnInfoTab()">
+                            <mat-hint align="end">{{loanCreateForm.controls.returnReceivedContactNo.value?.length ||
+                              0}}/15</mat-hint>
+                            <mat-error
+                              *ngIf="loanCreateForm.controls.returnReceivedContactNo.invalid && loanCreateForm.controls.returnReceivedContactNo.touched">
+                              <div
+                                *ngIf="loanCreateForm.controls.returnReceivedContactNo.errors.minlength && !loanCreateForm.controls.returnReceivedContactNo.errors.pattern">
+                                "{{ 'LOAN_RETURN_RECEIVED_BY_CONTACT_NO' | translate }}" Minimum Length is 10 </div>
+                              <div *ngIf="loanCreateForm.controls.returnReceivedContactNo.errors.pattern">
+                                {{'COMMON_KINDLY_ENTER_VALID' | translate}} "{{ 'LOAN_RETURN_RECEIVED_BY_CONTACT_NO' | translate }}"
+                              </div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                            <span class="input-label">{{'LOAN_RETURN_RECEIVED_BY_EMAIL_ID'| translate}}</span>
+                            <input matInput formControlName="returnReceivedEmailId" [maxlength]="50"
+                              (blur)="validateReturnInfoTab()" class="input-field">
+                            <mat-hint align="end">{{loanCreateForm.controls.returnReceivedEmailId.value?.length || 0}}/50</mat-hint>
+                            <mat-error
+                              *ngIf="loanCreateForm.controls.returnReceivedEmailId.invalid && loanCreateForm.controls.returnReceivedEmailId.touched">
+                              <div *ngIf="loanCreateForm.controls.returnReceivedEmailId.errors.pattern">
+                                {{ 'COMMON_EMAIL_FORMAT' | translate }}</div>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div fxFlex="2">
+                      </div>
+                      <div fxFlex="23">
+                        <div class="form-group remark-field">
+                          <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'"
+                            hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                            <span class="input-label"> {{ 'COMMON_REMARKS' | translate }} </span>
+                            <textarea (blur)="remarkTrim()" matInput formControlName="returnRemarks" [maxlength]="500"></textarea>
+                            <mat-hint align="end">{{loanCreateForm.controls.returnRemarks.value?.length || 0}}/500</mat-hint>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+
+            <mat-tab *ngIf="loanCreateForm.controls.loanId.value > 0"
+              label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+              <mat-card class="card-style">
+                <mat-card-content>
+              <app-common-workflow-approval-tab [transactionId]=loanTransactionId [transactionSource]=transactionSource [loanStatusId]= loanCreateForm.controls.loanStatusId.value
+              [loanApprove] = approvebuttonEnable
+              [loanEmployeeId]=employeeId
+              (loanApproveMethod)=confirmLoanApprove()
+              (loanRejectMethod)=rejectLoanApprove() >
+              </app-common-workflow-approval-tab>
+              </mat-card-content>
+              </mat-card>
+            </mat-tab>
+
+          </mat-tab-group>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

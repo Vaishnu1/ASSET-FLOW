@@ -1,0 +1,36 @@
+.card-footer {
+    padding: 0.50rem 0.50rem;
+    background-color: #fff;
+    border-top: 1px solid #eeeeee;
+    margin-left: 0%;
+  }
+  
+  .card-footer:last-child {
+    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+  }
+
+  .word-spacing {
+    word-spacing: 10px;
+    padding-left: 0%;
+    bottom: -5px;
+  }
+
+  .view-financialyear {
+    z-index: 500;
+  }
+  
+  .bold{
+    font-weight: 500;
+  }
+
+
+  .m-5{
+    margin: 5px;
+  }
+
+  .demo-chart{
+    width: 100%;
+    top: -15px;
+    height: 358px !important; 
+    bottom: 0px !important;
+  }

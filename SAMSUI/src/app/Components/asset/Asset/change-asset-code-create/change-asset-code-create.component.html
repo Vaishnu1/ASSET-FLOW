@@ -1,0 +1,55 @@
+<div fxLayout="column" fxFlexfill>
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h4 class="dialogue-box-header" id="heading">{{ 'ASSET_CODE_CHANGE_REQ' | translate }}</h4>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon class="close-icon" (click)="closeModal('close')">highlight_off</mat-icon>
+        </div>
+    </div>
+    <form [formGroup]="changeAssetCodeForm">
+        <div fxLayout="column">
+            <div>
+                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                    <mat-label class="input-label"> {{'NEW_ASSET_CODE' | translate}}
+                        <span class="mandatory-style">*</span> </mat-label>
+                    <input matInput class="input-field" formControlName="newAssetCode" (blur)="uniqueValidation()"
+                        tabindex="1" [maxlength]="100" oninput="this.value = this.value.toUpperCase().trim()">
+                    <mat-hint align="end">{{changeAssetCodeForm.controls.newAssetCode.value?.length ||
+                        0}}/100</mat-hint>
+                    <mat-error
+                        *ngIf="changeAssetCodeForm.controls.newAssetCode.invalid && changeAssetCodeForm.controls.newAssetCode.touched">
+                        <div class="err-field" *ngIf="changeAssetCodeForm.controls.newAssetCode.errors.required">
+                            "{{'NEW_ASSET_CODE' | translate}}" Is Required </div>
+                        <div class="err-field" *ngIf="changeAssetCodeForm.controls.newAssetCode.errors.notUnique">
+                            "{{'ASSET_CODE' | translate}}" Exists Already </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="example-full-width" floatLabel="always" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                    <mat-label class="example-label">{{ 'REASON' | translate }}</mat-label>
+                    <textarea matInput formControlName="reason" oninput="this.value = this.value.toUpperCase().trim()" required tabindex="2" [maxlength]="500"></textarea>
+                    <mat-hint align="end">{{changeAssetCodeForm.controls.reason.value?.length || 0}}/500</mat-hint>
+                    <mat-error
+                        *ngIf="changeAssetCodeForm.controls.reason.errors && changeAssetCodeForm.controls.reason.touched">
+                        <div *ngIf="changeAssetCodeForm.controls.reason.errors.required">{{ 'REASON' | translate }} is
+                            Required </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <div fxLayoutAlign="center center">
+                    <button mat-raised-button class="space" color="primary" tabindex="3"
+                        (click)="submitChangeAssetCodeRequest()"
+                        [disabled]="changeAssetCodeForm.invalid || !changeAssetCodeForm.dirty"
+                        tabindex="3">{{buttonDisplay}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

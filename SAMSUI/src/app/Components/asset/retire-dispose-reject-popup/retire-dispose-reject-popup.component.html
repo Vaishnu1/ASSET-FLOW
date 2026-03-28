@@ -1,0 +1,49 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row">
+    <div fxFlex="90" >
+      <h4 class="dialogue-box-header"> Reject Confirmation</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="Cancel()" >highlight_off</mat-icon>
+    </div>
+  </div>
+
+
+
+  <div class="Model_Body" [formGroup]="rejectPopUpForm" fxLayout="column">
+
+    <!-- <div fxLayout="row" fxFlex="100">
+      <mat-radio-group aria-label="Select an option" formControlName="rejectDecision">
+        <mat-radio-button value="REJECT PERMANENTLY" color="primary">
+          <span class="input-label">{{'RETIRE_REJECT_PERMANENTLY' | translate}}</span>
+        </mat-radio-button>
+        &nbsp;
+        <mat-radio-button value="REVERT BACK FOR CORRECTIVE ACTION"  color="primary">
+          <span class="input-label">{{ 'RETIRE_REVERT_BACK_FOR_CORRECTIVE_ACTION' | translate}}</span></mat-radio-button>
+      </mat-radio-group>
+    </div> -->
+
+    <div class="form-group" style="padding-top: 20px !important;">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'"
+        hintLabel="{{ CommonhintMsg.MAX_500 }}">
+        <span class="input-label"> {{ 'RETIRE_REJECT_REASON' | translate }}</span>
+        <textarea matInput formControlName="rejectReason" [maxlength]="500"
+          oninput="this.value = this.value.toUpperCase()" rows="5" class="input-field"></textarea>
+        <mat-hint align="end">{{rejectPopUpForm.controls.rejectReason.value?.length || 0}}/500
+        </mat-hint>
+        <mat-error
+          *ngIf="rejectPopUpForm.controls.rejectReason.invalid && rejectPopUpForm.controls.rejectReason.touched">
+          <div *ngIf="rejectPopUpForm.controls.rejectReason.errors.maxlength">
+            {{'RETIRE_REJECT_REASON' | translate}}
+            Maximum length is 500</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+    <div fxLayoutAlign="center center">
+        <button class="space" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+        <button mat-raised-button color="primary" (click)="Proceed()" [disabled]="rejectPopUpForm.invalid"> Yes </button>
+    </div>
+  </div>
+</div>

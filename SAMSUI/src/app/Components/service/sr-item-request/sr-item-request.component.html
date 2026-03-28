@@ -1,0 +1,333 @@
+<div fxLayout="column">
+  
+    <div fxLayout="row" >
+        <div fxFlex="50" class="dialogue-box-header">
+            <h4 class="section_title"> {{'SR_ITEM_RAISE_REQUEST' | translate}} </h4>
+        </div>
+
+        <div fxFlex="50" class="mb-5">
+            <button mat-raised-button class="space" color="primary" [disabled]="lengthItemReq=='0'" (click)="createPRStockIndent()">{{buttonDisplay}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+        </div>
+    </div>
+
+    <form [formGroup]="itemRequestAddForm">
+        <div class="row">
+            <div class="content-style">
+                <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                        <div fxFlex="30" fxFlex.sm="40" fxFlex.xs="40">
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'SR_ITEM_RAISE_FOR' | translate }} <span class="mandatory-style">*</span></span>
+                                    <ng-select  autofocus #focusItemReqFor formControlName="itemRequestFor" [items]="itemRequestForList"
+                                                bindLabel="name" bindValue="name" dropdownPosition=top 
+                                                (change)="changeItemReqFor($event)" >
+                                    </ng-select>
+                                    <mat-error
+                                    *ngIf="itemRequestAddForm.controls.itemRequestFor.invalid && itemRequestAddForm.controls.itemRequestFor.touched">
+                                    <div class="err-field" *ngIf="itemRequestAddForm.controls.itemRequestFor.errors.required">
+                                        {{'SR_ITEM_RAISE_FOR' | translate}} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>        
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label">{{'ITEM_TYPE' | translate}} <span class="mandatory-style">*</span></span>
+                                    <ng-select class=" input-field" formControlName="itemTypeName"
+                                        (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({})"
+                                        (change)="getItemTypeValue($event)" [items]="itemTypeList" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfItemTypeCombo({})"
+                                        (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                                        (clear)="listOfItemTypeCombo('clear')" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                                        bindValue="itemTypeName" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                                        required>
+                                    </ng-select>
+                                    <mat-error *ngIf="itemRequestAddForm.controls.itemTypeName.invalid && itemRequestAddForm.controls.itemTypeName.touched">
+                                    <div style="font-size: 10px " *ngIf="itemRequestAddForm.controls.itemTypeName.errors.required">
+                                        {{'ITEM_TYPE' | translate }} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL' && !unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <span class="input-label">{{'ITEM_NAME' | translate}} <span class="mandatory-style">*</span></span>
+                                    <ng-select  class=" input-field" formControlName="itemName"
+                                        (search)="listOfItemFromMaster($event)" (click)="listOfItemFromMaster({})"
+                                        (change)="getItemValueFromMaster($event)" [items]="itemList" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfItemFromMaster({})"
+                                        (keyup.backspace)="listOfItemFromMaster($event.target.value ? $event : 'back')"
+                                        (clear)="listOfItemFromMaster('clear')" [loading]="scrollItemNamesync" bindLabel="itemMasterName"
+                                        bindValue="itemMasterName" tabindex="2" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                                        required>
+                                    </ng-select>
+                                    <mat-error *ngIf="itemRequestAddForm.controls.itemName.invalid && itemRequestAddForm.controls.itemName.touched">
+                                    <div style="font-size: 10px " *ngIf="itemRequestAddForm.controls.itemName.errors.required">
+                                        {{'ITEM_NAME' | translate }} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="form-group h-55" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL' && !unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <span class="input-label">{{'ITEM_DESC' | translate}} </span>
+                                    <ng-select #focusLocationName class=" input-field" formControlName="itemDescription"
+                                        (search)="listOfItemDescFromMaster($event)" (click)="listOfItemDescFromMaster({})"
+                                        (change)="getItemDescValueFromMaster($event)" [items]="itemDescList" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfItemDescFromMaster({})"
+                                        (keyup.backspace)="listOfItemDescFromMaster($event.target.value ? $event : 'back')"
+                                        (clear)="listOfItemDescFromMaster('clear')" [loading]="scrollItemDescsync" bindLabel="itemMasterDesc"
+                                        bindValue="itemMasterDesc" tabindex="3" loadingText="Loading..." [ngModelOptions]="{standalone: true}">
+                                    </ng-select>
+                                    <!-- <mat-error *ngIf="itemRequestAddForm.controls.itemDescription.invalid && itemRequestAddForm.controls.itemDescription.touched">
+                                        <div style="font-size: 10px " *ngIf="itemRequestAddForm.controls.itemDescription.errors.required">
+                                            {{'ITEM_DESC' | translate }} is Required </div>
+                                    </mat-error> -->
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL' && !unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <div class="example-full-width">
+                                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                            <mat-label class="input-label">{{'UOM_CODE' | translate}} </mat-label>
+                                            <input matInput class="input-field" formControlName="uomCd" [tabIndex]=2 readonly>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group h-55" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL' && !unApprovedItemFlag && itemRequestAddForm.controls.itemRequestType.value == 'PURCHASE REQUEST'">
+                                <div class="example-full-width">
+                                  <span class="input-label"> {{ 'PURCHASE_PR_REASON' | translate }} </span>
+                                  <ng-select [items]="prReasonList" bindLabel="prReasonName" bindValue="prReasonName"
+                                    (search)="loadPRReasonComboData($event)" (click)="loadPRReasonComboData($event)" [virtualScroll]="true"
+                                    (scrollToEnd)="loadPRReasonComboData({})" (keyup.backspace)="loadPRReasonComboData($event.target.value ? $event : 'back')" (clear)="loadPRReasonComboData('clear')" [loading]="scrollPRReasonsync" loadingText="Loading..."
+                                    (change)="selectedPRReasonData($event)" formControlName="prReason" class="input-field">
+                                  </ng-select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group h-55" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'SERVICE'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'ITEM_NAME' | translate}}<span ></span></mat-label>
+                                        <input matInput  class="input-field" formControlName="itemName">
+                                    </mat-form-field>
+                                </div>
+                            </div>    
+
+                            <div class="form-group h-55" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'SERVICE'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'ITEM_DESC' | translate}}<span class="mandatory-style">*</span></mat-label>
+                                        <textarea matInput class="input-field" formControlName="itemDescription"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+
+                        <div fxFlex="3" fxFlex.sm="3" fxFlex.xs="3">
+                        </div>
+
+                        <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+
+                            <div class="form-group" style="margin-top: -10px;">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'SR_ITEM_RAISE_REQ_QTY' | translate }} <span class="mandatory-style">*</span></mat-label>
+                                        <input type="number" min="1" max="1000" matInput class="input-field" min formControlName="requiredQty" style="font-size:12px;color:red" (change)="validateQty()">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: -15px;">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'SR_ITEM_RAISE_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+                                    <ng-select  formControlName="itemRequestType" [items]="itemRequestTypeList"
+                                                bindLabel="name" bindValue="name" dropdownPosition=top 
+                                                (change)="changeItemReqType($event)">
+                                    </ng-select>
+                                    <mat-error *ngIf="itemRequestAddForm.controls.itemRequestType.invalid && itemRequestAddForm.controls.itemRequestType.touched">
+                                    <div class="err-field" *ngIf="itemRequestAddForm.controls.itemRequestType.errors.required">
+                                        {{'SR_ITEM_RAISE_TYPE' | translate}} is Required </div>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="form-group h-55" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'SERVICE' && itemRequestAddForm.controls.itemRequestType.value == 'PURCHASE REQUEST'">
+                                <div class="example-full-width">
+                                  <span class="input-label"> {{ 'PURCHASE_PR_REASON' | translate }} </span>
+                                  <ng-select [items]="prReasonList" bindLabel="prReasonName" bindValue="prReasonName"
+                                    (search)="loadPRReasonComboData($event)" (click)="loadPRReasonComboData($event)" [virtualScroll]="true"
+                                    (scrollToEnd)="loadPRReasonComboData({})" (keyup.backspace)="loadPRReasonComboData($event.target.value ? $event : 'back')" (clear)="loadPRReasonComboData('clear')" [loading]="scrollPRReasonsync" loadingText="Loading..."
+                                    (change)="selectedPRReasonData($event)" formControlName="prReason" class="input-field">
+                                  </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'SERVICE' && itemRequestAddForm.controls.itemRequestType.value == 'PURCHASE REQUEST'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'PR_NEED_BY_DATE' | translate}}
+                                        </mat-label>
+                                        <input matInput class="input-field" formControlName="needByDtDisp"
+                                            tabindex="2" readonly (click)="picker2.open()"
+                                            [matDatepicker]="picker2" [min]="currentDate" (dateChange)="dateChange()">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2 [readonly]="false"></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'ITEM_STORE_NAME' | translate }} </mat-label>
+                                        <input matInput class="input-field" formControlName="storeName">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'SR_ITEM_RAISE_AVAIL_QTY' | translate }} </mat-label>
+                                        <input matInput class="input-field" formControlName="availableQty" style="font-size:12px;color:red">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="itemRequestAddForm.controls.itemRequestFor.value == 'MATERIAL' && !unApprovedItemFlag && itemRequestAddForm.controls.itemRequestType.value == 'PURCHASE REQUEST'">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'PR_NEED_BY_DATE' | translate}}
+                                        </mat-label>
+                                        <input matInput class="input-field" formControlName="needByDtDisp"
+                                            tabindex="2" readonly (click)="picker2.open()"
+                                            [matDatepicker]="picker2" [min]="currentDate" (dateChange)="dateChange()">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2 [readonly]="false"></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div> 
+                        
+                        <div fxFlex="3" fxFlex.sm="3" fxFlex.xs="3">
+                        </div>
+                        
+                        <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+                            <div class="form-group" style="margin-top: 16px;">
+                                <mat-checkbox formControlName="itemUnApprovedFlag" (change)="enableUnApprovedItem()" color="primary"> {{ 'SR_ITEM_RAISE_UNAPPROVED_FLAG'| translate }}</mat-checkbox>
+                            </div>
+
+                            <div class="form-group h-55" *ngIf="unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">New {{'ITEM_NAME' | translate}}</mat-label>
+                                        <input matInput  class="input-field" formControlName="itemName">
+                                    </mat-form-field>
+                                </div>
+                            </div>    
+
+                            <div class="form-group h-55 fixed-textArea" *ngIf="unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">New {{'ITEM_DESC' | translate}}<span class="mandatory-style">*</span></mat-label>
+                                        <textarea matInput class="custom-textarea" formControlName="itemDescription"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="unApprovedItemFlag">
+                                <div class="example-full-width">
+                                    <div class="example-full-width">
+                                        <span class="input-label"> {{ 'UOM_CODE' | translate }}</span>
+                                        <ng-select class=" input-field" formControlName="uomCd"
+                                            (search)="listOfUOM($event)" (click)="listOfUOM({})"
+                                            [items]="uomComboList" [virtualScroll]="true"
+                                            (scrollToEnd)="listOfUOM({})"
+                                            (keyup.backspace)="listOfUOM($event.target.value ? $event : 'back')"
+                                            (clear)="listOfUOM('clear')" [loading]="scrollUomCdSync" bindLabel="uomCode"
+                                            bindValue="uomCode" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}">
+                                        </ng-select>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <button mat-raised-button class="space" color="primary" [disabled]="itemRequestAddForm.invalid"  (click)="addItemReqInfo()">{{'COMMON_ADD' | translate}}</button>
+                                </div>
+                            </div>    
+
+                        </div>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </form>
+    
+    <div class="example-container">
+        <div fxLayout="row">
+            <table mat-table [dataSource]="itemReqMainDataSource">
+            <ng-container matColumnDef="sNo">
+                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+            </ng-container>
+            <ng-container matColumnDef="srNo">
+                <th mat-header-cell *matHeaderCellDef> {{'WO_NO' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.srNo}}</td>
+            </ng-container>
+            <ng-container matColumnDef="itemName">
+                <th mat-header-cell *matHeaderCellDef> {{'ITEM_NAME' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="itemDescription">
+                <th mat-header-cell *matHeaderCellDef> {{'ITEM_DESC' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.itemDescription}} </td>
+            </ng-container>
+            <ng-container matColumnDef="itemTypeName">
+                <th mat-header-cell *matHeaderCellDef> {{'ITEM_TYPE' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.itemTypeName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="requiredQty">
+                <th mat-header-cell *matHeaderCellDef> {{'SR_ITEM_RAISE_REQ_QTY' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.requiredQty}} </td>
+            </ng-container>
+            <ng-container matColumnDef="itemUnApprovedFlagDisp">
+                <th mat-header-cell *matHeaderCellDef> {{'SR_ITEM_RAISE_UNAPPROVED_FLAG' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.itemUnApprovedFlagDisp}} </td>
+            </ng-container>
+            <ng-container matColumnDef="itemRequestType">
+                <th mat-header-cell *matHeaderCellDef> {{'SR_ITEM_RAISE_TYPE' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.itemRequestType}} </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                <td mat-cell *matCellDef="let element;let i = index;">
+                <button mat-button class="mat-icon-button" (click)="removeItemRequest(i)"
+                    matTooltip="{{ 'COMMON_DELETE' | translate }}">
+                    <mat-icon color="primary" style="cursor: pointer; color: red;">delete</mat-icon>
+                </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsForItemReq;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumnsForItemReq;">
+            </tr>
+            </table>
+        </div>
+        <div fxLayout="row">
+            <mat-card class="no_records_found" *ngIf="lengthItemReq=='0'">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+        </div>
+    </div>
+
+</div>

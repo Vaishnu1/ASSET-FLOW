@@ -1,0 +1,47 @@
+
+mat-card.list_grid{
+  margin-top: 5px;
+  padding: 3px;
+  
+}
+
+mat-icon{
+  font-size: 20px !important;
+  color:blue;
+}
+mat_grid_actions{
+  cursor: pointer !important;
+  
+}
+.grid_action{
+  padding-top:13px;
+  }
+.grid_active{
+  padding-top:13px;
+}
+.list_grid:hover{
+  cursor: pointer !important;
+} 
+
+
+.example-container {
+  height: 300px;
+  overflow: auto;
+}
+  
+  
+.mat-cell{
+    font-size: 11px !important;
+}
+
+
+.mat-cell{
+  font-size: 11px !important;
+}
+mat-card{
+padding: 7px !important;  
+} 
+ 
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  padding: 0px 5px;
+}

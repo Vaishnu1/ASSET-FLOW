@@ -1,0 +1,75 @@
+.space {
+    margin-right: 15px;
+}
+#searchModel{
+    margin-top: 18px;
+    margin-left: 50px;
+}
+#searchHeader{
+    padding-bottom: 10px;
+}
+#detailsTable{
+    margin-top: 0px;
+}
+#totalAmount{
+    padding-left: 10%;
+    padding-top: 18px
+   
+}
+#addAssetGroup{
+    margin-top: 24px;  
+     
+} 
+#inputBoxOfTotalAmount{
+    margin-top: 15px; 
+    width: 140px;
+}
+
+.total-budget-amt {
+    margin-top: 15px;
+}
+
+#search{
+    margin-left: 98px;
+}
+.currentBudgetName{
+    margin-left: 8%;
+    margin-top: 40px;
+}
+
+#budgetName{
+    margin-top: 15px;
+}
+
+.section_title{
+    color: #445c8f;
+    margin: 0px 0px 10px;
+}
+
+/* #back{
+    margin-left: 67%;
+} */
+
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 10px;
+}
+
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    padding-right: 10px;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 5px;
+    word-break: break-word;
+    max-width: 95px;
+}
+
+.create-budget-input {
+    max-width: 90px !important;
+}
+
+/* .budget-detail-popup {
+    max-height: 500px;
+    overflow-y: scroll;
+} */

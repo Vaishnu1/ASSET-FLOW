@@ -1,0 +1,50 @@
+::ng-deep .mat-card-title{
+    font-size: 17px !important; 
+}
+
+::ng-deep .mat-card-content{ 
+    padding: 21px !important; 
+}
+
+td{
+    margin-left: 3px !important; 
+}
+::ng-deep .mat-card-subtitle{
+    margin-top: 5px !important; 
+} 
+
+.department-container {
+    height: 301px; 
+    overflow: auto;
+  }
+  .reg-container{
+    height: 301px; 
+    overflow: auto;  
+  }
+  
+  table {
+    width: 100%;
+  }
+    
+  .mat-table {
+    background: transparent;
+  }
+ 
+  tr {
+    line-height: 30px !important;
+  }
+.innerth {
+    width:14%;
+  }
+  .outerth {
+    width:34%;
+  }
+  .space {
+    margin-right:30px;
+  }
+  .mb-50 {
+    margin-bottom: 50px;
+  }
+  .mt-24 {
+    margin-top:-24px;
+  }

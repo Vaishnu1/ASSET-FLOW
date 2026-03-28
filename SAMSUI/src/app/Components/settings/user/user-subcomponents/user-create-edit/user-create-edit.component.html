@@ -1,0 +1,191 @@
+<mat-icon class="close-icon-large" (click)="closeModal()">highlight_off</mat-icon>
+<form class="modalform" [formGroup]="userAddEditFormGroup">
+  <div class="row closebutton">
+    <div class="col-md-10">
+      <h4 class="section_title">{{mode}} {{'MENU_USER' | translate}}</h4>
+    </div>
+  </div>
+
+  <div class="col-md-12 row">
+
+  <div class="col-md-6">
+
+    <div class="form-group">
+      <p class="spacing"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span> </p>
+      <ng-select tabindex="1" [items]="locationCombo" autofocus required #FormFirstItemUser bindLabel="locDisplayField"
+        (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)"
+        [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsync" loadingText="Loading..."
+        (change)="selectedLocationData($event)" formControlName="locationName"></ng-select>
+    </div>
+
+    <div class="form-group">
+      <p class="spacing">{{'USER_TYPE' | translate}} </p>
+      <ng-select tabindex="2" [items]="userTypeCombo" formControlName="userType"
+        (change)="selectUserType($event)" bindLabel="userTypeName" bindValue="userTypeName"></ng-select>
+    </div>
+
+    <div class="form-group" *ngIf="this.mode == 'Create';">
+      <p class="spacing">{{userTypeName}}</p>
+      <ng-select tabindex="3" #empCustNameCombo [items]="customerEmployeeSupplierComboData"
+        (search)="getCustomerComboData($event)" (click)="getCustomerComboData($event)"
+        [virtualScroll]="true" (scrollToEnd)="getCustomerComboData({})" (keyup.backspace)="getCustomerComboData($event.target.value ? $event : 'back')" (clear)="getCustomerComboData('clear')" [loading]="scrollsync" loadingText="Loading..."
+        (change)="getEmpCustSuppData($event)" bindLabel="custSuppEmpName"></ng-select>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+        <mat-label class="example-label input-label"> {{'USER' | translate}} </mat-label>
+        <input matInput tabindex="4" formControlName="userName" required [maxlength]="50"  class="bring-username-below">
+        <mat-hint align="end">{{userName.value?.length || 0}}/50</mat-hint>
+        <mat-error
+          *ngIf="userName.invalid && userName.touched">
+          <div *ngIf="userName.errors.required">{{'USER' | translate}} Is Required </div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" >
+        <mat-label class="example-label input-label"> {{'COMMON_EMAIL_ID' | translate}} </mat-label>
+        <input matInput tabindex="5" formControlName="emailId" required >
+        <mat-error
+          *ngIf="emailId.invalid && emailId.touched">
+          <div *ngIf="emailId.errors.required">{{'COMMON_EMAIL_ID' | translate}} is
+            Required </div>
+          <div *ngIf="emailId.errors.pattern">
+            {{ 'COMMON_EMAIL_ID' | translate }} is Invalid</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- <div class="form-group">
+        <mat-checkbox type="checkbox" formControlName="defaultRegionWiseDashboard">Display RegionWise Dashboard
+          </mat-checkbox>
+    </div> -->
+
+    <div class="form-group">
+        <mat-checkbox type="checkbox" formControlName="assetRelocationApproval">
+            <span class="input-label"> {{ 'ASSET_RELOCATION_APPROVAL' | translate }} </span>
+          </mat-checkbox>
+    </div>
+
+    <div class="form-group">
+      <mat-checkbox type="checkbox" formControlName="purchaseRequestApproval">
+          <span class="input-label"> {{ 'PURCHASE_REQUISITION_APPROVAL' | translate }} </span>
+        </mat-checkbox>
+    </div>
+
+    <div class="form-group">
+      <mat-checkbox type="checkbox" formControlName="tlApproved">
+        <span class="input-label"> {{ 'TL_APPROVAL' | translate }} </span>
+      </mat-checkbox>
+    </div>
+
+    <div class="form-group">
+      <mat-checkbox type="checkbox" formControlName="sourcingApproved">
+        <span class="input-label"> {{ 'SOURCING_APPROVAL' | translate }} </span>
+      </mat-checkbox>
+    </div>
+
+    <div class="form-group">
+      <mat-checkbox type="checkbox" formControlName="rmApproved">
+        <span class="input-label"> {{ 'RM_APPROVAL' | translate }} </span>
+      </mat-checkbox>
+    </div>  
+
+  </div>
+
+  <div class="col-md-6">
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15 }}">
+        <mat-label class="example-label input-label"> {{'COMMON_PHONE_NO' | translate}} </mat-label>
+        <input matInput tabindex="6" formControlName="phoneNumber" [maxlength]="15" required >
+        <mat-hint align="end">{{phoneNumber.value?.length || 0}}/15</mat-hint>
+        <mat-error
+          *ngIf="phoneNumber.invalid && phoneNumber.touched">
+          <div *ngIf="phoneNumber.errors.required">{{'COMMON_PHONE_NO' | translate}} is
+            Required </div>
+          <div *ngIf="phoneNumber.errors.pattern">{{ 'COMMON_PHONE_NO' | translate }} is Invalid</div>
+        </mat-error>
+
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+        <mat-label class="example-label input-label"> {{'USER_LOGIN_ID' | translate}} </mat-label>
+        <input matInput tabindex="7" formControlName="loginId" required [maxlength]="50" (blur)="checkUniqueConstrainForUser()" >
+        <mat-hint align="end">{{loginId.value?.length || 0}}/50</mat-hint>
+        <mat-error
+          *ngIf="loginId.errors && loginId.touched">
+          <div *ngIf="loginId.errors.required">{{'USER_LOGIN_ID' | translate}} is Required
+          </div>
+          <div *ngIf="loginId.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="example-label input-label"> {{'USER_PWD' | translate}} </mat-label>
+        <input matInput tabindex="8" formControlName="password" required type="password"
+         [maxlength]="100">
+         <!-- <mat-icon matSuffix (click)="viewPwd()" class="viewicon">{{ (hide) ? 'visibility_off' : 'visibility'}}</mat-icon> -->
+          <mat-hint align="end">{{password.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="password.invalid && password.touched">
+          <div *ngIf="password.errors.required">{{'USER_PWD' | translate}} is Required
+          </div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'USER_VALID_FROM' | translate}} </mat-label>
+        <input matInput required tabindex="9" formControlName="validFromDtDisp" (click)="picker1.open()" [max]="validToDtDisp.value"
+          [matDatepicker]="picker1" (keypress)="dateValidation1($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error
+          *ngIf="validFromDtDisp.invalid && validFromDtDisp.touched">
+          <div *ngIf="validFromDtDisp.errors.required">{{'USER_VALID_FROM' | translate}}
+            Date is Required </div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'USER_VALID_TO' | translate}} </mat-label>
+        <input matInput tabindex="10" formControlName="validToDtDisp" (click)="picker2.open()" [matDatepicker]="picker2" [min]="validFromDtDisp.value"
+          (keypress)="dateValidation2($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+
+      </mat-form-field>
+    </div>
+
+  </div>
+
+ </div>
+
+  <div class="row" *ngIf="!viewPage">
+    <div class="col-md-12 rightbutton">
+      <button mat-raised-button type="button" class="space col-md-2" color="primary" [disabled]="editMode"
+        (click)="clearData()">{{'COMMON_CLEAR' | translate}}</button>
+      <button mat-raised-button type="button" class="space col-md-2" color="primary" [disabled]="userAddEditFormGroup.invalid || uploadFlagUser"
+        (click)="saveOrUpdateUser()">
+        <span *ngIf="!uploadFlagUser"> {{buttonDisplay}} </span> 
+        <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>
+      </button>
+
+    </div>
+  </div>
+  
+</form>

@@ -1,0 +1,92 @@
+<div fxLayout="column" fxFlexfill>
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header" id="heading">{{ 'ASSET_DOCUMENT' | translate }}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+  <form [formGroup]="assetDocumentForm">
+    <div fxLayout="column">
+      <div>
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" style="width: 100%;">
+          <!-- <mat-label class="input-label"> {{ 'ASSET_DOCUMENT_NAME' | translate }} </mat-label> -->
+          <span class="input-label"> {{ 'ASSET_DOCUMENT_NAME' | translate }} <span class="mandatory-style">*</span> </span>
+
+          <input #docName matInput formControlName="docName" oninput="this.value = this.value.toUpperCase().trim()" required class="input-field">
+          <mat-error *ngIf="assetDocumentForm.controls.docName.invalid && assetDocumentForm.controls.docName.touched">
+            <div class="err-field" *ngIf="assetDocumentForm.controls.docName.errors.required">"{{ 'ASSET_DOCUMENT_NAME' | translate }}" Is Required</div>
+            <div class="err-field" *ngIf="assetDocumentForm.controls.docName.errors.maxlength">{{ 'ASSET_DOCUMENT_NAME' | translate }}
+              Maximum length is 50</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <span class="input-label"> {{ 'ASSET_DOCUMENT_TYPE' | translate }} <span class="mandatory-style">*</span> </span>
+        <ng-select formControlName="docType" (change)="setDocType($event)" bindLabel="name"
+          class=" input-field" [items]="docTypeList">
+        </ng-select>
+        <mat-error *ngIf="assetDocumentForm.controls.docType.invalid && assetDocumentForm.controls.docType.touched">
+          <div class="err-field" *ngIf="assetDocumentForm.controls.docType.errors.required"> Kindly Select The "{{
+            'ASSET_DOCUMENT_TYPE' | translate }}" </div>
+        </mat-error>
+      </div>
+
+      <div fxLayout="row">
+      <div fxFlex="50">
+        <div class="form-group">
+          <mat-form-field [floatLabel]="'always'" class="example-full-width">
+            <span class="example-label input-label">{{'ASSET_CERTIFICATE_START_DT' | translate}}</span>
+            <input matInput (click)="startDtDisp.open()" [matDatepicker]="startDtDisp" (dateChange)="dateChange()" 
+              [max]="assetDocumentForm.controls.expiryDtDisp.value" formControlName="startDtDisp">
+            <mat-datepicker-toggle [for]="startDtDisp" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #startDtDisp></mat-datepicker>
+         
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxFlex="50">
+        <div class="form-group">
+          <mat-form-field [floatLabel]="'always'" class="example-full-width">
+            <span class="example-label input-label">{{'ASSET_CERTIFICATE_EXPIRY_DT' | translate}}</span>
+            <input matInput (click)="expiryDtDisp.open()" [matDatepicker]="expiryDtDisp" (dateChange)="dateChange()"
+              [min]="assetDocumentForm.controls.startDtDisp.value" formControlName="expiryDtDisp">
+            <mat-datepicker-toggle [for]="expiryDtDisp" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #expiryDtDisp></mat-datepicker>
+          
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+      <div fxLayout="row" fxFlex="100" style="margin-top: 15px;">
+        <label fxFlex="10" class="input-label">{{ 'COMMON_FILE' | translate }}<span
+            class="mandatory-style">*</span></label>
+
+
+
+        <div fxFlex="50" fxLayoutAlign="start center">
+          <button color="grey" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab
+            matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+            <mat-icon>attachment</mat-icon>
+          </button>
+          <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+          <input style="display:none" id="imgModelupload" type="file" name="organizFile" formControlName="filePath"
+            (change)="handleFileInput($event.target.files)" />
+        </div>
+        <div fxFlex="40"></div>
+      </div>
+
+      <div>
+        <div fxLayoutAlign="center center">
+          <button mat-raised-button type="button" class="space" (click)="uploadAssetDocFile()" color="primary"
+            [disabled]="assetDocumentForm.invalid || !assetDocumentForm.dirty">{{ 'COMMON_SUBMIT' | translate
+            }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

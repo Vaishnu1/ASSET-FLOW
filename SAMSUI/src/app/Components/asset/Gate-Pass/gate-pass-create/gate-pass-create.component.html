@@ -1,0 +1,786 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon> 
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' |
+          translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content link" fxLayoutAlign="start center" aria-current="page">
+          <a (click)="exit()">{{'MENU_GATE_PASS' | translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+
+      <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+      <button *ngIf="submitButton" mat-raised-button color="primary" class="space" (click)="clearGatePass()"
+        [disabled]="disableClear">{{ 'COMMON_CLEAR' | translate }}</button>
+
+
+      <button *ngIf="submitButton" mat-raised-button class="space" color="primary" (click)="saveGatePass()"
+        [disabled]="gatePassHdrForm.invalid || uploadFlag || !formOneValid">
+        <span *ngIf="!uploadFlag">{{displayButton}}</span>
+        <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+
+
+    </mat-toolbar-row>
+
+  </div>
+  <div class="content-section" fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+      <form [formGroup]="gatePassHdrForm" fxFlex="100">
+
+        <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxLayout.md="column">
+          <div fxLayout="row" fxFlex="100">
+            <div fxFlex="25">
+
+              <div class="form-group example-full-width select-branch h-50-px">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" required formControlName="locationName"
+                  (search)="listOfLocationName($event,true)" (click)="listOfLocationName({},true)"
+                  (change)="setFromLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                  (scrollToEnd)="listOfLocationName({},true)" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back',true)" (clear)="listOfLocationName('clear',true)" [loading]="scrollLocationNameSync" tabindex="1"
+                  bindLabel="locDisplayField" bindValue="locDisplayField">
+                </ng-select>
+                <mat-error class="error-style"
+                  *ngIf="gatePassHdrForm.controls.locationName.invalid && gatePassHdrForm.controls.locationName.touched">
+                  <div class="err-field" *ngIf="gatePassHdrForm.controls.locationName.errors.required">
+                    Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+                </mat-error>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px">
+                <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'GATE_PASS_NO' | translate }}</span>
+                      <input matInput class="input-field" formControlName="gatePassNo" readonly>
+                    </mat-form-field>
+                  </div>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px">
+                <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'GATE_PASS_DT' | translate }}
+                        <span class="mandatory-style">*</span></span>
+                      <input matInput class="input-field" formControlName="gatePassDtDisp" readonly
+                        [matDatepicker]="gatePassDt" (click)="gatePassDt.open()"
+                        (keypress)="dateValidationinstall($event)">
+                      <mat-datepicker-toggle matSuffix [for]="gatePassDt"></mat-datepicker-toggle>
+                      <mat-datepicker #gatePassDt></mat-datepicker>
+                      <mat-error class="error-style"
+                        *ngIf="gatePassHdrForm.controls.gatePassDtDisp.invalid && gatePassHdrForm.controls.gatePassDtDisp.touched">
+                        <div class="err-field" *ngIf="gatePassHdrForm.controls.gatePassDtDisp.errors.required">Kindly Select The "{{ 'GATE_PASS_DT' |
+                          translate }}"</div>
+                      </mat-error>
+                    </mat-form-field>
+                </div>
+              </div>
+
+              <!-- <div class="form-group example-full-width">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'GATE_PASS_REQUESTED_BY' | translate }}</span>
+                  <input matInput class="input-field" formControlName="createdBy" readonly>
+                </mat-form-field>
+              </div> -->
+
+              
+
+              
+
+              
+
+              <!-- <div fxLayout="row" class="example-full-width">
+                <div fxFlex="47">
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'GATE_PASS_SOURCE' | translate }}</span>
+                      <input matInput class="input-field" formControlName="gatePassSource" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="6">
+                </div>
+                <div fxFlex="47">
+                  <div class="form-group">
+                  <span class="input-label">{{'GATE_PASS_SOURCE_NO' | translate}}</span>
+                  <ng-select class=" input-field" formControlName="gatePassSourceNo"
+                    (search)="listOfGatePassSourceNo($event)" (click)="listOfGatePassSourceNo({})"
+                    (change)="setGatePassSourceNoData($event)" [virtualScroll]="true" (scrollToEnd)="listOfGatePassSourceNo({})"
+                    (keyup.backspace)="listOfGatePassSourceNo($event.target.value ? $event : 'back')" (clear)="listOfGatePassSourceNo('clear')"
+                    [loading]="scrollGatePassSourceNosync" [items]="gatePassHdrList" bindLabel="gatePassSourceNo"
+                    bindValue="gatePassSourceNo">
+                  </ng-select>
+                  </div>
+                </div>
+              </div> -->
+
+            </div>
+
+            <div fxFlex="25">
+
+              <div fxLayout="row" class="form-group example-full-width select-branch h-50-px">
+                <div fxFlex="90">
+                  <div class="form-group">
+                    <span class="input-label">{{'GATE_PASS_PURPOSE' | translate}}<span class="mandatory-style">*</span></span>
+                    <ng-select class=" input-field" required formControlName="gatePassPurpose" (change)="changeGatePassPurpose($event)"
+                      (search)="listOfGatePassPurpose($event)" (click)="listOfGatePassPurpose({})" [virtualScroll]="true"
+                      (scrollToEnd)="listOfGatePassPurpose({})"
+                      (keyup.backspace)="listOfGatePassPurpose($event.target.value ? $event : 'back')"
+                      (clear)="listOfGatePassPurpose('clear')" [loading]="scrollGatePassPurposesync" [items]="gatePassPurposeList"
+                      bindLabel="purposeName" bindValue="purposeName" tabindex="2">
+                    </ng-select>
+                    <mat-error class="error-style"
+                      *ngIf="gatePassHdrForm.controls.gatePassPurpose.invalid && gatePassHdrForm.controls.gatePassPurpose.touched">
+                      <div class="err-field" *ngIf="gatePassHdrForm.controls.gatePassPurpose.errors.required">
+                        Kindly Select The "{{ 'GATE_PASS_PURPOSE' | translate }}"
+                      </div>
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div fxFlex="5">
+                  <div class="form-group h-55" *ngIf="gatePassSourceInfo">
+                    <mat-icon color="primary" (click)="updateGatePassSourceInfo()" title="{{'GP_SOURCE_INFO' | translate}}" class="bread-crumb-link">info</mat-icon>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group select-branch example-full-width h-50-px">
+                <span class="input-label"> {{ 'DELIVERY_TO' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select class=" input-field" formControlName="deliveryTo" [items]="deliveryTo"
+                  bindLabel="name" bindValue="name" dropdownPosition=bottom (change)="changeDeliveryTo($event)">
+                </ng-select>
+                <mat-error class="error-style"
+                  *ngIf="gatePassHdrForm.controls.deliveryTo.invalid && gatePassHdrForm.controls.deliveryTo.touched">
+                  <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryTo.errors.required">
+                    Kindly Select The "{{ 'DELIVERY_TO' | translate }}"
+                  </div>
+                </mat-error>
+              </div>
+
+              <div class="form-group select-manufacturer example-full-width h-50-px"
+                *ngIf="!enableSupplierCombo && enableManufacturerCombo && !enableBranchCombo && !enableCustomer && !enableEmployee">
+                <span class="input-label">{{'MANUFACTURER' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" required formControlName="deliveryToName"
+                  (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                  (change)="setManufacturerData($event)" [virtualScroll]="true" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')"
+                  [loading]="scrollManufacturersync" [items]="manufacturerList" bindLabel="businessPartnerName"
+                  bindValue="businessPartnerName" tabindex="2">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.deliveryToName.invalid && gatePassHdrForm.controls.deliveryToName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryToName.errors.required">
+                      Kindly Select The "{{'MANUFACTURER' | translate}}"</div>
+                  </mat-error>
+              </div>
+
+              <div class="form-group select-supplier example-full-width h-50-px"
+                *ngIf="enableSupplierCombo && !enableManufacturerCombo && !enableBranchCombo && !enableCustomer && !enableEmployee">
+                <span class="input-label">{{'SUPPLIER_NAME' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" required formControlName="deliveryToName"
+                  (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                  [items]="supplierList" bindLabel="businessPartnerName" bindValue="businessPartnerName" tabindex="2">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.deliveryToName.invalid && gatePassHdrForm.controls.deliveryToName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryToName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_NAME' | translate}}"</div>
+                  </mat-error>
+              </div>
+            </div>
+
+            <div fxFlex="25">
+
+              <div class="form-group example-full-width select-branch h-50-px"
+                *ngIf="enableSupplierCombo && !enableManufacturerCombo && !enableBranchCombo && !enableCustomer && !enableEmployee">
+                <span class="input-label">{{'SUPPLIER_SITE_NAME' | translate}}<span
+                    class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" required formControlName="siteServiceLocationName"
+                  (search)="listOfSupplierLocation($event)" (click)="listOfSupplierLocation({})"
+                  (change)="setSupplierSiteData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfSupplierLocation({})" (keyup.backspace)="listOfSupplierLocation($event.target.value ? $event : 'back')" (clear)="listOfSupplierLocation('clear')" [loading]="scrollSupplierLocationSync"
+                  [items]="supplierLocationCombo" bindLabel="partnerSiteAddress1" bindValue="partnerSiteAddress1" tabindex="2">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.siteServiceLocationName.invalid && gatePassHdrForm.controls.siteServiceLocationName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.siteServiceLocationName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_SITE_NAME' | translate}}"</div>
+                  </mat-error>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px"
+                *ngIf="!enableSupplierCombo && !enableManufacturerCombo && enableBranchCombo && !enableCustomer && !enableEmployee">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select  required formControlName="deliveryToName"
+                  (search)="listOfLocationName($event,false)" (click)="listOfLocationName({},false)"
+                  (change)="setToLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                  (scrollToEnd)="listOfLocationName({},false)" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back',false)" (clear)="listOfLocationName('clear',false)" [loading]="scrollLocationNameSync1" tabindex="1"
+                  bindLabel="locDisplayField" bindValue="locDisplayField">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.deliveryToName.invalid && gatePassHdrForm.controls.deliveryToName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryToName.errors.required">
+                      Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+                  </mat-error>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px"
+                *ngIf="!enableSupplierCombo && !enableManufacturerCombo && !enableBranchCombo && enableCustomer && !enableEmployee">
+                <span class="input-label">{{'CUSTOMER_NAME' | translate}}<span
+                    class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" formControlName="deliveryToName"
+                  (search)="listOfCustomer($event)" (click)="listOfCustomer({})" (change)="setCustomerData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfCustomer({})" (keyup.backspace)="listOfCustomer($event.target.value ? $event : 'back')" (clear)="listOfCustomer('clear')" [loading]="scrollCustomersync"
+                  [items]="customerList" bindLabel="customerName" bindValue="customerName" required>
+                </ng-select>
+                <mat-error class="error-style"
+                  *ngIf="gatePassHdrForm.controls.deliveryToName.invalid && gatePassHdrForm.controls.deliveryToName.touched">
+                  <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryToName.errors.required">
+                    Kindly Select The "{{'CUSTOMER_NAME' | translate}}" </div>
+                </mat-error>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px"
+              *ngIf="!enableSupplierCombo && !enableManufacturerCombo && !enableBranchCombo && enableCustomer && !enableEmployee">
+                <span class="input-label">{{'CUSTOMER_SITE_NAME' | translate}}
+                  <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" formControlName="siteServiceLocationName"
+                  (search)="listOfCustomerLocation($event)" (click)="listOfCustomerLocation({})"
+                  (change)="selectedCustomerLocationData($event)" [virtualScroll]="true" required
+                  (scrollToEnd)="listOfCustomerLocation({})" (keyup.backspace)="listOfCustomerLocation($event.target.value ? $event : 'back')" (clear)="listOfCustomerLocation('clear')" [loading]="scrollCustomerLocationSync"
+                  [items]="customerLocationCombo" bindLabel="customerSiteName" bindValue="customerSiteName" tabindex="3">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.siteServiceLocationName.invalid && gatePassHdrForm.controls.siteServiceLocationName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.siteServiceLocationName.errors.required">
+                      Kindly Select The "{{'CUSTOMER_SITE_NAME' | translate}}" </div>
+                </mat-error>
+              </div>
+
+              <div class="form-group example-full-width select-branch h-50-px"
+               *ngIf="!enableSupplierCombo && !enableManufacturerCombo && !enableBranchCombo && !enableCustomer && enableEmployee">
+                <span class="input-label"> {{ 'EMPLOYEE_NAME' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select [items]="employeeCombo" class="input-field" bindLabel="displayName" bindValue="displayName"
+                  (search)="listOfEmployeeName($event)" (click)="listOfEmployeeName($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfEmployeeName({})" (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName('clear')" [loading]="scrollsyncEmployee" loadingText="Loading..."
+                  (change)="selectedEmployee($event)" formControlName="deliveryToName" required>
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.deliveryToName.invalid && gatePassHdrForm.controls.deliveryToName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryToName.errors.required">
+                        Kindly Select The "{{'EMPLOYEE_NAME' | translate}}"</div>
+                </mat-error>
+              </div>
+
+              <div class="form-group select-supplier example-full-width h-50-px"
+                *ngIf="!enableSupplierCombo && enableManufacturerCombo && !enableBranchCombo && !enableCustomer && !enableEmployee">
+                <span class="input-label">{{'SERVICE_CENTER' | translate}}<span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" required formControlName="siteServiceLocationName"
+                  (search)="listOfManuServiceLocation($event)" (click)="listOfManuServiceLocation({})"
+                  (change)="setManuServiceCenterData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfManuServiceLocation({})" (keyup.backspace)="listOfManuServiceLocation($event.target.value ? $event : 'back')" (clear)="listOfManuServiceLocation('clear')" [loading]="scrollManuServiceLocationSync"
+                  [items]="manuServiceLocationList" bindLabel="partnerSiteName" bindValue="partnerSiteName"
+                  tabindex="2">
+                </ng-select>
+                <mat-error class="error-style"
+                    *ngIf="gatePassHdrForm.controls.siteServiceLocationName.invalid && gatePassHdrForm.controls.siteServiceLocationName.touched">
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.siteServiceLocationName.errors.required">
+                      Kindly Select The "{{'SERVICE_CENTER' | translate}}"</div>
+                  </mat-error>
+              </div>
+
+              <div class="form-group select-branch example-full-width" style="margin-top: -10px;">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'GP_DELIVERY_TO_ADDRESS' | translate }}</span>
+                  <textarea rows="3" matInput class="input-field" formControlName="deliveryToAddress1" tabindex="2"
+                    [maxlength]="500"></textarea>
+                </mat-form-field>
+              </div>
+
+              <!-- <div class="form-group example-full-width">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'DELIVERY_TO_ADDRESS2' | translate }}</span>
+                  <input matInput class="input-field" formControlName="deliveryToAddress2">
+                </mat-form-field>
+              </div> -->
+
+              <!-- <div fxLayout="row" class="example-full-width m--6-px-8-px">
+                <div fxFlex="47">
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'DELIVERY_TO_CITY' | translate }}</span>
+                      <input matInput class="input-field" formControlName="deliveryToCity">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="6">
+
+                </div>
+                <div fxFlex="47">
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'DELIVERY_TO_STATE' | translate }}</span>
+                      <input matInput class="input-field" formControlName="deliveryToState">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div fxLayout="row" class="example-full-width mt-12-px">
+                <div fxFlex="47">
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'DELIVERY_TO_COUNTRY' | translate }}</span>
+                      <input matInput class="input-field" formControlName="deliveryToCountry">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="6">
+
+                </div>
+                <div fxFlex="47">
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                      <span class="input-label">{{'DELIVERY_TO_ZIP' | translate }}</span>
+                      <input matInput class="input-field" formControlName="deliveryToZipcode">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- <div class="form-group example-full-width mt-6-px">
+                <span class="input-label"> {{ 'DELIVERY_MODE' | translate }}<span class="mandatory-style">*</span>
+                </span>
+                <ng-select class=" input-field" formControlName="deliveryMode" [items]="deliveryMode"
+                  bindLabel="name" bindValue="name" dropdownPosition=bottom (change)="setDeliveryMode($event)">
+                </ng-select>
+                <mat-error class="error-style" *ngIf="gatePassHdrForm.controls.deliveryMode.invalid && gatePassHdrForm.controls.deliveryMode.touched">
+                  <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryMode.errors.required">
+                    Kindly Select The "{{ 'DELIVERY_MODE' | translate }}"
+                  </div>
+                </mat-error>
+              </div> -->
+
+              <!-- <div class="form-group example-full-width gt-status">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'GATE_PASS_STATUS' | translate }}</span>
+                  <input matInput class="input-field" formControlName="gatePassStatus" readonly>
+                </mat-form-field>
+              </div> -->
+            </div>
+
+            <div fxFlex="25">
+              <div class="form-group" style="margin-top: -20px;">
+                <mat-form-field [floatLabel]="'always'">
+                  <span class="input-label">{{ 'GATE_PASS_REMARKS' | translate }}</span>
+                  <textarea rows="3" matInput class="input-field" formControlName="gatePassRemarks" tabindex="2"
+                    [maxlength]="500"></textarea>
+                  <mat-hint align="end">{{gatePassHdrForm.controls.gatePassRemarks.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="form-group h-55">
+                <button mat-raised-button class="space" color="blue" (click)="addGPCollectedInfo()" tabindex="46">{{ 'GP_COLLECTED_INFO' | translate }}</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div fxLayout="row" fxFlex="25" class="panel-bottom-field">
+            <div fxFlex="100" fxLayout="column" fxLayout.lt-md="row" fxLayout.md="row">
+
+              <div class="form-group bt-panel1 m--6-px-8-px">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'DELIVERY_TAKEN_BY_PERSON' | translate }}</span>
+                  <input matInput class="input-field" formControlName="deliveryTakenByPerson">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group bt-panel2 mt-12-px">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}</span>
+                  <input matInput class="input-field" formControlName="deliveryTakenByContactNo" [maxlength]="15" [minlength]="10">
+                  <mat-hint align="end">{{gatePassHdrForm.controls.deliveryTakenByContactNo.value?.length || 0}}/15</mat-hint>
+                  <mat-error
+                    *ngIf="gatePassHdrForm.controls.deliveryTakenByContactNo.invalid && gatePassHdrForm.controls.deliveryTakenByContactNo.touched">
+                      <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryTakenByContactNo.errors.pattern?false:gatePassHdrForm.controls.deliveryTakenByContactNo.errors.minlength">
+                        "{{ 'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}" Should Be Of Minimum 10 digits </div>
+                    <div class="err-field" *ngIf="gatePassHdrForm.controls.deliveryTakenByContactNo.errors.pattern">
+                      Kindly Enter Valid "{{ 'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}" </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group bt-panel3">
+                <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                  <span class="input-label">{{'DELIVERY_TAKEN_BY_EMAIL_ID' | translate }}</span>
+                  <input matInput class="input-field" formControlName="deliveryTakenByEmailId">
+                </mat-form-field>
+              </div> -->
+
+              <!-- <div class="form-group" fxHide.lt-md fxHide.md>
+                <mat-form-field [floatLabel]="'always'">
+                  <span class="input-label">{{ 'GATE_PASS_REMARKS' | translate }}</span>
+                  <textarea rows="3" matInput class="input-field" formControlName="gatePassRemarks" tabindex="2"
+                    [maxlength]="500"></textarea>
+                  <mat-hint align="end">{{gatePassHdrForm.controls.gatePassRemarks.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+
+            </div>
+          </div> -->
+
+          <!-- <div fxFlex="100" fxLayout="row" fxHide.gt-md>
+            <div class="form-group bt-panel1">
+              <mat-form-field [floatLabel]="'always'" class="input-lable-font">
+                <span class="input-label">{{ 'GATE_PASS_REMARKS' | translate }}</span>
+                <textarea rows="3" matInput class="input-field" formControlName="gatePassRemarks" tabindex="2"
+                  [maxlength]="500"></textarea>
+                <mat-hint align="end">{{gatePassHdrForm.controls.gatePassRemarks.value?.length || 0}}/500</mat-hint>
+              </mat-form-field>
+            </div>
+          </div> -->
+        </div>
+      </form>
+
+    </div>
+    <div fxLayout="row" fxFlex="100">
+      <mat-tab-group fxFlex="100" [@.disabled]="true">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            {{ 'GATE_PASS_ITEMS' | translate }}
+            <div *ngIf="!modeDisplay">
+              <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+            </div>
+          </ng-template>
+          <form [formGroup]="gatePassDtlForm">
+            <div fxLayout="row">
+              <div fxFlex="24">
+                <div class="form-group h-65-px">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'GATE_PASS_FOR' | translate }} <span class="mandatory-style">*</span>
+                    </span>
+                    <ng-select class=" input-field" formControlName="gatePassFor" [items]="gatePassFor"
+                      bindLabel="name" bindValue="name" dropdownPosition=bottom (change)="setGatePassForData($event)"
+                      appendTo="body">
+                    </ng-select>
+                    <mat-error class="error-style"
+                      *ngIf="gatePassDtlForm.controls.gatePassFor.invalid && gatePassDtlForm.controls.gatePassFor.touched">
+                      <div class="err-field" *ngIf="gatePassDtlForm.controls.gatePassFor.errors.required">
+                        Kindly Select The "{{ 'GATE_PASS_FOR' | translate}}"
+                      </div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="24">
+                <div *ngIf="gatePassForAssetCombo">
+                  <div class="form-group h-65-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'ASSET_CODE' | translate }} <span class="mandatory-style">*</span> </span>
+                      <ng-select [items]="assetCodeCombo" class="input-field" bindLabel="comboDisp"
+                        bindValue="comboDisp" (search)="fetchListOfAllAsset($event)"
+                        (click)="fetchListOfAllAsset($event)" [virtualScroll]="true" formControlName="assetCode"
+                        (scrollToEnd)="fetchListOfAllAsset({})" (keyup.backspace)="fetchListOfAllAsset($event.target.value ? $event : 'back')" (clear)="fetchListOfAllAsset('clear')" [loading]="scrollsyncAssetCode"
+                        loadingText="Loading..." (change)="selectedAssetCodeData($event)" dropdownPosition=bottom appendTo="body">
+                      </ng-select>
+                      <mat-error class="error-style"
+                        *ngIf="gatePassDtlForm.controls.assetCode.invalid && gatePassDtlForm.controls.assetCode.touched && !formOneValid">
+                        <div class="err-field" *ngIf="gatePassDtlForm.controls.assetCode.errors.required">
+                          Kindly Select The "{{'ASSET_CODE' | translate}}"</div>
+                      </mat-error>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="gatePassForModule">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'MODULE' | translate }} <span class="mandatory-style">*</span> </span>
+                      <ng-select [items]="modelModuleCombo" class="input-field" required bindLabel="itemModuleName"
+                        bindValue="itemModuleName" (search)="listOfModelModuleName($event)" appendTo="body"
+                        (click)="listOfModelModuleName($event)" [virtualScroll]="true"
+                        (scrollToEnd)="listOfModelModuleName({})" (keyup.backspace)="listOfModelModuleName($event.target.value ? $event : 'back')" (clear)="listOfModelModuleName('clear')" [loading]="scrollModelModuleSync"
+                        loadingText="Loading..." (change)="selectedModuleData($event)">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="gatePassForSpares">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'SPARES' | translate }} <span class="mandatory-style">*</span> </span>
+                      <ng-select [items]="itemList" class="input-field" required bindLabel="itemName" appendTo="body"
+                        bindValue="itemName" (search)="listOfItem($event)" (click)="listOfItem($event)"
+                        [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')" [loading]="scrollItemNameSync"
+                        loadingText="Loading..." (change)="selectedItemDataData($event)">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="gatePassForAcc">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'ACCESSORIES' | translate }} <span class="mandatory-style">*</span>
+                      </span>
+                      <ng-select [items]="itemList" class="input-field" required bindLabel="itemName" appendTo="body"
+                        bindValue="itemName" (search)="listOfItem($event)" (click)="listOfItem($event)"
+                        [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')" [loading]="scrollItemNameSync"
+                        loadingText="Loading..." (change)="selectedItemDataData($event)">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="gatePassForCon">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'CONSUMABLES' | translate }} <span class="mandatory-style">*</span>
+                      </span>
+                      <ng-select [items]="itemList" class="input-field" required bindLabel="itemName" appendTo="body"
+                        bindValue="itemName" (search)="listOfItem($event)" (click)="listOfItem($event)"
+                        [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')" [loading]="scrollItemNameSync"
+                        loadingText="Loading..." (change)="selectedItemDataData($event)">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div fxFlex="30" *ngIf="gatePassForAssetCombo">
+                <div class="form-group">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'ASSET_INFO' | translate }} </span>
+                    <span class="input-field">{{assetCodeDisp}}</span> <br>
+                    <span class="input-field" style="color: red;">{{assetTransactionSrcDesc}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div fxFlex="15">
+                <button *ngIf="submitButton" mat-raised-button class="space-near" color="primary"
+                  [disabled]="gatePassDtlForm.invalid || assetTransactionSrc == 'INTERNAL LOAN' || assetTransactionSrc == 'EXTERNAL LOAN' || assetTransactionSrc == 'ASSET RELOCATE'"
+                  (click)="addAssetOrItemInfo(gatePassDtlForm.controls.assetCode.value,gatePassDtlForm.controls.transactionId.value)">
+                  {{'COMMON_ADD' | translate }}</button>
+              </div>
+
+            </div>
+          </form>
+
+          <div class="row" style="padding-top: 0.5%;">
+            <div *ngIf="gatePassForAsset">
+              <table fxFlex="100" mat-table #matGatePassDtlModel [dataSource]="gatePassDtlFormList">
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'COMMON_S_NO' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element;let i = index;"> {{i+1}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_CODE' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.assetCode}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_NAME' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'MODEL_NAME' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.modelName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="manufacturerName">
+                  <th mat-header-cell *matHeaderCellDef>{{'MANUFACTURER' | translate }}</th>
+                  <td mat-cell *matCellDef="let element"> {{element.manufacturerName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetGroupName">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_GROUP' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.assetGroupName}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="returnType">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:15%;">
+                    {{'GATE_PASS_RETURN_TYPE' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element">
+                    <ng-select  [items]="returnTypeList" bindLabel="name" bindValue="name"
+                      [(ngModel)]="element.returnType" name="returnType" class="form-control" type="text"
+                      id="returnType" dropdownPosition=bottom appendTo="body" [disabled]="modeDisplay">
+                    </ng-select>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="returnedStatus">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">
+                    {{'RETURN_RETURN_STATUS' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.returnedStatus}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:5%;">{{'GATE_PASS_QUANTITY'
+                    | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element">
+
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <input [min]="1" matInput [(ngModel)]="element.quantity" name="quantity" class="form-control" id="quantity"
+                      [disabled]="modeDisplay" type="number">
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expectedReturnDt">
+                  <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'EXPECTED_RETURN_DT' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element;let i = index;" style="width:8%;text-align: center">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <input matInput  [(ngModel)]="element.expectedReturnDtDisp" [disabled]="modeDisplay"
+                        class="form-control" id="expectedReturnDtDisp" (click)="expectedReturnDt.open()" (keypress)="dateValidationinstall($event)" [matDatepicker]="expectedReturnDt" [min]="gatePassHdrForm.controls.gatePassDtDisp.value">
+                      <mat-datepicker-toggle matSuffix [for]="expectedReturnDt"></mat-datepicker-toggle>
+                      <mat-datepicker #expectedReturnDt></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_ACTION' | translate }}</th>
+                  <td mat-cell *matCellDef="let element;let j = index;">
+
+                    <button mat-icon-button color *ngIf="element.gatePassDtlId <= 0" color="warn"
+                      matTooltip="{{ 'COMMON_DELETE' | translate }}" class="action_icon"
+                      (click)="deleteGatePassItem(element.gatePassDtlId,j)"><mat-icon>delete</mat-icon></button>
+
+                    <button mat-icon-button color *ngIf="element.gatePassDtlId > 0 && element.returnedStatus != 'RETURNED'
+                      && gatePassHdrForm.controls.gatePassStatusId.value == gatepassStatusApproved && modeDisplay != true" color="primary"
+                      matTooltip="{{ 'UPDATE_RETURN' | translate }}" class="action_icon"
+                      (click)="updateReturnInfo(element,j,'edit')"><mat-icon>edit</mat-icon></button>
+
+                    <button mat-icon-button color *ngIf="element.gatePassDtlId > 0" color="primary"
+                      matTooltip="{{ 'VIEW' | translate }}" class="action_icon"
+                      (click)="updateReturnInfo(element,j,'view')"><mat-icon>visibility</mat-icon></button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="dispColumnsGatePassForAsset; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: dispColumnsGatePassForAsset;let i = index"></tr>
+              </table>
+            </div>
+
+            <div *ngIf="!gatePassForAsset">
+              <table fxFlex="100" mat-table #matGatePassDtlModel [dataSource]="gatePassDtlFormList">
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'COMMON_S_NO' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element;let i = index;"> {{i+1}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_CODE' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.assetCode}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="itemName">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ITEM_NAME' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.itemName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="itemDesc">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ITEM_DESC' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.itemDesc}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="returnType">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:15%;">
+                    {{'GATE_PASS_RETURN_TYPE' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element">
+                    <ng-select  [items]="returnTypeList" bindLabel="name" bindValue="name"
+                      [(ngModel)]="element.returnType" name="returnType" class="form-control" type="text"
+                      id="returnType" [disabled]="modeDisplay">
+                    </ng-select>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="returnedStatus">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">
+                    {{'RETURN_RETURN_STATUS' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element.returnedStatus}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:5%;">{{'GATE_PASS_QUANTITY'
+                    | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element">
+                    <input [min]="1" [(ngModel)]="element.quantity" name="quantity" class="form-control" type="number"
+                      id="quantity" [disabled]="modeDisplay">
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expectedReturnDt">
+                  <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">
+                    {{'EXPECTED_RETURN_DT' | translate }}</th>
+                  <td mat-cell class="table-cell-data" *matCellDef="let element" style="width:8%;text-align: center">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{'REPORT_FROM_DATE' | translate}}</mat-label>
+                      <input matInput [(ngModel)]="element.expectedReturnDtDisp" [disabled]="modeDisplay"
+                        class="form-control" id="expectedReturnDtDisp" [min]='gatePassHdrForm.controls.gatePassDtDisp.value'>
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_ACTION' | translate }}</th>
+                  <td mat-cell *matCellDef="let element;let j = index;">
+                    <mat-icon *ngIf="element.gatePassDtlId <= 0" color="primary"
+                      matTooltip="{{ 'COMMON_DELETE' | translate }}" class="action_icon"
+                      (click)="deleteGatePassItem(element.gatePassDtlId,j)"
+                      style="cursor: pointer;font-size: 17px !important;color: red;">delete</mat-icon>
+
+                    <mat-icon *ngIf="element.gatePassDtlId > 0 && element.returnedStatus != 'RETURNED'
+                      && gatePassHdrForm.controls.gatePassStatusId.value == gatepassStatusApproved && modeDisplay != true" color="primary"
+                      matTooltip="{{ 'UPDATE_RETURN' | translate }}" class="action_icon"
+                      (click)="updateReturnInfo(element,j,'edit')"
+                      style="cursor: pointer;font-size: 17px !important;color: red;">edit</mat-icon>
+
+                    <mat-icon *ngIf="element.gatePassDtlId > 0" color="primary"
+                      matTooltip="{{ 'VIEW' | translate }}" class="action_icon"
+                      (click)="updateReturnInfo(element,j,'view')"
+                      style="cursor: pointer;font-size: 17px !important;color: red;">visibility</mat-icon>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="dispColumnsGatePassForOther; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: dispColumnsGatePassForOther;let i = index"></tr>
+              </table>
+            </div>
+
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="gatePassHdrForm.controls.gatePassHdrId.value > 0"
+          label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+          <mat-card class="card-style">
+            <mat-card-content>
+          <app-common-workflow-approval-tab [transactionId]=gatePassHdrId [transactionSource]=transactionSource
+            [gatePassStatusId]=gatePassHdrForm.controls.gatePassHdrId.value [gatePassApproveButton]=approvebuttonEnable
+            [gatePassEmployeeId]=employeeId (confirmGatePass)=gatepassWorkflowApproval(true) (GatePassReject) = gatepassWorkflowApproval(false)>
+          </app-common-workflow-approval-tab>
+          </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

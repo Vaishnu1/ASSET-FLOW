@@ -1,0 +1,153 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row">
+    <div fxFlex="90">
+  <h5 class="dialogue-box-header" fxLayoutAlign="start center">{{ 'ASSET_INFO' | translate }}</h5>
+</div>
+  <div fxFlex="10" fxLayoutAlign="end start">
+    <mat-icon class="close-icon" (click)="closeAssetInfoDetails()">highlight_off</mat-icon>
+  </div>
+</div>
+ 
+  <!-- <div style="display: flex !important"> -->
+
+  <div fxFlex="100" fxLayout="column">
+
+    <div class="info-field" fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_CODE' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.assetCode.value}} </div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_SERIAL_NO' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.serialNo.value}} </div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_GROUP' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.assetGroupName.value}} </div>
+      </div>
+    </div>
+
+    <div class="info-field" fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div fxFlex="30">
+        <div class="title"> {{ 'MODEL_NAME' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.modelName.value}}</div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'MANUFACTURER' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.manufacturerName.value}} </div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.assetCategoryName.value}}</div>
+      </div>
+    </div>
+
+    <div class="info-field" fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_FUNCTIONALITY' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.functionalStatus.value}} </div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_STATUS' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.assetStatus.value}}</div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'SUPPLIER_NAME' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.supplierName.value}} </div>
+      </div>
+    </div>
+
+    <div class="info-field" fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_PUR_ORD_NO' | translate }} </div>
+        <div style="word-break: break-word;" class="value"> {{assetMainForm.controls.purchaseOrderNo.value}}</div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_PUR_DATE' | translate }} </div>
+        <div class="value"> {{assetMainForm.controls.purchaseDtDisp.value}}</div>
+      </div>
+      <div fxFlex="30">
+        <div class="title"> {{ 'ASSET_TOT_AMT' | translate }} </div>
+        <div class="value"> <span
+            class="currency">{{assetMainForm.controls.totalPurchaseAmt.value.toLocaleString()}}</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div>
+    <div style="margin-bottom:5%;">
+      <mat-tab-group>
+        <mat-tab label="{{ 'ASSET_CONTRACT_DETAILS' | translate }}">
+          <mat-card class="card-style">
+            <mat-card-content>
+              <div class="content-style">
+                <div fxLayout="column">
+                  <table mat-table [dataSource]="contractDataSource">
+                    <ng-container matColumnDef="sno" style="width: 3%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data" > {{ 'COMMON_S_NO' | translate }} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" class="table-cell-data"> {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractNo" style="width: 8%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'CONTRACT_NUMBER' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractNo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractName" style="width: 8%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'CONTRACT_TITLE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data">  {{element?.contractName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="coverageType" style="width: 5%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'CONTRACT_COVERAGE_TYPE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.coverageType}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractType" style="width: 8%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'CONTRACT_TYPE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractType}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractingPartyType" style="width: 10%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'CONTRACT_PARTY' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractingPartyType}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractPartyName" style="width: 8%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'CONTRACT_PARTY_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractPartyName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractStartDtDisp" style="width: 10%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'CONTRACT_START_DATE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractStartDtDisp}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contractEndDtDisp" style="width: 10%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'CONTRACT_END_DATE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.contractEndDtDisp}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="active" style="width: 10%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'COMMON_ACTIVE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" class="table-cell-data">
+                        <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="netContractValue" style="width: 8%;">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'CONTRACT_PERIOD_NET_VALUE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element?.netContractValue.toLocaleString()}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="contractDisplayCol;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: contractDisplayCol;">
+                  </table>
+                  <mat-card fxLayoutAlign="center center" *ngIf="contractLength=='0'" class="no_records_found">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+      </mat-tab-group>
+
+    </div>
+  </div>
+</div>
+
+<!-- </div> -->

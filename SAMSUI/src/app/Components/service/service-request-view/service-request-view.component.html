@@ -1,0 +1,94 @@
+<div fxLayout="column">
+
+    <div fxLayout="row" > 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{'SR_PROBLEM_ANALYSIS' | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <div fxLayout="column">  
+      <form [formGroup]="srBreakDownForm" fxFlex="100"> 
+
+        <div style="margin-top: 10px;">
+          
+            <div class="example-full-width">   
+              <span class="input-label"> {{ 'SR_CAUSE_CODE' | translate }} <span class="mandatory-style">*</span>
+              </span>
+              <ng-select [items]="sr3AttributeCombo" required bindLabel="attribute3Name"
+                (search)="loadSr3AttributeComboData($event)" (click)="loadSr3AttributeComboData($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadSr3AttributeComboData({})" (keyup.backspace)="loadSr3AttributeComboData($event.target.value ? $event : 'back')" (clear)="loadSr3AttributeComboData('clear')" [loading]="scrollsyncSr3Attribute"
+                loadingText="Loading..." (change)="selectedSr3AttributeData($event)" formControlName="srAttribute3Name">
+              </ng-select>
+              <mat-error *ngIf="srBreakDownForm.controls.srAttribute3Name.invalid && srBreakDownForm.controls.srAttribute3Name.touched">
+                <div class="err-field" *ngIf="srBreakDownForm.controls.srAttribute3Name.errors.required">
+                  {{ 'SR_CAUSE_CODE' | translate }} is Required </div>
+              </mat-error>
+            </div>
+         
+        </div>
+
+        <div style="margin-top: 10px;">
+        
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'SR_ACTION_SUGGESTED' | translate }} <span class="mandatory-style">*</span> </span>
+              <ng-select [items]="sr4AttributeCombo" required bindLabel="attribute4Name"
+                (search)="loadSr4AttributeComboData($event)" (click)="loadSr4AttributeComboData($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadSr4AttributeComboData({})" (keyup.backspace)="loadSr4AttributeComboData($event.target.value ? $event : 'back')" (clear)="loadSr4AttributeComboData('clear')" [loading]="scrollsyncSr4Attribute"
+                loadingText="Loading..." (change)="selectedSr4AttributeData($event)" formControlName="srAttribute4Name">
+              </ng-select>
+              <mat-error *ngIf="srBreakDownForm.controls.srAttribute4Name.invalid && srBreakDownForm.controls.srAttribute4Name.touched">
+                <div class="err-field" *ngIf="srBreakDownForm.controls.srAttribute4Name.errors.required">
+                  {{ 'SR_ACTION_SUGGESTED' | translate }} is Required </div>
+              </mat-error>
+            </div>
+          
+        </div>
+
+        <div style="margin-top: 10px;">
+          
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <mat-label class="input-label"> {{ 'SR_PROBLEM_OBSERVED' | translate }} </mat-label>
+              <textarea matInput formControlName="problemObserved" [maxlength]="100"  class="input-field"></textarea>
+              <mat-hint align="end">{{srBreakDownForm.controls.problemObserved.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="srBreakDownForm.controls.problemObserved.invalid && srBreakDownForm.controls.problemObserved.touched">
+                <div *ngIf="srBreakDownForm.controls.problemObserved.errors.maxlength">
+                  {{ 'SR_PROBLEM_OBSERVED' | translate }} Maximum
+                  Length is 100 </div>
+              </mat-error>
+            </mat-form-field>
+         
+        </div>
+
+        <div style="margin-top: 10px;">
+         
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <mat-label class="input-label"> {{ 'SR_ACTION_TAKEN' | translate }} </mat-label>
+              <textarea matInput formControlName="actionTaken" [maxlength]="100" required  class="input-field"></textarea>
+              <mat-hint align="end">{{srBreakDownForm.controls.actionTaken.value?.length || 0}}/100</mat-hint>
+              <mat-error *ngIf="srBreakDownForm.controls.actionTaken.invalid && srBreakDownForm.controls.actionTaken.touched">
+                <div class="err-field" *ngIf="srBreakDownForm.controls.actionTaken.errors.required">
+                    {{ 'SR_ACTION_TAKEN' | translate }} is Required </div>
+                <div *ngIf="srBreakDownForm.controls.actionTaken.errors.maxlength">
+                  {{ 'SR_ACTION_TAKEN' | translate }} Maximum
+                  Length is 100 </div>
+              </mat-error>
+            </mat-form-field>
+          
+        </div>
+
+        <div fxlayout="row" class="service-request-button"> 
+            <button mat-raised-button color="primary" [disabled]="srBreakDownForm.invalid"
+              (click)="updateSrActivty()">
+              <span *ngIf="!uploadFlag"> {{'COMMON_SUBMIT' | translate}} </span>
+              <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button> 
+        </div>
+
+      </form>
+    </div>
+
+</div>

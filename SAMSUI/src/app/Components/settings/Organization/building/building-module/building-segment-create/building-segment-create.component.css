@@ -1,0 +1,39 @@
+.section_title {
+    font-size: 22px;
+    color: #445c8f;
+    padding:20px 0px;
+  }
+
+  .modalform {
+    padding:0px;
+  }
+  .mat-raised-button {
+    color:#fff !important;
+    min-width: 30px !important;
+  }
+  .closebutton {
+    margin-top: -20px; 
+    margin-right: -35px; 
+  }
+  .space {
+    margin-right: 5px;
+  }
+  
+  .example-label{
+    font-size: 20px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color:#000000;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+
+  /* .pad-10-px {
+    padding: 10px;
+  } */
+
+  .close-icon {
+    color: red;
+    cursor: pointer;
+  }

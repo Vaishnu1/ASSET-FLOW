@@ -1,0 +1,52 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="close()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="supplierRegForm">
+    <div fxLayout="column" fxFlex="100">
+      <div>
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+          <mat-label class="input-label">{{ 'REGISTRATION_NAME' | translate }} </mat-label>
+          <input matInput required class="input-field" formControlName="registrationName" [maxlength]="50"
+            oninput="this.value = this.value.toUpperCase()">
+          <mat-hint align="end">{{supplierRegForm.controls.registrationName.value?.length || 0}}/50</mat-hint>
+          <mat-error
+            *ngIf="supplierRegForm.controls.registrationName.invalid && supplierRegForm.controls.registrationName.touched">
+            <div class="err-field" *ngIf="supplierRegForm.controls.registrationName.errors.required">"{{ 'REGISTRATION_NAME' | translate }}"
+              Is Required </div>
+            <div class="err-field" *ngIf="supplierRegForm.controls.registrationName.errors.maxlength"> {{ 'REGISTRATION_NAME' | translate
+              }} Maximum Length is 50 </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div style="margin-top:10px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+          <mat-label class="input-label"> {{ 'REGISTRATION_NO' | translate }} </mat-label>
+          <input matInput required class="input-field" formControlName="registrationNo" [maxlength]="50"
+            oninput="this.value = this.value.toUpperCase()">
+          <mat-hint align="end">{{supplierRegForm.controls.registrationNo.value?.length || 0}}/50</mat-hint>
+          <mat-error
+            *ngIf="supplierRegForm.controls.registrationNo.invalid && supplierRegForm.controls.registrationNo.touched">
+            <div class="err-field" *ngIf="supplierRegForm.controls.registrationNo.errors.required">"{{ 'REGISTRATION_NO' | translate }}"
+              Is Required </div>
+            <div class="err-field" *ngIf="supplierRegForm.controls.registrationNo.errors.maxlength">{{ 'REGISTRATION_NO' | translate }}
+              Maximum Length is 50 </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayoutAlign="center center" style="margin-top:10px;">
+        <!-- <button mat-raised-button class="space" color="primary" (click)="close()">{{ 'COMMON_BACK' | translate }}</button> -->
+        <button mat-raised-button class="space" color="primary" (click)="save()"
+          [disabled]="supplierRegForm.invalid || !supplierRegForm.dirty">{{buttonDisplay}}</button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,481 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+        <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>  
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET'| translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET_EXTERNAL_LOANS'| translate}}
+          </mat-list-item>
+        </mat-list>
+        <span class="example-spacer"></span>
+        <div fxFlex></div>
+      </mat-toolbar-row>
+    </div>
+
+    <div fxLayout="row">
+      <div class="content_section_background" style="padding-top:0.5%">
+          <div class="table_section">
+            <mat-expansion-panel hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET_EXTERNAL_LOANS'| translate}}
+                </mat-panel-title>
+                <mat-panel-description fxLayoutAlign="end end">
+                  <mat-icon>search</mat-icon>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div fxLayout="row">
+
+                  <div fxFlex="30">
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                        <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField" (search)="loadLocationComboData($event)"
+                          (click)="loadLocationComboData($event)" [virtualScroll]="true" appendTo="body"
+                          (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                          (change)="selectedLocationData($event)" [(ngModel)]="loanReturns.locationName"
+                          [ngModelOptions]="{standalone: true}"></ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'LOAN_CODE' | translate }} </span>
+                        <ng-select [items]="loanComboList" class="input-field" bindLabel="loanNo" bindValue="loanNo" appendTo="body"
+                          (search)="loadLoanCodeComboData($event)" (click)="loadLoanCodeComboData($event)" tabindex="1"
+                          [virtualScroll]="true" (scrollToEnd)="loadLoanCodeComboData({})" (keyup.backspace)="loadLoanCodeComboData($event.target.value ? $event : 'back')" (clear)="loadLoanCodeComboData('clear')" [loading]="scrollsyncLoan"
+                          loadingText="Loading..." [(ngModel)]="loanReturns.loanNo" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'EXTERNAL_LOAN_STATUS' | translate }} </span>
+                        <ng-select [ngModelOptions]="{standalone: true}"
+                          (search)="loadStatusComboData($event)" (click)="loadStatusComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadStatusComboData({})" (keyup.backspace)="loadStatusComboData($event.target.value ? $event : 'back')" (clear)="loadStatusComboData('clear')" [loading]="scrollsyncLoanstatus"
+                          loadingText="Loading..." (change)="getLoanStatusValue($event)" appendTo="body"
+                          class="input-field" [(ngModel)]="loanReturns.loanStatus">
+                          <ng-option *ngFor="let loanReturnStatus of loanStatusList" [value]="loanReturnStatus">
+                            {{ loanReturnStatus.processStatusName | translate }}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+                        <span class="input-label">{{ 'LOAN_ISSUED_DT' | translate}}</span>
+                        <input matInput class="input-field" (click)="loanDt.open()" [matDatepicker]="loanDt" (dateChange)="loanRequestedDateValidation($event)">
+                        <mat-datepicker-toggle matSuffix [for]="loanDt"></mat-datepicker-toggle>
+                        <mat-datepicker #loanDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div fxFlex="5"></div>
+                  <div fxFlex="30">
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_CODE' | translate }}</span>
+                        <ng-select [items]="assetCodeCombo" class="input-field" bindLabel="assetCode" bindValue="assetCode"
+                          (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                          loadingText="Loading..." (change)="selectedAssetCodeData($event)" appendTo="body"
+                          [(ngModel)]="loanReturns.assetCode" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                        <ng-select class=" input-field" [(ngModel)]="loanReturns.modelName"
+                          [ngModelOptions]="{standalone: true}" (click)="listOfAllModel({})" [virtualScroll]="true"
+                          (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')" appendTo="body"
+                          (change)="getModelComboValue($event)" [items]="modelCombo" bindLabel="modelName"
+                          bindValue="modelName" [loading]="scrollsyncModel" loadingText="Loading..." required>
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'LOAN_TO' | translate }}
+                        </span>
+                        <ng-select class=" input-field" bindLabel="name" bindValue="name"
+                          [items]="loanToOptions" (change)="clearAllFields()" appendTo="body"
+                          [(ngModel)]="loanReturns.loanedTo" [ngModelOptions]="{standalone: true}">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" *ngIf="loanReturns.loanedTo=='SUPPLIER'">
+                      <span class="input-label">{{'SUPPLIER_NAME' | translate}}</span>
+                      <ng-select class=" input-field" appendTo="body"
+                      [(ngModel)]="loanReturns.loanedToName" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                        [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                        [items]="supplierList" bindLabel="supplierName" bindValue="supplierName">
+                      </ng-select>
+                    </div>
+
+                    <div class="form-group" *ngIf="loanReturns.loanedTo=='MANUFACTURER'">
+                      <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                      <ng-select class=" input-field" [(ngModel)]="loanReturns.loanedToName" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})" appendTo="body"
+                        (change)="setManufacturerData($event)" [virtualScroll]="true" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')"
+                        [loading]="scrollManufacturersync" [items]="manufacturerList" bindLabel="manufacturerName"
+                        bindValue="manufacturerName">
+                      </ng-select>
+                    </div>
+
+                    <div class="form-group" *ngIf="loanReturns.loanedTo === 'CUSTOMER'">
+                      <span class="input-label">{{'CUSTOMER_SITE_NAME' | translate}} </span>
+                      <ng-select class=" input-field" appendTo="body"
+                      [(ngModel)]="loanReturns.loanedToSiteName" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfCustomerLocation($event)" (click)="listOfCustomerLocation({})"
+                        (change)="selectedCustomerLocationData($event)" [virtualScroll]="true"
+                        (scrollToEnd)="listOfCustomerLocation({})" (keyup.backspace)="listOfCustomerLocation($event.target.value ? $event : 'back')" (clear)="listOfCustomerLocation('clear')" [loading]="scrollCustomerLocationSync"
+                        [items]="customerLocationCombo" bindLabel="custNameDispVal" bindValue="custNameDispVal">
+                      </ng-select>
+                    </div>
+
+                    <div class="form-group" *ngIf="loanReturns.loanedTo=='EMPLOYEE'">
+                      <span class="input-label"> {{ 'EMPLOYEE_NAME' | translate }}
+                      </span>
+                      <ng-select [items]="employeeCombo" class="input-field" bindLabel="displayName" bindValue="displayName"
+                        (search)="listOfEmployeeName($event)" (click)="listOfEmployeeName($event)" [virtualScroll]="true"
+                        (scrollToEnd)="listOfEmployeeName({})" (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName('clear')" [loading]="scrollsyncEmployee" loadingText="Loading..."
+                        (change)="selectedEmployee($event)" appendTo="body"
+                        [(ngModel)]="loanReturns.loanedToName" [ngModelOptions]="{standalone: true}" >
+                      </ng-select>
+                    </div>
+
+                    <div class="form-group" *ngIf="loanReturns.loanedTo=='BRANCH'">
+                      <span class="spacing input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField"
+                        (search)="loadLocationComboDataSearch($event)" (click)="loadLocationComboDataSearch($event)"
+                        [virtualScroll]="true"
+                        (scrollToEnd)="loadLocationComboDataSearch({})" (keyup.backspace)="loadLocationComboDataSearch($event.target.value ? $event : 'back')" (clear)="loadLocationComboDataSearch('clear')" [loading]="scrollsync" loadingText="Loading..."
+                        (change)="selectedLocationLoanData($event)" appendTo="body"
+                        [(ngModel)]="loanReturns.loanedToName" [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+
+                  </div>
+
+                  <div fxFlex="5"></div>
+
+                  <div fxFlex="30">
+
+                    <div class="form-group start-date-field">
+                      <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+                        <span class="input-label">{{ 'START_DATE' | translate}}</span>
+                        <input matInput class="input-field" (click)="fromDt.open()" [matDatepicker]="fromDt" [(ngModel)]="loanReturns.fromDtDisp"
+                          [ngModelOptions]="{standalone: true}" (dateChange)="fromDateValidation($event)" tabindex="11">
+                        <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group end-date-field">
+                      <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+                        <span class="input-label">{{ 'LOAN_END_DATE' | translate}}</span>
+                        <input matInput class="input-field" (click)="endDt.open()" [matDatepicker]="endDt" [(ngModel)]="loanReturns.toDtDisp"
+                          [ngModelOptions]="{standalone: true}" (dateChange)="toDateValidation($event)" tabindex="12">
+                        <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                        <mat-datepicker #endDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group loan-type-field">
+                      <div class="example-full-width">
+                        <span class="input-label">{{ 'LOAN_TYPE' | translate }}</span>
+                        <ng-select class=" input-field" [(ngModel)]="loanReturns.loanType" appendTo="body"
+                        [ngModelOptions]="{standalone: true}" [items]="loanTypeList" bindLabel="name"
+                          bindValue="name">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="form-group" fxLayoutAlign="end end" style="margin-top: 10px;">
+                      <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="searchLoans()">{{'COMMON_SEARCH' | translate}}</button>
+
+                    <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" (click)="searchLoans()"  fxHide.gt-sm><mat-icon>search</mat-icon></button>
+
+                      <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+                        <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="clear()"  fxHide.gt-sm><mat-icon>clear_all</mat-icon></button>
+
+                      <button mat-raised-button fxHide.sm fxHide.xs color="primary" class="space" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="generateReportForLoan()">{{ 'REPORT_EXPORT' | translate }}
+                      </button>
+
+                      <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                      [matTooltipPosition]="'below'" (click)="generateReportForLoan()"  fxHide.gt-sm><mat-icon>file_download</mat-icon></button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+            </mat-expansion-panel>
+
+            <hr>
+
+            <mat-toolbar>
+              <span>{{'MENU_ASSET_EXTERNAL_LOANS' | translate}} List</span>
+              <span class="example-spacer"></span>
+              <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+              <span class="example-spacer"></span>
+
+                                    <!-- custom column -->
+        <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+          <mat-icon>view_week</mat-icon>
+        </button>
+        
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('loanNo')"(change)="toggleColumn('loanNo')">
+            <span>{{'LOAN_CODE' | translate}}</span>
+            <br>
+
+            <input type="checkbox" (change)="toggleColumn('assetCode')" [checked]="displayedColumns.includes('assetCode')">
+            <span>{{'LOAN_ASSET_CODE' | translate}}</span> <br>
+          </div>
+    
+          <div id="column2">
+            
+    
+            <input type="checkbox" (change)="toggleColumn('loanedTo')" [checked]="displayedColumns.includes('loanedTo')">
+            <span>{{'LOAN_TO_LOAN' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('loanStatus')" [checked]="displayedColumns.includes('loanStatus')">
+            <span>{{'EXTERNAL_LOAN_STATUS' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('approvalStatus')" [checked]="displayedColumns.includes('approvalStatus')">
+            <span>{{'WORKFLOW_APPROVE_STATUS' | translate}}</span><br>
+
+          </div>
+    
+          <div id="column4">
+            <input type="checkbox" (change)="toggleColumn('fromDt')" [checked]="displayedColumns.includes('fromDt')">
+            <span>{{'LOAN_START_DATE_END_DT' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+            <span>{{'COMMON_CREATED_BY_DT' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('updatedBy')" [checked]="displayedColumns.includes('updatedBy')">
+            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span><br>
+          </div>
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+      <!-- custom column end -->
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+              *ngIf="modelAccessModule.createFlagDisplay" (click)="createAssetLoan('create')"><mat-icon>add</mat-icon>
+            </button>
+            <button [disabled]="enableActionBtn || checkEditValid()" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+            (click)="createAssetLoan('edit')"> <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn"*ngIf="modelAccessModule.readFlagDisplay"
+                matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="createAssetLoan('view')">
+                <mat-icon>visibility</mat-icon>
+            </button>
+
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+            matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="confirmLoanApprove()">
+            <mat-icon>spellcheck</mat-icon>
+            </button>
+
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+            matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rejectLoanApprove()">
+            <mat-icon>cancel</mat-icon>
+            </button>
+
+            </mat-toolbar>
+
+            <div class="example-container">
+            <div fxLayout="row">
+              <table id="loanListTable" mat-table class="Loan-list" [dataSource]="loanDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+                matSortDirection="asc" matSortDisableClear>
+
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" [checked]="selectAllLoan" class="example-margin" (change)="selectAllLoans($event)">
+                  </mat-checkbox>  </th>
+                  <td mat-cell *matCellDef="let element;let i = index;">
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectLoan(element)" [checked]="compareValue(element)">
+                    </mat-checkbox> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef style="width: 3%;"> {{'COMMON_S_NO' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;"> {{getIndexValue(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LOCATION_NAME' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element" > {{element?.locationName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loanNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOAN_CODE' | translate}} / <br /> {{'LOAN_REQUESTED_BY' | translate}} / <br /> {{'LOAN_CODE_DT' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.loanNo}} / <br /> {{element?.loanedPersonName}} / <br /> {{element?.createdDtDisp}}  </td>
+                </ng-container>
+                <ng-container matColumnDef="loanedTo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header >
+                    {{'LOAN_TO_LOAN' | translate}} / <br /> {{'LOAN_TO_LOAN_NAME' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                     {{element?.loanedTo}} / <br /> {{element?.loanedToName}}  </td>
+                </ng-container>
+                <ng-container matColumnDef="loanStatus">
+                  <th mat-header-cell *matHeaderCellDef >{{'EXTERNAL_LOAN_STATUS' | translate}}</th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element" >
+                    <span>{{element?.loanStatus | translate }} </span>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="loanDate">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'LOAN_CODE_DT' | translate}}
+                  </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.createdDtDisp}} </td>
+                </ng-container>
+                <ng-container matColumnDef="loanedPersonName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOAN_REQUESTED_BY' | translate}}
+                  </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.loanedPersonName}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="assetCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'ASSET_CODE' | translate}} / <br /> {{'ASSET_NAME_LIST' | translate}} / <br /> {{'LOAN_SEARCH_SERIAL_NO' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.assetCode}} / <br /> {{element?.description}} / <br /> {{element?.serialNo}}</td>
+                </ng-container>
+                <ng-container matColumnDef="fromDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOAN_START_DATE_END_DT' | translate}} / <br /> {{'LOAN_END_DATE' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.fromDtDisp}} / <br /> {{element?.toDtDisp}} </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="assetHdrTO.description">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOAN_ASSET_DESCRIPTION' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.description}} </td>
+                </ng-container>
+                <ng-container matColumnDef="assetHdrTO.serialNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'LOAN_SEARCH_SERIAL_NO' | translate}}</th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.serialNo}} </td>
+                </ng-container> -->
+                <!-- <ng-container matColumnDef="assetHdrTO.modelName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SEARCH_MODEL' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.modelName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="manufacturerName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'SEARCH_MANKER' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{ element?.manufacturerName }} </td>
+                </ng-container> -->
+                <!-- <ng-container matColumnDef="assetHdrTO.assetGroupName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{'SEARCH_GROUP' | translate}} </th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element">
+                    {{element?.assetGroupName}} </td>
+                </ng-container> -->
+                
+                <ng-container matColumnDef="approvalStatus">
+                  <th mat-header-cell *matHeaderCellDef >{{'WORKFLOW_APPROVE_STATUS' | translate}}</th>
+                  <td mat-cell (click)="selectLoan(element)" *matCellDef="let element" >
+                    <span class="{{element?.approvalStatus.replace(' ','')}}">{{ element?.approvalStatus }}</span>
+                  </td>
+                </ng-container>
+                <ng-container  matColumnDef="createdBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_BY_DT' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectLoan(element)" style="text-align: left">
+                    {{element?.createdBy}} / <br>{{element?.createdDtDisp}}</td>
+                </ng-container>
+
+                <!-- <ng-container  matColumnDef="createdDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_DT' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectLoan(element)" style="text-align: left">
+                    {{element?.createdDtDisp}}</td>
+                </ng-container> -->
+
+                <ng-container  matColumnDef="updatedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_UPDATED_BY_DATE' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element" (click)="selectLoan(element)" style="text-align: left">
+                    {{element?.updatedBy}} / <br>{{element?.updatedDtDisp}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                </tr>
+              </table>
+
+            </div>
+
+            <div fxLayout="row">
+
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+
+              <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+
+          </div>
+          </div>
+      </div>
+    </div>
+
+</div>

@@ -1,0 +1,64 @@
+<div fxLayout="column" fxFlexFill fxFlex="100">
+    <div class="content_section_background">
+        <div fxLayout="column">
+            <hr />
+            <mat-toolbar>
+                <span>{{title}}</span>
+                <span class="example-spacer"></span>
+                <span class="example-spacer"></span>
+                <button mat-raised-button class="space col-md-5" color="primary" (click)="updateGPCollectedInfo()">
+                    {{'COMMON_UPDATE' | translate }}
+                </button>
+
+                <button mat-raised-button class="space col-md-5" color="primary" (click)="closeModal()">
+                    {{'COMMON_CLOSE' | translate }}
+                </button>
+            </mat-toolbar>
+        </div>
+    </div>
+    <div fxFlex="100">
+
+        <form [formGroup]="gatePassCollectedMainInfoForm" fxFlex="100" class="modalForm">
+
+            <div class="form-group">
+                <div class="example-full-width">
+                    <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                        <span class="input-label">{{'DELIVERY_TAKEN_BY_PERSON' | translate }}</span>
+                        <input matInput class="input-field" formControlName="deliveryTakenByPerson">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="example-full-width">
+                    <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                        <span class="input-label">{{'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}</span>
+                        <input matInput class="input-field" formControlName="deliveryTakenByContactNo" [maxlength]="15"
+                            [minlength]="10">
+                        <mat-hint
+                            align="end">{{gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.value?.length
+                            || 0}}/15</mat-hint>
+                        <mat-error
+                            *ngIf="gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.invalid && gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.touched">
+                            <div class="err-field"
+                                *ngIf="gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.errors.pattern?false:gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.errors.minlength">
+                                "{{ 'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}" Should Be Of Minimum 10 digits </div>
+                            <div class="err-field"
+                                *ngIf="gatePassCollectedMainInfoForm.controls.deliveryTakenByContactNo.errors.pattern">
+                                Kindly Enter Valid "{{ 'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }}" </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                    <span class="input-label">{{'DELIVERY_TAKEN_BY_EMAIL_ID' | translate }}</span>
+                    <input matInput class="input-field" formControlName="deliveryTakenByEmailId" oninput="this.value = this.value.toLowerCase()">
+                </mat-form-field>
+            </div>
+            <!-- supplier invoice hdr start here -->
+        </form>
+    </div>
+
+</div>

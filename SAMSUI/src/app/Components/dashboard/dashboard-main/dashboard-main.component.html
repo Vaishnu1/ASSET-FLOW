@@ -1,0 +1,339 @@
+<div fxLayout="column" fxFlexFill FxFlex="100" class="dashboard-page" *ngIf="branchComboDisplay">
+
+    <form [formGroup]="locationFormGroup">
+        <div fxLayout="row" *ngIf="branchComboDisplay">
+            <div fxFlex="7" fxFlex.sm="8" fxFlex.xs="8" fxLayoutAlign="start center">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}</span>
+            </div>
+
+            <div fxFlex="25" fxLayoutAlign="center center" *ngIf="branchComboDisplay">
+                <ng-select class="input-field" id="branchBackground" formControlName="locationName"
+                    (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                    (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                    (scrollToEnd)="listOfLocationName({})"
+                    (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')"
+                    (clear)="listOfLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locationName"
+                    bindValue="locationName" tabindex="1">
+                </ng-select>
+            </div>
+
+            <div fxFlex="40"></div>
+
+            <div fxFlex="25" fxLayoutAlign="end center" *ngIf="branchComboDisplay">
+                <span class="input-label">Theme: </span>
+                <button mat-icon-button matTooltip="Dark" (click)="changingTheme('default')"
+                    [ngClass]="{ 'selected': theme === 'default' }">
+                    <mat-icon> insert_chart</mat-icon>
+                </button>
+
+                <button mat-icon-button matTooltip="light" (click)="changingTheme('light')"
+                    [ngClass]="{ 'selected': theme === 'light' }">
+                    <mat-icon> insert_chart_outlined</mat-icon>
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <div class="container-fluid" style="margin-top: -20px;">
+        <div fxLayout="column">
+            <div class="dashboard-row">
+
+                <div class="dashboard-data" *ngIf="modelAccessModuleAsset.readFlagDisplay">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100 card">
+                        <div class="cardheader-title2">
+                            <p> {{ 'DASHBOARD_ASSET_INFO' | translate }} -<span
+                                    style="text-transform: initial ;font-size: 88%;color: red">{{displayAlltill}}
+                                    {{displayDate}}</span> </p>
+                        </div>
+                        <app-all-assets [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                            style="height: 400px;">
+                        </app-all-assets>
+                    </div>
+                </div>
+
+                <div class="dashboard-data" *ngIf="modelAccessWarrantyContract.readFlagDisplay">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                        <div class="card">
+                            <div class="cardheader-title2">
+                                <p> Warranty / Contract Expiring Info </p>
+                            </div>
+                            <app-warranty-expiring [resetFormSubject]="resetFormSubject.asObservable()"
+                                [parentData]="frame1Data"> </app-warranty-expiring>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="dashboard-data" *ngIf="modelAccessRetireDispose.readFlagDisplay">
+            <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100"
+                 fxLayout="column">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> {{ 'DASHBOARD_RETIRED/DISPOSED' | translate }} </p>
+                    </div>
+                    <div>
+                        <app-inactive-assets [resetFormSubject]="resetFormSubject.asObservable()"
+                            [parentData]="frame1Data">
+                        </app-inactive-assets>
+                    </div>
+                </div>
+            </div>
+            </div> -->
+
+                <!-- </div> -->
+                <!-- <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between start"> -->
+                <!-- <div class="dashboard-data" *ngIf="modelAccessRentalLease.readFlagDisplay">
+                <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100"
+                 fxLayout="column">
+                <div class="card">
+                    <div fxLayout="column">
+                        <div class="cardheader-title2">
+                            <p> {{ 'DASHBOARD_RENTAL/LEASE' | translate }} -<span
+                                    style="text-transform: initial ;font-size: 88%;color: red">{{displayAlltill}}
+                                    {{displayDate}}</span> </p>
+                        </div>
+                        <div>
+                            <app-rental-lease-details [resetFormSubject]="resetFormSubject.asObservable()"
+                                [parentData]="frame1Data"> </app-rental-lease-details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div> -->
+
+                <div class="dashboard-data" *ngIf="modelAccessModuleBMAgeing.readFlagDisplay">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                        <div class="card">
+                            <div class="cardheader-title2">
+                                <p> {{ 'GROUPACCESS_BREAKDOWN_AGEING' | translate }}</p>
+                            </div>
+                            <app-break-down-aging [resetFormSubject]="resetFormSubject.asObservable()"
+                                [parentData]="frame1Data"></app-break-down-aging>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-data" *ngIf="modelAccessModuleBM.readFlagDisplay">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                        <div class="card">
+                            <div class="cardheader-title2">
+                                <p>{{ 'DASHBOARD_OPEN_WO' | translate }} -<span
+                                        style="text-transform: initial ;font-size: 88%; color: red">{{periodForOpen}}
+                                        {{allTillDateForOpen}}{{fromDateForOpen}}{{completedDateForOpen}}{{toDateForOpen}}</span>
+                                </p>
+
+                            </div>
+                            <app-open-srcriticality (dateList)="dateMethodForOpen($event)"
+                                [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data">
+                            </app-open-srcriticality>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div class="dashboard-data" *ngIf="modelAccessModuleAllWo.readFlagDisplay">
+        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+            <div class="card">
+                <div class="cardheader-title2">
+                    <p> {{ 'DASHBOARD_ALL_WO' | translate }} -<span
+                            style="text-transform: initial ;font-size: 88%;color: red">{{periodForAll}}
+                            {{allTillDateForAll}}{{fromDateForAll}}{{completedDateForAll}}{{toDateForAll}}</span>
+                    </p>
+
+                </div>
+                <app-open-srcriticality (dateList)="dateMethodForAll($event)"
+                    [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                    [transactionSourceForAllWOType]=transactionSourceForAllWOType></app-open-srcriticality>
+            </div>
+        </div>
+        </div> -->
+                <!-- </div> -->
+
+                <!-- <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between start"> -->
+                <!-- <div class="dashboard-data" *ngIf="moduleAccessModulePmWo.readFlagDisplay">
+                <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100"
+                    >
+                    <div class="card">
+                        <div class="cardheader-title2">
+                            <p> {{ 'DASHBOARD_PREVENTIVE_WO' | translate }} -<span
+                                    style="text-transform: initial ;font-size: 88%;color: red">{{periodForPreventive}}
+                                    {{allTillDateForPreventive}}{{fromDateForPreventive}}{{completedDateForPreventive}}{{toDateForPreventive}}</span>
+                            </p>
+
+                        </div>
+                        <app-open-srcriticality (dateList)="dateMethodForPreventive($event)"
+                            [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                            [transactionSourceForPrimitiveWOType]=transactionSourceForPrimitiveWOType>
+                        </app-open-srcriticality>
+                    </div>
+                </div>
+                </div> -->
+
+                <!-- <div class="dashboard-data" *ngIf="moduleAccessModuleQAWo.readFlagDisplay">
+				 <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                    <div class="card">
+                        <div class="cardheader-title2">
+                            <p> {{ 'DASHBOARD_CALIBRATION_WO' | translate }} -<span
+                                    style="text-transform: initial ;font-size: 88%;color: red">{{periodForCalibration}}
+                                    {{allTillDateForCalibration}}{{fromDateForCalibration}}
+                                    {{completedDateForCalibration}}
+                                    {{toDateForCalibration}} </span></p>
+                        </div>
+                        <app-open-srcriticality (dateList)="dateMethodForCalibration($event)"
+                            [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                            [transactionSourceForCalibrationWOType]=transactionSourceForCalibrationWOType>
+                        </app-open-srcriticality>
+                    </div>
+                </div>
+                </div> -->
+
+                <!-- <div class="dashboard-data" *ngIf="modelAccessModuleConsumedSpares.readFlagDisplay">
+                <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                    <div class="card">
+                        <div class="cardheader-title2">
+                            <p> {{ 'DASHBOARD_CONSUMED_WO' | translate }} -<span
+                                    style="text-transform: initial ;font-size: 88%;color: red">{{periodForSpareConsume}}
+                                    {{allTillDateForSpareConsumed}}{{fromDateForSpareConsume}}
+                                    {{completedDateForSpareConsume}} {{toDateForSpareConsume}}</span></p>
+
+                        </div>
+                        <app-open-srcriticality (dateList)="dateMethodForSparesConsume($event)"
+                            [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                            [transactionSourceForConsumedWOType]=transactionSourceForConsumedWOType>
+                        </app-open-srcriticality>
+                    </div>
+                </div>
+                </div> -->
+                <!-- </div> -->
+
+                <!-- <div fxFlex="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between start"> -->
+
+                <div class="row">
+                    <div style="width: 980px;height: 440px;max-height: 440px;" *ngIf="modelAccessModuleMissedMaintenance.readFlagDisplay">
+                        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                            <div class="card">
+                                <div class="cardheader-title2">
+                                    <p> Missed PM Schedules Info</p>
+                                </div>
+                                <app-missed-scheduling [resetFormSubject]="resetFormSubject.asObservable()"
+                                    [parentData]="frame1Data"></app-missed-scheduling>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div class="dashboard-data">
+                </div> -->
+
+                <!-- <div class="dashboard-data" *ngIf="modelAccessModuleBM3Months.readFlagDisplay">
+                    <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100" class="w-100">
+                        <div class="card">
+                            <div class="cardheader-title2">
+                                <p> Breakdown SR last 3 months Info </p>
+                            </div>
+                            <app-comparison-bm3months [resetFormSubject]="resetFormSubject.asObservable()"
+                                [parentData]="frame1Data"> </app-comparison-bm3months>
+                        </div>
+                    </div>
+                </div> -->
+
+
+            </div>
+
+            <!-- <div fxFlex="100" *ngIf="modelAccessAssetCount.readFlagDisplay">
+                <div class="cardheader-title2 w-100"
+                    style="box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14); border-radius: 6px; margin: 10px 0px 0px !important;">
+                    <div class="cardheader-title2">
+                        <p> Asset count with value Info </p>
+                    </div>
+                    <app-inactive-assets [resetFormSubject]="resetFormSubject.asObservable()" [parentData]="frame1Data"
+                        [transactionSourceForCategory]=transactionSourceForCategory></app-inactive-assets>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6" *ngIf="modelAccessModuleAsset.readFlagDisplay">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> {{ 'DASHBOARD_ASSET_INFO' | translate }} - {{_Date | date: 'MMMM d, y'}} </p>
+                    </div>
+                    <app-active-assets> </app-active-assets>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> Open Service Request - {{_Date | date: 'MMMM y'}}</p>
+                    </div>
+                    <app-open-srcriticality [parentData]="frame1Data"></app-open-srcriticality>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> Break Down Ageing</p>
+                    </div>
+                    <app-break-down-aging></app-break-down-aging>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> Missed Maintenance Schedules</p>
+                    </div>
+                    <app-missed-scheduling [parentData]="frame1Data"></app-missed-scheduling>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="card">
+                        <div class="cardheader-title2">
+                            <p> Breakdown SR for last 3 months </p>
+                        </div>
+                        <app-comparison-bm3months> </app-comparison-bm3months>
+                    </div>
+                </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> Warranty /Extended Warranty/ Contract Expiring </p>
+                    </div>
+                    <app-warranty-expiring> </app-warranty-expiring>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> {{ 'DASHBOARD_RETIRED/DISPOSED' | translate }} </p>
+                    </div>
+                    <app-inactive-assets></app-inactive-assets>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="cardheader-title2">
+                        <p> {{ 'DASHBOARD_RENTAL/LEASE' | translate }} - {{_Date | date: 'MMMM d, y'}} </p>
+                    </div>
+                    <app-rental-lease-details> </app-rental-lease-details>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

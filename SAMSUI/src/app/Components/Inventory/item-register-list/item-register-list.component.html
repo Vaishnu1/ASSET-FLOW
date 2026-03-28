@@ -1,0 +1,341 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="35">
+      <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a>{{'MENU_INVENTORY' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{'MENU_ITEM_TRANSACTION' | translate}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+  </div>
+
+  <div fxLayout="column" style="padding-top:0.5%">
+    <form fxLayout="column" [formGroup]="itemTransactionForm">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+  
+      <div fxLayout="column">
+  
+        <!-- column 1  -->
+        <div fxLayout="row">
+  
+          <div class="form-group" fxFlex="20">
+            <div class="example-full-width">
+              <span class="input-label">{{'LOCATION_NAME' | translate}} <span class="mandatory-style">*</span></span>
+              <ng-select #focusLocationName class=" input-field" formControlName="locationName"
+                (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                (scrollToEnd)="listofLocationName({})"
+                (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                bindValue="locDisplayField" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                appendTo="body" required>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-group" fxFlex="20">
+            <div class="example-full-width">
+                <span class="input-label">{{'ITEM_TYPE' | translate}} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" formControlName="itemTypeName"
+                    (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({})"
+                    (change)="getItemTypeValue($event)" [items]="itemTypeList" [virtualScroll]="true"
+                    (scrollToEnd)="listOfItemTypeCombo({})"
+                    (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                    (clear)="listOfItemTypeCombo('clear')" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                    bindValue="itemTypeName" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}" appendTo="body"
+                    required>
+                </ng-select>
+            </div>
+        </div>      
+  
+          <div class="form-group" fxFlex="20">
+            <div class="example-full-width">
+              <span class="input-label">{{'ITEM_NAME' | translate}} <span class="mandatory-style">*</span></span>
+              <ng-select #focusLocationName class=" input-field" formControlName="itemName"
+                (search)="listOfItemFromMaster($event)" (click)="listOfItemFromMaster({})"
+                (change)="getItemValueFromMaster($event)" [items]="itemList" [virtualScroll]="true"
+                (scrollToEnd)="listOfItemFromMaster({})"
+                (keyup.backspace)="listOfItemFromMaster($event.target.value ? $event : 'back')"
+                (clear)="listOfItemFromMaster('clear')" [loading]="scrollItemNamesync" bindLabel="itemMasterName"
+                bindValue="itemMasterName" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                appendTo="body" required>
+              </ng-select>
+            </div>
+          </div>
+  
+          <div class="form-group" fxFlex="35">
+            <div class="example-full-width">
+              <span class="input-label">{{'ITEM_DESC' | translate}} <span class="mandatory-style">*</span></span>
+              <ng-select #focusLocationName class=" input-field" formControlName="itemDesc"
+                (search)="listOfItemDescFromMaster($event)" (click)="listOfItemDescFromMaster({})"
+                (change)="getItemValueFromMaster($event)" [items]="itemDescList" [virtualScroll]="true"
+                (scrollToEnd)="listOfItemDescFromMaster({})"
+                (keyup.backspace)="listOfItemDescFromMaster($event.target.value ? $event : 'back')"
+                (clear)="listOfItemDescFromMaster('clear')" [loading]="scrollItemDescsync" bindLabel="itemMasterDesc"
+                bindValue="itemMasterDesc" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                appendTo="body">
+              </ng-select>
+            </div>
+          </div>
+  
+          <div class="form-group" fxFlex="20">
+            <div class="example-full-width">
+              <span class="input-label">{{'ITEM_STORE_NAME' | translate}}</span>
+              <ng-select #focusLocationName class=" input-field" formControlName="storeName"
+                (search)="listOfStore($event)" (click)="listOfStore({})" (change)="getStoreValue($event)"
+                [items]="storeList" [virtualScroll]="true" (scrollToEnd)="listOfStore({})"
+                (keyup.backspace)="listOfStore($event.target.value ? $event : 'back')" (clear)="listOfStore('clear')"
+                [loading]="scrollStoreNamesync" bindLabel="storeName" bindValue="storeName" tabindex="1"
+                loadingText="Loading..." [ngModelOptions]="{standalone: true}" appendTo="body">
+              </ng-select>
+            </div>
+          </div>
+  
+        </div>
+        <hr>
+        <!-- column 2  -->
+        <div fxLayout="row">
+  
+          <div class="form-group" fxFlex="20">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{ 'EMPLOYEE_FROM_DATE' | translate}}</mat-label>
+              <input matInput class="input-field" (click)="transFromDt.open()" [matDatepicker]="transFromDt" formControlName="transFromDtDisp" >
+              <mat-datepicker-toggle matSuffix [for]="transFromDt"></mat-datepicker-toggle>
+              <mat-datepicker #transFromDt></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" fxFlex="20">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{ 'EMPLOYEE_TO_DATE' | translate}}</mat-label>
+              <input matInput class="input-field" (click)="transToDt.open()" [matDatepicker]="transToDt" formControlName="transToDtDisp" >
+              <mat-datepicker-toggle matSuffix [for]="transToDt"></mat-datepicker-toggle>
+              <mat-datepicker #transToDt></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+        </div>
+  
+        <hr>
+  
+        <div fxFlex="60" fxLayout="row" fxLayoutAlign="end">
+          <div>
+            <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+              [matTooltipPosition]="'below'" tabindex="10" (click)="searchItemTransaction()"
+              [disabled]="(itemTransactionForm.invalid || !itemTransactionForm.dirty)" >
+              {{'COMMON_SEARCH' | translate}}</button>
+          </div>
+          <div>
+            <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+              [matTooltipPosition]="'below'" tabindex="11" (click)="clear()">{{'COMMON_CLEAR' |
+              translate}}</button>
+          </div>
+          <div>
+            <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                    (click)="generateReport()">{{'REPORT_EXPORT' | translate}}</button>
+          </div>
+        </div>
+  
+      </div>
+  
+    </mat-expansion-panel>
+  
+    <hr />
+  
+    <mat-toolbar>
+      <!-- <span>{{'MENU_ITEM_TRANSACTION'| translate}} List</span> -->
+      <span class="example-spacer"></span>
+  
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+        [pageSize]="pageSize" (page)="getServerData($event)">
+      </mat-paginator>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+        <mat-icon>view_week</mat-icon>
+      </button>
+
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('itemTypeName')"(change)="toggleColumn('itemTypeName')">
+            <span>{{'ITEM_TYPE' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('itemName')" (change)="toggleColumn('itemName')">
+            <span>{{'ITEM_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('itemDescription')" (change)="toggleColumn('itemDescription')">
+            <span>{{'ITEM_DESC' | translate}}</span>
+            <br>
+          </div>
+    
+          <div id="column2">
+            <input type="checkbox" (change)="toggleColumn('transactionSourceName')" [checked]="displayedColumns.includes('transactionSourceName')">
+            <span>{{'ITEM_TRANSACTION_SOURCE_NAME' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('transactionReference')" [checked]="displayedColumns.includes('transactionReference')">
+            <span>{{'ITEM_TRANSACTION_REFERENCE_NO' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('transactionType')" [checked]="displayedColumns.includes('transactionType')">
+            <span>{{'ITEM_TRANSACTION_TYPE' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('transactionDtDisp')" [checked]="displayedColumns.includes('transactionDtDisp')">
+            <span>{{'INVENTORY_TRANSACTION_DATE' | translate}}</span> <br>
+          </div>
+    
+          <div id="column3">
+            <input type="checkbox" (change)="toggleColumn('transactionQty')" [checked]="displayedColumns.includes('transactionQty')">
+            <span>{{'TRANSACTION_QTY' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('storeName')" [checked]="displayedColumns.includes('storeName')">
+            <span>{{'ITEM_STORE_NAME' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+            <span>{{'COMMON_CREATED_BY_DT' | translate}}</span>
+          </div>
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+
+      <span class="input-label">Opening Balance Qty : {{ openingQty }}</span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="space"></span>
+      <span class="input-label">Closing Balance Qty : {{ closingQty }}</span>
+    </mat-toolbar>
+  
+    <div class="example-container">
+      <div fxLayout="row">
+        <table class="item-reg-list-table" mat-table [dataSource]="itemTransactionDataSource" matSort (matSortChange)="customSort($event)"
+          matSortActive="name" matSortDirection="asc" matSortDisableClear>
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+            <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+          </ng-container>
+          <ng-container matColumnDef="locationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LOCATION_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" style="text-overflow: ellipsis;" (click)="selectItemTransaction(element)">
+              {{ element.locationName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="itemTypeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_TYPE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ (element?.itemTypeName.length>30) ? (element.itemTypeName | slice:0:20)+'...' :
+              (element.itemTypeName) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="itemName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ (element?.itemName.length>30) ? (element.itemName | slice:0:20)+'...' :
+              (element.itemName) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="itemDescription">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_DESC' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)"
+              style="text-overflow: ellipsis;">
+              {{ element.itemDescription }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="transactionSourceName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_TRANSACTION_SOURCE_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ element.transactionSourceName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="transactionReference">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_TRANSACTION_REFERENCE_NO' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ element.transactionReference }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="transactionType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_TRANSACTION_TYPE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)" class="{{element?.transactionType}}">
+              <b>{{ element.transactionType }}</b>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="transactionDtDisp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_TRANSACTION_DATE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ element.transactionDtDisp }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="transactionQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TRANSACTION_QTY' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)" style="text-align: center;color: red">
+              <b>{{ element.transactionQty }}</b>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="storeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM_STORE_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ element.storeName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'COMMON_CREATED_BY_DT' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemTransaction(element)">
+              {{ element.createdBy }}/  {{ element.createdDtDisp }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+      <div fxLayout="row">
+        <mat-card class="no_records_found" *ngIf="length=='0'  && !subLoaderItemTransaction">{{'COMMON_NO_RECORDS_FOUND' |
+          translate}}</mat-card>
+        <mat-card class="no_records_found" *ngIf="subLoaderItemTransaction" fxLayoutAlign="center center">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+      </div>
+    </div>
+    </form>
+  </div>
+
+</div>

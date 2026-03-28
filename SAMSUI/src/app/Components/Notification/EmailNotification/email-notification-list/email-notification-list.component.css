@@ -1,0 +1,49 @@
+.email-notification-table {
+  width: 100%;
+  
+}
+
+.example-container {
+  margin-top: 0%;
+}
+
+.rightbutton {
+  text-align: center;
+}
+
+.space {
+  margin: 0px 5px;
+}
+
+.input-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 0.5rem !important;
+}
+
+.sqr-btn {
+  min-width: 38px !important;
+  height: 36px !important;
+  padding: 0 !important;
+}
+
+.sqr-btn .mat-icon {
+  font-size: 20px !important;
+  height: 20px !important;
+  width: 20px !important;
+  transform: scale(1.2);
+  line-height: 20px !important;
+}
+
+.btn {
+  height: 34px !important;
+  min-width: 70px !important;
+}
+ng-select {
+  width: 100%;
+  max-width: 320px;
+}
+

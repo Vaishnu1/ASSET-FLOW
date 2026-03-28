@@ -1,0 +1,45 @@
+.asset-details {
+    width: 80%;
+    border-collapse: collapse;
+  }
+  
+  .asset-details td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .asset-details .header-cell {
+    font-weight: bold;
+    background-color: #f2f2f2;
+  }
+  
+  .normal-button {
+    text-decoration: none;
+    color: white;
+    padding: 2px 20px;
+    margin: 4px 2px;
+    border: none;
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .reject-button {
+    background: red;
+  }
+
+  .approve-button {
+    background: green;
+  }
+
+  .red-show{
+    color: red;
+  }
+
+  .green-show{
+    color: green;
+  }
+
+  .allign-text{
+    text-align: center;
+  }

@@ -1,0 +1,79 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" >
+    <div fxFlex="40"  fxLayoutAlign="start center">
+      <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+        <input matInput type="search" #searchSet name="search" id="search" class="form-control"
+        placeholder="Search {{'MENU_PARAMETER_TYPE'| translate}}" (input)="onSearchChange($event.target.value)">
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="60" fxLayoutAlign="end center">
+    </div>
+
+  </div>
+  <mat-toolbar>
+    <span>{{'MENU_PARAMETER_TYPE'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSizeParameterType" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay" (click)="openParameterTypeCreate(0, 'create')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openParameterTypeCreate(selectedItem, 'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+  matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openParameterTypeCreate(selectedItem, 'view')">
+  <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+
+  <div fxFlex="81" fxFlex.sm="93" fxFlex.xs="93">
+    <div fxLayout="column" fxFlexFill>
+      <table mat-table [dataSource]="parameterTypedataSource" matSort (matSortChange)="customSort($event)"
+        matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+            <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+              <mat-checkbox color="primary" class="example-margin" (change)="selectParameterType(element)" [checked]="selectedItem.parameterTypeId == element?.parameterTypeId"></mat-checkbox></td>
+          </ng-container>
+
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+            <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="parameterTypeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:46%;"> {{ 'SR_PARAMETER_TYPE' | translate }} </th>
+            <td mat-cell (click)="selectParameterType(element)" style="width:46%;" matTooltip="{{element.parameterTypeNameDisp}}" *matCellDef="let element">{{ element?.parameterTypeNameDisp }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedBy">
+            <th mat-header-cell *matHeaderCellDef style="width:15%;" mat-sort-header> {{ 'COMMON_UPDATED_BY' | translate }}</th>
+            <td mat-cell (click)="selectParameterType(element)" style="width:15%;" *matCellDef="let element"> {{element.updatedBy}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedDt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;"> {{ 'COMMON_UPDATED_DT' | translate }}</th>
+            <td mat-cell (click)="selectParameterType(element)" *matCellDef="let element" style="width:15%;"> {{element.updatedDtDisp}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+        </table>
+        <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderParameterType">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+        </mat-card>
+        <mat-card class="no_records_found" *ngIf="subLoaderParameterType"  fxLayoutAlign="center center">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+    </div>
+  </div>
+</div>
+
+
+

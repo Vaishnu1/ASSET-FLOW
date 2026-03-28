@@ -1,0 +1,201 @@
+<div fxLayout="column">
+  <mat-card fxLayout="column">
+    <mat-card-header>
+
+      <div fxLayout="column" fxFlex="100" >
+        <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end" class="checkpoint-button">
+
+          <mat-toolbar>
+            <span class="example-spacer"></span>
+            <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+  
+            <button *ngIf="modeDisplay && length>0" mat-raised-button color="primary"
+              [disabled]="(srCheckPointsForm.dirty || uploadButtonFlag) || !isButtonEnabled" (click)="saveSrCheckPoints()">
+              <span *ngIf="!uploadButtonFlag && srStatusId != '6'">{{'COMMON_UPDATE' | translate}}</span>
+              <span *ngIf="uploadButtonFlag">{{'COMMON_LOADING' | translate}}</span>
+            </button>
+          </mat-toolbar>
+         
+        </div>
+      </div>
+
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="example-container">
+       
+        <table mat-table [dataSource]="checkPointsMain">
+
+          <ng-container matColumnDef="sNo">
+            <th mat-header-cell *matHeaderCellDef style="width:4%; text-align: center;"> {{'COMMON_S_NO' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i=index;"  style="width:4%; text-align: center;"> {{i+1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="parameterName">
+            <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;"> {{'MODEL_PARAMETER_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" style="width:10%; text-align: center;"> {{element?.parameterName}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="parameterTypeName">
+            <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;"> {{'MODEL_PARAMETER_TYPE_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;"> {{element?.parameterTypeNameDisp}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="parameterGroupName">
+            <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;">
+              {{ 'MODEL_PARAMETER_GROUP_NAME' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:10%; text-align: center;">
+              {{ (element?.parameterGroupName.length>30) ? (element?.parameterGroupName | slice:0:30)+'...'
+              : (element?.parameterGroupName) }}
+            </td>
+          </ng-container>
+
+          <!-- <ng-container matColumnDef="startValue">
+            <th mat-header-cell *matHeaderCellDef> {{'MODEL_START_VALUE_TO_END_VALUE' | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element?.startValue}}-{{element?.uom}} -
+              {{element?.endValue}}-{{element?.uom}}
+            </td>
+          </ng-container> -->
+
+          <!-- <ng-container matColumnDef="actualValue">
+            <th mat-header-cell *matHeaderCellDef> {{'SR_ACTUAL_VALUE' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <input matInput [(ngModel)]="element.actualValue" name="actualValue" type="text" id="actualValue">
+              </mat-form-field>
+            </td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="uom">
+            <th mat-header-cell *matHeaderCellDef style="width:5%; text-align: center;">
+              {{ 'UOM' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:5%; text-align: center;">
+              {{ (element?.uom)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="inputType">
+            <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+              {{ 'INPUT_TYPE' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+              {{ (element?.inputType)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="defalutValue">
+            <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+              {{ 'DEFAULT_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+              {{ (element?.defaultValue)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="minAllowedValue">
+            <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+              {{ 'MIN_ALLOWED_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+              {{ (element?.minAllowedValue)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maxAllowedValue">
+            <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+              {{ 'MAX_ALLOWED_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+              {{ (element?.maxAllowedValue)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actualValue">
+            <th mat-header-cell *matHeaderCellDef style="width:15%; text-align: center;"> {{'SR_ACTUAL_VALUE' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i = index;" style="width:15%; text-align: center;">
+              <mat-form-field *ngIf="element.inputType == 'Text'" class="example-full-width" [floatLabel]="'always'">
+                <input matInput [(ngModel)]="element.actualValue" name="result" type="text" id="result" [disabled]="!modeDisplay" (input)="onInputChange(i)">
+              </mat-form-field>
+              <mat-form-field *ngIf="element.inputType == 'Number'" class="example-full-width" [floatLabel]="'always'">
+                <input matInput [(ngModel)]="element.actualValue" name="result" type="number" id="result" [disabled]="!modeDisplay" (input)="onInputChange(i)">
+              </mat-form-field>
+  
+                <div *ngIf="element.inputType == 'Pass/Fail'">
+                  <mat-radio-group [(ngModel)]="element.actualValue" (change)="radioPassFail($event.value, i)">
+                    <mat-radio-button [value]="'Pass'" [disabled]="!modeDisplay">
+                      {{ 'SR_PASS' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'Fail'" style="margin-left:20px ;" [disabled]="!modeDisplay">
+                      {{ 'SR_FAIL' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'Not Done'" style="margin-left:20px ;">
+                      {{ 'NOT_DONE' | translate }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div *ngIf="element.inputType == 'Yes/No'">
+                  <mat-radio-group [(ngModel)]="element.actualValue" (change)="radioYesNo($event.value, i)">
+                    <mat-radio-button [value]="'Yes'" [disabled]="!modeDisplay">
+                       {{ 'Yes' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'No'" style="margin-left:20px;" [disabled]="!modeDisplay">
+                       {{ 'No' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'Not Done'" style="margin-left:20px;">
+                       {{ 'Not Done' | translate }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div *ngIf="element.inputType == 'Radio'">
+                  <mat-radio-group [(ngModel)]="element.actualValue" (change)="radioSelectMethod($event.value, i)" [disabled]="!modeDisplay">
+                    <mat-radio-button [value]="'Pass'">
+                      {{ 'SR_PASS' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'Fail'" style="margin-left:20px ;">
+                      {{ 'SR_FAIL' | translate }}
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'Not Done'" style="margin-left:20px ;">
+                      {{ 'NOT_DONE' | translate }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="result">
+            <th mat-header-cell *matHeaderCellDef style="width:5%; text-align: center;">
+              {{ 'SR_RESULT' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:5%; text-align: center;">
+             <span [ngClass]="{
+                 'ResultFail' : element.result == 'Fail' || element.result == 'No',
+                 'ResultPass' : element.result == 'Pass' || element.result == 'Yes',
+                 'ResultNotDone' : element.result == 'Not Done'}">
+                {{ element?.result == 'Yes' ? 'Pass' : (element?.result == 'No' ? 'Fail' : element?.result) }}</span> 
+            </td>
+          </ng-container>
+
+          <!-- <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-icon matTooltip="{{ 'COMMON_DELETE' | translate }}" matTooltipPosition="below"
+                style="color: red;cursor: pointer;font-size: 17px !important;" (click)="delete(element.checkPointsId)"
+                *ngIf="srStatusId == '0'">
+                delete</mat-icon>
+            </td>
+          </ng-container> -->
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+          </tr>
+        </table>
+
+        <mat-card class="no_records_found" *ngIf="length==0">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+        </mat-card>
+
+      </div>
+
+
+    </mat-card-content>
+  </mat-card>
+</div>

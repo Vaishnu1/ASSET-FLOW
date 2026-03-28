@@ -1,0 +1,294 @@
+<div fxLayout="column">
+  <div style="padding-top: 0.5%;">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}} {{'LOCATION_NAME'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxFlex="100">
+        <form flex fxLayout="column">
+          <div class="pad-1-per" fxLayout="row" >
+            <div fxFlex="25" fxFlex.sm="33" fxFlex.xs="33">
+              <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+              <ng-select #searchSet class=" example-full-width" [items]="locationCombo" bindLabel="locDisplayField"
+                bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                (click)="loadLocationComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')"
+                [loading]="scrollsyncLocation" loadingText="Loading..." (change)="selectedLocationData($event)"
+                [(ngModel)]="locationModel.locationName" [ngModelOptions]="{standalone: true}" appendTo="body">
+              </ng-select>
+            </div>
+            <div fxFlex="25" fxFlex.sm="33" fxFlex.xs="33">
+              <span class="input-label"> {{ 'LOCATION_TYPE' | translate }} </span>
+              <ng-select class=" example-full-width" bindLabel="name" bindValue="name"
+                appendTo="body" [items]="locationType" [(ngModel)]="locationModel.locationType"
+                [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+            <div fxFlex="25" fxFlex.sm="34" fxFlex.xs="34">
+              <span class="input-label">{{ 'LEGAL_ENTITY' | translate }} </span>
+              <ng-select class=" example-full-width" (change)="selectedLegalEntity($event)"
+                (search)="listOfLegalEntityGroup($event)" (click)="listOfLegalEntityGroup({})" appendTo="body"
+                bindLabel="legalEntityName" [virtualScroll]="true" (scrollToEnd)="listOfLegalEntityGroup({})" (keyup.backspace)="listOfLegalEntityGroup($event.target.value ? $event : 'back')" (clear)="listOfLegalEntityGroup('clear')"
+                [loading]="legalcrollsync" loadingText="Loading..."  [items]="legalEntityCombo"
+                [(ngModel)]="locationModel.legalEntityName" [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+            <div fxFlex="25" fxHide.sm fxHide.xs>
+              <span class="input-label"> {{ 'LOCATION_CD' | translate }} </span>
+              <ng-select class=" example-full-width" [items]="locationCodeCombo" bindLabel="locationCode"
+                (search)="loadLocationCode($event)" (click)="loadLocationCode({})" [virtualScroll]="true"
+                (scrollToEnd)="loadLocationCode({})" (keyup.backspace)="loadLocationCode($event.target.value ? $event : 'back')" (clear)="loadLocationCode('clear')" [loading]="scrollsyncLocationCode" appendTo="body" loadingText="Loading..."
+                (change)="selecedLocationCode($event)" bindValue="locationCode" [(ngModel)]="locationModel.locationCode"
+                [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="pad-1-per" fxLayout="row" >
+            <div fxFlex.sm="33" fxFlex.xs="33" fxHide.gt-sm>
+              <span class="input-label"> {{ 'LOCATION_CD' | translate }} </span>
+              <ng-select class=" example-full-width" [items]="locationCodeCombo" bindLabel="locationCode"
+                (search)="loadLocationCode($event)" (click)="loadLocationCode({})" [virtualScroll]="true"
+                (scrollToEnd)="loadLocationCode({})" (keyup.backspace)="loadLocationCode($event.target.value ? $event : 'back')" (clear)="loadLocationCode('clear')" [loading]="scrollsyncLocationCode" appendTo="body" loadingText="Loading..."
+                (change)="selecedLocationCode($event)" bindValue="locationCode" [(ngModel)]="locationModel.locationCode"
+                [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+            <div fxFlex="25" fxFlex.sm="33" fxFlex.xs="33">
+              <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}</span>
+              <ng-select class=" input-field" [items]="countriesList" (search)="getCountryData($event)"
+                (click)="getCountryData({})" (change)="getCountryList($event)" bindLabel="countryName" appendTo="body"
+                bindValue="countryName" [(ngModel)]="locationModel.locCountry" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                [loading]="scrollCountrysync" loadingText="Loading..."
+                [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+            <div fxFlex="1"></div>
+            <div fxFlex="25" fxFlex.sm="33" fxFlex.xs="33">
+              <span class="input-label"> {{ 'COMMON_STATE' | translate }} </span>
+              <ng-select class=" example-full-width" [items]="states" bindLabel="stateName"
+                (search)="getStateData($event)"
+                (click)="getStateData({})" [virtualScroll]="true" (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')"
+                [loading]="stateScrollsync" (change)="selecedState($event)" bindValue="stateName" appendTo="body"
+                [(ngModel)]="locationModel.locState" [ngModelOptions]="{standalone: true}" loadingText="Loading...">
+              </ng-select>
+            </div>
+            <div fxFlex="25" fxFlex.sm="33" fxFlex.xs="33">
+              <span class="input-label"> {{ 'COMMON_CITY' | translate }} </span>
+              <ng-select class=" example-full-width" [items]="cities" bindLabel="cityName" (search)="getCityData($event)"
+                (click)="getCityData({})" (scrollToEnd)="getCityData({})" (keyup.backspace)="getCityData($event.target.value ? $event : 'back')" (clear)="getCityData('clear')" (change)="selectedCity($event)"
+                [virtualScroll]="true" [loading]="cityscrollsync" loadingText="Loading..." bindValue="cityName" appendTo="body"
+                [(ngModel)]="locationModel.locCity" [ngModelOptions]="{standalone: true}">
+              </ng-select>
+            </div>
+            <div fxFlex="50" fxLayoutAlign="end center" fxHide.sm fxHide.xs>
+              <button mat-raised-button class="space" color="primary"
+                (click)="searchLocation($event)">{{'COMMON_SEARCH' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" (click)="clear()">{{'COMMON_CLEAR' |
+                translate}}</button>
+              <button mat-raised-button color="primary"  (click)="generateReportOfLocation()" class="space-right-1"
+                [disabled]="length=='0' && !subLoaderLocation">{{ 'REPORT_EXPORT' | translate }}</button>
+            </div>
+          </div>
+
+          <div fxFlex.sm="100" fxFlex.xs="100" fxHide.gt-sm fxLayoutAlign="end center">
+            <button mat-raised-button class="space" matTooltip="Search" color="primary"
+              (click)="searchLocation($event)">
+              <mat-icon>search</mat-icon>
+            </button>
+            <button mat-raised-button class="space" matTooltip="Clear" color="primary" (click)="clear()">
+              <mat-icon>clear_all</mat-icon>
+            </button>
+            <button mat-raised-button color="primary" matTooltip="Export" class="space-right"
+              (click)="generateReportOfLocation()" [disabled]="length=='0' && !subLoaderLocation">
+              <mat-icon>file_download</mat-icon>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-expansion-panel>
+  </div>
+  <hr>
+
+  <mat-toolbar>
+    <span>{{'LOCATION_NAME'| translate}} List</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+  [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+    <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+      <mat-icon>view_week</mat-icon>
+    </button>
+    
+  <div class="custom-dialog" *ngIf="showManageColumns">
+    <div>
+      <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+    </div>
+    <hr>
+    <div class="custom-dialog-body" *ngIf="showManageColumns">
+      <div id="column1">        
+        <input type="checkbox" [checked]="displayedColumns.includes('locationCode')"(change)="toggleColumn('locationCode')">
+        <span>{{'LOCATION_CD' | translate}}</span>
+        <br>
+        
+        <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+        <span>{{'LOCATION_NAME' | translate}}</span>
+        <br>
+
+        <input type="checkbox" [checked]="displayedColumns.includes('locState')" (change)="toggleColumn('locState')">
+        <span>{{'COMMON_STATE' | translate}}</span>
+        <br>
+        
+        <input type="checkbox" [checked]="displayedColumns.includes('locCity')" (change)="toggleColumn('locCity')">
+        <span>{{'COMMON_CITY' | translate}}</span>
+        <br>
+        
+      </div>
+
+      <div id="column2">
+        <input type="checkbox" (change)="toggleColumn('updatedBy')" [checked]="displayedColumns.includes('updatedBy')">
+        <span>{{'COMMON_UPDATED_BY' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+        <span>{{'COMMON_UPDATED_DT' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+        <span>{{'COMMON_CREATED_BY' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('createdDt')" [checked]="displayedColumns.includes('createdDt')">
+        <span>{{'COMMON_CREATED_DT' | translate}}</span>
+      </div>
+
+      <div id="column3">
+        <input type="checkbox" (change)="toggleColumn('contactPersonName')" [checked]="displayedColumns.includes('contactPersonName')">
+        <span>{{'LOCATION_CONTACT_PERSON' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('contactPhoneNo')" [checked]="displayedColumns.includes('contactPhoneNo')">
+        <span>{{'COMMON_PHONE_NO' | translate}}</span> <br>
+      </div>
+    </div>
+
+    <hr>
+    
+    <div fxLayoutAlign="end end">
+      <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+        {{'COMMON_OK' | translate}}
+      </button>
+      <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+        {{'COMMON_RESET' | translate}}
+      </button>
+    </div>
+    
+  </div>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay"
+    (click)="createLocation(0,'add')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="createLocation(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+    <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="createLocation(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+  <div class="org-container-table" fxLayout="column">
+    <table fxFlex="100" mat-table [dataSource]="locationDataSource" matSort (matSortChange)="sortData($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectLocation(element)" [checked]="selectedItem == element?.locationId">
+          </mat-checkbox></td>
+      </ng-container>
+
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;"> {{getIndexValue(i+1)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="locationCode">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header>{{ 'LOCATION_CD' | translate }}</th>
+        <td mat-cell *matCellDef="let element"  (click)="selectLocation(element)" matTooltip="{{element.locationCode}}">
+          {{element.locationCode}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="locationName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'LOCATION_NAME' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element" matTooltip="{{element.locationName}}">
+          {{ element.locationName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="locCity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'COMMON_CITY' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element" matTooltip="{{element.locCity}}"> {{element.locCity}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="locState">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_STATE' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element" matTooltip="{{element.locState}}"> {{element.locState}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_UPDATED_BY' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.updatedBy}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.updatedDtDisp}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_CREATED_BY' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.createdBy}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.createdDtDisp}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="locCountry">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_COUNTRY' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element" matTooltip="{{element.locCountry}}"> {{element.locCountry}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contactPersonName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'LOCATION_CONTACT_PERSON' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.contactPersonName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contactPhoneNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'COMMON_PHONE_NO' | translate }}</th>
+        <td mat-cell (click)="selectLocation(element)" *matCellDef="let element"> {{element.contactPhoneNo}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderLocation" fxLayoutAlign="center center">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+    <mat-card *ngIf="subLoaderLocation" fxLayoutAlign="center center" class="no_records_found">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+</div>

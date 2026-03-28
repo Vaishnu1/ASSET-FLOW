@@ -1,0 +1,177 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_REPORT' | translate}}
+        </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span> 
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+    <div fxFlex="19"> 
+
+      <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs">
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_report'}"
+           (click)="Active_Tab_Change('asset_report')" fxLayoutAlign="start center" *ngIf="assetAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'asset_report'" class="asset-registration-icon-blue"></mat-icon>  
+          <mat-icon *ngIf="Active_Tab === 'asset_report'" class="asset-registration-icon-white">
+          </mat-icon>
+          {{ 'REPORT_ASSET' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'service_request_report'}"
+          (click)="Active_Tab_Change('service_request_report')" fxLayoutAlign="start center" *ngIf="woAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'service_request_report'" class="wo-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'service_request_report'" class="wo-icon-white">
+          </mat-icon>
+          {{ 'REPORT_SERVICE_REQUEST' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'model_report'}"
+          (click)="Active_Tab_Change('model_report')" fxLayoutAlign="start center" *ngIf="modelAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'model_report'" class="asset-model-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'model_report'" class="asset-model-icon-white"></mat-icon>
+          {{ 'REPORT_MODEL_REQUEST' | translate }}
+        </mat-list-item> 
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'manufacturer_detailed_report'}"
+          (click)="Active_Tab_Change('manufacturer_detailed_report')" fxLayoutAlign="start center" *ngIf="manufacturerAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'manufacturer_detailed_report'" class="manufacturer-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'manufacturer_detailed_report'" class="manufacturer-icon-white">
+          </mat-icon>
+          {{ 'MANUFACTURER_DETAILED_REPORT' | translate }}
+        </mat-list-item> 
+        
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'contract_detailed_report'}"
+          (click)="Active_Tab_Change('contract_detailed_report')" fxLayoutAlign="start center" *ngIf="contractAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'contract_detailed_report'" class="contract-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'contract_detailed_report'" class="contract-icon-white">
+          </mat-icon>
+          {{ 'CONTRACT_DETAILED_REPORT' | translate }}
+        </mat-list-item> 
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'mttr_and_mtbf'}"
+          (click)="Active_Tab_Change('mttr_and_mtbf')" fxLayoutAlign="start center" *ngIf="contractAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'mttr_and_mtbf'" class="wo-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'mttr_and_mtbf'" class="wo-icon-white">
+          </mat-icon>
+          {{ 'MTTR_AND_MTBF_REPORT' | translate }}
+        </mat-list-item> 
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'ai_automated_reports'}"
+          (click)="Active_Tab_Change('ai_automated_reports')" fxLayoutAlign="start center"
+          *ngIf="aiAutomatedReportAccessModule.createFlagDisplay">
+          <mat-icon *ngIf="Active_Tab != 'ai_automated_reports'" class="ai-report-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'ai_automated_reports'" class="ai-report-icon-white">
+          </mat-icon>
+          {{ 'AI_AUTOMATED_REPORTS' | translate }}
+        </mat-list-item>
+
+      </mat-nav-list> 
+    </div>
+
+    <div fxFlex="1">
+
+    </div>
+
+     <div fxFlex="80" fxFlex.sm="100" fxFlex.xs="100"> 
+
+      <!-- 
+    <app-sr-with-out-pr-count [ngClass]="{show: srWithOutPrSearch,hide:!srWithOutPrSearch}"></app-sr-with-out-pr-count>
+    <app-sr-with-pr-count [ngClass]="{show: srWithPrSearch,hide:!srWithPrSearch}"></app-sr-with-pr-count> -->
+
+
+
+    <div fxLayout="row" class="space-between">   
+
+      <mat-form-field fxFlex="30" [floatLabel]="'always'" >  
+        <input matInput type="search" #searchSet name="search" id="search" 
+        placeholder="Search" (input)="onSearchChange($event.target.value)"> 
+      </mat-form-field> 
+    </div> 
+
+    <!-- <hr /> -->
+
+    <mat-toolbar>
+      <span>{{'MENU_REPORT'| translate}} List</span>
+      <span class="example-spacer"></span>
+
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+      [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button color="primary"  class="space sqr-btn" *ngIf="modelAccessModule.createFlagDisplay"
+      [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_REFRESH' | translate }}"
+      (click)="loadList()"> <mat-icon >refresh</mat-icon></button>
+
+      <button [disabled]=" selectedItem == 0" mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" matTooltipPosition="below" (click)="downloadDocument(selectedItem.serverFilePath)">
+        <mat-icon >cloud_download</mat-icon>
+      </button>
+    </mat-toolbar>
+
+
+    <div fxLayout="row" class="space-between" fxLayoutAlign="start center"> 
+      <div class="table_section col-md-12">  
+        <div class="example-container">
+          <table mat-table [dataSource]="viewRequestMain">
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef> {{'COMMON_SELECT' | translate}} </th>
+                <td mat-cell *matCellDef="let element;"> 
+                  <mat-checkbox color="primary" class="example-margin" (change)="selectReport(element)"
+                  [checked]="selectedItem.requestId == element?.requestId">
+                  </mat-checkbox>  
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="no">
+              <th mat-header-cell *matHeaderCellDef> {{'REPORT_REQUEST_NO' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)"> {{element.requestNo}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> {{'REPORT_REPORT_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)"> {{element.programName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef> {{'REPORT_START_DT' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)"> {{element.requestDtDisplay}} </td>
+            </ng-container> 
+            <ng-container matColumnDef="completedDate">
+              <th mat-header-cell *matHeaderCellDef> {{'REPORT_END_DT' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)"> {{element.requestEndDtDisp}} </td>         
+            </ng-container> 
+            <ng-container matColumnDef="requestedBy">
+              <th mat-header-cell *matHeaderCellDef> {{'COMMON_REQUESTED_BY' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)"> {{element?.requestedBy}} </td>
+            </ng-container> 
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> {{'COMMON_STATUS' | translate}} </th>
+              <td mat-cell *matCellDef="let element"  (click)="selectReport(element)">        
+                <span class="{{element?.requestStatusDisp.replace(' ','')}}">{{element?.requestStatusDisp}} </span> 
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderViewRequest">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+          <mat-card class="no_records_found" *ngIf="subLoaderViewRequest" fxLayoutAlign="center cenetr"> 
+              <mat-spinner [diameter]="60"></mat-spinner>
+          </mat-card> 
+
+        </div>
+
+
+    </div>
+  </div>
+</div>
+ 

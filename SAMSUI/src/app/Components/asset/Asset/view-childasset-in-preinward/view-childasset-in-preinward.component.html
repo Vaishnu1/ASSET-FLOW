@@ -1,0 +1,39 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h6 class="dialogue-box-header">List of Child Assets Attached to Pre Inward Asset</h6>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="cancel()" >highlight_off
+      </mat-icon>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <div class="example-container" style="margin-top:2px;">
+      <table #matChildAsset mat-table [dataSource]="addChildAssetDataSource" style="width: 100%;">
+        <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef  class="table-head-data"> {{ 'COMMON_S_NO' | translate }} </th>
+          <td mat-cell *matCellDef="let element; let i=index; " style="text-align:center"  class="table-cell-data">
+            {{i+1}} </td>
+        </ng-container>
+        <ng-container matColumnDef="modelName">
+          <th mat-header-cell *matHeaderCellDef  class="table-head-data">
+            {{ 'MODEL_NAME' | translate }}</th>
+          <td mat-cell *matCellDef="let element"  class="table-cell-data">
+            {{ element.modelName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="manufacturerName" >
+          <th mat-header-cell *matHeaderCellDef  class="table-head-data">
+            {{ 'MANUFACTURER' | translate }} </th>
+          <td mat-cell *matCellDef="let element"  class="table-cell-data">
+            {{element?.manufacturerName}}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="childAssetDisCol;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: childAssetDisCol;">
+      </table>
+    </div>
+  </div>
+</div>

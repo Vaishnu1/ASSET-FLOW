@@ -1,0 +1,66 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h4 class="dialogue-box-header"> {{'MODEL_DOCUMENT' | translate}}</h4>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon (click)="closeModal()" class="close-icon ">highlight_off</mat-icon>
+        </div>
+    </div>
+
+
+    <form [formGroup]="supplierInvoiceDocForm">
+        <div fxLayout="column">
+            <div style="margin: 5px 0px;">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label"> {{ 'MODEL_DOCUMENT_NAME' | translate }} </mat-label>
+                    <input #docName matInput formControlName="docName" required
+                        oninput="this.value = this.value.toUpperCase()" class="input-field">
+                    <mat-error *ngIf="supplierInvoiceDocForm.controls.docName.invalid && supplierInvoiceDocForm.controls.docName.touched">
+                        <div class="err-field" *ngIf="supplierInvoiceDocForm.controls.docName.errors.required">"{{
+                            'MODEL_DOCUMENT_NAME' | translate }}" Is Required</div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="example-full-width" style="margin: 5px 0px;">
+                <span class="input-label"> {{ 'MODEL_DOCUMENT_TYPE' | translate }} <span
+                        class="mandatory-style">*</span>
+                </span>
+                <ng-select formControlName="docType" (change)="setDocType($event)" bindLabel="name" class=" input-field"
+                    [items]="docTypeList">
+                </ng-select>
+                <mat-error *ngIf="supplierInvoiceDocForm.controls.docType.invalid && supplierInvoiceDocForm.controls.docType.touched">
+                    <div class="err-field" *ngIf="supplierInvoiceDocForm.controls.docType.errors.required">Kindly Select
+                        The "{{
+                        'MODEL_DOCUMENT_TYPE' | translate }}"</div>
+                </mat-error>
+            </div>
+
+            <div fxLayout="row" fxFlex="100" style="margin-top: 15px;">
+                <label fxFlex="10" class="input-label">{{ 'COMMON_FILE' | translate }}<span class="mandatory-style">*</span></label>
+                <div fxFlex="50" fxLayoutAlign="start center">
+                    <button color="grey" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab
+                        matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+                        <mat-icon>attachment</mat-icon>
+                    </button>
+                    <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}
+                    </div>
+                    <input style="display:none" id="imgModelupload" type="file" name="organizFile"
+                        formControlName="filePath" (change)="handleFileInput($event.target.files)" />
+                </div>
+                <div fxFlex="40"></div>
+            </div>
+
+            <div>
+                <div fxLayoutAlign="center center">
+                    <button mat-raised-button type="button" class="space" (click)="uploadSupplierInvoiceDocFile()"
+                        color="primary" [disabled]="supplierInvoiceDocForm.invalid || !supplierInvoiceDocForm.dirty">
+                        {{ 'COMMON_SUBMIT' | translate }}</button>
+                    <button mat-raised-button type="button" class="space" (click)="closeModal()" color="primary" >
+                        {{ 'COMMON_CLOSE' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,94 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header"> {{'MODEL_SOLUTION_BANK' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+<form [formGroup]="modelSolutionBankForm">
+  <div fxLayout="column">
+
+      <div class="form-group">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+          <!-- <mat-label class="example-label input-label"> {{ 'MODEL_DEFECT_NAME' | translate }} </mat-label> -->
+          <span class="example-label input-label"> {{'MODEL_DEFECT_NAME' | translate}}
+            <span class="mandatory-style">*</span>
+          </span>
+          <input #solBankDefectType matInput formControlName="defectName" required>
+          <mat-error
+            *ngIf="modelSolutionBankForm.controls.defectName.invalid && modelSolutionBankForm.controls.defectName.invalid">
+            <div class="err-field" *ngIf="modelSolutionBankForm.controls.defectName.errors.required">
+             "{{ 'MODEL_DEFECT_NAME' | translate }}" Is Required</div>
+            
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+
+      <div class="form-group" >
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+          <!-- <mat-label class="example-label input-label">{{ 'MODEL_DEFECT_TAG' | translate }}</mat-label> -->
+          <span class="example-label input-label"> {{'MODEL_DEFECT_TAG' | translate}}
+            <span class="mandatory-style">*</span>
+          </span>
+          <input #defectTag matInput formControlName="defectTag" required>
+          <mat-error
+            *ngIf="modelSolutionBankForm.controls.defectTag.invalid && modelSolutionBankForm.controls.defectTag.invalid">
+            <div class="err-field" *ngIf="modelSolutionBankForm.controls.defectTag.errors.required">"{{ 'MODEL_DEFECT_TAG' | translate }}" Is Required</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group" >
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+          <!-- <mat-label class="example-label input-label"> {{ 'MODEL_ROOT_CAUSE' | translate }} </mat-label> -->
+          <span class="example-label input-label"> {{'MODEL_ROOT_CAUSE' | translate}}
+            <span class="mandatory-style">*</span>
+          </span>
+          <textarea matInput formControlName="defectCause" required></textarea>
+          <mat-error
+            *ngIf="modelSolutionBankForm.controls.defectCause.invalid && modelSolutionBankForm.controls.defectCause.invalid">
+            <div class="err-field" *ngIf="modelSolutionBankForm.controls.defectCause.errors.required">
+              "{{ 'MODEL_ROOT_CAUSE' | translate }}" Is Required </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group" >
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+          <!-- <mat-label class="example-label input-label"> {{ 'MODEL_SOLUTION' | translate }} </mat-label> -->
+          <span class="example-label input-label"> {{'MODEL_SOLUTION' | translate}}
+            <span class="mandatory-style">*</span>
+          </span>
+          <textarea matInput formControlName="defectSolution" required></textarea>
+          <mat-error
+            *ngIf="modelSolutionBankForm.controls.defectSolution.invalid && modelSolutionBankForm.controls.defectSolution.invalid">
+            <div class="err-field" *ngIf="modelSolutionBankForm.controls.defectSolution.errors.required">
+              "{{ 'MODEL_SOLUTION' | translate }}" Is Required </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+
+      <div >
+        <mat-checkbox type="checkbox" color="primary" formControlName="active">{{ 'COMMON_ACTIVE' | translate}}
+          </mat-checkbox>
+    </div>
+
+
+    <div fxLayoutAlign="center center">
+      <button mat-raised-button type="button" class="space" *ngIf="buttonShowOnEdit"
+        (click)="addSolutionBankModel()" color="primary"
+        [disabled]="modelSolutionBankForm.invalid || !modelSolutionBankForm.dirty">
+        {{ buttonDisplay }}</button>
+    </div>
+
+  </div>
+</form>
+</div>

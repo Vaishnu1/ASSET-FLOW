@@ -1,0 +1,46 @@
+<mat-icon class="close-icon-large" (click)="closeModal()">highlight_off</mat-icon>
+<form class="modalform" [formGroup]="itemCategoryForm">
+    <div class="row closebutton">
+        <div class="col-md-10">
+            <h4 class="section_title">{{headingDisplay}} {{'MENU_ITEM_CATEGORY' | translate}}</h4>
+          </div>
+       </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+              <mat-label class="example-label input-label">{{ 'ITEM_CATEGORY' | translate }}</mat-label>
+                <input matInput #itemCategory required formControlName="categoryName" (input)="checkUniqueConstrainForItemCategory()" [maxlength]="50" >
+                <mat-hint align="end">{{itemCategoryForm.controls.categoryName.value?.length || 0}}/50</mat-hint>
+                <mat-error *ngIf="itemCategoryForm.controls.categoryName.errors && itemCategoryForm.controls.categoryName.touched">
+                  <div *ngIf="itemCategoryForm.controls.categoryName.errors.required">{{ 'ITEM_CATEGORY' | translate }} is Required </div>
+                  <div *ngIf="itemCategoryForm.controls.categoryName.errors.maxlength">{{ 'ITEM_CATEGORY' | translate }} Max Length Length is 50</div>
+                  <div *ngIf="itemCategoryForm.controls.categoryName.errors.notUnique">{{ErrorMsg}}</div>
+                </mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                <mat-label class="example-label input-label">{{ 'COMMON_DESC' | translate }}</mat-label>
+                  <textarea matInput formControlName="categoryDesc" [maxlength]="100"></textarea>
+                  <mat-hint align="end">{{itemCategoryForm.controls.categoryDesc.value?.length || 0}}/100</mat-hint>
+                </mat-form-field>
+            </div>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-md-12 rightbutton">
+          <!-- <button mat-raised-button type="button" class="space col-md-3" color="primary"  (click)="closeModal()">{{ 'COMMON_BACK' | translate }}</button> -->
+          <button mat-raised-button type="button" class="space col-md-3"  color="primary" (click)="submit()" 
+          [disabled]="itemCategoryForm.invalid || !itemCategoryForm.dirty">
+            <span *ngIf="!uploadFlagUser"> {{buttonDisplay}} </span> 
+            <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>  
+        </button>
+        </div>
+      </div>
+  </form>

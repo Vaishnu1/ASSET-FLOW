@@ -1,0 +1,20 @@
+/* .Model_Body {
+    padding-top: 20px;
+} */
+
+.space {
+    margin-right:5px;
+}
+/* .rightbutton {
+    float: right;
+} */
+
+/* .modal-content {
+    min-width: 364px;
+} */
+
+.confirmation-content{
+    font-size: 15px;
+    font-weight: 400;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+}

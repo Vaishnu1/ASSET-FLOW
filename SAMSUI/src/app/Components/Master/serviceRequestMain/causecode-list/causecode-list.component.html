@@ -1,0 +1,79 @@
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="35">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <input matInput #searchSet name="search" id="search" autocomplete="off"
+                    placeholder="Search {{'MENU_CAUSE_CODE'| translate}}"
+                    (input)="onSearchChange($event.target.value)">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <hr />
+
+    <mat-toolbar>
+      <span>{{'MENU_CAUSE_CODE'| translate}} List</span>
+      <span class="example-spacer"></span>
+
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length"
+      [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button color="primary"  class="space sqr-btn" *ngIf="modelAccessModule.createFlagDisplay"
+      [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+      (click)="openCausecodeCreate(0)"><mat-icon>add</mat-icon></button>
+
+      <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}"   *ngIf="modelAccessModule.updateFlagDisplay" (click)="openCausecodeCreate(selectedItem)">
+      <mat-icon>edit</mat-icon>
+      </button>
+          
+    </mat-toolbar>
+
+    <div fxLayout="row">
+
+        <table fxFlex="100" mat-table [dataSource]="causeCodedataSource" matSort (matSortChange)="customSort($event)"
+            matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="select">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef> {{ 'COMMON_SELECT' | translate }} </th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element;"> 
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectCauseCode(element)"
+                    [checked]="selectedItem.srAttributeId3 == element?.srAttributeId3"></mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="attribute3Name">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{ 'SR_CAUSE_CODE' |
+                    translate }} </th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectCauseCode(element)"> {{element.attribute3Name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="createdBy">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_BY' |
+                    translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectCauseCode(element)"> {{element.createdBy}}</td>
+            </ng-container>
+            <ng-container matColumnDef="createdDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_DT' |
+                    translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectCauseCode(element)"> {{element.createdDtDisp}}</td>
+            </ng-container>
+            <ng-container matColumnDef="updatedBy">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_BY' |
+                    translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectCauseCode(element)"> {{element.updatedBy}}</td>
+            </ng-container>
+            <ng-container matColumnDef="updatedDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_DT' |
+                    translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectCauseCode(element)"> {{element.updatedDtDisp}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <div fxLayout="row">
+        <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderCauseCode" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' |
+            translate}}</mat-card>
+        <mat-card class="no_records_found" *ngIf="subLoaderCauseCode" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+    </div>
+</div>

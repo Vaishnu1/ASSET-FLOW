@@ -1,0 +1,25 @@
+<div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start">
+        <div>
+            <h2 matDialogTitle>{{'PHYSICAL_AUDIT_IMAGES' | translate }}</h2>
+        </div>
+    </div>
+
+    <div fxFlex="row" fxLayoutAlign="end" class="btn">
+        <button mat-raised-button mat-dialog-close id="backButton" color="primary"
+                (click)="close()">{{ 'COMMON_BACK' | translate }}</button> 
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center" style="flex-wrap: wrap;">
+        <div *ngFor="let imageUrl of imageFilePath; let i = index" class="image-container">
+          <img [src]="imageUrl" class="img-style">
+      
+          <button *ngIf="auditStatus == 'AUDITED'" mat-icon-button color="warn" class="delete-btn" (click)="deleteImage(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      
+    
+</div>

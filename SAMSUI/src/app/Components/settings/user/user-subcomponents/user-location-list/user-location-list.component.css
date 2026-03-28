@@ -1,0 +1,194 @@
+table{
+    width:100%;
+  }
+  .mat-form-field
+  {
+    width:80% !important;
+  }
+  .section_title h3{
+    color:#7f8286 !important;
+  }
+  .example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    padding: 8px 1px 0;
+  }
+  
+  
+  .frm-search
+  {
+      width:100% !important;
+  }
+  .searchicon
+  {
+    position: absolute;
+    top: 24px !important;
+    left: 400px;
+  }
+  .searchicondet
+  {
+    background: transparent !important;
+    top:8px !important;
+    margin-left:46px !important;
+  }
+  .searchlist li 
+  {
+  list-style-type: none !important;
+  line-height: 25px !important;
+  }
+  .search-ref 
+  {
+  margin-top:-14px;
+  margin-bottom: 10px;
+  position: absolute;
+  top: 62px;
+  }
+  .searchlist li a{
+  color:#5d5e61 !important;
+  font-size: 13px;
+  }
+  .searchlist{
+  padding: 0 !important;
+  }
+  
+  .rightbutton
+  {
+  text-align: right;
+  }
+  .actionicon
+  {
+  margin-right:10px;
+  margin-top:3px;
+  }
+  .mat-button, .mat-raised-button a{
+  color:#ffffff !important;
+  font-size: 13px !important;
+  }
+  .mat-icon.mat-primary
+  {
+  color:#545257 !important;
+  }
+  .filterdate
+  {
+  position: absolute;
+  top:3px;
+  left: 44px;
+  }
+  .filtericon{
+  padding-top: 14px;
+    font-size: 20px;
+    padding-left: 40px;
+    z-index: 1000;
+    display: block;
+    position: relative;
+  }
+  .space{
+    margin-right: 10px;
+  }
+  .filterdet{
+  padding-right:5px;
+  }
+  .filterdeticon
+  {
+  font-size: 2px;
+  }
+  
+  .example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  }
+  
+  .example-sidenav {
+  padding: 20px;
+  }
+  .header {
+  height: 250px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 150px;
+  background: rgba(0,0,255,.1);
+  }
+  
+  .rightSidenav_toggle {
+  width: 300px;
+  height: 50px;
+  background-color: #eee;
+  }
+  .mt-15
+  {
+  margin-top:-15px;
+  }
+  
+  .content {
+  margin:1px 1px 0px 2px;
+  }
+  /* .search-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  } */
+  .search-container {
+  position: absolute;
+  right: 0;
+  left: 0; 
+  }
+  .sidenav-content {
+  margin-left: 30px;
+  }
+  
+  
+  
+  
+  
+  /* Static Drop Down */
+
+  
+  ::ng-deep .ng-select .ng-select-container  {            
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+  }
+  
+
+  
+  .toggle-button-position {
+      margin-top:15px!important;
+  }
+  
+  .white-bg {
+      overflow: scroll!important;
+  }
+  
+  .tableColumnMover {
+    width:280px!important;
+  }
+  
+  .right-mover {
+    margin-left: 80%!important;
+  }
+  
+  .section_title {
+    font-size: 22px;
+    color: #445c8f;
+    /* padding:20px 0px; */
+}
+  
+.user-defined-class{
+  background-color:#445C8F!important;
+}
+.card-style{
+  padding: 20px;
+  background: #fff;
+}
+  

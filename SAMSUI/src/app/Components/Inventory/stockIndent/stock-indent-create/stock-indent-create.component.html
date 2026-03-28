@@ -1,0 +1,335 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <mat-toolbar-row fxFlex="50">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="start center">
+        <mat-list-item><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a>{{'MENU_INVENTORY' | translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item><a (click)="backTOItemScreen()" style="cursor: pointer;">{{'MENU_STOCK_INDENT' |
+            translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  
+    <div fxFlex="50" fxLayoutAlign="end center">
+      <button mat-raised-button class="space" color="primary" (click)="exitForm()">{{'COMMON_BACK' |
+        translate}}</button>
+      <button mat-raised-button class="space" color="primary" (click)="clear()" [disabled]="disbleClear">{{'COMMON_CLEAR'
+        | translate}}</button>
+      <button mat-raised-button class="space" color="primary" (click)="submit()"
+        *ngIf="stockIndentForm.controls.stockIndentDtl.value.length == 0" [disabled]=true>Submit</button>
+      <button mat-raised-button class="space" color="primary" (click)="submit()"
+        *ngIf="stockIndentForm.controls.stockIndentDtl.value.length > 0"
+        [disabled]="!stockIndentForm.dirty || stockIndentForm.invalid || disableSubmit">Submit</button>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <form fxLayout="column" [formGroup]="stockIndentForm">
+        <!-- stock indent hdr start here -->
+        <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+            <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+
+              <div style="padding: 10px;" fxFlex="25" fxFlex.sm="25" fxFlex.xs="25">
+
+                <div class="form-group h-65-px mt-5-px">
+                  <div class="example-full-width">
+                    <span class="example-label">{{'LOCATION_NAME' | translate}} <span class="mandatory-style">*</span></span>
+                    <ng-select class="example-field" formControlName="locationName" (search)="listofLocationName($event)"
+                      (click)="listofLocationName({})" (change)="setLocationNameComboValue($event)" [items]="locationCombo"
+                      [virtualScroll]="true" (scrollToEnd)="listofLocationName({})"
+                      (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                      (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                      bindValue="locDisplayField" tabindex="1" required>
+                    </ng-select>
+                    <mat-error
+                      *ngIf="stockIndentForm.controls.locationName.invalid && stockIndentForm.controls.locationName.touched">
+                      <div style="font-size: 10px " *ngIf="stockIndentForm.controls.locationName.errors.required">
+                        {{'LOCATION_NAME' | translate }} is Required </div>
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label"> {{'STOCK_INDENT_NO' | translate}} </mat-label>
+                      <input #focusSet class="input-field" matInput formControlName="indentNo">
+                    </mat-form-field>
+                  </div>
+                </div>    
+
+              </div>
+
+              
+
+              <div style="padding: 10px;" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <span class="example-label"> {{ 'STOCK_INDENT_SR_NO' | translate }} </span>
+                    <ng-select class="example-field" #srNo [items]="srNoCombo" bindLabel="srNo" bindValue="srNo"
+                      (search)="loadServiceRequestNumbers($event)" (click)="loadServiceRequestNumbers($event)"
+                      [virtualScroll]="true" (scrollToEnd)="loadServiceRequestNumbers({})" (keyup.backspace)="loadServiceRequestNumbers($event.target.value ? $event : 'back')" (clear)="loadServiceRequestNumbers('clear')" [loading]="scrollSRNosync"
+                      loadingText="Loading..." (change)="selectedSRNo($event)" formControlName="srNo"></ng-select>
+                  </div>
+                </div>   
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <span class="example-label"> {{ 'STORE' | translate }} <span class="mandatory-style">*</span> </span>
+                    <ng-select class="example-field" #storeName  formControlName="storeName" (click)="listOfStore({})"
+                      (search)="listOfStore($event)" (scrollToEnd)="listOfStore({})" (keyup.backspace)="listOfStore($event.target.value ? $event : 'back')" (clear)="listOfStore('clear')" [loading]="scrollStoreNamesync"
+                      (change)="getStoreValue($event)" [items]="storeList" bindLabel="storeName" bindValue="storeName">
+                    </ng-select>
+                    <mat-error style ="font-size:11px" *ngIf="stockIndentForm.controls.storeName.invalid && stockIndentForm.controls.storeName.touched">
+                      <div *ngIf="stockIndentForm.controls.storeName.errors.required">
+                        {{'STORE' | translate}} is Required </div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding: 10px;" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-field"> {{'REPORT_ASSET_CODE' | translate}} </mat-label>
+                      <input class="input-field" #focusSet matInput formControlName="assetCode">
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+              </div>
+
+              <div style="padding: 10px;" fxFlex="18" fxFlex.sm="18" fxFlex.xs="18">
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-field"> {{'STOCK_REQUEST_BY' | translate}} </mat-label>
+                      <input class="input-field" #focusSet matInput formControlName="requestedBy">
+                    </mat-form-field>
+                  </div>
+                </div> 
+                
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-field"> {{'STOCK_INDENT_STATUS' | translate}} </mat-label>
+                      <input class="input-field" #focusSet matInput formControlName="indentStatus">
+                    </mat-form-field>
+                  </div>
+                </div>
+              
+              </div>
+
+              <div style="padding: 10px;" fxFlex="18" fxFlex.sm="18" fxFlex.xs="18">
+
+                <div class="form-group h-55">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-field"> {{'STOCK_REQUEST_DT' | translate}} </mat-label>
+                      <input class="input-field" matInput formControlName="requestedDtDisp" tabindex="2" readonly (click)="picker1.open()"
+                        [matDatepicker]="picker1">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+        </div>
+        <!-- stock indent hdr end here -->
+        <hr>
+        <!-- stock indent dtl start here -->
+        <div>
+          <div style="margin-bottom:5%;">
+            <div [@.disabled]="true">
+              <mat-tab-group>
+                  <mat-tab>
+                      <ng-template mat-tab-label>
+                        {{'STOCK_INDENT_DETAILS' | translate }}
+                      </ng-template>
+                      <mat-card>
+                        <mat-card-content>
+                          <div>   
+                            <button
+                              *ngIf="stockIndentForm.controls.storeName.value != '' && stockIndentForm.controls.storeName.value != undefined"
+                              mat-icon-button class="mat-icon-button" matTooltip="{{ 'STOCK_ADD_ITEM' | translate }}"
+                              (click)="addStockIndentForItem()">
+                              <!-- <mat-icon color="primary">add_circle</mat-icon> -->
+                              <div class="plus-icon add-circle-icon"></div>
+                            </button>
+                          </div>
+                          <div>
+                            <table style="overflow: scroll;">
+                              <thead>
+                                <tr>
+                                  <th class="input-label"  style="width:1%">{{'COMMON_S_NO' | translate}}</th>
+                                  <th class="input-label"  style="width:7%">{{'ITEM_TYPE' | translate}} <span class="mandatory-style">*</span></th>
+                                  <th class="input-label"  style="width:7%">{{'ITEM_NAME' | translate}} <span class="mandatory-style">*</span></th>
+                                  <th class="input-label"  style="width:8%">{{'ITEM_DESC' | translate}}</th>
+                                  <th class="input-label"  style="width:8%">{{'ITEM_OEM_CODE' | translate}}</th>
+                                  <th class="input-label"  style="width:4%">{{'UOM_NAME' | translate}}</th>
+                                  <th class="input-label"  style="width:5%">{{'STOCK_AVAILABLE_QTY' | translate}}</th>
+                                  <th class="input-label"  style="width:5%">{{'STOCK_INDENT_QTY' | translate}} <span class="mandatory-style">*</span></th>
+                                  <th class="input-label"  style="width:5%" *ngIf= "!createMode">{{'STOCK_ISSUE_QTY' | translate}}</th>
+                                  <th class="input-label"  style="width:3%" *ngIf="stockIndentForm.controls.indentHdrId.value==0">
+                                    {{'COMMON_DELETE' | translate}} 
+                                  </th>
+                                  <th  style="width:10%" *ngIf="stockIndentForm.controls.indentHdrId.value>0">
+                                    {{'REMARKS' | translate}}
+                                  </th> 
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <ng-container formArrayName="stockIndentDtl" *ngFor="let element of stockIndentForm.get('stockIndentDtl')['controls']; let i = index;">
+                                  <tr height="20" [formGroupName]="i">
+                                    <td style="width:1%"> {{ i+1 }} </td>
+
+                                    <td style="width:7%" class="Form_Select">
+                                      <div *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value == 0">
+                                         <ng-select formControlName="itemTypeName"
+                                            (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({},i)"
+                                            (change)="getItemTypeValue($event,i)" [items]="itemTypeList" 
+                                            (scrollToEnd)="listOfItemTypeCombo({},i)"
+                                            (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                                            (clear)="listOfItemTypeCombo('clear',i)" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                                            bindValue="itemTypeName" appendTo="body">
+                                        </ng-select>
+                                      </div>
+      
+                                      <input *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value > 0"
+                                        matInput formControlName="itemTypeName" readonly  class="input-field">
+                                    </td>
+
+                                    <td style="width:7%" class="Form_Select">
+                                      <div *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value == 0">
+                                        <ng-select  formControlName="itemName"
+                                          (click)="listOfItemFromMaster({},i)"
+                                          (search)="listOfItemFromMaster($event)"
+                                          (scrollToEnd)="listOfItemFromMaster({},i)" 
+                                          (keyup.backspace)="listOfItemFromMaster($event.target.value ? $event : 'back',i)" 
+                                          (clear)="listOfItemFromMaster('clear',i)" [loading]="scrollItemNamesync"
+                                          (change)="getItemValueFromMaster($event,i)" [items]="itemList"
+                                          bindLabel="itemMasterName" bindValue="itemMasterName" appendTo="body">
+                                        </ng-select>
+                                      </div>
+      
+                                      <input *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value > 0"
+                                        matInput formControlName="itemName" readonly  class="input-field">
+                                    </td>
+      
+                                    <td style="width:8%" class="Form_Input">
+                                      <div *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value == 0">
+                                        <ng-select  formControlName="description"
+                                          (click)="listOfItemDescFromMaster({},i)"
+                                          (search)="listOfItemDescFromMaster($event)"
+                                          (scrollToEnd)="listOfItemDescFromMaster({},i)" 
+                                          (keyup.backspace)="listOfItemDescFromMaster($event.target.value ? $event : 'back',i)" 
+                                          (clear)="listOfItemDescFromMaster('clear',i)" [loading]="scrollItemDescsync"
+                                          (change)="getItemDescValueFromMaster($event,i)" [items]="itemDescList"
+                                          bindLabel="itemMasterDesc" bindValue="itemMasterDesc" appendTo="body" 
+                                          style="text-overflow: ellipsis;">
+                                        </ng-select>                                        
+                                      </div>
+                                      <input *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value > 0"
+                                        matInput formControlName="description" readonly class="input-field" style="text-overflow: ellipsis;">
+                                    </td>
+
+                                    <td  class="Form_Input" style="width:8%;border-bottom: none;">
+                                      <div *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value == 0">
+                                        <ng-select  formControlName="makerPartCode"
+                                          (click)="listOfManufacturerPartNo({},i)"
+                                          (search)="listOfManufacturerPartNo($event)"
+                                          (scrollToEnd)="listOfManufacturerPartNo({},i)" 
+                                          (keyup.backspace)="listOfManufacturerPartNo($event.target.value ? $event : 'back',i)" 
+                                          (clear)="listOfManufacturerPartNo('clear',i)" [loading]="scrollManufacturerPartNosync"
+                                          (change)="getManufacturerPartNoValue($event,i)" [items]="manufacturerPartNoList"
+                                          bindLabel="comboDisp" bindValue="comboDisp" appendTo="body" 
+                                          style="text-overflow: ellipsis;">
+                                        </ng-select>                                        
+                                      </div>
+                                      <input *ngIf="stockIndentForm.controls.stockIndentDtl['controls'][i]['controls'].indentDtlId.value > 0"
+                                        matInput formControlName="makerPartCode" readonly class="input-field">
+                                    </td>
+
+                                    <td  class="input-label" style="width:4%;border-bottom: none;">
+                                      <input matInput formControlName="uom" style="text-align: left; font-size:12px;" readonly>
+                                    </td>
+      
+                                    <td style="width:5%; color: red; text-align: right" class="Form_Input">
+                                      <strong>
+                                        <input type="number" matInput formControlName="availableQty" readonly  class="input-field" style="font-weight: bold !important;"
+                                          (change)="setAvailableQty(element,i)">
+                                      </strong>
+                                    </td>
+
+                                    <td style="width:5%; color: blue; text-align: right" 
+                                      class="Form_Input"
+                                      [ngClass]="{'isError': this.stockIndentForm.controls.stockIndentDtl['controls'][i]['controls']['indentQty'].errors && !this.stockIndentForm.controls.stockIndentDtl['controls'][i]['controls']['indentQty'].pristine}">
+                                      <strong>
+                                        <input type="number" matInput formControlName="indentQty"  class="input-field" style="font-weight: bold !important;" [min]="1" (change)="setIndentQty(element,i)">
+                                      </strong>
+                                    </td>
+
+                                    <td style="width:5%; color: #096218;text-align: right" class="Form_Input"
+                                      [ngClass]="{'isError': this.stockIndentForm.controls.stockIndentDtl['controls'][i]['controls']['issueQty'].errors && !this.stockIndentForm.controls.stockIndentDtl['controls'][i]['controls']['issueQty'].pristine}" *ngIf= "!createMode">
+                                      <strong>
+                                        <input type="number" matInput formControlName="issueQty"  class="input-field" style="font-weight: bold !important;" [min]="0" (change)="setIssueQty(element,i)">
+                                      </strong>
+                                    </td>
+
+                                    <td style="width:3%" *ngIf="stockIndentForm.controls.indentHdrId.value==0">
+                                      <mat-icon class="close-icon-large-remove" (click)="delete(i)">remove_circle_outline
+                                      </mat-icon>
+                                    </td>
+
+                                    <td style="width:10%" *ngIf="stockIndentForm.controls.indentHdrId.value>0">
+                                      <input style="font-size:10px !important; color:red" matInput  class="input-field" formControlName="errorMessage" readonly>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </tbody>    
+                            </table>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>    
+                  </mat-tab>
+                  <mat-tab *ngIf = "stockIndentForm.controls.indentHdrId.value > 0" label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}"> 
+                    <mat-card class="card-style">
+                      <mat-card-content> 
+                    <app-common-workflow-approval-tab 
+                    [transactionId]=StockIndentId 
+                    [transactionSource]=transactionSource 
+                    [StockIndentEmployeeId] =employeeId 
+                    [StockIndentStatusId] =stockIndentForm.controls.StockIndentStatusId.value 
+                    [StockIndentApproveButtonEnable] = approvebuttonEnable
+                    (StockIndentconfirm) = confirmStockIndentApprove() 
+                    (StockIndentReject) = rejectStockIndentApprove() >       
+                    </app-common-workflow-approval-tab>
+                    </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+              </mat-tab-group>
+            </div>
+          </div>
+        </div>              
+
+    </form>          
+  </div>
+ 
+</div>

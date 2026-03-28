@@ -1,0 +1,210 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div style="padding-top: 0.5%;">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}} {{'CUSTOMER_NAME'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon style="color: red;">search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div fxFlex="100" fxLayout="row">
+        <form fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxLayout.md="column">
+          <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100" fxLayout.md="row" fxFlex.md="100">
+            <div fxFlex="34">
+              <div class="example-full-width" style="margin-bottom: 14px;">
+                <span class="input-label"> {{ 'CUSTOMER_NAME' | translate }} </span>
+                <ng-select class=" input-field" [(ngModel)]="customer.customerName"
+                  [ngModelOptions]="{standalone: true}" (click)="listOfCustomerName({})" [virtualScroll]="true"
+                  (search)="listOfCustomerName($event)" (scrollToEnd)="listOfCustomerName({})" (keyup.backspace)="listOfCustomerName($event.target.value ? $event : 'back')" (clear)="listOfCustomerName('clear')"
+                  (change)="setCustomerNameCombo($event)" [items]="customerNameList" bindLabel="customerName"
+                  bindValue="customerName" [loading]="scrollsyncCustomerName" appendTo="body" loadingText="Loading..."
+                  required>
+                </ng-select>
+              </div>
+              <div class="example-full-width" style="margin-bottom: 10px;"  >
+                <span class="input-label"> {{'COMMON_COUNTRY' | translate }}</span>
+                <ng-select class=" input-field" [(ngModel)]="customer.customerCountry" [ngModelOptions]="{standalone: true}" [virtualScroll]="true"
+                  [items]="countries" (search)="getCountryData($event)" (click)="getCountryData({})"
+                  (change)="setCountryData($event)" (scrollToEnd)="getCountryData({})" (clear)="getCountryData('clear')" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')"
+                  [loading]="scrollCountrysync" loadingText="Loading..." bindLabel="countryName"
+                  bindValue="countryName" appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxFlex="33">
+              <div class="example-full-width" style="margin-bottom: 14px;">
+                <span class="input-label"> {{ 'CUSTOMER_SITE_NAME' | translate }} </span>
+                <ng-select class=" input-field" [(ngModel)]="customer.customerSiteName" appendTo="body"
+                  [ngModelOptions]="{standalone: true}" (click)="listOfCustomerSiteName({})" [virtualScroll]="true"
+                  (search)="listOfCustomerSiteName($event)" (scrollToEnd)="listOfCustomerSiteName({})" (clear)="listOfCustomerSiteName('clear')" (keyup.backspace)="listOfCustomerSiteName($event.target.value ? $event : 'back')"
+                  (change)="setCustomerSiteNameCombo($event)" [items]="customerSiteNameList"
+                  bindLabel="custSiteSearchDisp" bindValue="customerSiteName" [loading]="scrollsyncCustomerSiteName"
+                  loadingText="Loading..." required>
+                </ng-select>
+
+              </div>
+              <div class="example-full-width" style="margin-bottom: 10px;"  >
+                <span class="input-label"> {{ 'COMMON_STATE' | translate }} </span>
+                <ng-select class=" input-field" [(ngModel)]="customer.customerState"
+                  [ngModelOptions]="{standalone: true}" (click)="getStateData({})" [virtualScroll]="true"
+                  (search)="getStateData($event)" (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" (change)="setState($event)"
+                  [items]="states" bindLabel="stateName" bindValue="stateName" [loading]="scrollStatesync"
+                  loadingText="Loading..." appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxFlex="33">
+              <div style="margin-top: 6px;">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{ 'COMMON_AREA' | translate }}</mat-label>
+                  <input matInput class="input-field" [(ngModel)]="customer.customerArea" [ngModelOptions]="{standalone: true}"
+                    oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+              <div class="example-full-width">
+                <div>
+                  <span class="input-label">{{ 'COMMON_CITY' | translate }}</span>
+                <ng-select class=" input-field" [(ngModel)]="customer.customerCity"
+                [ngModelOptions]="{standalone: true}" (click)="getCityMethod({})" [virtualScroll]="true"
+                (search)="getCityMethod($event)" (scrollToEnd)="getCityMethod({})" (clear)="getCityMethod('clear')" (change)="getCityListData($event)" (keyup.backspace)="getCityMethod($event.target.value ? $event : 'back')"
+                [items]="cities" bindLabel="cityName" bindValue="cityName" [loading]="cityScrollsync"
+                loadingText="Loading..." appendTo="body">
+              </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100" fxLayout.md="row" fxFlex.md="100">
+            <div fxFlex="100" fxLayout="column" fxLayout.lt-md="row" fxFlex.lt-md="100" fxLayout.md="row"
+              fxFlex.md="100">
+              <div fxFlex.lt-md="34" fxFlex.md="34" style="margin-top: 5px;">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="100">
+                  <mat-label class="input-label">{{ 'CUSTOMER_CONTACT_PHONE_NO' | translate }}</mat-label>
+                  <input matInput class="input-field" [(ngModel)]="customer.contactPersonNo" [ngModelOptions]="{standalone: true}"
+                    oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+              <div>
+                <div style="margin-bottom: 20px;">
+                  <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+                  <ng-select class=" bg-transparant" [(ngModel)]="customer.activeDisplay"
+                    [ngModelOptions]="{standalone: true}" [items]="status" bindLabel="name" bindValue="name"
+                    (change)="changeStatus($event)" appendTo="body">
+                  </ng-select>
+                </div>
+              </div>
+              <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end" fxHide.lt-md fxLayoutAlign.md="end end"
+                fxFlex.md="66">
+                <button mat-raised-button color="primary" class="space" (click)="onSearchChange($event)">{{
+                  'COMMON_SEARCH' | translate }}</button>
+                <button mat-raised-button color="primary" class="space" (click)="clearSearch()">{{ 'COMMON_CLEAR' |
+                  translate }}</button>
+                <button mat-raised-button color="primary" class="space"
+                  (click)="generateReportOfCustomer()">Export</button>
+              </div>
+              <div fxLayout="row" fxFlex.lt-md="66" fxFlex.md="66" fxLayoutAlign="end end" fxHide.gt-md fxHide.md>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="onSearchChange($event)">
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="clearSearch()">
+                  <mat-icon>clear_all</mat-icon>
+                </button>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="generateReportOfCustomer()">
+                  <mat-icon>file_download</mat-icon>
+                </button>
+
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </mat-expansion-panel>
+  </div>
+  <hr>
+  <mat-toolbar>
+    <span>{{'CUSTOMER_NAME'| translate}} List</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+  [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+  
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="customerAccessModule.createFlagDisplay"
+    (click)="createCustomer(0,'add')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="customerAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="createCustomer(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+    <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="customerAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="createCustomer(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+  </mat-toolbar>
+  <div fxLayout="column" fxFlexFill class="category-container-table">
+    <table mat-table [dataSource]="customerDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear>
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectCustomer(element)" [checked]="selectedItem == element?.customerId">  </mat-checkbox></td>
+      </ng-container>
+
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 44%;"> {{'CUSTOMER_NAME' | translate}} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 44%; padding-right: 1px;"> {{element.customerName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;text-align: center">
+          {{ 'COMMON_ACTIVE' | translate }} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 10%;">
+          <span class="{{element?.activeYOrN}}">{{element?.activeYOrN}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> {{'COMMON_CREATED_BY' | translate}} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 10%;"> {{element.createdBy}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> {{'COMMON_CREATED_DT' |translate}} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 10%;"> {{element.createdDtDisp}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> {{'COMMON_UPDATED_BY' | translate}} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 10%;"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> {{'COMMON_UPDATED_DT'| translate}} </th>
+        <td mat-cell (click)="selectCustomer(element)" *matCellDef="let element" style="width: 10%;"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+
+    </table>
+    <mat-card class="no_records_found" *ngIf="length== 0  && !subLoaderCustomer">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+    <mat-card class="no_records_found" *ngIf="subLoaderCustomer" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+
+</div>

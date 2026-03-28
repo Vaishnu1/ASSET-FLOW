@@ -1,0 +1,65 @@
+<mat-icon class="close-icon-large" (click)="closeModal()">highlight_off</mat-icon>
+<form [formGroup]="bulkSerialNumberFormGroup">
+  <div class="row closebutton">
+    <div class="col-md-8">
+      <h6 class="section_title"> {{ 'ADD_BULK_SERIAL_NO' | translate }} </h6>
+    </div>
+    <div class="col-md-2">
+      <button mat-raised-button color="primary" 
+          (click)="addSerialNumber()">Save</button>
+    </div>
+  </div>
+
+  <div class="content-style">
+    <div class="col-md-12 row">
+     
+      <div class="col-md-9">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{ 'ASSET_SERIAL_NO' | translate }} </mat-label>
+            <input matInput formControlName="serialNo" >
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button mat-raised-button color="primary" [disabled]="bulkSerialNumberFormGroup.invalid"
+          (click)="addSerialNumber()">Add</button>
+      </div>
+      
+    </div>
+
+    <div class="example-container">
+      <table mat-table #serialNumber [dataSource]="bulkSerialNo" matSort>
+
+        <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_S_NO' | translate }} </th>
+          <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="serialNumber">
+          <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'ASSET_SERIAL_NO' | translate }} </th>
+          <td mat-cell *matCellDef="let element" style="width:7%; ">
+               {{element.serialNo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sequenceNumber">
+          <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'SEQUENCE_NUMBER' | translate }} </th>
+          <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="action" >
+            <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_ACTION' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i = index;" style="width:5%;">
+                <mat-icon color="primary" class="action_icon"
+                    (click)="deleteSerialNumber(i)" *ngIf="!modeDisplay">delete
+                </mat-icon>   </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayColmns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayColmns;">
+      </table>
+
+    </div>
+  </div>
+</form>

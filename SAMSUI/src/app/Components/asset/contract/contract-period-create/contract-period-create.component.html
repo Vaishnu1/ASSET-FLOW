@@ -1,0 +1,176 @@
+<mat-icon class="close-icon-large" (click)="exit()">highlight_off</mat-icon>
+<form [formGroup]="contractPeriodForm">
+  <div class="row">
+    <div class="col-md-8">
+      <h4 class="section_title">{{headingDisplay}} {{'CONTRACT_PERIOD' | translate}}</h4>
+    </div>
+    <div class="col-md-4">
+        <button *ngIf="buttonShowOnEdit" mat-raised-button class="space" color="primary" (click)="addContractPeriod()"
+          [disabled]="contractPeriodForm.invalid || !contractPeriodForm.dirty">{{buttonDisplay}}</button>
+    </div>
+  </div>
+
+  <div class="form-group row">
+
+    <div class="col-sm-6">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{ 'CONTRACT_PERIOD_START_DATE' | translate}}</mat-label>
+        <input matInput (click)="periodStartDtDisp.open()" [matDatepicker]="periodStartDtDisp"
+          formControlName="periodStartDtDisp" [max]="contractPeriodForm.controls.periodEndDtDisp.value"
+          (keypress)="dateValidationinstall($event)" tabindex="1" required>
+        <mat-datepicker-toggle matSuffix [for]="periodStartDtDisp"></mat-datepicker-toggle>
+        <mat-datepicker #periodStartDtDisp></mat-datepicker>
+        <mat-error>
+          {{ 'CONTRACT_PERIOD_START_DATE' | translate }} is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-6">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{ 'CONTRACT_PERIOD_END_DATE' | translate}}</mat-label>
+        <input matInput (click)="periodEndDtDisp.open()" [matDatepicker]="periodEndDtDisp"
+          formControlName="periodEndDtDisp" [min]="contractPeriodForm.controls.periodStartDtDisp.value"
+          (keypress)="dateValidationinstall($event)" tabindex="2" required>
+        <mat-datepicker-toggle matSuffix [for]="periodEndDtDisp"></mat-datepicker-toggle>
+        <mat-datepicker #periodEndDtDisp></mat-datepicker>
+        <mat-error>
+          {{ 'CONTRACT_PERIOD_END_DATE' | translate }} is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label"> {{'CONTRACT_PERIOD_BASIC_VALUE' | translate}}</mat-label>
+          <input matInput tabindex="3" required formControlName="periodBasicValue" (keyup)="contractValChange()" (ngModelChange)="contractValChange()">
+        </mat-form-field>
+        <mat-error
+          *ngIf="contractPeriodForm.controls.periodBasicValue.invalid && contractPeriodForm.controls.periodBasicValue.touched">
+          <div class="err-field" *ngIf="contractPeriodForm.controls.periodBasicValue.errors.required">
+            {{'CONTRACT_PERIOD_BASIC_VALUE' | translate}} is Required </div>
+          <div class="err-field" *ngIf="contractPeriodForm.controls.periodBasicValue.errors.pattern">
+            {{'CONTRACT_PERIOD_BASIC_VALUE' | translate}} contains only Numbers </div>
+        </mat-error>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+
+    <div class="col-sm-6">
+
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'CONTRACT_DISCOUNT_RATE' | translate}} </mat-label>
+        <input matInput formControlName="discountRate" tabindex="3" 
+        (keyup)="calcualteDisRate(contractPeriodForm.controls.discountRate.value,contractPeriodForm.controls.periodBasicValue.value)"
+        (ngModelChange)="calcualteDisRate(contractPeriodForm.controls.discountRate.value,contractPeriodForm.controls.periodBasicValue.value)">
+        <mat-error *ngIf="contractPeriodForm.controls.discountRate.invalid && contractPeriodForm.controls.discountRate.touched">
+          <div *ngIf="contractPeriodForm.controls.discountRate.errors.pattern">
+            {{'CONTRACT_DISCOUNT_RATE' | translate}} contains only Numbers </div>
+          <div *ngIf="contractPeriodForm.controls.discountRate.errors.maxlength">
+            {{'CONTRACT_DISCOUNT_RATE' | translate}} Maximum length is 4 </div>
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-sm-6">
+
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'CONTRACT_DISCOUNT_AMT' | translate}} </mat-label>
+        <input matInput formControlName="discountAmt" tabindex="4">
+        <mat-error
+          *ngIf="contractPeriodForm.controls.discountAmt.invalid && contractPeriodForm.controls.discountAmt.touched">
+          <div *ngIf="contractPeriodForm.controls.discountAmt.errors.pattern"> {{'CONTRACT_DISCOUNT_AMT' | translate}}
+            contains only Numbers </div>
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label"> {{'CONTRACT_GROSS_VALUE' | translate}}</mat-label>
+          <input matInput tabindex="5" required formControlName="periodGrossValue">
+        </mat-form-field>
+        <mat-error
+          *ngIf="contractPeriodForm.controls.periodGrossValue.invalid && contractPeriodForm.controls.periodGrossValue.touched">
+          <div class="err-field" *ngIf="contractPeriodForm.controls.periodGrossValue.errors.required">
+            {{'CONTRACT_GROSS_VALUE' | translate}} is Required </div>
+          <div *ngIf="contractPeriodForm.controls.periodGrossValue.errors.pattern">
+            {{'CONTRACT_GROSS_VALUE' | translate}}
+            contains only Numbers </div>
+        </mat-error>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+
+    <div class="col-sm-6">
+      <span class="input-label">{{'CONTRACT_TAX_CODE1' | translate}}</span>
+      <ng-select  formControlName="taxCode1" (search)="listOfTaxCode1($event)"
+        (click)="listOfTaxCode1({})" (change)="setTaxCode1Id($event)" [virtualScroll]="true"
+        (scrollToEnd)="listOfTaxCode1({})"  (keyup.backspace)="listOfTaxCode1($event.target.value ? $event : 'back')"   (clear)="listOfTaxCode1('clear')" [loading]="scrollTaxCode1Sync" [items]="taxCode1List" bindLabel="taxCode"
+        bindValue="taxCode" tabindex="6">
+      </ng-select>
+    </div>
+
+    <div class="col-sm-6">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'CONTRACT_RATE' | translate}}(%)</mat-label>
+        <input matInput formControlName="taxRate1" tabindex="7" (ngModelChange)="contractValChange()">
+      </mat-form-field>
+    </div>
+
+  </div>        
+
+  <div class="form-group row">
+
+    <div class="col-sm-6">
+      <span class="input-label">{{'CONTRACT_TAX_CODE2' | translate}}</span>
+      <ng-select  formControlName="taxCode2" (search)="listOfTaxCode2($event)"
+        (click)="listOfTaxCode2({})" (change)="setTaxCode2Id($event)" [virtualScroll]="true"
+        (scrollToEnd)="listOfTaxCode2({})" (keyup.backspace)="listOfTaxCode2($event.target.value ? $event : 'back')" (clear)="listOfTaxCode2('clear')" [loading]="scrollTaxCode2Sync" [items]="taxCode2List" bindLabel="taxCode2"
+        bindValue="taxCode2" dropdownPosition =top tabindex="8" >
+      </ng-select>
+    </div>
+
+    <div class="col-sm-6">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label"> {{'CONTRACT_RATE' | translate}}(%) </mat-label>
+        <input matInput formControlName="taxRate2" tabindex="9" (ngModelChange)="contractValChange()">
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label"> {{'CONTRACT_PERIOD_NET_VALUE' | translate}}</mat-label>
+          <input matInput tabindex="10" required formControlName="periodNetValue">
+        </mat-form-field>
+        <mat-error
+          *ngIf="contractPeriodForm.controls.periodNetValue.invalid && contractPeriodForm.controls.periodNetValue.touched">
+          <div class="err-field" *ngIf="contractPeriodForm.controls.periodNetValue.errors.required">
+            {{'CONTRACT_PERIOD_NET_VALUE' | translate}} is Required </div>
+          <div *ngIf="contractPeriodForm.controls.periodNetValue.errors.pattern">
+            {{'CONTRACT_PERIOD_NET_VALUE' | translate}} contains only Numbers </div>
+        </mat-error>
+      </div>
+    </div>
+  </div>
+
+</form>  

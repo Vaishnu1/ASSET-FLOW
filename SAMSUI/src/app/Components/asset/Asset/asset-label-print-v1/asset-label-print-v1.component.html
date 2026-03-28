@@ -1,0 +1,222 @@
+<div fxLayout="column" fxFlexFill>
+    <div fxLayout="row">
+      <div fxFlex="90" >
+        <h4 class="dialogue-box-header">{{ 'PRINTER_PRINT_LABEL' | translate }}</h4>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+        <mat-icon class="close-icon-large close-icon" (click)="closeModal()" >highlight_off</mat-icon>
+      </div>
+    </div>
+  
+    <form [formGroup]="assetLabelPrintForm">
+      <!-- <div class="form-group " fxLayout="column">
+        <div>
+            <mat-checkbox type="checkbox" [checked]="this.assetLabelPrintForm.controls.PrinterType.value" (change)="setCustomPrinter(0)" color="primary">{{ 'PRINTER_DEFAULT' | translate}} </mat-checkbox>
+        </div>  
+        <div>
+            <mat-checkbox type="checkbox" [checked]="!(this.assetLabelPrintForm.controls.PrinterType.value)" (change)="setCustomPrinter(1)" color="primary">{{ 'PRINTER_CUSTOM' | translate}} </mat-checkbox>
+        </div>  
+      </div> -->
+   
+      <!-- <div>
+        <div>
+          <div class="form-group">
+            <span class="input-label">{{'PRINTER_MODEL' | translate}}<span  class="mandatory-style">*</span></span>
+
+            <ng-select required formControlName="printerModel"
+                [items]="printerModelCombo"
+                bindLabel="printerModel"
+                bindValue="printerModel"
+                [virtualScroll]="true"
+                tabindex="2">
+            </ng-select>
+            <mat-error
+              *ngIf="assetLabelPrintForm.controls.printerModel.invalid && assetLabelPrintForm.controls.printerModel.touched">
+              <div class="err-field" *ngIf="assetLabelPrintForm.controls.printerModel.errors.required">
+                {{'PRINTER_MODEL' | translate}} is Required </div>
+            </mat-error>
+          </div>
+        </div>
+      </div> -->
+  
+      
+      <!-- <div class="row" *ngIf="printerList.length > 0">
+        <div class="col-md-12">
+          <div class="form-group">
+            <span class="input-label">{{ 'PRINTER_NAME' | translate }}<span  class="mandatory-style">*</span></span>
+            <ng-select  formControlName="printerName"
+                [virtualScroll]="true" [loading]="scrollPrinterSync" loadingText="Loading..." 
+                 [items]="printerList" bindLabel="name"
+                bindValue="name"> 
+            </ng-select>
+          </div>
+        </div>
+      </div> -->
+  
+      <!-- <div *ngIf="printersComboDisplay">
+        <div >
+          <div class="form-group">
+            <span class="input-label">{{ 'PRINTER_LABEL_SIZE' | translate }}<span class="mandatory-style">*</span></span>
+            <ng-select class=" input-field" formControlName="labelSize" 
+                (search)="listOfPrinterLabelSize($event)" [virtualScroll]="true" (click)="listOfPrinterLabelSize({})"
+                (scrollToEnd)="listOfPrinterLabelSize({})" (keyup.backspace)="listOfPrinterLabelSize($event.target.value ? $event : 'back')" (clear)="listOfPrinterLabelSize('clear')"  [loading]="scrollPrinterLabelSizeSync" loadingText="Loading..." 
+                (change)="setPrinterLabelSize($event)" [items]="printerLabelSizeCombo" bindLabel="labelSize"
+                bindValue="labelSize" required> 
+            </ng-select>
+            <mat-error *ngIf="assetLabelPrintForm.controls.labelSize.invalid && assetLabelPrintForm.controls.labelSize.touched">
+            <div class="err-field" *ngIf="assetLabelPrintForm.controls.labelSize.errors.required">{{ 'PRINTER_LABEL_SIZE' | translate }} is Required </div>
+            </mat-error>
+          </div>   
+        </div>
+      </div>  -->
+  
+      <!-- <div *ngIf="printersComboDisplay">   
+        <div >
+          <div class="form-group">
+            <span class="input-label">{{ 'PRINTER_TEMPLATE' | translate }}<span class="mandatory-style">*</span></span>
+            <ng-select class=" input-field" formControlName="templateName" 
+                (search)="listOfPrinterTemplate($event)" [virtualScroll]="true" (click)="listOfPrinterTemplate({})"
+                (scrollToEnd)="listOfPrinterTemplate({})" (keyup.backspace)="listOfPrinterTemplate($event.target.value ? $event : 'back')" (clear)="listOfPrinterTemplate('clear')"  [loading]="scrollPrinterTemplateSync" loadingText="Loading..." 
+                (change)="setPrinterTemplate($event)" [items]="printerTemplateCombo" bindLabel="templateName"
+                bindValue="templateName" required>   
+            </ng-select>   
+            <mat-error *ngIf="assetLabelPrintForm.controls.templateName.invalid && assetLabelPrintForm.controls.templateName.touched">
+            <div class="err-field" *ngIf="assetLabelPrintForm.controls.templateName.errors.required">{{ 'PRINTER_TEMPLATE' | translate }} is Required </div>
+            </mat-error>
+          </div>   
+        </div>
+      </div> -->
+  
+      <!-- <div >  
+        <div  *ngIf="printersComboDisplay">
+          <div class="form-group">
+            <span class="input-label">{{ 'PRINTER_LABEL_CUT' | translate }}<span class="mandatory-style">*</span></span>
+            <ng-select class=" input-field" formControlName="labelCut"
+              [items]="labelCutCombo" bindLabel="name" bindValue="id" required>
+            </ng-select>
+            <mat-error *ngIf="assetLabelPrintForm.controls.labelCutForDisp.invalid && assetLabelPrintForm.controls.labelCutForDisp.touched">
+            <div class="err-field" *ngIf="assetLabelPrintForm.controls.labelCutForDisp.errors.required">{{ 'PRINTER_LABEL_CUT' | translate }} is Required </div>
+            </mat-error>
+          </div>   
+        </div>
+  
+        <div >
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 2 Digits" fxFlex="100">
+              <mat-label class="input-label">{{ 'PRINTER_NO_OF_LABELS' | translate }} </mat-label>
+              <input matInput required formControlName="noOfLabels" [maxlength]="2" (blur)="zeroValidation()" oninput="this.value = this.value.toUpperCase()" tabindex="2" class="input-field" >
+              <mat-hint align="end">{{assetLabelPrintForm.controls.noOfLabels.value?.length || 0}}/2
+              </mat-hint>
+              <mat-error *ngIf="assetLabelPrintForm.controls.noOfLabels.invalid && assetLabelPrintForm.controls.noOfLabels.touched">
+                <div *ngIf="assetLabelPrintForm.controls.noOfLabels.errors.required">{{ 'PRINTER_NO_OF_LABELS' | translate }} is Required </div>
+                <div *ngIf="assetLabelPrintForm.controls.noOfLabels.errors.pattern"> {{'PRINTER_NO_OF_LABELS' | translate }} should be in digits </div>
+                <div *ngIf="assetLabelPrintForm.controls.noOfLabels.errors.maxlength">{{ 'PRINTER_NO_OF_LABELS' | translate }} Maximum Length is 2 </div>
+              </mat-error>
+          </mat-form-field>
+          </div>   
+        </div>
+      </div> -->
+      <div class="container">
+        <div class="form-wrapper">
+          <div class="form-group">
+            <span class="input-label"> {{'FILE_FORMAT' | translate}} </span>
+            <div class="radio-group">
+              <div [formGroup]="assetLabelPrintForm">
+                <mat-radio-group  formControlName="fileExtension">
+                  <mat-radio-button [value]="'PDF'" checked>
+                    {{ 'PDF' | translate }}
+                  </mat-radio-button>
+                  <mat-radio-button [value]="'TXT'" style="margin-left:20px ;" >
+                    {{ 'TEXT' | translate }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div> 
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Show this only when PDF is selected -->
+      <div class="container" *ngIf="assetLabelPrintForm.get('fileExtension')?.value === 'PDF'" style="margin-top: 20px;">
+        <div class="form-wrapper">
+          <div class="form-group">
+            <span class="input-label"> {{'LABEL_TYPE' | translate}} </span>
+            <div class="radio-group">
+              
+              <div>
+                <mat-radio-group formControlName="pdfType">
+                  <mat-radio-button [value]="'BARCODE'">
+                    {{ 'BARCODE' | translate }}
+                  </mat-radio-button>
+                  <mat-radio-button [value]="'QRCODE'" style="margin-left:20px;">
+                    {{ 'QRCODE' | translate }}
+                  </mat-radio-button>
+                </mat-radio-group>
+                
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div  *ngIf="printersComboDisplay">  
+          <div class="form-group"> 
+  
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="100">
+              <mat-label class="input-label"> {{'PRINTER_LABEL_SAVED_PATH' | translate}} <span
+                  class="mandatory-style">{{ceidMandatory}}</span> </mat-label>
+              <input matInput placeholder="Ex: D:/LABELS" formControlName="userTemplateSavedPath" required class="input-field" /> 
+  
+              <mat-error *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.invalid && assetLabelPrintForm.controls.userTemplateSavedPath.touched">
+                <div *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.errors.required">{{ 'PRINTER_LABEL_SAVED_PATH' | translate }} is Required </div>
+                <div *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.errors.maxlength">{{ 'PRINTER_LABEL_SAVED_PATH' | translate }} Maximum length is 200</div>
+              </mat-error>  
+  
+              <!-- <mat-hint align="end">{{assetMainForm.controls.userTemplateSavedPath.value?.length || 0}}/100</mat-hint> -->
+            </mat-form-field>
+            
+            <!-- <span class="input-label">{{ 'PRINTER_LABEL_SAVED_PATH' | translate }}<span class="mandatory-style">*</span></span>   -->
+     
+            <!-- <input id="templatefile" style="margin-top: 10px;"  type="file" name="organizFile"
+                (change)="handleTemplateFileInput($event)" />   -->
+  
+                <!-- <input type="text" placeholder="Ex: D:/LABELS/" formControlName="userTemplateSavedPath" required class="input-field" />  -->
+  
+            <!-- <label>Select template file</label>
+            <input type="file" placeholder="Ex: D:/LABELS/" formControlName="userTemplateSavedPath" required class="input-field" /> -->
+            <!-- <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="For Ex: D:/LABELS/" fxFlex="100">
+              <mat-label class="input-label"> {{ 'PRINTER_LABEL_SAVED_PATH' | translate }} </mat-label>
+              <input type="file" formControlName="userTemplateSavedPath"  required oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end"> {{assetLabelPrintForm.controls.userTemplateSavedPath.value?.length || 0}}/200</mat-hint>  
+              <mat-error *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.invalid && assetLabelPrintForm.controls.userTemplateSavedPath.touched">
+                <div *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.errors.required">{{ 'PRINTER_LABEL_SAVED_PATH' | translate }} is Required </div>
+                <div *ngIf="assetLabelPrintForm.controls.userTemplateSavedPath.errors.maxlength">{{ 'PRINTER_LABEL_SAVED_PATH' | translate }} Maximum length is 200</div>
+              </mat-error>  
+            </mat-form-field> -->
+          </div>   
+      </div>
+  
+      <div > 
+        <div class=" rightbutton" fxLayoutAlign="center center" style="margin-top: 10px;"> 
+  
+            <!-- <button mat-raised-button type="button" class="space" matTooltip="{{'PRINTER_DOWNLOAD_TEMPLATES' | translate}}" 
+            (click)="downloadTemplates()" color="primary">{{'PRINTER_DOWNLOAD_TEMPLATES' | translate}} </button> -->
+  
+            <button mat-raised-button type="button" class="space" (click)="printLabel()" *ngIf="printersComboDisplay"
+                color="primary" [disabled]="assetLabelPrintForm.invalid || changePrintIconButtonToPrint">
+                <span *ngIf="!changePrintIconButtonToPrint">{{ 'COMMON_PRINT' | translate }}</span>
+                <span *ngIf="changePrintIconButtonToPrint">{{'COMMON_PRINTING' | translate}} </span>
+            </button>
+  
+            <button mat-raised-button type="button" class="space" (click)="printLabel()" *ngIf="!printersComboDisplay"
+                color="primary" [disabled]="assetLabelPrintForm.controls.noOfLabels.value < 1">
+                <span *ngIf="!changePrintIconButtonToPrint">{{ 'COMMON_PRINT' | translate }}</span>
+                <span *ngIf="changePrintIconButtonToPrint">{{'COMMON_PRINTING' | translate}} </span>
+            </button>
+        </div>
+      </div>
+  
+    </form>
+  </div>

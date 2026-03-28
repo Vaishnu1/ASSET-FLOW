@@ -1,0 +1,243 @@
+<div fxLayout="column">
+
+  <div fxLayout="row" fxFlex="100">
+
+    <div fxFlex="35" fxFlex.xs="35" fxFlex.sm="35">
+
+      <div class="form-group">
+      <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+        <input matInput type="search" #legalEntitySearchFocus name="search" id="search" class="input-field"
+          placeholder="Search {{'MENU_LEGAL_ENTITY'| translate}}" (input)="onSearchChange($event.target.value)">
+      </mat-form-field>
+    </div>
+    </div>
+
+    <div fxFlex="65" fxFlex.xs="50" fxFlex.sm="50" fxLayoutAlign="end center">
+    </div>
+
+  </div>
+  <mat-toolbar>
+    <span>{{'MENU_LEGAL_ENTITY'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+    <!-- <button color="primary" mat-raised-button class="space sqr-btn"
+       matTooltip="Help" (click)="userManual()">
+       <mat-icon>help_outline</mat-icon>
+    </button> -->
+
+    <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+      <mat-icon>view_week</mat-icon>
+    </button>
+    
+  <div class="custom-dialog" *ngIf="showManageColumns">
+    <div>
+      <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+    </div>
+    <hr>
+    <div class="custom-dialog-body" *ngIf="showManageColumns">
+      <div id="column1">        
+        <input type="checkbox" [checked]="displayedColumns.includes('legalEntityCode')"(change)="toggleColumn('legalEntityCode')">
+        <span>{{'LEGAL_ENTITY_CODE' | translate}}</span>
+        <br>
+        
+        <input type="checkbox" [checked]="displayedColumns.includes('legalEntityName')"(change)="toggleColumn('legalEntityName')">
+        <span>{{'LEGAL_ENTITY' | translate}}</span>
+        <br>
+        
+        <input type="checkbox" [checked]="displayedColumns.includes('updatedBy')" (change)="toggleColumn('updatedBy')">
+        <span>{{'COMMON_UPDATED_BY' | translate}}</span>
+        <br>
+        
+        <input type="checkbox" [checked]="displayedColumns.includes('updatedDt')" (change)="toggleColumn('updatedDt')">
+        <span>{{'COMMON_UPDATED_DT' | translate}}</span>
+        <br>
+      </div>
+
+      <div id="column2">
+        <input type="checkbox" (change)="toggleColumn('legalEntityCountry')" [checked]="displayedColumns.includes('legalEntityCountry')">
+        <span>{{'COMMON_COUNTRY' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('legalEntityState')" [checked]="displayedColumns.includes('legalEntityState')">
+        <span>{{'COMMON_STATE' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('legalEntityCity')" [checked]="displayedColumns.includes('legalEntityCity')">
+        <span>{{'COMMON_CITY' | translate}}</span> <br>
+
+        <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+        <span>{{'COMMON_CREATED_BY' | translate}}</span> <br>
+      </div>
+
+      <div id="column3">
+        <input type="checkbox" (change)="toggleColumn('createdDt')" [checked]="displayedColumns.includes('createdDt')">
+        <span>{{'COMMON_CREATED_DT' | translate}}</span>
+      </div>
+    </div>
+
+    <hr>
+    
+    <div fxLayoutAlign="end end">
+      <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+        {{'COMMON_OK' | translate}}
+      </button>
+      <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+        {{'COMMON_RESET' | translate}}
+      </button>
+    </div>
+    
+  </div>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay" (click)="create(0,'add')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="create(selectedItem, 'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="create(selectedItem, 'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+
+  <div class="org-container-table" fxLayout="column">
+
+    <table fxFlex="100" mat-table [dataSource]="entityDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" > Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" >
+          <mat-checkbox color="primary" class="example-margin" (change)="selectLegalEntity(element)" [checked]="selectedItem == element?.legalEntityId"></mat-checkbox></td>
+      </ng-container>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" > {{'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;" > {{getIndexValue(i+1)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="legalEntityCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header >{{ 'LEGAL_ENTITY_CODE' | translate }}</th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"   matTooltip="{{element.legalEntityCode}}">
+          {{ element.legalEntityCode }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="legalEntityName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'LEGAL_ENTITY' | translate }}</th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"   matTooltip="{{element.legalEntityName}}">
+          {{ element?.legalEntityName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'COMMON_UPDATED_BY' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  > {{ 'COMMON_UPDATED_DT' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'COMMON_CREATED_BY' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.createdBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="createdDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  > {{ 'COMMON_CREATED_DT' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.createdDtDisp}}</td>
+      </ng-container>
+      <ng-container matColumnDef="legalEntityCountry">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'COMMON_COUNTRY' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.legalEntityCountry}}</td>
+      </ng-container>
+      <ng-container matColumnDef="legalEntityState">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'COMMON_STATE' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.legalEntityState}}</td>
+      </ng-container>
+      <ng-container matColumnDef="legalEntityCity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header  >{{ 'COMMON_CITY' | translate }}
+        </th>
+        <td mat-cell (click)="selectLegalEntity(element)" *matCellDef="let element"  > {{element.legalEntityCity}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+
+  </div>
+
+  <div fxLayout="row">
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+    <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+
+  <!-- user manual -->
+<div id="mySidenav" class="sidenav">
+  <a class="closebtn" (click)="closeNav()">&times;</a>
+  <div class="sidenav-header">
+    <h3>User Manual</h3>
+  </div>
+  <div class="sidenav-search">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input class="search-input" type="search" name="search" size="55"/>
+  </div>
+
+    <div class="sidenav-content">
+      <div class="help-content-body">
+        <h3>Legal Entity</h3>
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+      <div class="help-content-body">
+        <p>On this screen, you can use the Search field for Legal Entity, the Create button, the Column button, and the checkbox </p>
+        <img class="help-img" src="assets/help_user_manual/help/docs/images/organization/legal-entity.png"><br>
+      </div>
+    </div>
+
+  <!-- inside box -->
+  <!-- <div class="sidenav-body">
+    <p>box</p>
+  </div> -->
+  <!-- Add other content here -->
+</div>
+
+
+</div>

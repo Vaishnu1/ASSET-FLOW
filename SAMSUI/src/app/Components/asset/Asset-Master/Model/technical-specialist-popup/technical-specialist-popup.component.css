@@ -1,0 +1,31 @@
+.form-group{
+    margin-bottom: 0rem !important;
+    font-size: 15px !important;
+    margin-left:0%;
+    font-weight: 400;
+    padding-top: 10px;
+  }
+
+  .font-style{
+    font-size: 17px;
+    color: #000000;
+    text-align: center;
+  }
+
+  .mandatory-style{
+    color: crimson;
+  }
+
+  .example-full-width{
+    width: 100%;
+  }
+
+  .space {
+    margin-right: 15px;
+  }
+
+  .rightbutton {
+    text-align: center;
+    float: right;
+    margin-top: 20px;
+}

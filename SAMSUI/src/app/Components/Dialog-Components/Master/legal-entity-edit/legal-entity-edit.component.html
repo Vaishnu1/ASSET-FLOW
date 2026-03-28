@@ -1,0 +1,44 @@
+<form class="modalform">
+  <div class="row closebutton">
+      <div class="col-md-10">
+          <h4 class="section_title">Edit Legal Entity</h4>
+        </div>
+      <div class="col-md-2">
+          <button mat-flat-button class="rightbutton"><mat-icon (click)=closeModal()>close</mat-icon></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+            <span>Entity Group</span>
+            <ng-select  [items]="entitygrouplist" bindLabel="name"></ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> Name </mat-label>
+              <input matInput>
+            </mat-form-field>
+        </div>
+      </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="example-label input-label"> Description</mat-label>
+              <textarea matInput></textarea>
+              </mat-form-field>
+          </div>
+        </div>
+    </div> 
+    <div class="row">
+      <div class="col-md-12">
+          <!-- <button mat-raised-button type="button" class="space col-md-5 rightbutton" color="primary">Clear</button> -->
+        <button mat-raised-button type="button" class="space col-md-4 rightbutton" color="primary">Submit</button>
+      </div>
+    </div>
+</form>

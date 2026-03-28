@@ -1,0 +1,259 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-toolbar-row class="breadcrumb-padding" fxFlex="35" fxFlex.sm="35" fxFlex.xs="35">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="end center">
+        <mat-list-item class="breadcrumb-item">
+          <a href="#" href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item><a>{{'MENU_PURCHASE' | translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'MENU_SUPPLIER' | translate}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{'COMMON_SEARCH'| translate}} {{'MENU_SUPPLIER'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header> 
+      <div fxLayout="column" id="exp">
+        <div fxLayout="row">
+          <div fxFlex="30">
+            <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} </span>
+            <ng-select  [(ngModel)]="supplier.supplierName" [ngModelOptions]="{standalone: true}"
+              (click)="listOfSupplierName({})" [virtualScroll]="true" (search)="listOfSupplierName($event)"
+              (scrollToEnd)="listOfSupplierName({})" (keyup.backspace)="listOfSupplierName($event.target.value ? $event : 'back')" (clear)="listOfSupplierName('clear')" (change)="getSupplierNameComboValue($event)" [items]="suppliers"
+              bindLabel="supplierName" bindValue="supplierName" [loading]="scrollsyncSupplierName"
+              loadingText="Loading..." required appendTo="body">
+            </ng-select>
+          </div>
+
+          <div fxFlex="5"></div>
+
+          <div fxFlex="30">
+            <span class="input-label"> {{ 'SUPPLIER_SITE_MENU' | translate }} </span>
+            <ng-select  [(ngModel)]="supplier.supplierLocationName"
+              [ngModelOptions]="{standalone: true}" (click)="listOfSupplierLocationName({})" [virtualScroll]="true"
+              (search)="listOfSupplierLocationName($event)" (scrollToEnd)="listOfSupplierLocationName({})" (keyup.backspace)="listOfSupplierLocationName($event.target.value ? $event : 'back')" (clear)="listOfSupplierLocationName('clear')"
+              appendTo="body" (change)="setSupplierLocNameCombo($event)" [items]="supLocationList"
+              bindLabel="searchSiteDisp" bindValue="supplierSiteName" [loading]="supLocationScrollSync"
+              loadingText="Loading..." required>
+            </ng-select>
+          </div>
+
+          <div fxFlex="5"></div>
+
+          <!-- //customer phone no -->
+          <div fxFlex="30">
+            <mat-form-field class="full-width" [floatLabel]="'always'">
+              <mat-label class="example-label input-label">{{ 'CUSTOMER_CONTACT_PHONE_NO' | translate }}</mat-label>
+              <input matInput [(ngModel)]="supplier.contactPersonNo" [ngModelOptions]="{standalone: true}"
+                oninput="this.value = this.value.toUpperCase()">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxLayout="row">
+
+          <div fxFlex="30">
+            <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}</span>
+            <ng-select class=" input-field" [items]="countriesList" (search)="getCountryData($event)"
+              (click)="getCountryData({})" (change)="getCountryList($event)" bindLabel="countryName" appendTo="body"
+              bindValue="countryName" [(ngModel)]="supplier.supCountry" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+              [loading]="scrollCountrysync" loadingText="Loading..."
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+          <div fxFlex="5"></div>
+          
+          <div fxFlex="30">
+            <span class="input-label"> {{ 'COMMON_STATE' | translate }} </span>
+            <ng-select  [(ngModel)]="supplier.supSiteState" [ngModelOptions]="{standalone: true}"
+              (click)="getStateData({})" [virtualScroll]="true" (search)="getStateData($event)"
+              (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" (change)="setState($event)" [items]="states" bindLabel="stateName"
+              bindValue="stateName" [loading]="scrollStatesync" loadingText="Loading..." appendTo="body">
+            </ng-select>
+          </div>
+
+          <div fxFlex="5"></div>
+
+          <div fxFlex="30">
+              <span class="input-label">{{ 'COMMON_CITY' | translate }}
+                </span>
+                <ng-select  [(ngModel)]="supplier.supSiteCity" [ngModelOptions]="{standalone: true}"
+                (click)="getCityData({})" [virtualScroll]="true" (search)="getCityData($event)"
+                (scrollToEnd)="getCityData({})" (keyup.backspace)="getCityData($event.target.value ? $event : 'back')" (clear)="getCityData('clear')" (change)="setCity($event)" [items]="cities" bindLabel="cityName"
+                bindValue="cityName" [loading]="scrollStatesync" loadingText="Loading..." appendTo="body">
+              </ng-select>
+          </div>
+
+        </div>
+
+        <div fxLayout="row" class="mt-15">
+          <div fxFlex="30" fxLayout="column">
+            <mat-form-field class="full-width" [floatLabel]="'always'">
+              <mat-label class="example-label input-label">{{ 'COMMON_AREA' | translate }}</mat-label>
+              <input matInput [(ngModel)]="supplier.supSiteArea" [ngModelOptions]="{standalone: true}"
+                oninput="this.value = this.value.toUpperCase()">
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="5"></div>
+
+          <div fxFlex="30">
+            <span> {{ 'COMMON_ACTIVE' | translate }} </span>
+            <ng-select class=" bg-transparant" [(ngModel)]="supplier.activeDisplay"
+              [ngModelOptions]="{standalone: true}" [items]="status" bindLabel="name" bindValue="name"
+              (change)="changeStatus($event)" appendTo="body">
+            </ng-select>
+          </div>
+
+          <div fxFlex="5"></div>
+
+          <div fxFlex="30" style="margin-top: 15px;">
+            <div fxHide.sm fxHide.xs fxLayoutAlign="end" style="margin-right: 10px;">
+              <button mat-raised-button color="primary" class="space" matTooltip="Search"
+                (click)="searchSupplier($event)">{{ 'COMMON_SEARCH'
+                | translate }}</button>
+              <button mat-raised-button color="primary" class="space" matTooltip="Clear" (click)="clearSearch()">{{
+                'COMMON_CLEAR' |
+                translate }}</button>
+              <button mat-raised-button color="primary" class="space" matTooltip="Export"
+                (click)="generateReportOfSupplier()">Export</button>
+            </div>
+
+            <div fxHide.gt-sm fxLayoutAlign="space-evenly center">
+              <button mat-raised-button color="primary" matTooltip="Search" class="space"
+                (click)="searchSupplier($event)">
+                <mat-icon>search</mat-icon>
+              </button>
+              <button mat-raised-button color="primary" matTooltip="Clear" class="space" (click)="clearSearch()">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+              <button mat-raised-button color="primary" matTooltip="Export" class="space"
+                (click)="generateReportOfSupplier()">
+                <mat-icon>file_download</mat-icon>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+
+  <hr />
+
+  <mat-toolbar>
+    <span>{{'MENU_SUPPLIER'| translate}} List</span>
+    <span class="example-spacer"></span>
+
+    <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+    [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+   
+    <button mat-raised-button color="primary" *ngIf="supplierAccessModule.createFlagDisplay" class="space sqr-btn" 
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    (click)="createSupplier(0,'add')" ><mat-icon>add</mat-icon></button>
+
+    <button [disabled]=" selectedItem == 0"  matTooltip="{{ 'COMMON_EDIT' | translate }}" mat-raised-button class="space sqr-btn" color="primary"
+    *ngIf="supplierAccessModule.updateFlagDisplay" (click)="createSupplier(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+    </button>
+
+    <button [disabled]=" selectedItem == 0"  matTooltip="{{ 'COMMON_VIEW' | translate }}" mat-raised-button class="space sqr-btn" color="primary"
+    *ngIf="supplierAccessModule.readFlagDisplay" (click)="createSupplier(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+   </button>
+
+  </mat-toolbar>
+
+</div>
+  <div class="example-container">
+  <div fxLayout="row">
+
+    <table mat-table [dataSource]="supplierDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear>
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data"><span>Select</span></th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectAssets(element)"
+           [checked]="selectedItem.supplierId == element.supplierId">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="supplierName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'SUPPLIER_NAME' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.supplierName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="supplierType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'SUPPLIER_TYPE' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.supplierType}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="serviceType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'SUPPLIER_SERVICE_TYPE' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.serviceType}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_ACTIVE'
+          | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+          <span class="{{element?.activeStatusDisp}}">{{element?.activeStatusDisp}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_BY' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.createdBy}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_DT' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.createdDtDisp}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_BY' | translate }} </th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.updatedBy}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table> 
+  </div>
+
+  <div fxLayout="row">
+    <mat-card class="no_records_found" *ngIf="length=='0'  && !subLoaderSupplier">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+    <mat-card class="no_records_found" *ngIf="subLoaderSupplier"  fxFlex="100" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+</div>
+
+</div>

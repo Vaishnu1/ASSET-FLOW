@@ -1,0 +1,25 @@
+<div class="dialog-content">
+
+  <div class="header-section">
+    <span class="label-title">Label Type</span>
+  </div>
+
+  <mat-radio-group [(ngModel)]="printType" class="custom-radio-group">
+
+    <mat-radio-button value="BARCODE" class="pink-radio">
+      Bar Code
+    </mat-radio-button>
+
+    <mat-radio-button value="QR" class="pink-radio">
+      QR Code
+    </mat-radio-button>
+
+  </mat-radio-group>
+
+  <div class="action-section">
+    <button mat-raised-button class="custom-print-btn" (click)="print()">
+      Print
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,270 @@
+<div class="top-content row">
+    <div class="col-md-12">
+      <mat-toolbar-row>   
+        <nav aria-label="breadcrumb" class="breadcrumblink">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']"><mat-icon class="breadcrumbicon">home</mat-icon></a></li>
+            <li class="breadcrumb-item">{{ 'MENU_ASSET' | translate }}</li>
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/asset']">{{ 'MENU_ASSET' | translate }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{'COMMON_VIEW' | translate}}</li>
+          </ol>
+        </nav>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+    </div>
+   </div>
+
+  <form>
+      <div class="row">
+          <div class="col-md-12 row">
+            <div class="col-md-3">
+                <mat-card class="card-design" style="margin-top:0px !important;">
+                    <mat-card-content>
+                    <span class="font-style"> {{ 'COMMON_BASIC_INFORMATION' | translate }} </span>
+                        <div class="col-md-12">
+                            <div>
+                            <p>{{ 'MODEL_NAME' | translate }} : {{assetMainForm.controls.modelName.value}}</p>
+                            <p>{{ 'MANUFACTURER' | translate }} : {{assetMainForm.controls.manufacturerName.value}}</p>
+                            <p>{{ 'ASSET_GROUP' | translate }} : {{assetMainForm.controls.assetGroupName.value}}</p>
+                            <p>{{ 'ASSET_CATEGORY' | translate }} : {{assetMainForm.controls.assetCategoryName.value}}</p>
+                            <p>{{ 'ASSET_SUB_CATEGORY' | translate }}: {{assetMainForm.controls.subCategoryName.value}}</p>
+                            <p>{{ 'ASSET_TYPE' | translate }} : {{assetMainForm.controls.assetTypeName.value}}</p>
+                          </div>
+                        </div>
+                        </mat-card-content>
+                  </mat-card>
+            </div>
+            <div class="col-md-9" style="margin-bottom:5%;">
+                <mat-tab-group [@.disabled]="true">
+                    <mat-tab label="{{'ASSET_INFO' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div class="row">
+                                            <div class="col-md-4">
+                                                <p>{{'LOCATION_NAME' | translate}}: {{assetMainForm.controls.locationName.value}}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{'ASSET_CODE' | translate}}: {{assetMainForm.controls.assetCode.value}} </p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{'ASSET_SERIAL_NO' | translate}}: {{assetMainForm.controls.serialNo.value}}</p>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_STATUS' | translate}}: {{assetMainForm.controls.assetStatus.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'DEPARTMENT_NAME' | translate}}: {{assetMainForm.controls.departmentName.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'SUB_DEPARTMENT_NAME' | translate}}: {{assetMainForm.controls.subDepartmentName.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_PERSON_INCHARGE' | translate}}: {{assetMainForm.controls.personIncharge.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_OWNERSHIP_TYPE' | translate}} : {{assetMainForm.controls.ownershipType.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_FUNCTIONALITY' | translate}} : {{assetMainForm.controls.functionalStatus.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSETGROUP_CRITICAL_NAUTURE' | translate}}: {{assetMainForm.controls.criticalNatureUnit.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <!-- <p>{{'ASSET_MAINTENANCE_TYPE' | translate}}: {{assetMainForm.controls.maintenanceType.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_INSTALL_DATE' | translate}}: {{assetMainForm.controls.installationDtDisp.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WARRANTY_COVERAGE_PART' | translate}}: {{assetMainForm.controls.warrantyCoveragePart.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WARRANTY_COVERAGE_LABOR' | translate}}: {{assetMainForm.controls.warrantyCoverageLabor.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WARR_START_DT' | translate}}: {{assetMainForm.controls.warrentyStartDtDisp.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WARRANTY_COVERAGE_END_PART' | translate}}: {{assetMainForm.controls.warrentyEndDtDisp.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WARRANTY_COVERAGE_END_LABOR' | translate}}: {{assetMainForm.controls.warrentyEndDtDispForLabor.value}}</p>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                    <mat-tab label="{{'ASSET_PURCHASE_INFO' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div class="row">
+                                            <div class="col-md-4">
+                                                <p>{{'SUPPLIER_NAME' | translate}}: {{assetMainForm.controls.supplierName.value}}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p> {{'ASSET_YEAR_MANUFACTURER' | translate}} : {{assetMainForm.controls.yearOfManufacture.value}} </p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p> {{'ASSET_PUR_CUR_CODE' | translate}} : {{assetMainForm.controls.purchaseCurrencyCode.value}}</p>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_PUR_ORD_NO' | translate}}: {{assetMainForm.controls.purchaseOrderNo.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p> {{'ASSET_PUR_DATE' | translate}} : {{assetMainForm.controls.purchaseDtDisp.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_EXC_RATE' | translate}}: {{assetMainForm.controls.exchangeRt.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_ORGI_PUR_AMT' | translate}}: {{assetMainForm.controls.originalPurchaseAmt.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>Local Purchase Amount: {{assetMainForm.controls.localPurchaseAmt.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_LOC_TAX_RATE' | translate}}: {{assetMainForm.controls.localTaxRate.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_LOC_TAX_AMT' | translate}}: {{assetMainForm.controls.localTaxAmt.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_TOT_AMT' | translate}}: {{assetMainForm.controls.totalPurchaseAmt.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_AMC_PERCENT' | translate}} : {{assetMainForm.controls.amcPercent.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_AMC_VALUE' | translate}}: {{assetMainForm.controls.amcValue.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_AMC_ESCALATION_VALUE' | translate}}: {{assetMainForm.controls.amcEscalationPercentage.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_AMC_ESCALATION_PER' | translate}}: {{assetMainForm.controls.amcEscalationValue.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_CMC_PERCENT' | translate}}: {{assetMainForm.controls.cmcPercent.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p> {{'ASSET_CMC_VALUE' | translate}}: {{assetMainForm.controls.cmcValue.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p> {{'ASSET_CMC_ESCALATION_PER' | translate}}: {{assetMainForm.controls.cmcEscalationPercentage.value}}</p>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_CMC_ESCALATION_VALUE' | translate}}: {{assetMainForm.controls.cmcEscalationValue.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_RESIDUAL_VAL' | translate}}: {{assetMainForm.controls.residualValue.value}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_WRITTEN_DOWN_VAL' | translate}}: {{assetMainForm.controls.returnDownValue.value}}</p>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p> {{'ASSET_SCRAB_VAL' | translate}}: {{assetMainForm.controls.scrapValue.value}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                    <mat-tab label="{{'ASSET_MAINTENANCE_SCHEDULING' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div class="row">
+                                            <div class="col-md-4">
+                                                <h6>{{'ASSETGROUP_PM_SCHEDULING' | translate}}</h6>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{'ASSETGROUP_PM_FREQUENCY' | translate}}: {{assetMainForm.controls.pmFrequency.value}} </p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{'ASSET_MONTH' | translate}}: {{assetMainForm.controls.pmMonth.value}}</p>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6>{{'ASSETGROUP_QA_SCHEDULING' | translate}}</h6>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSETGROUP_QA_FREQUENCY' | translate}}: {{assetMainForm.controls.qaFrequency.value}} </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_MONTH' | translate}}: {{assetMainForm.controls.qaMonth.value}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6>{{'ASSETGROUP_PA_SCHEDULING' | translate}}</h6>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSETGROUP_PA_FREQUENCY' | translate}}: {{assetMainForm.controls.paFrequency.value}} </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>{{'ASSET_MONTH' | translate}}: {{assetMainForm.controls.paMonth.value}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                    <mat-tab label="{{'ASSET_MAINTENANCE_INCHARGE' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div class="col-md-12">
+                                        <p>{{'ASSET_SERVICE_ENGINEER_1' | translate}} : {{assetMainForm.controls.serviceEngg1.value}} </p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p>{{'ASSET_SERVICE_ENGINEER_2' | translate}} : {{assetMainForm.controls.serviceEngg2.value}} </p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p>{{'ASSET_SERVICE_ENGINEER_3' | translate}} : {{assetMainForm.controls.serviceEngg3.value}}</p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p>{{'ASSET_SERVICE_ENGINEER_4' | translate}} : {{assetMainForm.controls.serviceEngg4.value}} </p>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+            </div>
+        </div>
+  </form>
+
+

@@ -1,0 +1,203 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="50" class="dialogue-box-header">
+      {{'CONTRACT_INFO' | translate }}<span class="business-partner-info"> - {{businessPartnerName}}</span>
+    </div>
+
+    <div fxFlex="50" class="mb-5">
+
+      <button mat-raised-button class="space" color="primary" [disabled]="disableAddBtn" (click)="addPRItem()" 
+        >{{displayButton}}</button>
+      <button mat-raised-button class="space" color="primary" (click)="clear()" >{{'COMMON_CLEAR' |
+        translate}}</button>
+      <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' |
+        translate}}</button>
+
+    </div>
+
+  </div>
+
+  <div fxFlex="100" style="margin-top: 30px;">
+    <form [formGroup]="contractCreateFormGroup">
+      <div fxLayout="column" fxFlex="100">
+      <div fxLayout="row wrap" fxLayout.lt-md="column" fxFlex="100">
+
+        <div fxFlex="25" fxFlex.lt-md="100">
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{ 'CONTRACT_COVERAGE_TYPE' | translate }}</span>
+              <ng-select class=" input-field" formControlName="coverageType" [items]="ownership" bindLabel="name"
+                bindValue="name" (change)="changeCoverageType($event)">
+              </ng-select>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div fxFlex="25" fxFlex.lt-md="100">
+
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{'CONTRACT_START_DATE' | translate}}
+
+              </mat-label>
+              <input matInput (click)="contractStartDt.open()" [matDatepicker]="contractStartDt"
+                formControlName="contractStartDtDisp" (keypress)="dateValidationinstall($event)" tabindex="10"
+                class="input-field" (dateChange)="onChangeValidation()">
+              <mat-datepicker-toggle matSuffix [for]="contractStartDt"></mat-datepicker-toggle>
+              <mat-datepicker #contractStartDt></mat-datepicker>
+
+            </mat-form-field>
+          </div>
+
+        </div>
+
+        <div fxFlex="25" fxFlex.lt-md="100">
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{'CONTRACT_END_DATE' | translate}}
+
+              </mat-label>
+              <input matInput (click)="contractEndDt.open()" [matDatepicker]="contractEndDt"
+                formControlName="contractEndDtDisp" (keypress)="dateValidationinstall($event)"
+                (dateChange)="onChangeValidation()" [min]="contractCreateFormGroup.controls.contractStartDtDisp.value"
+                tabindex="" class="input-field">
+              <mat-datepicker-toggle matSuffix [for]="contractEndDt"></mat-datepicker-toggle>
+              <mat-datepicker #contractEndDt></mat-datepicker>
+
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="25" fxFlex.lt-md="100">
+
+          <div class="form-group">
+            <mat-form-field [floatLabel]="'always'" class="example-full-width">
+              <mat-label class="input-label"> {{'CONTRACT_PERIOD_BASIC_VALUE' | translate}} </mat-label>
+              <input matInput tabindex="13" formControlName="contractBasicValue" (input)="onChangeValidation()"
+                 class="input-field">
+            
+            <!-- <mat-error
+              *ngIf="contractCreateFormGroup.controls.contractBasicValue.invalid && contractCreateFormGroup.controls.contractBasicValue.touched">
+              <div class="err-field"
+                *ngIf="contractCreateFormGroup.controls.contractBasicValue.errors.required">
+                "{{'CONTRACT_PERIOD_BASIC_VALUE' | translate}}" Is Required </div>
+              <div class="err-field"
+                *ngIf="contractCreateFormGroup.controls.contractBasicValue.errors.pattern">
+                "{{'CONTRACT_PERIOD_BASIC_VALUE' | translate}}" Should Be Numbers Only </div>
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+
+        </div>
+
+      </div>
+      <div fxLayout="row wrap" fxLayout.lt-md="column" fxFlex="100">
+
+
+        <div fxFlex="100" style="margin-top: 30px;" class="contract-info-panel">
+          <mat-expansion-panel hideToggle (opened)="togglePanel('Contract Info','opened')" (closed)="togglePanel('Contract Info','closed')">
+            <mat-expansion-panel-header>
+              <mat-panel-title class="panel-header">
+                <span class="expansion-icon" [ngClass]="{'expanded': isContractInfoPanelExpanded}">{{isContractInfoPanelExpanded ? '-' : '+'}}</span>
+                <span style="margin-left: 10px;">{{'Contract History'| translate}}</span>
+              </mat-panel-title>
+              <mat-panel-description fxLayoutAlign="end end">
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            
+            <div fxFlex="100" fxFlex.lt-md="100">
+              <div class="example-container">
+                <table mat-table [dataSource]="contractDataSource" matSort>
+    
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="contractNo">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_NUMBER' | translate }} / <br />
+                      {{ 'COMMON_TITLE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.contractNo}} <br /> <br />
+                      {{element?.contractName}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="coverageType">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_COVERAGE_TYPE' | translate }} / <br />
+                      {{ 'CONTRACT_TYPE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.coverageType}} <br /> <br />
+                      {{element?.contractType}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contractStartDtDisp">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'CONTRACT_START_DATE' | translate }}/ <br />
+                      {{ 'CONTRACT_END_DATE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.contractStartDtDisp}} <br /> <br />
+                      {{element?.contractEndDtDisp}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="contractingPartyType">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PARTY' | translate }} <br />
+                    <td mat-cell *matCellDef="let element"> {{element?.contractingPartyType}} 
+                     </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contractingPartyInfo">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'BUSINESS_PARTNER_NAME' | translate }} / <br />
+                      {{ 'BUSINESS_PARTNER_SITE_NAME' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.contractPartyName}} <br /> <br />
+                      {{element?.contractPartyLocationName}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="contractStatus">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_STATUS' | translate }} / <br/> {{ 'APPROVAL_STATUS' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <span class="{{element?.contractStatus.replace(' ','')}}">{{element?.contractStatus | translate }} <br />
+                        <br /> </span>
+                      <span
+                        class="{{element?.woApprovalStatus.replace(' ','')}}">{{ element?.contractStatus == 'CONTRACT_CANCELLED' ? '' : element?.woApprovalStatus}}</span>
+                    </td>
+                  </ng-container>
+    
+                  <!-- <ng-container matColumnDef="active">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                      <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+                    </td>
+                  </ng-container> -->
+    
+                  <ng-container matColumnDef="netContractValue">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{ 'CONTRACT_AMOUNT' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:center;">
+                      <span class="currency">{{element?.netContractValue.toLocaleString()}}</span>
+                    </td>
+                  </ng-container>
+    
+                  <tr mat-header-row *matHeaderRowDef="contractDisplayCol;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: contractDisplayCol;">
+                </table>
+                <mat-card class="no_records_found" *ngIf="contractLength=='0'" fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+              </div>
+            </div>        
+
+        </mat-expansion-panel>
+      </div>
+
+       
+
+      </div>
+    </div>
+    </form>
+  </div>
+
+
+</div>

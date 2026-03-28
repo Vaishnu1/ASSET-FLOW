@@ -1,0 +1,186 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <div fxLayout="row" class="main-heading">
+      <div fxFlex="90">
+        <h4 class="section_title"> {{'SR_ASSIGN_SERVICE_ENGG' | translate}} </h4>
+      </div>
+
+      <div fxFlex="10" class="first-title">
+        <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+    <div fxLayout="column" >
+      <form [formGroup]="srAssignEnggForm" fxFlex="100" class="modalForm">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+          <div fxLayout="column" fxFlex="50" fxLayout.lt-md="column" fxFlex.lt-md="100" class="srassignengg-form">
+            <div fxLayout="row" fxFlex="100">
+              <div fxFlex="50">
+                <div class="example-full-width">
+                  <div class="form-group">
+                    <span class="input-label"> {{ 'SERVICE_ENGINEER_FROM' | translate }} <span
+                        class="mandatory-style">*</span>
+                    </span>
+                    <ng-select  formControlName="serviceEngineerMode"
+                      [items]="serviceEngineerFrom" bindLabel="name" bindValue="name" dropdownPosition=top
+                      (change)="changeEngineerFrom($event)">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="srAssignEnggForm.controls.serviceEngineerMode.invalid && srAssignEnggForm.controls.serviceEngineerMode.touched">
+                      <div class="err-field"
+                        *ngIf="srAssignEnggForm.controls.serviceEngineerMode.errors.required">
+                        {{'SERVICE_ENGINEER_FROM' | translate}} is Required </div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+
+              <div fxFlex="50">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                  (change)="selectLoadType($event)" formControlName="listServiceEnggType">
+                  <mat-radio-button class="mat-radio-button-align" value="1" color="primary">{{'LOAD_SERVICE_ENGINEER_BY_ATT' |
+                    translate}}
+                  </mat-radio-button>
+                  <mat-radio-button class="mat-radio-button-align" value="2" color="primary">
+                    {{'LOAD_SERVICE_ENGINEER_BY_MODEL_TECH' | translate}}
+                  </mat-radio-button>
+                  <mat-radio-button class="mat-radio-button-align" value="3" color="primary">{{'LOAD_ALL_SERVICE_ENGINEER' | translate}}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+            </div>
+
+            <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+              <mat-card class="card-style" fxFlex="100">
+                <mat-card-content>
+                  <div >
+                    <div class="example-container">
+                      <table mat-table [dataSource]="serviceEnggDataSource" style="height: 200px">
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="displayName">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'SERVICE_ENGINEER_NAME_GRID' | translate }} <br />
+                            {{ 'SERVICE_CONTACT_NO_GRID' | translate }} </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{element.displayName}} <br /> {{element.officeContactNo}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="openCalls">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'TOTAL_OPEN_CALLS_GRID' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.openCalls}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assignDt">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'ASSIGN_DT_GRID' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;">  
+
+                            <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                              <input matInput [(ngModel)]="element.assignDtDisp" [matDatepicker]="from" 
+                              (dateChange)="selectedEnggRow(element)"  [ngModelOptions]="{standalone: true}"
+                              [min]="this.currentDate">
+                              <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+                              <mat-datepicker #from></mat-datepicker>
+                            </mat-form-field>  
+ 
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assign">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'ASSIGN_WO_GRID' | translate }} </th>
+                          <td mat-cell *matCellDef="let element">
+                            <mat-radio-button class="example-radio-button" [(ngModel)]="element.assign" color="primary"
+                              [ngModelOptions]="{standalone: true}" (click)="selectedEnggRow(element)" [checked]="assignedEmpId === element.employeeId ? true: false"></mat-radio-button>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedServiceEnggColumns;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedServiceEnggColumns; "
+                          >
+                      </table>
+                      <mat-card class="no_records_found" *ngIf="serviceEnggLength=='0' && !serviceEnggLoader">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                      </mat-card>
+                      <mat-card class="no_records_found" *ngIf="serviceEnggLoader" fxLayoutAlign="center center">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div> 
+          <div fxLayout="column" fxFlex="50" fxLayoutAlign="start center" fxLayout.lt-md="column" fxFlex.lt-md="100" style="width: 100%;">
+            <div  fxFlex="100" fxLayoutAlign="start center" class="assignenggname">Assigned Work Orders for {{assignEmpName}}</div>
+            <div fxLayout="column" fxFlexFill>
+              
+
+              <mat-card class="card-style" fxFlex="100" fxLayout="column">
+                <mat-card-content>
+                  <div>
+                    <div class="example-table-container" fxFlex="100">
+                      <table mat-table [dataSource]="serviceRequestDataSource" style="height: 200px; width: 100%;" >
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="srNo">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'WO_NO' | translate }}
+                            <br /> {{ 'WO_DATE' | translate }} {{ 'WO_TIME' | translate }}
+                          </th>
+                          <td mat-cell *matCellDef="let element"> {{element.srNo}} <br />
+                            {{element.createdDtDisp}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="assetCode">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{'SR_ASSET_DESC_GRID' | translate}} <br />
+                            {{'SR_ASSET_GROUP_GRID' | translate}}</th>
+                          <td mat-cell *matCellDef="let element">
+                            {{element?.assetCode}} <br /> {{element?.assetDescription}} <br />
+                            {{element?.assetGroupName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="srStatus">
+                          <th mat-header-cell *matHeaderCellDef>
+                            {{ 'SR_STATUS' | translate }} </th>
+                          <td mat-cell *matCellDef="let element"> {{element.srStatusName}}
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedSRColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedSRColumns;">
+
+                      </table>
+                      <mat-card class="no_records_found" *ngIf="srHistoryLength=='0' && !srHistoryLoader">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+
+                      </mat-card>
+                      <mat-card class="no_records_found" *ngIf="srHistoryLoader" fxLayoutAlign="center center">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+
+            </div>
+
+
+            <div fxLayout="row" class="assign-button" fxLayoutAlign="start center">
+              <button mat-raised-button class="space" color="primary" (click)="assignServiceEngineer()" [disabled]="!assignEmpId">
+                <span> {{buttonDisplay}} </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

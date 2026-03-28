@@ -1,0 +1,2116 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* @import '~@angular/material/prebuilt-themes/deeppurple-amber.css'; */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import '~material-icons/iconfont/material-icons.scss';
+
+/* newly added styles */
+
+.main-body{
+  width: 100%;
+}
+
+body {
+  margin: 0px;
+}
+
+
+.full-width {
+  width: 100%;
+}
+
+.active-menu-item{
+  background-color:#467B99 !important;
+  color: white !important;
+  cursor: default !important;
+}
+/* .breadcrumb-padding {
+  padding: 0% !important;
+} */
+
+/* old styles */
+
+.icon-img {
+  height: 20px;
+  width: 19px;
+  margin-right: 5px;
+}
+
+.timepicker-overlay {
+  z-index: 1100 !important;
+}
+
+.timepicker-backdrop-overlay {
+  z-index: 1100 !important;
+}
+
+/*** PURCHASE ORDER STYLE BASED ON STATUS *********/
+
+.COMPLETE {
+  color: #24af14 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  border-bottom: 1px solid #d8d6d6;
+}
+
+.INCOMPLETE {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  border-bottom: 1px solid #d8d6d6;
+}
+
+.CANCELLED {
+  color: #f89624 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.APPROVED{
+  color: #1b910e !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.APPROVALPENDING {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.REQUESTED {
+  color: orange !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.REJECTED {
+  color: red !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.RETURNED {
+  color: #bd2696 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.RETURNEDPARTIALLY {
+  color: #445c8f !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.highlighted-column {
+  color: firebrick;
+}
+
+/***  WORK ORDER TYPES *********/
+
+.PM {
+  color: #1b910e !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  border-bottom: 1px solid #d8d6d6;
+}
+
+.INSTALLATION {
+  color: #445c8f !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.BM {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.PENDING {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="PENDING"] {
+  color: #ed1414 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="APPROVED"] {
+  color: #1b910e !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="ACTIVE"],[class*="COMPLETED"] {
+  color: #1b910e !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="REJECTED"] {
+  color: red !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="CANCELLED"] {
+  color: red !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="TERMINATED"] , [class*="EXPIRED"] {
+  color: red !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="MATCHED"] {
+  color: blue !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="BOOKED"] {
+  color: purple !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+[class*="UNMATCHED"] {
+  color: #ed1414 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/***  WORK ORDER STATUS *********/
+
+.COMPLETED {
+  color: #24af14 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.ACKNOWLEDGED {
+  color: orange !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.OPEN {
+  color: #bd2696 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.IN-PROGRESS {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.CLOSED {
+  color: #6E2C00 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.COMPLETED-APPROVAL-PENDING {
+  color: #bd2696 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.FAILED {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.DATAERROR {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.INQUEUE {
+  color: orange !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/***  WORK ORDER ASSET FUNCTIONALAITY *********/
+
+.CRITICAL {
+  color: #ed1414 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.NONCRITICAL {
+  color: #24af14 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.RECEIPT {
+  color: #24af14 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.ISSUE {
+  color: purple !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.MATERIAL {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.SERVICE {
+  color: purple !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.dashboard-icon-white {
+  background: url(assets/images/menus/dashboard_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.dashboard-icon-blue {
+  background: url(assets/images/menus/dashboard_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.setting-icon-white {
+  background: url(assets/images/menus/setting_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.setting-icon-blue {
+  background: url(assets/images/menus/setting_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-icon-white {
+  background: url(assets/images/menus/asset_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-icon-blue {
+  background: url(assets/images/menus/asset_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wo-icon-white {
+  background: url(assets/images/menus/wo_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wo-icon-blue {
+  background: url(assets/images/menus/wo_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.purchase-order-menu-icon-white {
+  background: url(assets/images/menus/purcahse_order_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.purchase-order-menu-icon-blue {
+  background: url(assets/images/menus/purcahse_order_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.inventory-icon-white {
+  background: url(assets/images/menus/inventory_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.inventory-icon-blue {
+  background: url(assets/images/menus/inventory_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.notification-icon-white {
+  background: url(assets/images/menus/notification_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.sms-notification-icon-blue {
+  background: url(assets/images/subMenus/sms_notification_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.whatsapp-notification-icon-blue {
+  background: url(assets/images/subMenus/whatsapp_notification_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.email-notification-icon-blue {
+  background: url(assets/images/subMenus/email_notification_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.hr-icon-white {
+  background: url(assets/images/menus/hr_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.hr-icon-blue {
+  background: url(assets/images/menus/hr_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.reports-icon-white {
+  background: url(assets/images/menus/reports_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.reports-icon-blue {
+  background: url(assets/images/menus/reports_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.workflow-icon-white {
+  background: url(assets/images/menus/workflow_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.workflow-icon-blue {
+  background: url(assets/images/menus/workflow_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.organization-icon-blue {
+  background: url(assets/images/subMenus/organization-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  outline: none;
+  border: none;
+}
+
+.organization-icon-white {
+  background: url(assets/images/subMenus/organization-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.user-management-icon-white {
+  background: url(assets/images/subMenus/user-management-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.user-management-icon-blue {
+  background: url(assets/images/subMenus/user-management-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.N {
+  color: #ed1414 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.Y {
+  color: #24af14 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+.label-config-icon-blue {
+  background: url(assets/images/subMenus/label-config-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.label-config-icon-white {
+  background: url(assets/images/subMenus/label-config-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.number-control-icon-blue {
+  background: url(assets/images/subMenus/number-control-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.number-control-icon-white {
+  background: url(assets/images/subMenus/number-contol-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.master-icon-blue {
+  background: url(assets/images/subMenus/master-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.master-icon-white {
+  background: url(assets/images/subMenus/master-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.pre-inward-icon-blue {
+  background: url(assets/images/subMenus/pre-inward-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.pre-inward-icon-white {
+  background: url(assets/images/subMenus/pre-inward-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.inward-icon-blue {
+  background: url(assets/images/subMenus/inward-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.inward-icon-white {
+  background: url(assets/images/subMenus/inward-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-registration-icon-blue {
+  background: url(assets/images/subMenus/asset-registration-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.asset-registration-icon-white {
+  background: url(assets/images/subMenus/asset-registration-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-relocation-icon-blue {
+  background: url(assets/images/subMenus/asset-relocation-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-relocation-icon-white {
+  background: url(assets/images/subMenus/asset-relocation-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-registration-icon-blue {
+  background: url(assets/images/menus/asset-registration-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-registration-icon-white {
+  background: url(assets/images/menus/asset_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-reloc-app-icon-blue {
+  background: url(assets/images/subMenus/relocation-approval-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-reloc-app-icon-white {
+  background: url(assets/images/subMenus/relocation-approval-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.physical-audit-icon-blue {
+  background: url(assets/images/subMenus/physical-audit-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.physical-audit-icon-white {
+  background: url(assets/images/subMenus/physical-audit-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.gate-pass-icon-blue {
+  background: url(assets/images/subMenus/gate-pass-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.gate-pass-icon-white {
+  background: url(assets/images/subMenus/gate-pass-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.loan-icon-blue {
+  background: url(assets/images/subMenus/loan-return-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.loan-icon-white {
+  background: url(assets/images/subMenus/loan-return-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.contract-icon-blue {
+  background: url(assets/images/subMenus/contract-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+
+.contract-icon-white {
+  background: url(assets/images/subMenus/contract-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-retirement-icon-blue {
+  background: url(assets/images/subMenus/asset-retire-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.asset-retirement-icon-white {
+  background: url(assets/images/subMenus/asset-retire-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wo-icon-blue {
+  background: url(assets/images/subMenus/wo_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.ai-report-icon-blue {
+  background: url(assets/images/subMenus/ai-report-icon-blue-1.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.ai-report-icon-white {
+  background: url(assets/images/subMenus/ai-report-icon-white-1.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wo-icon-white {
+  background: url(assets/images/menus/wo_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.schedule-maintenance-icon-blue {
+  background: url(assets/images/subMenus/sc-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.schedule-maintenance-icon-white {
+  background: url(assets/images/subMenus/sc-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.item-icon-blue {
+  background: url(assets/images/subMenus/item-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.item-icon-white {
+  background: url(assets/images/subMenus/items-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.item-approval-icon-blue {
+  background: url(assets/images/subMenus/item-approval-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.item-approval-icon-white {
+  background: url(assets/images/subMenus/item-approval-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-icon-blue {
+  background: url(assets/images/subMenus/store-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.stock-icon-white {
+  background: url(assets/images/subMenus/store-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-enquiry-icon-blue {
+  background: url(assets/images/subMenus/stock_enquiry-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-enquiry-icon-white {
+  background: url(assets/images/subMenus/stock_enquiry-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.grn-icon-blue {
+  background: url(assets/images/subMenus/grn_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.grn-icon-white {
+  background: url(assets/images/subMenus/grn_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-indent-icon-blue {
+  background: url(assets/images/subMenus/stock-indent-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-indent-icon-white {
+  background: url(assets/images/subMenus/stock-indent-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.manufacturer-icon-blue {
+  background: url(assets/images/subMenus/manufacturer-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.manufacturer-icon-white {
+  background: url(assets/images/subMenus/manufacturer-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.supplier-icon-blue {
+  background: url(assets/images/subMenus/supplier-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.supplier-icon-white {
+  background: url(assets/images/subMenus/supplier-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.purchase-req-icon-blue {
+  background: url(assets/images/subMenus/purchase-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.purchase-req-icon-white {
+  background: url(assets/images/subMenus/purchase-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.purchase-order-icon-blue {
+  background: url(assets/images/subMenus/purchase-order-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.purchase-order-icon-white {
+  background: url(assets/images/subMenus/purchase-order-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.employee-icon-blue {
+  background: url(assets/images/subMenus/employee-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.employee-icon-white {
+  background: url(assets/images/subMenus/employee-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.manage-reports-icon-blue {
+  background: url(assets/images/subMenus/report-management-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.manage-reports-icon-white {
+  background: url(assets/images/subMenus/report-management-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.view-reports-icon-blue {
+  background: url(assets/images/subMenus/view-report-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.view-reports-icon-white {
+  background: url(assets/images/subMenus/view-report-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wf-desc-icon-blue {
+  background: url(assets/images/subMenus/wf-description-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wf-desc-icon-white {
+  background: url(assets/images/subMenus/wf-description-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wf-hierarchy-icon-blue {
+  background: url(assets/images/subMenus/workflow-heirarchy-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.wf-hierarchy-icon-white {
+  background: url(assets/images/subMenus/workflow-heirarchy-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wf-notification-icon-blue {
+  background: url(assets/images/subMenus/wf-notifications-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.wf-notification-icon-white {
+  background: url(assets/images/subMenus/wf-notifications-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.import-icon-blue {
+  background: url(assets/images/subMenus/import-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.import-icon-white {
+  background: url(assets/images/subMenus/import-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.legal-entity-icon-blue {
+  background: url(assets/images/subMenus/legal-entity-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.8;
+}
+
+.legal-entity-icon-white {
+  background: url(assets/images/subMenus/legal-entity-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.region-icon-blue {
+  background: url(assets/images/subMenus/region-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.region-icon-white {
+  background: url(assets/images/subMenus/region-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.branch-icon-blue {
+  background: url(assets/images/subMenus/branch-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.branch-icon-white {
+  background: url(assets/images/subMenus/branch-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.department-icon-blue {
+  background: url(assets/images/subMenus/department-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.department-icon-white {
+  background: url(assets/images/subMenus/department-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.tax-icon-blue {
+  background: url(assets/images/subMenus/tax-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.tax-icon-white {
+  background: url(assets/images/subMenus/tax-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.currency-code-icon-blue {
+  background: url(assets/images/subMenus/currency-code-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.currency-code-icon-white {
+  background: url(assets/images/subMenus/currency-code-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.uom-code-icon-blue {
+  background: url(assets/images/subMenus/uom-code-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.uom-code-icon-white {
+  background: url(assets/images/subMenus/uom-code-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.building-icon-blue {
+  background: url(assets/images/subMenus/building-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.building-icon-white {
+  background: url(assets/images/subMenus/building-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.currency-code-icon-blue {
+  background: url(assets/images/subMenus/currency-code-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.currency-code-icon-white {
+  background: url(assets/images/subMenus/currency-code-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.designation-icon-blue {
+  background: url(assets/images/subMenus/designation-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.designation-icon-white {
+  background: url(assets/images/subMenus/designation-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.category-icon-blue {
+  background: url(assets/images/subMenus/catgory-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.category-icon-white {
+  background: url(assets/images/subMenus/catgory-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.sub-category-icon-blue {
+  background: url(assets/images/subMenus/sub-category-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.sub-category-icon-white {
+  background: url(assets/images/subMenus/sub-category-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-type-icon-blue {
+  background: url(assets/images/subMenus/asset-type-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-type-icon-white {
+  background: url(assets/images/subMenus/asset-type-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-group-icon-blue {
+  background: url(assets/images/subMenus/asset-group-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.asset-group-icon-white {
+  background: url(assets/images/subMenus/asset-group-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-manufacturer-icon-blue {
+  background: url(assets/images/subMenus/manufacturer-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-manufacturer-icon-white {
+  background: url(assets/images/subMenus/manufacturer-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-model-icon-blue {
+  background: url(assets/images/subMenus/asset-model-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-model-icon-white {
+  background: url(assets/images/subMenus/asset-model-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.service-parameter-icon-blue {
+  background: url(assets/images/subMenus/service-parameter-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.service-parameter-icon-white {
+  background: url(assets/images/subMenus/service-parameter-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.statutory-icon-blue {
+  background: url(assets/images/subMenus/satutory-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.statutory-icon-white {
+  background: url(assets/images/subMenus/satutory-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.customer-icon-blue {
+  background: url(assets/images/subMenus/customer-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.customer-icon-white {
+  background: url(assets/images/subMenus/customer-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.group-icon-blue {
+  background: url(assets/images/subMenus/group-access-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.group-icon-white {
+  background: url(assets/images/subMenus/group-access-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.group-access-icon-blue {
+  background: url(assets/images/subMenus/group-access-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.group-access-icon-white {
+  background: url(assets/images/subMenus/group-access-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.user-icon-blue {
+  background: url(assets/images/subMenus/user-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.user-icon-white {
+  background: url(assets/images/subMenus/user-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.location-access-icon-blue {
+  background: url(assets/images/subMenus/location-access-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.location-access-icon-white {
+  background: url(assets/images/subMenus/location-access-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.priority-icon-blue {
+  background: url(assets/images/subMenus/priority-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.priority-icon-white {
+  background: url(assets/images/subMenus/priority-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.severity-icon-blue {
+  background: url(assets/images/subMenus/severity-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.severity-icon-white {
+  background: url(assets/images/subMenus/severity-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.cause-code-icon-blue {
+  background: url(assets/images/subMenus/cause-code-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.cause-code-icon-white {
+  background: url(assets/images/subMenus/cause-code-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.action-code-icon-blue {
+  background: url(assets/images/subMenus/action-code-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.action-code-icon-white {
+  background: url(assets/images/subMenus/action-code-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.module-icon-blue {
+  background: url(assets/images/subMenus/module-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.module-icon-white {
+  background: url(assets/images/subMenus/module-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.warranty-icon-blue {
+  background: url(assets/images/subMenus/warranty-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.warranty-icon-white {
+  background: url(assets/images/subMenus/warranty-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.warranty-icon-blue {
+  background: url(assets/images/subMenus/warranty-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.warranty-icon-white {
+  background: url(assets/images/subMenus/warranty-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.break-down-icon-blue {
+  background: url(assets/images/subMenus/break-down-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.break-down-icon-white {
+  background: url(assets/images/subMenus/break-down-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.missed-maintenance-icon-blue {
+  background: url(assets/images/subMenus/maintenance-missed-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.missed-maintenance-icon-white {
+  background: url(assets/images/subMenus/maintenance-missed-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.loan-count-icon-blue {
+  background: url(assets/images/subMenus/loan-count-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.loan-count-icon-white {
+  background: url(assets/images/subMenus/loan-count-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.budget-icon-blue {
+  background: url(assets/images/subMenus/budget_blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.budget-icon-white {
+  background: url(assets/images/subMenus/budget_white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+/*---Budget item icon blue---*/
+.file-icon-blue {
+  background: url(assets/images/subMenus/budget-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+/*---Budget item icon white---*/
+.file-icon-white {
+  background: url(assets/images/subMenus/budget-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-assignement-icon-white {
+  background: url(assets/images/subMenus/asset-assignement-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.asset-assignement-icon-blue {
+  background: url(assets/images/subMenus/asset-assignement-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+.stock-transfer-icon-blue {
+  background: url(assets/images/subMenus/stock-transfer-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-transfer-icon-white {
+  background: url(assets/images/subMenus/stock-transfer-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-allocate-icon-blue {
+  background: url(assets/images/subMenus/stock-allocate-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.stock-allocate-icon-white {
+  background: url(assets/images/subMenus/stock-allocate-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.batch-assets-icon-white {
+  background: url(assets/images/subMenus/btach-assets-white-icon.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.batch-assets-icon-blue {
+  background: url(assets/images/subMenus/btach-assets-blue-icon.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.schedule-email-icon-blue{
+  background: url(assets/images/subMenus/schedule-email-icon-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.schedule-email-icon-white {
+  background: url(assets/images/subMenus/schedule-email-icon-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+/*---For Dialogue Box Close icon---*/
+.close-icon {
+  padding: 1px !important;
+  margin: "0px 0px 10px 0px";
+  color: crimson !important;
+  cursor: pointer;
+}
+
+/*---Mandatory Style---*/
+.mandatory-style {
+  color: crimson !important;
+}
+
+/*---For Menu---*/
+.menu-content {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+/*---For Sub Menus---*/
+.submenu-content {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+/*---For Bread Crumb---*/
+.bread-crumb-content {
+  font-size: 15px !important;
+  font-weight: 400;
+  font-family: Roboto,Helvetica Neue,sans-serif !important;
+}
+
+/*---For Expansion Panel Heads---*/
+.panel-header {
+  font-size: 15px;
+  font-weight: 400;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+/*---FOr Dialogue box heading---*/
+.dialogue-box-header {
+  margin: 0px 0px 10px 0px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #445c8f;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+/*---For Input Field Label---*/
+.input-label {
+  /* font-size: 15px !important; */
+  /* font-weight: 500 !important; */
+  /* font-family: Roboto,Helvetica Neue,sans-serif !important; */
+  font: 400 15px/20px Roboto, "Helvetica Neue", sans-serif !important;
+  color: #000;
+}
+
+/*---For Input Fields---*/
+.input-field {
+  /* font-size: 14px !important; */
+  /* font-weight: 400 !important; */
+  /* font-family: Roboto,Helvetica Neue,sans-serif !important; */
+  font: 400 13px/20px Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+/*---Reports menu--- */
+.report-table {
+  margin-top: 20px;
+}
+
+/*---No Records Found---  */
+.no_records_found {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: black;
+  display: flex;
+  text-align: center;
+  max-width: 100%;
+  width: 100%;
+}
+
+/*---Hand gesture on hover---*/
+.bread-crumb-link {
+  cursor: pointer;
+}
+
+/*---Icons for Printer module---*/
+.printer-icon-white {
+  background: url(assets/images/subMenus/printer-white.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+}
+
+.printer-icon-blue {
+  background: url(assets/images/subMenus/printer-blue.png);
+  background-repeat: no-repeat;
+  background-size: 19px 20px;
+  opacity: 0.7;
+}
+
+/*---Application body colour and height---*/
+body {
+  min-height: 100vh;
+  background-color: #e5e5e5;
+}
+
+
+/*--- ng select dropdown ---  */
+
+.ng-dropdown-panel {
+  z-index: 900 !important;
+  background: #fff;
+  box-shadow: 0px 0px 5px 3px #cac6c6;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.ng-dropdown-panel .ng-option {
+  padding: 5px;
+}
+
+.ng-dropdown-panel .ng-option:hover {
+    background: #bccbd9;
+}
+
+.section_title {
+  margin: 0px;
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  color: #445c8f !important;
+  font-family: Roboto,Helvetica Neue,sans-serif !important;
+}
+
+/*---For Table Head---*/
+table th {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  color: #000 !important;
+}
+
+/*---For Table Data---*/
+table td{
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.breadcrumb-padding-0 {
+  font-size: 15px !important;
+  font-weight: 400;
+  font-family: Roboto,Helvetica Neue,sans-serif !important;
+}
+
+mat-card mat-card-content {
+  width: 100%;
+}
+
+.mat-sort-header-container {
+  justify-content: left;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  text-align: left;
+  padding: 0 5px !important;
+}
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 10px !important;
+}
+
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+  padding-right: 10px !important;
+}
+
+.mat-tab-body.mat-tab-body-active {
+  overflow-y: inherit !important;
+}
+
+.mat-tab-body-content {
+  overflow: inherit !important;
+}
+
+.Modal_Header {
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  color: #445c8f !important;
+  font-family: Roboto,Helvetica Neue,sans-serif !important;
+}
+
+.mat-table {
+  overflow-wrap: anywhere;
+}
+
+.table.mat-table {
+  overflow-wrap: anywhere;
+}
+
+.count-component-header {
+  margin-bottom: 15px;
+}
+
+/*---Mat input field labels---*/
+.mat-form-field-appearance-legacy .mat-form-field-label {
+  font-size: 18px !important;
+  color: rgba(0,0,0,.87) !important;
+}
+
+/*---Mat input field line color---*/
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: rgba(0,0,0, 0.6);
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container:focus {
+  outline: 0px;
+}
+
+.ng-select:focus {
+  outline: 0px;
+}
+
+span + ng-select {
+  font: 400 13px/20px Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+mat-panel-title {
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+mat-label.input-label {
+  font-size: 20px !important;
+  font-weight: 400 !important;
+}
+
+.mat-input-element:disabled {
+  color: #5f5e5e;
+  background: #e8e8e8;
+  padding: 1px;
+}
+
+.mat-expansion-panel-body  {
+  padding: 0 24px 25px !important;
+}
+
+.search-item {
+  margin-top: 12px !important;
+}
+
+@media screen and (max-width: 960px) {
+  .mat-menu-panel {
+    margin-top: 0px;
+    margin-left: 15px;
+  }
+}
+
+
+mat-list-item .mat-list-item-content {
+  padding: 0 5px !important;
+}
+
+.modal-dropdown ng-select .ng-dropdown-panel {
+  position: fixed !important;
+  width: 22% !important;
+ }
+
+
+ .mat-list-item-content a .mat-icon {
+  color: black;
+}
+
+.dialogue-dropdown-medium ng-select .ng-dropdown-panel {
+  position: fixed !important;
+  width:440px !important;
+ }
+
+ /*-----ng-select dropdown height-----*/
+ .ng-dropdown-panel .ng-dropdown-panel-items {
+  box-sizing: border-box;
+  max-height: 208px !important;
+}
+
+.mat-paginator {
+height: 40px !important;
+margin-top: 0px !important;
+background: transparent !important;
+}
+
+.mat-list-base {
+  padding-top: 0px !important;
+}
+
+.ng-select-disabled {
+  color: #5f5e5e;
+  background: #e8e8e8;
+}
+
+/* to convert the input values to uppercase */
+.ng-select .ng-select-container .ng-value-container .ng-input>input {
+  text-transform: uppercase;
+}
+
+/* For password strength progress bar */
+.progress-bar-style .mat-progress-bar {
+  height: 10px !important;
+  width: 95%;
+  border-radius: 10px;
+}
+
+.mat-progress-bar.mat-warn .mat-progress-bar-buffer {
+  background-color: #d5d2e0;
+}
+
+.mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
+  background-color: #6689f8 !important;
+}
+
+.mat-progress-bar.mat-accent .mat-progress-bar-buffer {
+  background-color: #d5d2e0 !important;
+}
+
+.mat-progress-bar.mat-accent .mat-progress-bar-fill::after{
+  background-color: #3c67f5 !important;
+}
+
+.mat-progress-bar.mat-primary .mat-progress-bar-buffer {
+  background-color: #d5d2e0 !important;
+}
+
+.mat-progress-bar.mat-primary .mat-progress-bar-fill::after{
+  background-color: #3f51b5 !important;
+}
+
+
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 5px 0px 0 !important;
+}
+
+.mat-dialog-container {
+  padding: 15px !important;
+}
+
+.first-title{
+  text-align: end;
+}
+
+.pl-15 {
+  padding-left: 15px !important;
+}
+
+.cdk-overlay-pane {
+  max-width: 100vw !important;
+}
+
+.h-55{
+  height: 55px;
+}
+
+/* start only for tables css */
+
+.example-container {
+  max-height: 62vh !important;
+  overflow: auto;
+}
+
+.org-container-table {
+  max-height: 62vh !important;
+  overflow: auto;
+}
+
+.category-container-table {
+  max-height: 62vh !important;
+  overflow: auto;
+}
+
+.example-container table{
+  width: 100%;
+}
+
+.category-container-table table{
+  width: 100%;
+}
+
+.asset-reloacation-container-table {
+  max-height: 55vh !important;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.user-container-table {
+  max-height: 52vh !important;
+  overflow: auto;
+}
+
+.user-container-table table {
+  width: 100%;
+}
+
+.user-groups-container-table {
+  max-height: 63vh !important;
+  overflow: auto;
+}
+
+.user-groups-container-table table {
+  width: 100%;
+}
+
+.label-conf-container-table {
+  max-height: 70vh !important;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.label-conf-container-table table {
+  width: 100%;
+}
+
+.printer-container-table {
+  max-height: 60vh !important;
+  overflow: auto;
+}
+
+.printer-container-table table {
+  width: 100%;
+}
+
+.inventory-container-table {
+  max-height: 64vh !important;
+  overflow: auto;
+}
+
+.inventory-container-table table {
+  width: 100%;
+}
+
+.reports-container-table {
+  max-height: 60vh !important;
+  overflow: auto;
+}
+
+.reports-container-table table {
+  width: 100%;
+}
+
+.import-reports-container-table {
+  height: 50vh !important;
+  overflow: auto;
+}
+
+.import-reports-container-table table {
+  width: 100%;
+}
+
+.workflow-notification-container-table {
+  max-height: 60vh !important;
+  overflow: auto;
+}
+
+.workflow-notification-container-table table {
+  width: 100%;
+}
+/* end only for tables css */
+
+
+.mat-datepicker-toggle, .mat-datepicker-content .mat-calendar-next-button, .mat-datepicker-content .mat-calendar-previous-button {
+  font-size: 16px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-expansion-panel-header.mat-expanded{
+  height: 50px;
+  margin-bottom: 10px;
+  background: #A9DADC !important;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row{
+  height: 50px;
+}
+
+.mat-expansion-panel-header:hover{
+  background: #A9DADC !important;
+}
+
+.mat-table tbody tr:hover{
+  background: #b0dee08c !important;
+}
+
+.sqr-btn{
+  margin: 4px !important;
+  border-radius: 0px !important;
+  min-width: 38px !important;
+  min-height: 36px !important;
+  padding: 0px !important;
+}
+
+.sqr-btn:not(:disabled){
+  background-color: #cf5260 !important;
+}
+
+.mat-toolbar.mat-primary{
+  background: #467B99;
+}
+
+.mat-expansion-panel-header {
+  background: #A9DBDC;
+}
+
+.mat-table thead {
+  background: #A9DADC;
+}
+
+.mat-checkbox-checked.mat-primary .mat-checkbox-background{
+  background-color: #cf5260;
+}
+
+th.mat-header-cell{
+  font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.asset-list-paginator{
+  height: 56px !important;
+}
+
+
+.mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
+  background-color: #cf5260;
+}
+
+.mat-tab-header{
+  background: #A9DADC;
+}
+
+.mat-tab-link{
+  opacity: 1 !important
+}
+
+thead tr.mat-header-row{
+  height: 35px;
+}
+
+mat-panel-description .mat-icon{
+  color: #cf5260 !important;
+}
+
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger{
+  padding-bottom: 2px;
+}
+
+.mat-badge-warn .mat-badge-content{
+  background: #cf5260 !important;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mat-menu-content:not(:empty){
+  padding-bottom: 0px !important;
+}
+
+.mat-menu-panel {
+  min-height: 44px !important;
+}
+
+td.mat-cell {
+  word-break: break-word !important;
+}
+
+.mt-15{
+  margin-top: 15px;
+}
+
+.mt-10{
+  margin-top: 10px;
+}
+
+.mb-5{
+  margin-bottom: 5px;
+}
+
+.mb-22{
+  margin-bottom: 22px !important;
+}
+
+.mt-20{
+  margin-top: 20px !important;
+}
+
+.mt-22{
+  margin-top: 22px !important;
+}
+
+.mt-28{
+  margin-top: 28px !important;
+}
+
+.mt-03{
+  margin-top: 3px !important;
+}
+
+.err-field{
+  font-size: 11px;
+  margin-top: 2px;
+  color: crimson;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+.mat-form-field .err-field{
+  margin-top: -2px !important;
+  line-height: 15px;
+}
+
+.text-center{
+  text-align: center !important;
+}
+
+.mat-error{
+  font-size: 11px !important;
+  color: crimson !important;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+.activeicon {
+  color: #88d91d !important;
+}
+
+.inactiveicon {
+  color: #f00 !important;
+}
+
+.ng-select .ng-arrow-wrapper .ng-arrow {
+  display: inline-block;
+  height: 0;
+  width: 0;
+  pointer-events: none;
+  position: relative;
+  border-color: rgba(0,0,0,.87) transparent transparent;
+  border-style: solid;
+  border-width: 5px 5px 2.5px;
+}
+ 
+.ng-select.ng-select-opened>.ng-select-container .ng-arrow {
+  top: -2px;
+  border-color: transparent transparent rgba(0,0,0,.87);
+  border-width: 0 5px 5px;
+}
+
+.custom-button {
+  background-color: #cf5260;
+  color: white;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  border: none;
+  margin: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  appearance: none;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 16px;
+  min-width: 65px;
+  height: 36px;
+  line-height: 36px;
+  transition: background 400ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 280ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  margin: 5px;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* For adding border radius for the buttons */
+.mat-raised-button{
+  border-radius: 5px !important;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px !important;
+}
+
+/* Container for the square shape and the + icon */
+.plus-icon {
+  width: 20px; 
+  height: 20px;
+  background-color: gray; 
+  position: relative;
+  display: inline-block;
+  border-radius: 2px; 
+  cursor: pointer;
+}
+
+/* Create the vertical line of the + sign */
+.plus-icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px; 
+  height: 60%;
+  background-color: white; 
+  transform: translate(-50%, -50%);
+}
+
+/* Create the horizontal line of the + sign */
+.plus-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 2px; 
+  background-color: white; 
+  transform: translate(-50%, -50%);
+}
+
+/* Home icon size */
+.small-icon{
+  font-size:20px;
+  margin-top: 5px;
+}
+
+.PARTIALLY_APPROVED{
+  color: #e07b16 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}

@@ -1,0 +1,39 @@
+<div fxLayout="column">
+
+    <div fxLayout="row">
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header">{{'SR_REPORT_TYPE' | translate}}</h4>
+      </div>
+      <div fxFlex="5" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" color="primary" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <div>
+        <hr>
+    </div>
+
+    <div class="form-group">
+        <div fxLayout="column" fxFlex="80" fxLayoutAlign="start center">
+            <div  class="mt-30">
+                <mat-radio-button [checked]="this.serviceRequestModel.srReportType == 'summary'"
+                [value]="this.serviceRequestModel.srReportType"
+                (change)="changeAllowEditItem('summary')">
+                {{'SR_SUMMARY_REPORT' | translate}}
+                </mat-radio-button>
+            </div>
+            <div  class="mt-20 ml-7px">
+                <mat-radio-button [checked]="this.serviceRequestModel.srReportType == 'detailed'"
+                [value]="this.serviceRequestModel.srReportType"
+                (change)="changeAllowEditItem('detailed')"  >
+                {{'SR_DETAILED_REPORT' | translate}}
+            </mat-radio-button>
+            </div>
+            <div fxFlex="20" class="mt-30 ml-30px">
+                <button mat-raised-button color="primary" class="space " [disabled]="this.serviceRequestModel.srReportType == null" (click)="generateWOReport()">{{ 'REPORT_EXPORT' | translate }}</button>
+            </div>
+        </div>
+        
+    </div>
+  
+</div>

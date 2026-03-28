@@ -1,0 +1,142 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <div fxFlex="90" fxLayoutAlign="start center">
+        <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'SUB_DEPARTMENT_NAME' | translate }}</h4>
+      </div>
+      <div fxFlex="30" fxLayoutAlign="end start">
+        <button mat-raised-button color="primary" class="btn-margin-5px" (click)="closeSubDeptCreateModal(false)">
+          <span *ngIf="!uploadLocationFlag">{{displayButton}}</span>
+          <span *ngIf="uploadLocationFlag">{{'COMMON_LOADING' | translate}}</span>
+        </button>
+        <button mat-raised-button color="primary" class="btn-margin-5px" (click)="closeSubDeptCreateModal(true)">{{ 'COMMON_CLOSE' | translate}}</button>
+        <!-- <mat-icon class="close-icon" (click)="closeSubDeptCreateModal()">highlight_off</mat-icon> -->
+      </div>
+    </div>
+
+    <div fxFlexFill>
+    <form [formGroup]="subDeptForm">
+        <div fxFlex="100" class="department-container">
+          <table mat-table [dataSource]="locSubDepartmentTO" class="department-list" >
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 2%;"> {{i+1}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Select">
+              <th mat-header-cell *matHeaderCellDef >
+                <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="selectAllFlag" [disabled]="modeDisplay" (change)="selectAll(selectAllFlag)"></mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let element;let i = index;" style=" width: 1%;">
+                <mat-checkbox [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}"
+                  color="primary" [disabled]="modeDisplay" (change)="selectOne(element.active ,i)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ 'SUB_DEPARTMENT_NAME' | translate }} </th>
+              <td mat-cell *matCellDef="let element" style="width: 7%;"> {{element.subDepartmentName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="reportingInchargeName">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'DEPARTMENT_REPORTING_INCHARGE' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 15%; margin-left: 0px;">
+                <ng-select [disabled]="!element.active || modeDisplay"
+                  [(ngModel)]="element.inchargeName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfPersonInCharge($event)" (click)="listOfPersonInCharge({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfPersonInCharge({})" (keyup.backspace)="listOfPersonInCharge($event.target.value ? $event : 'back')" (clear)="listOfPersonInCharge('clear')"
+                  [loading]="personscrollsync" (change)="getEmployeeValue($event,i)" [searchable]="true"
+                  [items]="inchargeNameList" bindLabel="employeeFirstName" bindValue="employeeFirstName" [value]="element.inchargeName">
+                </ng-select>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="designation">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ 'DESIGNATION_NAME' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                <ng-select class=" form-width" [disabled]=true
+                  [(ngModel)]="element.designation" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfDesignation($event)" (click)="listOfDesignation({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfDesignation({})" (keyup.backspace)="listOfDesignation($event.target.value ? $event : 'back')" (clear)="listOfDesignation('clear')" [loading]="designationScrollsync"
+                  (change)="getDesignationValue($event,i)" [items]="designationList"
+                  bindLabel="designationName" bindValue="designationName" [value]="element.designation">{{element.designation}}
+                </ng-select>
+              </td>
+              <!-- <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                
+                <input matInput class="input-field input-box" type="text" formControlName="designationName" tabindex="4"
+                 *ngIf="element.active" readonly>
+                
+              </td> -->
+            </ng-container>
+            <ng-container matColumnDef="block">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ 'BUILDING_BLOCK' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                <ng-select class=" form-width" [disabled]="!element.active || modeDisplay "
+                  [(ngModel)]="element.blockName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfBlock($event)" (click)="listOfBlock({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfBlock({})" (keyup.backspace)="listOfBlock($event.target.value ? $event : 'back')" (clear)="listOfBlock('clear')" [loading]="blockScrollsync"
+                  (change)="getBlockValue($event,i)" [items]="blockList"
+                  bindLabel="blockName" bindValue="blockName" [value]="element.blockName" >{{element.blockName}}
+                </ng-select>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="floor">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ 'BUILDING_FLOOR' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                <ng-select class=" form-width" [disabled]="!element.active || modeDisplay "
+                  [(ngModel)]="element.floorName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfFloor($event)" (click)="listOfFloor({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfFloor({})" (keyup.backspace)="listOfFloor($event.target.value ? $event : 'back')" (clear)="listOfFloor('clear')" [loading]="floorScrollsync"
+                  (change)="getFloorValue($event,i)" [items]="floorList"
+                  bindLabel="floorName" bindValue="floorName" [value]="element.floorName" >{{element.floorName}}
+                </ng-select>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef >
+                {{ 'BUILDING_ROOM' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                <ng-select class=" form-width" [disabled]="!element.active || modeDisplay "
+                  [(ngModel)]="element.roomName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfRoom($event)" (click)="listOfRoom({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfRoom({})" (keyup.backspace)="listOfRoom($event.target.value ? $event : 'back')" (clear)="listOfRoom('clear')" [loading]="roomScrollsync"
+                  (change)="getRoomValue($event,i)" [items]="roomList"
+                  bindLabel="roomName" bindValue="roomName" [value]="element.roomName">{{element.roomName}}
+                </ng-select>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="segment">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'BUILDING_SEGMENT' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width: 10%;">
+                <ng-select class=" form-width" [disabled]="!element.active || modeDisplay "
+                  [(ngModel)]="element.segmentName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfSegment($event)" (click)="listOfSegment({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfSegment({})" (keyup.backspace)="listOfSegment($event.target.value ? $event : 'back')" (clear)="listOfSegment('clear')" [loading]="segmentScrollsync"
+                  (change)="getSegmentValue($event,i)" [items]="segmentList"
+                  bindLabel="segmentName" bindValue="segmentName" [value]="element.segmentName" >{{element.segmentName}}
+                </ng-select>
+              </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedSubDepartmentColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedSubDepartmentColumns;">
+          </table>
+          <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}
+          </mat-card>
+
+          <mat-card *ngIf="subLoader" fxLayoutAlign="center center" class="no_records_found">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </mat-card> 
+        </div>
+      </form>
+      </div>
+  </div>

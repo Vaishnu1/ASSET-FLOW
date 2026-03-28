@@ -1,0 +1,150 @@
+<div fxLayout="column">
+
+  <div fxFlex="row">
+  <div fxFlex="95">
+    <h6 class="section_title"> {{'COMMON_SEARCH' | translate}} </h6>
+  </div>
+
+  <div fxFlex="5" class="first-title" fxLayoutAlign="end start"> 
+    <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+  </div>
+  </div>
+
+  <div fxLayout="row" fxFlex="100">
+    
+    <div fxFlex="20">
+      <div class="form-group example-width">
+        <span class="input-label"> {{ 'SCHEDULE_STATUS' | translate }} </span>
+        <ng-select class=" input-field" [(ngModel)]="scheduleDtlModel.status"
+          [ngModelOptions]="{standalone: true}" [items]="scheduleStatus" bindLabel="name" bindValue="name">
+        </ng-select>
+      </div>
+    </div>
+    <div fxFlex="5"></div>
+    <div fxFlex="30">
+
+      <div class="form-group">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="input-label input-label"> {{'SCHEDULE_DATE' | translate}} </mat-label>
+          <input matInput (click)="scheduleDt.open()" [matDatepicker]="scheduleDt"
+          [(ngModel)]="scheduleDtlModel.scheduleDateDisp" [ngModelOptions]="{standalone: true}"
+            (dateChange)="scheduleDateValidation($event)" class="input-field">
+          <mat-datepicker-toggle matSuffix [for]="scheduleDt"></mat-datepicker-toggle>
+          <mat-datepicker #scheduleDt></mat-datepicker>
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="start center">
+      <button  mat-raised-button class="space rightbutton" color="primary"
+         (click)="searchSchedule()">
+        {{'COMMON_SEARCH' | translate}}</button>
+    </div>
+
+  </div>
+
+  <mat-toolbar>
+    <span class="example-spacer"></span>
+    <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+    [pageSize]="pageSize" (page)="getServerData($event)">
+    </mat-paginator>
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+
+  <div fxFlex="row"> 
+    
+      
+    <div fxFlex="95" style="display: flex; align-items: center; justify-content: space-between;">
+  <h4 class="section_title" style="margin-top: 10px;">
+    {{ 'MAINTENANCE_PLANNED_SCHEDULES' | translate }}
+    <span *ngIf="assetCodeAndDescription" 
+          style="font-weight: bold; font-size: 14px; margin-left: 20px; color: #ba4802ed;">
+      Asset Code : {{ assetCodeAndDescription }}
+    </span>
+  </h4>
+</div>
+<div fxFlex="15">
+  <button mat-raised-button class="space rightbutton" style="margin: 10px 10px;" color="primary"
+          (click)="cancelSchedule()" [disabled]="!(enableCancelButton && plannedScheduleFlag)">
+    {{ 'MAINTENANCE_CANCEL_SCHEDULE' | translate }}
+  </button>
+</div>
+
+  </div>
+ 
+<div fxLayout="column"> 
+<div class="example-container">
+
+  <table mat-table [dataSource]="scheduleDtlModelList">
+
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef >
+        <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}"
+        [(ngModel)]="selectAllFlag" (change)="multipleSelectSchedule(selectAllFlag)" ></mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let element;let i = index;">
+        <mat-checkbox  *ngIf="element.status == 'BOOKED'" color="primary"  (change)="selectSchedule(element,$event.checked)"
+          [checked]="compareValue(element)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+ 
+    <ng-container matColumnDef="occurance">
+      <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_OCCURANCE_NO' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.occurrenceNo}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="scheduledDate">
+      <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_SCHEDULED_DATE' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.scheduleDateDisp}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_SCHEDULE_STATUS' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="srNo">
+      <th mat-header-cell *matHeaderCellDef>{{ 'SR_NO' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.srNo}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="assignedTo">
+      <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_SR_ASSIGNED_TO' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.assignedTo}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="srStatus">
+      <th mat-header-cell *matHeaderCellDef>{{ 'SR_STATUS' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element"> {{element.srStatusName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_CANCEL_SCHEDULE' | translate }}</th>
+
+      <td mat-cell *matCellDef="let element">
+        <mat-icon *ngIf="element.status=='BOOKED'" matTooltip="{{ 'MAINTENANCE_CANCEL_SCHEDULE' | translate }}"
+          matTooltipPosition="below" 
+          style="font-size: 14px !important;color: red;cursor: pointer;">block</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+
+  </table>
+  <mat-card class="no_records_found" *ngIf="length=='0'">
+    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+  </mat-card>
+</div>
+</div>
+
+</div>

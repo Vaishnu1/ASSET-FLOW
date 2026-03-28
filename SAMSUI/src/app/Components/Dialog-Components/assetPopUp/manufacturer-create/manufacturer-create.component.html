@@ -1,0 +1,258 @@
+<mat-icon class="close-icon-large" (click)="closeModal()">highlight_off</mat-icon>
+<form [formGroup]="manufacturerForm">
+  <div class="row ">
+    <div class="col-md-12 row">
+
+      <div class="col-md-6">
+        <h4 class="section_title">{{headingDisplay}} {{ 'MENU_MANUFACTURER' | translate }}</h4>
+      </div>
+
+
+       <div class="col-md-6 rightbutton " id ="buttons">
+
+          <button mat-raised-button color="primary" class="space col-md-5" (click)="clear()"
+          tabindex="13"[disabled]="isView">{{ 'COMMON_CLEAR' | translate }}</button>
+
+          <button mat-raised-button class="space col-md-5" color="primary" (click)="submit()"
+            [disabled]="manufacturerForm.invalid || !manufacturerForm.dirty || uploadFlagManufacturer">
+            <span *ngIf="!uploadFlagManufacturer">{{displayButton}}</span>
+            <span *ngIf="uploadFlagManufacturer">{{'COMMON_LOADING' | translate}} </span>
+          </button>
+
+          
+        </div>
+
+
+
+    </div>
+  </div>
+
+
+  <fieldset>
+
+    <div class="col-md-12 row">
+
+      <div class="col-md-6 ">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'MANUFACTURER_CODE' | translate}} </mat-label>
+            <input matInput formControlName="manufacturerCode">          
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label"> {{'MANUFACTURER' | translate}} </mat-label>
+            <input #manufactrerFocus matInput formControlName="manufacturerName" [maxlength]="100" required
+              (input)="checkForManufacturerExistence()">
+            <mat-hint align="end">{{manufacturerForm.controls.manufacturerName.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="manufacturerForm.controls.manufacturerName.errors && manufacturerForm.controls.manufacturerName.touched">
+              <div *ngIf="manufacturerForm.controls.manufacturerName.errors.required">{{'MANUFACTURER' | translate}}
+                is Required </div>
+              <div *ngIf="manufacturerForm.controls.manufacturerName.errors.maxlength">{{'MANUFACTURER' | translate}}
+                Maximum Length is 100 </div>
+              <div *ngIf="manufacturerForm.controls.manufacturerName.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label"> {{'COMMON_ADDRESS' | translate}} </mat-label>
+            <input #manufactrerFocus matInput formControlName="address" [maxlength]="100" required
+              (input)="checkForManufacturerExistence()">
+            <mat-hint align="end">{{manufacturerForm.controls.address.value?.length || 0}}/100</mat-hint>
+            <mat-error *ngIf="manufacturerForm.controls.address.errors && manufacturerForm.controls.address.touched">
+              <div *ngIf="manufacturerForm.controls.address.errors.required">{{'COMMON_ADDRESS' | translate}} is
+                Required </div>
+              <div *ngIf="manufacturerForm.controls.address.errors.maxlength">{{'COMMON_ADDRESS' | translate}} Length is
+                100 </div>
+              <div *ngIf="manufacturerForm.controls.address.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label"> {{'COMMON_AREA' | translate}} </mat-label>
+            <input #manufactrerFocus matInput formControlName="area" [maxlength]="100" required
+              (input)="checkForManufacturerExistence()">
+            <mat-hint align="end">{{manufacturerForm.controls.area.value?.length || 0}}/100</mat-hint>
+            <mat-error *ngIf="manufacturerForm.controls.area.errors && manufacturerForm.controls.area.touched">
+              <div *ngIf="manufacturerForm.controls.area.errors.required">{{'COMMON_AREA' | translate}} is Required
+              </div>
+              <div *ngIf="manufacturerForm.controls.area.errors.maxlength">{{'COMMON_AREA' | translate}} Maximum Length
+                is 100 </div>
+              <div *ngIf="manufacturerForm.controls.area.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <div class="example-full-width">
+            <p class="spacing" style="font-size: 12px "> {{ 'COMMON_COUNTRY' | translate }} <span
+                class="mandatory-style">*</span>
+            </p>
+            <ng-select  formControlName="locCountry" [items]="countries"
+              (search)="getCountryData($event)" (click)="getCountryData({})"
+              (change)="checkForManufacturerExistence();getCountryList($event)" bindLabel="countryName"
+              bindValue="countryName">
+            </ng-select>
+            <mat-error *ngIf="manufacturerForm.controls.locCountry.invalid && manufacturerForm.controls.locCountry.touched">
+              <div id = "warningFont" *ngIf="manufacturerForm.controls.locCountry.errors.required">
+                {{ 'COMMON_COUNTRY' | translate }} is Required </div>
+            </mat-error>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="example-full-width">
+            <p class="spacing" style="font-size: 12px "> {{ 'COMMON_STATE' | translate }} <span
+                class="mandatory-style">*</span>
+            </p>
+            <ng-select  formControlName="locState" [items]="states" bindLabel="stateName"
+              (search)="getStateData($event)" (click)="getStateData({})" [virtualScroll]="true"
+              (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="stateScrollsync"
+              (change)="getStateList($event); checkForManufacturerExistence()" bindValue="stateName">
+            </ng-select>
+            <mat-error *ngIf="manufacturerForm.controls.locState.invalid && manufacturerForm.controls.locState.touched">
+              <div id = "warningFont" *ngIf="manufacturerForm.controls.locState.errors.required">
+                {{ 'COMMON_STATE' | translate }} is Required </div>
+            </mat-error>
+          </div>
+        </div>
+
+        
+
+      </div>
+
+
+      <div class="col-md-6 ">
+
+          <div class="form-group">
+              <div class="example-full-width">
+                <p class="spacing" style="font-size: 12px "> {{ 'COMMON_CITY' | translate }} <span
+                    class="mandatory-style">*</span>
+                </p>
+                <ng-select  formControlName="locCity" [items]="cities" bindLabel="cityName"
+                  (search)="getCityData($event)" (click)="getCityData({})" (scrollToEnd)="getCityData({})" (keyup.backspace)="getCityData($event.target.value ? $event : 'back')" (clear)="getCityData('clear')"
+                  (change)="getCityList($event); checkForManufacturerExistence()" [virtualScroll]="true"
+                  [loading]="cityscrollsync" bindValue="cityName">
+                </ng-select>
+                <mat-error *ngIf="manufacturerForm.controls.locCity.invalid && manufacturerForm.controls.locCity.touched">
+                  <div id = "warningFont" *ngIf="manufacturerForm.controls.locCity.errors.required">
+                    {{ 'COMMON_CITY' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_6_DIG }}">
+            <mat-label class="example-label input-label">{{ 'COMMON_ZIP_CODE' | translate }} </mat-label>
+            <input matInput formControlName="zipCode" required (input)="formOneValidation()"
+            [maxlength]="6">
+            <mat-hint align="end">
+              {{manufacturerForm.controls.zipCode.value?.toString().length || 0}}/6
+            </mat-hint>
+            <mat-error *ngIf="manufacturerForm.controls.zipCode.invalid && manufacturerForm.controls.zipCode.touched">
+              <div *ngIf="manufacturerForm.controls.zipCode.errors.pattern">
+                Zip Code contains only Numbers </div>
+                <div *ngIf="manufacturerForm.controls.zipCode.errors.required">
+                  {{ 'COMMON_ZIP_CODE' | translate }} is Required </div>
+                <div *ngIf="manufacturerForm.controls.zipCode.errors.maxlength">
+                  {{ 'COMMON_ZIP_CODE' | translate }} Maximum Length is 6 </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label"> {{ 'COMMON_CONTACT_NAME' | translate }} </mat-label>
+            <input #manufactrerFocus matInput formControlName="contactPerson" [maxlength]="100" required
+              (input)="checkForManufacturerExistence()">
+            <mat-hint align="end">{{manufacturerForm.controls.contactPerson.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="manufacturerForm.controls.contactPerson.errors && manufacturerForm.controls.contactPerson.touched">
+              <div *ngIf="manufacturerForm.controls.contactPerson.errors.required">
+                {{ 'COMMON_CONTACT_NAME' | translate }}
+                is Required </div>
+              <div *ngIf="manufacturerForm.controls.contactPerson.errors.maxlength">
+                {{ 'COMMON_CONTACT_NAME' | translate }}
+                Maximum Length is 100 </div>
+              <div *ngIf="manufacturerForm.controls.contactPerson.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label"> {{ 'COMMON_EMAIL_ID' | translate }} </mat-label>
+            <input matInput formControlName="emailId" required (input)="checkForManufacturerExistence()"
+              [maxlength]="100">
+            <mat-hint align="end">{{manufacturerForm.controls.emailId.value?.length || 0}}/100
+            </mat-hint>
+            <mat-error *ngIf="manufacturerForm.controls.emailId.invalid && manufacturerForm.controls.emailId.touched">
+              <div *ngIf="manufacturerForm.controls.emailId.errors.required">
+                {{ 'COMMON_EMAIL_ID' | translate }} is Required </div>
+              <div *ngIf="manufacturerForm.controls.emailId.errors.maxlength">
+                {{ 'COMMON_EMAIL_ID' | translate }} Maximum Length is 100 </div>
+              <div *ngIf="manufacturerForm.controls.emailId.errors.pattern">
+                {{ 'COMMON_EMAIL_ID' | translate }} Id Should be xxx@yyy.zzz format </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+            <mat-label class="example-label input-label"> {{ 'COMMON_PHONE_NO' | translate }} </mat-label>
+            <input matInput formControlName="contactPhoneNo" [maxlength]="100" required
+              (input)="checkForManufacturerExistence()">
+            <mat-hint align="end">
+              {{manufacturerForm.controls.contactPhoneNo.value?.length || 0}}/15
+            </mat-hint>
+            <mat-error
+              *ngIf="manufacturerForm.controls.contactPhoneNo.invalid && manufacturerForm.controls.contactPhoneNo.touched">
+              <div *ngIf="manufacturerForm.controls.contactPhoneNo.errors.required">
+                {{ 'COMMON_PHONE_NO' | translate }} is Required </div>
+              <div *ngIf="manufacturerForm.controls.contactPhoneNo.errors.maxlength">
+                {{ 'COMMON_PHONE_NO' | translate }} Maximum Length is 15 </div>
+              <div *ngIf="manufacturerForm.controls.contactPhoneNo.errors.pattern">
+                {{ 'COMMON_PHONE_NO' | translate }} is Invalid </div>
+              <div *ngIf="manufacturerForm.controls.contactPhoneNo.errors.minlength">
+                {{ 'COMMON_PHONE_NO' | translate }} Minimum Length is 10 </div>
+
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+            <mat-label class="example-label input-label"> {{ 'COMMON_ALT_PHONE_NO' | translate }} </mat-label>
+            <input matInput formControlName="altPhoneNo" (input)="checkForManufacturerExistence()" [maxlength]="15">
+            <mat-hint align="end">{{manufacturerForm.controls.altPhoneNo .value?.length || 0}}/15
+            </mat-hint>
+            <mat-error
+              *ngIf="manufacturerForm.controls.altPhoneNo.invalid && manufacturerForm.controls.altPhoneNo.touched">
+              <div *ngIf="manufacturerForm.controls.altPhoneNo.errors.maxlength">
+                {{ 'COMMON_ALT_PHONE_NO' | translate }} Maximum Length is 15 </div>
+              <div *ngIf="manufacturerForm.controls.altPhoneNo.errors.pattern">
+                {{ 'COMMON_ALT_PHONE_NO' | translate }} is Invalid </div>
+              <div *ngIf="manufacturerForm.controls.altPhoneNo.errors.minlength">
+                {{ 'COMMON_ALT_PHONE_NO' | translate }} Min Length is 10 </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+  </fieldset>
+
+
+</form>

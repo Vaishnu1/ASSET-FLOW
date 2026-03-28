@@ -1,0 +1,220 @@
+<div fxLayout="column" fxFlex="100%">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_SERVICE' |
+          translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{'MENU_MASTER' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+    <div fxFlex="19" fxFlex.sm="2" fxFlex.xs="2">
+
+      <div fxLayoutAlign="center start" class="side-menu-button">
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'work_order_view'}"
+              (click)="Active_Tab_Change('work_order_view')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'work_order_view'" class="priority-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'work_order_view'" class="priority-icon-white">
+              </mat-icon>
+              {{ 'SERVICE_REQUEST' | translate }}
+            </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'priority_type'}"
+          (click)="Active_Tab_Change('priority_type')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'priority_type'" class="priority-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'priority_type'" class="priority-icon-white">
+          </mat-icon>
+          {{ 'MENU_PRIORITY' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'severity_type'}"
+          (click)="Active_Tab_Change('severity_type')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'severity_type'" class="severity-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'severity_type'" class="severity-icon-white">
+          </mat-icon>
+          {{ 'MENU_SEVERITY' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'casual_code'}"
+          (click)="Active_Tab_Change('casual_code')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'casual_code'" class="cause-code-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'casual_code'" class="cause-code-icon-white"></mat-icon>
+          {{ 'MENU_CAUSE_CODE' | translate }}
+        </mat-list-item>
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'action_code'}"
+          (click)="Active_Tab_Change('action_code')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'action_code'" class="action-code-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'action_code'" class="action-code-icon-white">
+          </mat-icon>
+          {{ 'MENU_ACTION_CODE' | translate }}
+        </mat-list-item>
+      </mat-nav-list>
+
+      <mat-sidenav-container fxHide.gt-sm>
+        <mat-sidenav #sidenav>
+          <mat-nav-list fxLayout="column" fxShow="true">
+
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'work_order_view'}"
+              (click)="Active_Tab_Change('work_order_view')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'work_order_view'" class="priority-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'work_order_view'" class="priority-icon-white">
+              </mat-icon>
+              {{ 'SERVICE_REQUEST' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'priority_type'}"
+              (click)="Active_Tab_Change('priority_type')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'priority_type'" class="priority-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'priority_type'" class="priority-icon-white">
+              </mat-icon>
+              {{ 'MENU_PRIORITY' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'severity_type'}"
+              (click)="Active_Tab_Change('severity_type')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'severity_type'" class="severity-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'severity_type'" class="severity-icon-white"></mat-icon>
+              {{ 'MENU_SEVERITY' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'casual_code'}"
+              (click)="Active_Tab_Change('casual_code')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'casual_code'" class="cause-code-icon-blue"></mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'casual_code'" class="cause-code-icon-white">
+              </mat-icon>
+              {{ 'MENU_CAUSE_CODE' | translate }}
+            </mat-list-item>
+
+            <mat-list-item class="Tab ml-25" [ngClass]="{' active-menu-item':Active_Tab === 'action_code'}"
+              (click)="Active_Tab_Change('action_code')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'action_code'" class="action-code-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'action_code'" class="action-code-icon-white">
+              </mat-icon>
+              {{ 'MENU_ACTION_CODE' | translate }}
+            </mat-list-item>
+
+          </mat-nav-list>
+        </mat-sidenav>
+      </mat-sidenav-container>
+
+    </div>
+
+    <div fxFlex="78" fxFlex.sm="93" fxFlex.xs="93">
+      <div *ngIf="Active_Tab === 'priority_type'">
+        <div fxLayout="column" fxFlex="100">
+          <div fxLayout="row">
+            <div fxFlex="35"> 
+              <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <input matInput type="search"  #searchSet name="search" id="search"
+                  placeholder="Search {{'MENU_PRIORITY'| translate}}" (input)="onSearchChange($event.target.value)">
+              </mat-form-field>
+            </div>
+
+          </div>
+          </div>
+
+          <hr />
+
+          <mat-toolbar>
+            <span>{{'MENU_PRIORITY'| translate}} List</span>
+            <span class="example-spacer"></span>
+    
+            <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length"
+            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+   
+            <button mat-raised-button color="primary"  class="space sqr-btn" *ngIf="modelAccessModule.createFlagDisplay"
+            [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+            (click)="openPriorityCreate(0)"><mat-icon>add</mat-icon></button>
+
+            <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}"   *ngIf="modelAccessModule.updateFlagDisplay" (click)="openPriorityCreate(selectedItem)">
+            <mat-icon>edit</mat-icon>
+            </button>
+    
+                
+          </mat-toolbar>
+
+          <div fxLayout="row">
+            <table fxFlex="100" mat-table [dataSource]="prioritydataSource" matSort (matSortChange)="customSort($event)"
+              matSortActive="name" matSortDirection="asc" matSortDisableClear>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef> {{ 'COMMON_SELECT' | translate }} </th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element;"> 
+                  <mat-checkbox color="primary" class="example-margin" (change)="selectPriority(element)"
+                  [checked]="selectedItem.priorityId == element?.priorityId"></mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="priorityName">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'SR_PRIORITY' | translate }} </th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPriority(element)"> {{element.priorityName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="createdBy">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_BY' | translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPriority(element)"> {{element.createdBy}}</td>
+              </ng-container>
+              <ng-container matColumnDef="createdDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_DT' | translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPriority(element)"> {{element.createdDtDisp}}</td>
+              </ng-container>
+              <ng-container matColumnDef="updatedBy">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_BY' | translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPriority(element)"> {{element.updatedBy}}</td>
+              </ng-container>
+              <ng-container matColumnDef="updatedDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_DT' | translate }}</th>
+                <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPriority(element)"> {{element.updatedDtDisp}}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+              </tr>
+            </table>
+
+            <mat-card class="no_records_found" *ngIf="subLoaderPriority" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+          </div>
+
+          <div fxLayout="row"> 
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderPriority" fxLayoutAlign="center center">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card> 
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="Active_Tab === 'severity_type'">
+        <app-severity-list></app-severity-list>
+      </div>
+      <div *ngIf="Active_Tab === 'casual_code'">
+        <app-causecode-list></app-causecode-list>
+      </div>
+      <div *ngIf="Active_Tab === 'action_code'">
+        <app-actioncode-list></app-actioncode-list>
+      </div>
+    </div>
+  </div>
+</div>

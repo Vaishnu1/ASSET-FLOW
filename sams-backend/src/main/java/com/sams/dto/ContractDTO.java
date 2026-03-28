@@ -1,0 +1,75 @@
+package com.sams.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+public class ContractDTO {
+    private Long contractId;
+    private Long orgId;
+    private Long locationId;
+    private String locationName;
+    private String contractNo;
+    private String contractName;
+    private String coverageType;
+    private String contractType;
+    private Long contractStatusId;
+    private Boolean active;
+    private String contractingPartyType;
+    private Long contractPartyId;
+    private String contractPartyName;
+    private Long contractPartyLocationId;
+    private String contractPartyLocationName;
+    private Long contactPersonId;
+    private String contactPerson;
+    private String phoneNumber;
+    private String currencyCode;
+    private LocalDateTime startDt;
+    private LocalDateTime endDt;
+    private Long expiryPriorNotifyDays;
+    private String poNo;
+    private LocalDateTime poDate;
+    private LocalDateTime contractInactiveOn;
+    private Double contractBasicValue;
+    private Double discountRate;
+    private Double discountAmount;
+    private Double grossContractValue;
+    private String taxCd1;
+    private String taxCd2;
+    private String taxCd3;
+    private Double taxRate1;
+    private Double taxRate2;
+    private Double taxRate3;
+    private Double taxValue1;
+    private Double taxValue2;
+    private Double taxValue3;
+    private Double netContractValue;
+    private String includedService;
+    private String excludedService;
+    private String autoRenewal;
+    private Double appreciationCoeffecient;
+    private Boolean autoRenewCreated;
+    private String remarks;
+    private String tenurePaymentFrequency;
+    private Long tenurePaymentOccurances;
+    private String termsCondition;
+    private String approvedBy;
+    private LocalDateTime approvedDt;
+    private String cancelledBy;
+    private LocalDateTime cancelledDt;
+    private String createdBy;
+    private LocalDateTime createdDt;
+    private String updatedBy;
+    private LocalDateTime updatedDt;
+    private String emailId;
+    private String addressInfo;
+    private Double exchRate;
+    private Double localNetContractValue;
+    private String cancelReason;
+    private String rejectReason;
+    private Long workFlowProcessStatusId;
+    private String terminateReason;
+    private String insuranceType;
+}

@@ -1,0 +1,2225 @@
+<div class="top-content row">
+  <div fxLayout="column" fxFlex="100%">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+        <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+              [routerLink]="['/home/dashboard']">
+              <mat-icon>home</mat-icon>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </a></mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_SERVICE'
+            | translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{headingDisplay}}</mat-list-item>
+        </mat-list>
+        <div fxFlex></div>
+
+        <div class="rightbutton" style="margin-right: 0px !important; ">
+
+          <button mat-raised-button class="space" color="primary" (click)="back()">
+            {{ backButtonHeadingDisplay }}</button>
+
+          <button (click)="refresh()" mat-raised-button color="primary" class="space">{{'COMMON_REFRESH' |
+            translate}}</button>
+
+
+          <button mat-raised-button *ngIf="srBreakDownGeneralForm.controls.srType.value === 'INSTALLATION'
+            && srBreakDownGeneralForm.controls.srId.value> 0 " color="primary" class="space"
+            matTooltip="{{ 'DOWNLOAD_SR_HAND_OVER_FORM' | translate }}" [matTooltipPosition]="'below'"
+            (click)="generateSRHandOverFormPDF(srBreakDownGeneralForm.controls.srId.value)">
+            <mat-icon class="cloud_download_icon">cloud_download</mat-icon>{{ 'SR_HAND_OVER_FORM' | translate }}
+          </button>
+
+          <button mat-raised-button color="primary" class="space" color="primary" *ngIf="srBreakDownGeneralForm.controls.srType.value === 'INSTALLATION'
+          && srBreakDownGeneralForm.controls.srId.value> 0 && displayBatchButton"
+            matTooltip="{{ 'UPDATE_BY_BATCH' | translate }}" (click)="updateWOByBatch()">
+            {{'COMMON_BATCH' | translate}}
+          </button>
+
+
+          <button *ngIf="reAssignBtn" (click)="openReassignPopUp(srBreakDownGeneralForm.controls.srId.value)"
+            mat-raised-button class="space" color="primary">
+            {{ 'COMMON_REASSIGN' | translate }}
+          </button>
+
+          <button *ngIf="ackBtn" (click)="approvalSR('3');formValidation()" mat-raised-button class="space"
+            color="primary">
+            {{ 'COMMON_ACKNOWLEDGE' | translate }}
+          </button>
+
+          <button *ngIf="completeBtn" (click)="approvalSR('6')" mat-raised-button class="space" color="primary"
+            [disabled]="!isAllSubTicketsClosed || !formOneValid || !formTwoValid">
+            {{ 'COMMON_COMPLETE' | translate }}
+          </button>
+
+          <button *ngIf="closeBtn" (click)="approvalSR('7')" mat-raised-button class="space" color="primary">
+            {{ 'COMMON_CLOSE' | translate }}
+          </button>
+
+        </div>
+
+      </mat-toolbar-row>
+    </div>
+  </div>
+</div>
+
+<div class="top-content row">
+  <div fxLayout="column" fxFlex="100%">
+    <div fxLayout="row">
+      <mat-card fxFlex="100" style="margin-bottom: 15px;">
+        <div fxFlex="20">
+          <div class="title"> {{ 'SR_NO' | translate }} </div>
+          <div class="value mandatory-style">
+            <span *ngIf="!updateByBatch">{{srBreakDownGeneralForm.controls.srNo.value}}</span>
+            <span *ngIf="updateByBatch">{{srNoForRangeForBatchUpdate}}</span>
+          </div>
+        </div>
+        <div fxFlex="20">
+          <div class="title"> {{ 'SR_TYPE' | translate }} </div>
+          <div class="value mandatory-style"> {{srBreakDownGeneralForm.controls.srType.value}} </div>
+        </div>
+        <div fxFlex="20">
+          <div class="title"> {{ 'SR_ASSET_DESC_GROUP' | translate }} </div>
+          <div class="value mandatory-style">
+            <span *ngIf="!updateByBatch">
+              {{srBreakDownGeneralForm.controls.assetCode.value}} <br />
+              {{srBreakDownGeneralForm.controls.modelName.value}} <br />
+              {{srBreakDownGeneralForm.controls.assetSerialNo.value}}
+            </span>
+            <span *ngIf="updateByBatch">
+              {{assetCodeRangeForBatchUpdate}} /
+              {{srBreakDownGeneralForm.controls.modelName.value}} /
+              {{serialNoRangeForBatchUpdate}}
+            </span>
+          </div>
+        </div>
+        <div fxFlex="20">
+          <div class=" title"> {{ 'SR_CALLER_NAME' | translate }} </div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.callerName.value}} <br />
+            {{srBreakDownGeneralForm.controls.callerContactNo.value}} </div>
+        </div>
+        <div fxFlex="20" *ngIf="srBreakDownGeneralForm.controls.srType.value != 'INSTALLATION'">
+          <div class=" title"> {{ 'SR_PROBLEM_REPORTED' | translate }} </div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.problemReported.value}} </div>
+        </div>
+        <div fxFlex="12">
+          <div class=" title"> {{ 'SR_TOTAL_DOWN_HOURS' | translate }} </div>
+          <div class=" value mandatory-style"> {{srBreakDownGeneralForm.controls.totalDownHrsStr.value}} </div>
+        </div>
+        <div fxFlex="20">
+          <div class="title"> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }} </div>
+          <div class="value mandatory-style"> {{srBreakDownGeneralForm.controls.physicalDamageDisp.value}}
+            <button *ngIf="srBreakDownGeneralForm.controls.physicalDamageDisp.value == 'YES'" mat-icon-button
+              color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openBreakDownAnalysis()">
+              <mat-icon>info</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div fxFlex="20">
+          <div class="title"> {{ 'SR_ACTIVITY_PATIENT_SAFETY' | translate }} </div>
+          <div class="value mandatory-style"> {{srBreakDownGeneralForm.controls.patientIncidentDisp.value}}
+            <button *ngIf="srBreakDownGeneralForm.controls.patientIncidentDisp.value == 'YES'" mat-icon-button
+              color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openBreakDownAnalysis()">
+              <mat-icon>info</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div fxFlex="15" *ngIf="srBreakDownGeneralForm.controls.srType.value != 'INSTALLATION'">
+          <div class="title"> {{ 'SR_COST_INCURRED' | translate }} </div>
+          <div class="value mandatory-style"> {{srBreakDownGeneralForm.controls.totalServiceCost.value}} </div>
+        </div>
+
+        <!-- <div fxFlex="15">
+              <div class="title"> {{ 'LAST_UPDATED_BY_DATE' | translate }} </div>
+              <div class="value mandatory-style"> {{srBreakDownGeneralForm.controls.updatedBy.value}} -
+                                  {{srBreakDownGeneralForm.controls.updatedDtDisp.value}}
+              </div>
+            </div> -->
+
+        <div fxFlex="15" *ngIf="updateByBatch">
+          <div class="batch-update-mode"> [Batch Update is Enabled] </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="srBreakDownGeneralForm">
+  <div fxFlex="100" fxLayout="column">
+
+    <div fxLayout="row" fxFlex="70">
+      <mat-card fxLayout="row" fxFlex="70">
+        <div fxFlex="14">
+          <div class=" title"> {{ 'SR_STATUS' | translate }} </div>
+          <div class=" value mandatory-style"> {{srBreakDownGeneralForm.controls.srStatusName.value}} </div>
+        </div>
+        <div fxFlex="14">
+          <div class=" title"> {{ 'SR_ACTIVITY_EFS' | translate }} </div>
+          <div class=" value mandatory-style"> {{srBreakDownGeneralForm.controls.srEFSValue.value}} </div>
+        </div>
+        <div fxFlex="16">
+          <div class=" title">
+            {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }}</div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.assignedTo.value}} <br />
+            {{srBreakDownGeneralForm.controls.assignedToContactNo.value}} </div>
+        </div>
+        <div fxFlex="16">
+          <div class=" title"> {{ 'SR_ASSIGNED_BY_GRID' | translate }} 
+            </div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.assignedBy.value}} <br />
+            {{srBreakDownGeneralForm.controls.assignedDtDisp.value}} </div>
+        </div>
+        <div fxFlex="14">
+          <div class=" title"> {{ 'SR_OPENED_EDIT_DATE' | translate }} <br /> {{ 'SR_ACKNOWLEDGED_DATE' | translate }}
+          </div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.srOpenedDtDisp.value}} <br />
+            {{srBreakDownGeneralForm.controls.srAckDtDisp.value}}</div>
+        </div>
+        <!-- <div fxFlex="12">
+            <div class=" title"> {{ 'SR_PRIORITY_GRID' | translate }} <br /> {{ 'SR_SEVERITY' | translate }}</div>
+            <div class=" value"> {{srBreakDownGeneralForm.controls.srPriority.value}} <br />
+              {{srBreakDownGeneralForm.controls.srSeverity.value}}</div>
+          </div> -->
+        <div fxFlex="14">
+          <div class=" title"> {{ 'IS_EQUIPMENT_WORKING_PARTIALLY_GRID' | translate }} </div>
+          <div class=" value"> {{srBreakDownGeneralForm.controls.isPartiallyWorkingDisp.value}}</div>
+        </div>
+
+        <div fxFlex="10"
+          *ngIf="srBreakDownGeneralForm.controls.srType.value != 'INSTALLATION' && srBreakDownGeneralForm.controls.srStatusName.value != 'BOOKED' && modeDisplay ">
+          <div class="example-full-width">
+            <button mat-icon-button (click)="showPrioritySeverityStatus()" matTooltip="{{'COMMON_UPDATE' | translate}}">
+              <img src="assets/images/subMenus/UPDATE3.png" style="height: 25px;width: 25px;" alt="Update" />
+            </button>
+          </div>
+        </div>
+
+
+        <!-- <div fxFlex="13">
+            <div class="example-full-width">
+              <button mat-icon-button (click)="addOrUpdateRemarks()" matTooltip="{{'SR_REMARKS' | translate}}">
+                <mat-icon class="large-icon">edit_note</mat-icon>
+              </button>
+            </div>
+          </div> -->
+
+      </mat-card>
+
+      <div fxLayout="row" fxFlex="30">
+      <div class="remarks-window" fxFlex="100">
+        <div fxLayout="row" fxFlex="100">
+          <div fxFlex="70" style="margin: 0;">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label class="title">{{ 'REMARKS' | translate }}</mat-label>
+              <textarea matInput [formControl]="srBreakDownGeneralForm.controls.srRemarks"
+                placeholder="Enter your remarks" class="custom-textarea"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="20" style="margin-left:10px;">
+            <button mat-raised-button color="primary" matTooltip="{{'SR_REMARKS' | translate}}"
+              [disabled]="srBreakDownGeneralForm.controls.srRemarks.value === ''" (click)="addOrUpdateRemarks()">
+              {{ 'COMMON_UPDATE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </div>
+
+    <div fxLayout="column" fxFlex="100">
+      <div style="margin-bottom:5%;">
+        <div [@.disabled]="true">
+
+          <mat-toolbar style="margin-top: 5px;">
+            <button class="menu-list-btn" mat-raised-button [matMenuTriggerFor]="menu1" color="primary"
+              xPosition="after">
+              <mat-icon class="menu-list-icon-btn">menu</mat-icon>
+            </button>
+          </mat-toolbar>
+
+          <nav mat-tab-nav-bar>
+            <mat-menu #menu1="matMenu" [class]="'customize'">
+              <a [ngClass]="(((data.name == 'asset_info') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_warranty_contract_info') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'delivery_installation') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_sub_tickects') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_work_activity') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_activity_log') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_activity_chart') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'menu_workflow_approval') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_item_request') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_check_points') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'asset_service_details') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_accessories') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_consumables') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_items') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'documents') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'training') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'hand_over_items') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'user_gate_pass') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_re_opened') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_images') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_feedback') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                ) ? 'tab-disble' : ''" [routerLink]="!(((data.name == 'asset_info') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_warranty_contract_info') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'delivery_installation') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_sub_tickects') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_work_activity') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_activity_log') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_activity_chart') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'menu_workflow_approval') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_item_request') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_check_points') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'asset_service_details') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_accessories') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_consumables') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'model_items') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'documents') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'training') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'hand_over_items') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'user_gate_pass') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_re_opened') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_images') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                || ((data.name == 'sr_feedback') && !(srBreakDownGeneralForm.controls.srId.value >= 0))
+                ) ? ['/home/serviceRequest/serviceView/', wo_id, mode, data.name] : null"
+                *ngFor="let data of filteredTabsList; let k = index">
+                <li mat-menu-item [ngClass]="activetab == data.name ? 'tab-menu-item menu-active' : 'tab-menu-item' ">
+                  {{data.lable | translate}} </li>
+              </a>
+            </mat-menu>
+            <!-- TAB-1 ASSET INFO -->
+            <a mat-tab-link *ngIf="assetTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'asset_info']" routerLinkActive
+              #rla1="routerLinkActive" [active]="rla1.isActive || (activetab == 'asset_info')">{{ 'ASSET_INFO' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="contractWarrantyTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_warranty_contract_info']"
+              routerLinkActive #rla2="routerLinkActive"
+              [active]="rla2.isActive || (activetab == 'sr_warranty_contract_info')">{{ 'SR_WARRANTY_CONTRACT_INFO' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="installationTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'delivery_installation']"
+              routerLinkActive #rla3="routerLinkActive"
+              [active]="rla3.isActive || (activetab == 'delivery_installation')">{{ 'DELIVERY_INSTALLATION' | translate
+              }}
+            </a>
+
+            <a mat-tab-link *ngIf="srSubTicketTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_sub_tickects']" routerLinkActive
+              #rla4="routerLinkActive" [active]="rla4.isActive || (activetab == 'sr_sub_tickects')">{{ 'SR_SUB_TICKECTS'
+              | translate }}
+              {{subTicketsDataSource.length>0 ? '('+(closedSubTicketCount+'/'+subTicketsDataSource.length)+' Closed)' :
+              ""}}
+              <mat-icon *ngIf="!isAllSubTicketsClosed" style="color: orange" aria-hidden="true"> error</mat-icon>
+            </a>
+
+            <a mat-tab-link *ngIf="workActivityTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_work_activity']" routerLinkActive
+              #rla5="routerLinkActive" [active]="rla5.isActive || (activetab == 'sr_work_activity')">{{
+              'SR_WORK_ACTIVITY' | translate }}<mat-icon *ngIf="modeDisplay && !formOneValid"
+                class="mandatory-style">error</mat-icon>
+            </a>
+
+            <a mat-tab-link *ngIf="activityLogTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_activity_log']" routerLinkActive
+              #rla6="routerLinkActive" [active]="rla6.isActive || (activetab == 'sr_activity_log')">{{ 'SR_ACTIVITY_LOG'
+              | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="activityChartTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_activity_chart']" routerLinkActive
+              #rla7="routerLinkActive" [active]="rla7.isActive || (activetab == 'sr_activity_chart')">{{
+              'SR_ACTIVITY_CHART' | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="srBreakDownGeneralForm.controls.srId.value > 0 && employeeId > 0"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'menu_workflow_approval']"
+              routerLinkActive #rla8="routerLinkActive"
+              [active]="rla8.isActive || (activetab == 'menu_workflow_approval')">{{ 'MENU_WORKFLOW_APPROVAL' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="itemReqTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_item_request']" routerLinkActive
+              #rla9="routerLinkActive" [active]="rla9.isActive || (activetab == 'sr_item_request')">{{ 'SR_ITEM_REQUEST'
+              | translate }}
+            </a>
+
+            <!-- <a mat-tab-link *ngIf="prTabDisplay"
+            [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_purchase_request']" 
+            routerLinkActive #rla9="routerLinkActive"
+            [active]="rla9.isActive || (activetab == 'sr_purchase_request')">{{ 'SR_PURCHASE_REQUEST' | translate }}
+            </a>
+            
+            <a mat-tab-link *ngIf="stockRequestTabDisplay"
+            [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_stock_indent']"
+            routerLinkActive #rla10="routerLinkActive"
+            [active]="rla10.isActive || (activetab == 'sr_stock_indent')">{{ 'SR_STOCK_INDENT' | translate }}
+            </a> -->
+
+            <a mat-tab-link *ngIf="checkListTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_check_points']" routerLinkActive
+              #rla11="routerLinkActive" [active]="rla11.isActive || (activetab == 'sr_check_points')">{{
+              'SR_CHECK_POINTS' | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="serviceReqTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'asset_service_details']"
+              routerLinkActive #rla12="routerLinkActive"
+              [active]="rla12.isActive || (activetab == 'asset_service_details')">{{ 'ASSET_SERVICE_DETAILS' | translate
+              }}
+            </a>
+
+            <a mat-tab-link *ngIf="accessoriesTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'model_accessories']" routerLinkActive
+              #rla13="routerLinkActive" [active]="rla13.isActive || (activetab == 'model_accessories')">{{
+              'MODEL_ACCESSORIES' | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="consumablesTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'model_consumables']" routerLinkActive
+              #rla14="routerLinkActive" [active]="rla14.isActive || (activetab == 'model_consumables')">{{
+              'MODEL_CONSUMABLES' | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="sparePartsTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'model_items']" routerLinkActive
+              #rla15="routerLinkActive" [active]="rla15.isActive || (activetab == 'model_items')">{{ 'MODEL_ITEMS' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="srDocTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'documents']" routerLinkActive
+              #rla16="routerLinkActive" [active]="rla16.isActive || (activetab == 'documents')">{{ 'DOCUMENTS' |
+              translate }}<mat-icon *ngIf="modeDisplay && !formTwoValid" class="mandatory-style">error</mat-icon>
+            </a>
+
+            <a mat-tab-link *ngIf="trainingTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'training']" routerLinkActive
+              #rla17="routerLinkActive" [active]="rla17.isActive || (activetab == 'training')">{{ 'TRAINING' | translate
+              }}
+            </a>
+
+            <a mat-tab-link *ngIf="handOverTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'hand_over_items']" routerLinkActive
+              #rla18="routerLinkActive" [active]="rla18.isActive || (activetab == 'hand_over_items')">{{
+              'HAND_OVER_ITEMS' | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="gatePassTabDisplay && !updateByBatch"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'user_gate_pass']" routerLinkActive
+              #rla19="routerLinkActive" [active]="rla19.isActive || (activetab == 'user_gate_pass')">{{ 'USER_GATE_PASS'
+              | translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="reopenedTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_re_opened']" routerLinkActive
+              #rla20="routerLinkActive" [active]="rla20.isActive || (activetab == 'sr_re_opened')">{{ 'SR_RE_OPENED' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="srImagesTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_images']" routerLinkActive
+              #rla21="routerLinkActive" [active]="rla21.isActive || (activetab == 'sr_images')">{{ 'SR_IMAGES' |
+              translate }}
+            </a>
+
+            <a mat-tab-link *ngIf="srFeedbackTabDisplay"
+              [routerLink]="['/home/serviceRequest/serviceView/', wo_id, mode, 'sr_feedback']" routerLinkActive
+              #rla22="routerLinkActive" [active]="rla22.isActive || (activetab == 'sr_feedback')">{{ 'SR_FEEDBACK' |
+              translate }}
+            </a>
+
+          </nav>
+        </div>
+
+        <div fxLayout="column">
+
+          <div *ngIf="activetab == 'asset_info'" fxFlex="100%">
+            <mat-card>
+              <div fxFlex="100" fxLayout="row">
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_CODE' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetCode.value}} </div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_SERIAL_NO' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetSerialNo.value}} </div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_STATUS' | translate }} </div>
+                    <div class=" value mandatory-style"> {{srBreakDownGeneralForm.controls.assetStatus.value |
+                      translate}}
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetCategoryName.value}}</div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_GROUP' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetGroupName.value}} </div>
+                  </div>
+                </div>
+
+
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'MANUFACTURER' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.manufacturerName.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'MODEL_NAME' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.modelName.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'DEPARTMENT_NAME' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.departmentName.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.subDepartment.value}} </div>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_PRIORITY' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetPriority.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_RISK' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetRisk.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_FUNCTIONALITY' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.functionality.value}} </div>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'BUILDING_ROOM' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetRoom.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'BUILDING_FLOOR' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetFloor.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'BUILDING_SEGMENT' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetSegment.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'BUILDING_BLOCK' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetBlock.value}}</div>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'PURCHASE_PO_NUMBER' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.poNo.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'PURCHASE_PO_DATE' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.poDtDisp.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'SUPPLIER_NAME' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.supplierName.value}} </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'COMMON_CONTACT_NAME' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.supplierContactPerson.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'COMMON_PHONE_NO' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.supplierContactNo.value}}</div>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'INSTALLED_DT' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.assetActualInstalledDtDisp.value}}
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'INSTALLED_BY' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.installationDoneBy.value}}</div>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <!-- </div> -->
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_warranty_contract_info'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style" style="padding-top: 0.5%;">
+                  <div class="example-container">
+                    <table mat-table [dataSource]="contractDataSource" matSort>
+
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contractNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_NUMBER' | translate }} / <br />
+                          {{ 'COMMON_TITLE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.contractNo}} <br /> <br />
+                          {{element?.contractName}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="coverageType">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_COVERAGE_TYPE' | translate }} / <br />
+                          {{ 'CONTRACT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.coverageType}} <br /> <br />
+                          {{element?.contractType}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contractingPartyType">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PARTY' | translate }} / <br />
+                          {{ 'COMMON_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.contractingPartyType}} <br /> <br />
+                          {{element?.contractPartyName}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contactInfo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_CONTACT_PERSON' | translate }} / <br />
+                          {{ 'CONTRACT_PHONE_NUMBER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.contactPerson}} <br /> <br />
+                          {{element?.phoneNumber}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contractStatus">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CONTRACT_STATUS' | translate
+                          }}/<br />
+                          {{'APPROVAL_STATUS' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          <span class="{{element?.contractStatus.replace(' ','')}}">{{element?.contractStatus}} <br />
+                            <br /> </span>
+                          <span
+                            class="{{element?.woApprovalStatus.replace(' ','')}}">{{element?.woApprovalStatus}}</span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="contractStartDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'CONTRACT_START_DATE' | translate }}/ <br />
+                          {{ 'CONTRACT_END_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.contractStartDtDisp}} <br /> <br />
+                          {{element?.contractEndDtDisp}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="active">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                          <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                          <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Service">
+                        <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                          {{ 'CONTRACT_INCLUDE_SR' | translate }}/<br />
+                          {{ 'CONTRACT_EXCLUDE_SR' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" style="text-align:center;">
+                          <span>{{element?.includedService}}</span> <br /> <br />
+                          <span>{{element?.excludedService}}</span>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="contractDisplayCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: contractDisplayCol;">
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="contractLength=='0'" fxLayoutAlign="center center">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'delivery_installation'" fxFlex="100%">
+            <mat-card>
+              <div fxFlex="100" fxLayout="row">
+                <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_RECEIVED_DT' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.receivedDtDisp.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_INVOICE_NO' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.doNo.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_INVOICE_DT' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.doDtDisp.value}}</div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'ASSET_INVOICE_VALUE' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.invoiceValue.value}}</div>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="40" class="edit-table-form-table">
+                  <div style="margin-bottom: 10px;">
+                    <div class=" title"> {{ 'EXPECTED_INSTALLATION_DT' | translate }} </div>
+                    <div class=" value"> {{srBreakDownGeneralForm.controls.expectedInstallationDtDisp.value}}</div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <span class="input-label"> {{ 'ASSET_ACTUAL_INSTALL_DATE' | translate }} </span>
+                    <mat-form-field class="example-full-width mat-form-input" [floatLabel]="'always'">
+                      <input matInput (click)="actualInstalledDt.open()" [matDatepicker]="actualInstalledDt"
+                        formControlName="actualInstalledDtDisp" class="input-field" [min]="this.receivedDate"
+                        (keypress)="dateValidationinstall($event)">
+                      <mat-datepicker-toggle matSuffix [for]="actualInstalledDt"></mat-datepicker-toggle>
+                      <mat-datepicker #actualInstalledDt></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <span class="input-label"> {{ 'ACTUAL_INSTALLATION_TYPE' | translate }} <span
+                        class="mandatory-style">*</span>
+                    </span>
+                    <ng-select class=" example-full-width" formControlName="installationDoneBy"
+                      [items]="installationDoneBy" bindLabel="name" bindValue="name" dropdownPosition=bottom
+                      appendTo="body" (change)="changeInstallationDoneBy($event)">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="srBreakDownGeneralForm.controls.installationDoneBy.invalid && srBreakDownGeneralForm.controls.installationDoneBy.touched">
+                      <div class="err-field" *ngIf="srBreakDownGeneralForm.controls.installationDoneBy.errors.required">
+                        {{'ASSET_INSTALLATION_TYPE' | translate}} is Required </div>
+                    </mat-error>
+                  </div>
+
+                  <div style="margin-bottom: 10px;" *ngIf="!insExternalEnggInfo">
+                    <span class="input-label"> {{ 'INS_INT_ENGINEER_NAME' | translate }}</span>
+                    <ng-select [items]="personInchargeCombo" bindLabel="employeeFirstName" class="example-full-width"
+                      (search)="loadPersonInchargeComboData($event)" (click)="loadPersonInchargeComboData($event)"
+                      [virtualScroll]="true" (scrollToEnd)="loadPersonInchargeComboData({})"
+                      (keyup.backspace)="loadPersonInchargeComboData({})" [loading]="scrollsyncPersonIncharge"
+                      loadingText="Loading..." (change)="selectedPersonInchargeData($event)"
+                      formControlName="installedInternalEngName" appendTo="body">
+                    </ng-select>
+                  </div>
+
+
+                  <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                    <span class="input-label example-full-width"> {{ 'INSTALLATION_PROVIDED_BY' | translate }} </span>
+                    <ng-select class=" example-full-width" formControlName="installationProvidedBy"
+                      [items]="installationProvidedBy" bindLabel="name" bindValue="name" dropdownPosition=top
+                      appendTo="body">
+                    </ng-select>
+                  </div>
+                  <div style="margin-bottom: 10px; "
+                    *ngIf="insExternalEnggInfo && srBreakDownGeneralForm.controls.installationProvidedBy.value == 'MANUFACTURER'">
+                    <span class="input-label">{{'INSTALLATION_PROVIDER_NAME' | translate}}</span>
+                    <ng-select required formControlName="installationProvidedByName"
+                      (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                      (change)="setManufacturerData($event)" [virtualScroll]="true"
+                      (scrollToEnd)="listOfManufacturer({})"
+                      (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')"
+                      (clear)="listOfManufacturer('clear')" [loading]="scrollManufacturersync"
+                      [items]="manufacturerList" bindLabel="manufacturerName" bindValue="manufacturerName"
+                      appendTo="body" tabindex="2">
+                    </ng-select>
+                  </div>
+                  <div style="margin-bottom: 10px;"
+                    *ngIf="insExternalEnggInfo && srBreakDownGeneralForm.controls.installationProvidedBy.value == 'SUPPLIER'">
+                    <span class="input-label">{{'INSTALLATION_PROVIDER_NAME' | translate}}</span>
+                    <ng-select required formControlName="installationProvidedByName" appendTo="body"
+                      (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                      [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})"
+                      (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"
+                      (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync" [items]="supplierList"
+                      bindLabel="supplierName" bindValue="supplierName" tabindex="2">
+                    </ng-select>
+                  </div>
+                  <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                    <span class="input-label"> {{ 'INS_EXT_ENGINEER_NAME' | translate }} </span>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <input matInput formControlName="insExtEngineerName" [maxlength]="25" class="input-field">
+                    </mat-form-field>
+                  </div>
+                  <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                    <span class="input-label"> {{ 'INS_EXT_ENGINEER_CONTACT_NO' | translate }} </span>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <input matInput formControlName="insExtEngineerContactNo" [maxlength]="15" class="input-field">
+                      <mat-hint align="end">{{srBreakDownGeneralForm.controls.insExtEngineerContactNo.value?.length ||
+                        0}}/15</mat-hint>
+                      <mat-error
+                        *ngIf="srBreakDownGeneralForm.controls.insExtEngineerContactNo.invalid && srBreakDownGeneralForm.controls.insExtEngineerContactNo.touched">
+                        <div class="err-field"
+                          *ngIf="srBreakDownGeneralForm.controls.insExtEngineerContactNo.errors.pattern">
+                          {{'INS_EXT_ENGINEER_CONTACT_NO' | translate}} is Invalid </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                    <span class="input-label"> {{ 'INS_EXT_ENGINEER_EMAIL_ID' | translate }} </span>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <input matInput formControlName="insExtEngineerEmailId" [maxlength]="25" class="input-field">
+                      <mat-hint align="end">{{srBreakDownGeneralForm.controls.insExtEngineerEmailId.value?.length ||
+                        0}}/25</mat-hint>
+                      <mat-error
+                        *ngIf="srBreakDownGeneralForm.controls.insExtEngineerEmailId.invalid && srBreakDownGeneralForm.controls.insExtEngineerEmailId.touched">
+                        <div class="err-field"
+                          *ngIf="srBreakDownGeneralForm.controls.insExtEngineerEmailId.errors.pattern">
+                          {{'INS_EXT_ENGINEER_EMAIL_ID' | translate}} Should be in xxx@yyy.zzz format </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="34" class="edit-table-form-table">
+                  <div fxFlex="50">
+                    <div class=" title"> {{ 'INSTALLATION_REMARKS' | translate }} </div>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'" style="margin-top: 25px;">
+                      <textarea matInput formControlName="installationRemarks" tabindex="2" [maxlength]="1000" s="15"
+                        style="height: 122px;" class="input-field"></textarea>
+                      <mat-hint align="end">
+                        {{srBreakDownGeneralForm.controls.installationRemarks.value?.length || 0}}/1000</mat-hint>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_sub_tickects'" fxFlex="100%">
+            <mat-card class="card-style" fxLayout="column">
+              <mat-card-content fxLayout="column">
+                <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end">
+
+                  <button *ngIf="completeBtn" mat-raised-button color="primary"
+                    (click)="openCreateSubTicketPopUp()">{{'COMMON_ADD' | translate}}</button>
+
+                </div>
+                <div class="content-style">
+                  <div class="example-container">
+                    <table #matSubTicket mat-table [dataSource]="subTicketsDataSource">
+
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'WO_NO' | translate }} <br /> {{ 'WO_DATE' | translate
+                          }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.srNo}} <br />
+                          {{element.createdDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srStatusName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_STATUS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                          <span class="{{element?.srStatusName.replace(' ','')}}">{{element.srStatusName}}</span>
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srType">
+                        <th mat-header-cell *matHeaderCellDef>
+                          {{ 'SR_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                          <span class="{{element?.srType.replace(' ','')}}">{{element.srType}}</span>
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srPriority">
+                        <th mat-header-cell *matHeaderCellDef>
+                          {{'SR_PRIORITY_GRID' | translate}} <br />
+                          {{'SR_SEVERITY' | translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{element.srPriority}} <br /> {{element?.srSeverity}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="srOpenedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_OPEN_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srOpenedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srAckDtDisp">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_ACKNOWLEDGED_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srAckDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srClosedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_CLOSE_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srClosedDtDisp}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="assignedTo">
+                        <th mat-header-cell *matHeaderCellDef>
+                          {{ 'SR_ASSIGNED_TO_GRID' | translate }} <br />
+                          {{ 'SR_ASSIGNED_TO_CONTACT_NO_GRID' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.assignedTo}} <br />
+                          {{element?.assignedToContactNo}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="subTicketFor">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SUB_TICKET_FOR' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subTicketFor}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-button class="mat-icon-button"
+                            (click)="viewServiceRequestDtl(element.srId,'edit')"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}">
+                            <mat-icon color="primary" *ngIf="modeDisplay">edit</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="viewServiceRequestDtl(element.srId,'view')"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="!modeDisplay">
+                            <mat-icon color="primary">visibility</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="subTicketsDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: subTicketsDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_work_activity'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm" fxLayout="column" fxFlex="100">
+
+                  <mat-card-header>
+                    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="end ceter" style="padding: 10px;">
+
+                      <!-- <mat-list-item class="breadcrumb-padding-0" *ngIf="srBreakDownGeneralForm.controls.srType.value=='BM' && srBreakDownGeneralForm.controls.srStatusId.value >= '3' && modeDisplay">
+                        <button mat-raised-button color="primary" [disabled]="srBreakDownGeneralForm.controls.physicalDamageDisp.value == 'YES' || srBreakDownGeneralForm.controls.physicalDamageDisp.value == 'NO'"
+                          (click)="openBreakDownAnalysis()">{{'UPDATE_DAMAGE_DETAILS' | translate}}</button>
+                      </mat-list-item> -->
+
+                      <!-- <mat-list-item class="breadcrumb-padding-0 add-activity"
+                      *ngIf="srBreakDownGeneralForm.controls.srType.value!='BM' || srBreakDownGeneralForm.controls.srStatusId.value >= '3' ">
+                      <button mat-raised-button color="primary"
+                        (click)="addLabour({'srLabourId':0,'srId':this.srId})">{{'SR_ADD_ACTIVITY' |
+                        translate}}</button>
+                    </mat-list-item> -->
+
+                      <mat-list-item class="breadcrumb-padding-0 add-activity">
+                        <button mat-raised-button color="primary"
+                          [disabled]="srBreakDownGeneralForm.controls.srStatusId.value < '3' || srBreakDownGeneralForm.controls.srStatusId.value > 15 || !modeDisplay"
+                          (click)="addLabour({'srLabourId':0,'srId':this.srId})">{{'SR_ADD_ACTIVITY' |
+                          translate}}</button>
+                      </mat-list-item>
+                    </mat-toolbar-row>
+
+                  </mat-card-header>
+
+                  <!-- <div fxLayout="row" fxFlex="100" class="edit-table-form-table max-h"
+                    *ngIf="srBreakDownGeneralForm.controls.srType.value == 'BM'">
+                    <div fxFlex="25">
+                      <div class=" title"> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }} </div>
+                      <div class=" value"> {{srBreakDownGeneralForm.controls.physicalDamageDisp.value}} </div>
+                    </div>
+                    <div fxFlex="25">
+                      <div class=" title"> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE_DESC' | translate }} </div>
+                      <div class="row value"> {{srBreakDownGeneralForm.controls.physicalDamageDescription.value}} </div>
+                    </div>
+                    <div fxFlex="25">
+                      <div class="row title"> {{ 'SR_ACTIVITY_PATIENT_SAFETY' | translate }} </div>
+                      <div class="row value"> {{srBreakDownGeneralForm.controls.patientIncidentDisp.value}} </div>
+                    </div>
+                    <div fxFlex="25">
+                      <div class="row title"> {{ 'SR_ACTIVITY_PATIENT_SAFETY_DESC' | translate }} </div>
+                      <div class="row value"> {{srBreakDownGeneralForm.controls.incidentDescription.value}} </div>
+                    </div>
+                  </div> -->
+
+                  <br />
+
+                  <div class="example-container">
+                    <table mat-table [dataSource]="serviceRequestLaborModelList">
+                      <ng-container matColumnDef="sNo">
+                        <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="activityDoneBy">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVITY_DONE_BY_GRID' | translate}}
+                          <br /> {{'ACTIVITY_DONE_BY_ENG_GRID' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.activityDoneBy}} <br />
+                          {{element.internalEngineerName}} <br /> {{element.externalEngineerName}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="serviceProvidedBy">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVITY_SERVICE_PROVIDED_GRID' | translate}}
+                          <br /> {{'ACTIVITY_SERVICE_PROVIDED_NAME_GRID' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.serviceProvidedBy}} <br />
+                          {{element.serviceProvidedByName}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="activityStartDt">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVTY_START_DATE_GRID' | translate}}
+                          {{'ACTIVTY_END_DATE_GRID' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.startDtndTimeDisp}} <br />
+                          {{element.endDtndTimeDisp}}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="totalHrs">
+                        <th mat-header-cell *matHeaderCellDef> {{'SR_TOTAL_HOURS' | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalHours}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="totalLabourCost">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVTY_TOTAL_LABOUR_GRID' | translate}}
+                          <br /> {{'ACTIVTY_TOTAL_LABOUR_GRID_COST' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalLabourCost}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="totalSpareCost">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVTY_TOTAL_SPARE_GRID' | translate}}
+                          <br /> {{'ACTIVTY_TOTAL_SPARE_GRID_COST' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalSpareCost}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="internalEngineerCost">
+                        <th mat-header-cell *matHeaderCellDef> {{'ACTIVTY_ENGINEER_GRID' | translate}}
+                          <br /> {{'ACTIVTY_ENGINEER_GRID_COST' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.internalEngineerCost}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="totalUsedFromCost">
+                        <th mat-header-cell *matHeaderCellDef> {{'STOCK_USED_COST' | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalUsedFromCost}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{'COMMON_ACTION' |
+                          translate}} </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                          <button mat-button class="mat-icon-button" (click)="addLabour(element,'edit')"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                            *ngIf="srBreakDownGeneralForm.controls.srStatusId.value=='4' && modeDisplay && !updateByBatch">
+                            <mat-icon color="primary">edit</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="deleteActivity(element.srActivityId,element.srId)"
+                            matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                            *ngIf="srBreakDownGeneralForm.controls.srStatusId.value=='4' && modeDisplay && !updateByBatch">
+                            <mat-icon color="primary" style="cursor: pointer;font-size: 17px !important;color: red;">
+                              delete</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="addServiceCost(element.srActivityId,element.srId,'view')"
+                            matTooltip="{{ 'EXTERNAL_SR_COST' | translate }}"
+                            *ngIf="!updateByBatch && srBreakDownGeneralForm.controls.srStatusId.value !='16'">
+                            <mat-icon color="primary">attach_money</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button" (click)="addLabour(element,'view')"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                            <mat-icon color="primary">visibility</mat-icon>
+                          </button>
+                          <br />
+                          <button mat-button class="mat-icon-button" (click)="emailPopUp()"
+                            matTooltip="{{ 'COMMON_EMAIL' | translate }}"
+                            *ngIf="srBreakDownGeneralForm.controls.srStatusId.value=='4' && modeDisplay && !updateByBatch">
+                            <mat-icon color="primary">email</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="raiseStockIndent(0,element.srActivityId,element.srId,'add')"
+                            matTooltip="{{ 'USE_FROM_STOCK' | translate }}"
+                            *ngIf="!updateByBatch  && srBreakDownGeneralForm.controls.srStatusId.value !='16'">
+                            <mat-icon color="primary">layers</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="uploadSRActvitiyDoc(0,element.srActivityId,element.srId,'add')"
+                            matTooltip="{{ 'COMMON_ATTACH_FILE' | translate }}"
+                            *ngIf="!updateByBatch  && srBreakDownGeneralForm.controls.srStatusId.value !='16'">
+                            <mat-icon color="primary">attach_file</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedLabourColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedLabourColumns;">
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_activity_log'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+
+                <div class="top-content ">
+                  <div fxFlex="100">
+                    <div fxLayout="row">
+                      <div fxFlex="20">
+                        <div class="row title"> {{ 'SR_OPENED_DATE' | translate }} </div>
+                        <div class="row value" style="color: red">
+                          {{srBreakDownGeneralForm.controls.srOpenedDtDisp.value}}
+                        </div>
+                      </div>
+                      <div fxFlex="20">
+                        <div class="row title"> {{ 'SR_ACKNOWLEDGED_DATE' | translate }} </div>
+                        <div class="row value" style="color: red"> {{srBreakDownGeneralForm.controls.srAckDtDisp.value}}
+                        </div>
+                      </div>
+                      <div fxFlex="20">
+                        <div class="row title"> {{ 'SR_INPROGRESS_DATE' | translate }} </div>
+                        <div class="row value" style="color: red">
+                          {{srBreakDownGeneralForm.controls.srWorkStartDtDisp.value}} </div>
+                      </div>
+                      <div fxFlex="20">
+                        <div class="row title"> {{ 'SR_COMPLETED_DATE' | translate }} </div>
+                        <div class="row value" style="color: red">
+                          {{srBreakDownGeneralForm.controls.srCompletedDtDisp.value}} </div>
+                      </div>
+                      <div fxFlex="20">
+                        <div class="row title"> {{ 'SR_CLOSE_DATE' | translate }} </div>
+                        <div class="row value" style="color: red">
+                          {{srBreakDownGeneralForm.controls.srClosedDtDisp.value}} </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="top-content " style="margin-top: 20px;">
+                  <div fxFlex="100">
+                    <div fxLayout="row" class="edit-table-form-table">
+                      <div fxFlex="30">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class=" input-label">{{ 'SR_TURN_AROUND_TIME_IN_HOURS' | translate }}</mat-label>
+                          <input matInput class="sr-active-tab-form input-field" formControlName="sumOfHours" readonly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="30">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class=" input-label">{{ 'SR_TURN_AROUND_TIME_IN_DAYS' | translate }}</mat-label>
+                          <input matInput class="sr-active-tab-form input-field" formControlName="sumOfDays" readonly>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="20">
+                        <button style="margin-left: 40%;" (click)="loadActivityLogList()" mat-raised-button
+                          color="primary">{{'COMMON_REFRESH' | translate}}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="example-container">
+                  <table mat-table [dataSource]="activityLogDataSource">
+
+                    <ng-container matColumnDef="sNo">
+                      <th mat-header-cell *matHeaderCellDef style="width:4%;">{{ 'COMMON_S_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element;let i = index;" style="width:4%;"> {{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="transactionName">
+                      <th mat-header-cell *matHeaderCellDef style="width:12%;"> {{ 'SR_ACTIVITY_NAME' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:12%;"> {{element.transactionName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="transactionDesc">
+                      <th mat-header-cell *matHeaderCellDef style="width:15%;"> {{ 'SR_ACTIVITY_DESC' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:15%;"> {{element.transactionDesc}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fromDate">
+                      <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{ 'SR_ACTIVITY_DATE' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:5%;"> {{element.fromDateDisp}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tat">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{ 'SR_TURN_AROUND_TIME_IN_HOURS' |
+                        translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.timeDiff}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="activityLogColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: activityLogColumns;let i = index"></tr>
+
+                  </table>
+                </div>
+
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_activity_chart'" fxFlex="100%">
+            <app-sr-view-work-log [srId]=srId></app-sr-view-work-log>
+          </div>
+
+          <div *ngIf="activetab == 'menu_workflow_approval' && transactionSource" fxFlex="100%">
+            <mat-card fxLayout="column">
+              <mat-card-content>
+                <app-common-workflow-approval-tab [transactionId]=srId [transactionSource]=transactionSource
+                  [workOrderApproveButton]=wfAppBtn [workOrderEmployeeId]=employeeId [workOrderStatusId]=approvalId
+                  (confirmWorkOrder)=confirmApprove() (rejectWorkOrder)=rejectApprove()>
+                </app-common-workflow-approval-tab>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_item_request'" fxFlex="100%">
+            <div>
+              <mat-card class="card-style" fxLayout="column">
+                <mat-card-content>
+                  <div class="content-style" fxLayout="column">
+                    <div class="purchase-request-btn" fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+                      <button mat-raised-button class="space" color="primary" (click)="srItemRequest()">
+                        {{ 'SR_ITEM_RAISE_REQUEST' | translate }}</button>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-tab-group>
+                  <mat-tab>
+                    <ng-template mat-tab-label>
+                      {{'SR_PURCHASE_REQUEST' | translate }}
+                    </ng-template>
+                    <mat-card>
+                      <mat-card-content>
+                        <div class="example-container">
+                          <table mat-table [dataSource]="prMainDataSource">
+                            <ng-container matColumnDef="sNo">
+                              <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                              <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="poReqNo">
+                              <th mat-header-cell *matHeaderCellDef> {{'PR_NO' | translate}} </th>
+                              <td mat-cell *matCellDef="let element"> {{element.poReqNo}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="poReqDtDisp">
+                              <th mat-header-cell *matHeaderCellDef> {{'PR_DT' | translate}} </th>
+                              <td mat-cell *matCellDef="let element"> {{element.poReqDtDisp}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="poReqStatus">
+                              <th mat-header-cell *matHeaderCellDef> {{'PR_STATUS' | translate}} </th>
+                              <td mat-cell *matCellDef="let element"> {{element.poReqStatus}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="grandTotal">
+                              <th mat-header-cell *matHeaderCellDef> {{'PR_GRAND_AMT' | translate}} </th>
+                              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.grandTotal}}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="createdBy">
+                              <th mat-header-cell *matHeaderCellDef> {{'PR_REQUESTED_BY' | translate}} </th>
+                              <td mat-cell *matCellDef="let element"> {{element.createdBy}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="action">
+                              <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                              <td mat-cell *matCellDef="let element">
+                                <button mat-button class="mat-icon-button"
+                                  (click)="viewServiceRequestScreen(element.poReqId,'view')"
+                                  matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                                  <mat-icon color="primary">visibility</mat-icon>
+                                </button>
+                              </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="prDisplayedColumns;sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: prDisplayedColumns;">
+                            </tr>
+                          </table>
+                          <mat-card class="no_records_found" *ngIf="lengthPurchase=='0'">
+                            {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+
+                  <mat-tab>
+                    <ng-template mat-tab-label>
+                      {{'SR_STOCK_INDENT' | translate }}
+                    </ng-template>
+                    <mat-card>
+                      <mat-card-content>
+                        <div class="example-container">
+                          <table mat-table [dataSource]="stockIndentMainDataSource">
+                            <ng-container matColumnDef="sNo">
+                              <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{ 'COMMON_S_NO' | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;">{{i+1}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="indentNo">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_NO' | translate
+                                }}</th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element?.indentNo}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="indentDt">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_DT' | translate
+                                }}</th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element.indentDtDisp}}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalIndentValue">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_VALUE' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element.totalIndentValue}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="requestBy">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_REQUEST_BY' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element?.requestedBy}}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="requestDt">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_REQUEST_DT' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element?.requestedDtDisp}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="indentStatus">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_STATUS' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"
+                                class="{{element?.indentStatus.replace(' ','')}}">{{element?.indentStatus}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="approvedBy">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_APPROVED_BY' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element?.approvedBy}}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="approvedDt">
+                              <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_APPROVED_DT' |
+                                translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                                {{element?.approvedDtDisp}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="action" style="width:20%;">
+                              <th mat-header-cell *matHeaderCellDef style="width:20%;"> {{'COMMON_ACTION'| translate}}
+                              </th>
+                              <td mat-cell *matCellDef="let element" style="width:20%;">
+                                <button mat-button class="mat-icon-button"
+                                  (click)="createStockIndent(element.indentHdrId,'Edit')" matTooltip="Edit">
+                                  <mat-icon color="primary">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button class="mat-icon-button"
+                                  matTooltip="{{ 'COMMON_PDF' | translate }}"
+                                  (click)="generateStockIndentPDF(element?.indentHdrId)">
+                                  <mat-icon color="primary">picture_as_pdf</mat-icon>
+                                </button>
+                                <button mat-icon-button class="mat-icon-button" matTooltip="Acknowledge"
+                                  *ngIf="!(element.indentStatus =='APPROVED' || element.indentStatus =='BOOKED')"
+                                  (click)="approveStockIndent(element)">
+                                  <mat-icon color="primary"><a>spellcheck</a></mat-icon>
+                                </button>
+                              </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                          </table>
+                          <mat-card class="no_records_found" *ngIf="lengthStock=='0' && !subLoaderStockIndentMain">
+                            {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                          <mat-card class="no_records_found" *ngIf="subLoaderStockIndentMain"
+                            fxLayoutAlign="center center">
+                            <mat-spinner [diameter]="40"></mat-spinner>
+                          </mat-card>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+                </mat-tab-group>
+              </mat-card>
+            </div>
+          </div>
+
+          <div *ngIf="activetab == 'sr_purchase_request'" fxFlex="100%">
+            <mat-card fxLayout="column">
+              <mat-card-content>
+                <mat-card-header class="purchase-request-btn" fxLayout="column">
+                  <div *ngIf="completeBtn" fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+                    <button mat-raised-button color="primary" (click)="raisePurchaseRequest(0,'create')">
+                      {{ 'COMMON_RAISE_PR' | translate }}</button>
+                  </div>
+                </mat-card-header>
+
+                <div class="example-container">
+                  <table mat-table [dataSource]="prMainDataSource">
+                    <ng-container matColumnDef="sNo">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="poReqNo">
+                      <th mat-header-cell *matHeaderCellDef> {{'PR_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.poReqNo}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="poReqDtDisp">
+                      <th mat-header-cell *matHeaderCellDef> {{'PR_DT' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.poReqDtDisp}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="poReqStatus">
+                      <th mat-header-cell *matHeaderCellDef> {{'PR_STATUS' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.poReqStatus}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="grandTotal">
+                      <th mat-header-cell *matHeaderCellDef> {{'PR_GRAND_AMT' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.grandTotal}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="requestedBy">
+                      <th mat-header-cell *matHeaderCellDef> {{'PR_REQUESTED_BY' | translate}} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.requestedBy}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">
+                        <button mat-button class="mat-icon-button"
+                          (click)="viewServiceRequestScreen(element.poReqId,'view')"
+                          matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                          <mat-icon color="primary">visibility</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="prDisplayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: prDisplayedColumns;">
+                    </tr>
+                  </table>
+                  <mat-card class="no_records_found" *ngIf="lengthPurchase=='0'">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_stock_indent'" fxFlex="100%">
+            <mat-card fxLayout="column">
+              <mat-card-content>
+                <mat-card-header class="purchase-request-btn" fxLayout="column">
+                  <div fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;" *ngIf="completeBtn">
+                    <button mat-raised-button class="space" color="primary" (click)="raiseStockEnquiry(0,'add')">
+                      {{ 'PURCHASE_USE_FROM_STOCK' | translate }}</button>
+                    <button mat-raised-button class="space" color="primary" (click)="generateReport()">
+                      {{ 'REPORT_EXPORT' | translate }}</button>
+                  </div>
+                </mat-card-header>
+                <div class="example-container">
+                  <table mat-table [dataSource]="stockIndentMainDataSource">
+                    <ng-container matColumnDef="sNo">
+                      <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{ 'COMMON_S_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;">{{i+1}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="indentNo">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">{{element?.indentNo}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="indentDt">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_DT' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">{{element.indentDtDisp}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalIndentValue">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_VALUE' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                        {{element.totalIndentValue}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="requestBy">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_REQUEST_BY' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">{{element?.requestedBy}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="requestDt">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_REQUEST_DT' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                        {{element?.requestedDtDisp}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="indentStatus">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_INDENT_STATUS' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"
+                        class="{{element?.indentStatus.replace(' ','')}}">{{element?.indentStatus}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="approvedBy">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_APPROVED_BY' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">{{element?.approvedBy}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="approvedDt">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'STOCK_APPROVED_DT' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;">
+                        {{element?.approvedDtDisp}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" style="width:20%;">
+                      <th mat-header-cell *matHeaderCellDef style="width:20%;"> {{'COMMON_ACTION'| translate}} </th>
+                      <td mat-cell *matCellDef="let element" style="width:20%;">
+                        <button mat-button class="mat-icon-button"
+                          (click)="createStockIndent(element.indentHdrId,'Edit')" matTooltip="Edit">
+                          <mat-icon color="primary">edit</mat-icon>
+                        </button>
+                        <button mat-icon-button class="mat-icon-button" matTooltip="{{ 'COMMON_PDF' | translate }}"
+                          (click)="generateStockIndentPDF(element?.indentHdrId)">
+                          <mat-icon color="primary">picture_as_pdf</mat-icon>
+                        </button>
+                        <button mat-icon-button class="mat-icon-button" matTooltip="Acknowledge"
+                          *ngIf="!(element.indentStatus =='APPROVED' || element.indentStatus =='BOOKED')"
+                          (click)="approveStockIndent(element)">
+                          <mat-icon color="primary"><a>spellcheck</a></mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                  </table>
+                  <mat-card class="no_records_found" *ngIf="lengthStock=='0' && !subLoaderStockIndentMain">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                  <mat-card class="no_records_found" *ngIf="subLoaderStockIndentMain" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                  </mat-card>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_check_points'" fxFlex="100%">
+            <app-sr-check-points [srId]="srId" [srType]="srBreakDownGeneralForm.controls.srType.value"
+              [srStatusId]="srBreakDownGeneralForm.controls.srStatusId.value" (checkUpdated)="refereshPage()"> </app-sr-check-points>
+          </div>
+
+          <div *ngIf="activetab == 'asset_service_details'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="example-container">
+                    <table mat-table [dataSource]="srServiceHistoryDataSource">
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_NO_DATE_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srNo}} <br />
+                          {{element.srOpenedDtDisp}} <br /> {{element.srType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srStatusName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_STATUS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srStatusName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srAttribute3Name">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_CAUSE_PROBLEM' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srAttribute3Name}} <br /> <br />
+                          {{element.srAttribute4Name}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="assignedTo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'ASSIGNED_TO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.assignedTo}}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-icon-button matTooltipPosition="below"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="viewServiceRequestDtl(element.srId,'view')">
+                            <mat-icon color="primary"><a>visibility</a></mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedSRServiceHistoryColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedSRServiceHistoryColumns;">
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="srHistoryLength=='0' && !srHistoryLoader"
+                      style="text-align: center;">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+                    <mat-card class="no_records_found" *ngIf="srHistoryLoader" fxLayoutAlign="center center">
+                      <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'model_accessories'" fxFlex="100%">
+            <mat-card class="card-style" fxLayout="column">
+              <mat-card-content>
+                <div class="content-style" fxLayout="column">
+                  <div>
+                    <button
+                      *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch"
+                      mat-raised-button class="space" color="primary" (click)="addItemToAsset(0,'ACCESSORIES')">
+                      {{ 'COMMON_ADD' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table mat-table [dataSource]="accessoriesDataSource">
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_DESC' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" matTooltip="{{element.itemDesc}}">
+                          {{ (element?.itemDesc.length>15) ? (element.itemDesc | slice:0:30)+'...' : (element.itemDesc)
+                          }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" matTooltip="{{element.manufacturerName}}">
+                          {{ (element?.manufacturerName.length>15) ? (element.manufacturerName | slice:0:30)+'...' :
+                          (element.manufacturerName) }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="accReceivedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'RECEIVED_QTY' | translate }}</th>
+
+                        <td mat-cell *matCellDef="let element"> {{element.issueQty}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="accConsumedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'CONSUMED_QTY' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.consumedQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="accRemainingQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'REMAINING_QTY' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.remainingQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon
+                            *ngIf="(element.remainingQty !=0 || element.issueQty == 0) && (srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch)"
+                            class="action_icon" color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                            (click)="editAssetItem(element,'ACCESSORIES','edit')">edit
+                          </mat-icon>
+
+                          <button mat-icon-button *ngIf="(element.remainingQty == 0 && element.issuedQty !=0)"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="editAssetItem(element,'ACCESSORIES','view')">
+                            <mat-icon color="primary"><a>visibility</a></mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="accessoriesDispCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: accessoriesDispCol;"></tr>
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'model_consumables'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content fxLayout="column">
+                <div class="content-style" fxLayout="column">
+                  <div fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+
+                    <button
+                      *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch"
+                      mat-raised-button class="space" color="primary" (click)="addItemToAsset(0,'CONSUMABLES')">
+                      {{ 'COMMON_ADD' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table mat-table [dataSource]="consumablesDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_DESC' | translate }}</th>
+                        <td mat-cell *matCellDef="let element" matTooltip="{{element.itemDesc}}">
+                          {{ (element?.itemDesc.length>15) ? (element.itemDesc | slice:0:15)+'...' : (element.itemDesc)
+                          }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" matTooltip="{{element.itemDesc}}">
+                          {{ (element?.manufacturerName.length>15) ? (element.manufacturerName | slice:0:15)+'...' :
+                          (element.manufacturerName) }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="conReceivedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'RECEIVED_QTY' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.issueQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="conConsumedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'CONSUMED_QTY' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.consumedQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="conRemainingQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'REMAINING_QTY' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.remainingQty}} </td>
+
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon
+                            *ngIf="(element.remainingQty !=0 || element.issueQty ==0) && (srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch)"
+                            class="action_icon" color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                            (click)="editAssetItem(element,'CONSUMABLES','edit')">edit
+                          </mat-icon>
+
+                          <button mat-icon-button *ngIf="(element.remainingQty == 0 && element.issuedQty !=0)"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="editAssetItem(element,'CONSUMABLES','view')">
+                            <mat-icon color="primary"><a>visibility</a></mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="consumableDispCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: consumableDispCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'model_items'" fxFlex="100%">
+            <mat-card class="card-style" fxLayout="column">
+              <mat-card-content>
+                <div class="content-style" fxLayout="column">
+                  <div fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+
+                    <button
+                      *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch"
+                      mat-raised-button class="space" color="primary" (click)="addItemToAsset(0,'SPARE PARTS')">
+                      {{ 'COMMON_ADD' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table #matSpareParts mat-table [dataSource]="sparePartsDataSource">
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_DESC' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemDesc}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.manufacturerName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="spReceivedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'RECEIVED_QTY' | translate }}</th>
+
+                        <td mat-cell *matCellDef="let element"> {{element.issueQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="spConsumedQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'CONSUMED_QTY' | translate }}</th>
+
+                        <td mat-cell *matCellDef="let element"> {{element.consumedQty}} </td>
+
+                      </ng-container>
+                      <ng-container matColumnDef="spRemainingQty">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{'REMAINING_QTY' | translate }}</th>
+
+                        <td mat-cell *matCellDef="let element"> {{element.remainingQty}} </td>
+
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon
+                            *ngIf="(element.remainingQty !=0 || element.issueQty ==0)  && (srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn && !updateByBatch)"
+                            class="action_icon" color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                            (click)="editAssetItem(element,'SPARE PARTS','edit')">edit
+                          </mat-icon>
+
+                          <button mat-icon-button *ngIf="(element.remainingQty == 0 && element.issuedQty !=0)"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="editAssetItem(element,'SPARE PARTS','view')">
+                            <mat-icon color="primary"><a>visibility</a></mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="sparePartsDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: sparePartsDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'documents'" fxFlex="100%">
+            <mat-card class="card-style" fxLayout="column">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm" fxLayout="column">
+                  <div class="purchase-request-btn" fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+                    <button *ngIf="completeBtn" mat-raised-button class="space" color="primary"
+                      (click)="srDocAddEdit()">
+                      {{ 'COMMON_ADD' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table mat-table [dataSource]="documentDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_DOCUMENT_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docType">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_DOCUMENT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdBy">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_UPLOADED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_UPLOADED_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon color="primary" (click)="downloadDocument(element?.filePath,element?.contentType)"
+                            matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" class="actionicon">cloud_download
+                          </mat-icon>
+                          <mat-icon *ngIf="srBreakDownGeneralForm.controls.srStatusId.value == '4' && !updateByBatch"
+                            class="space" color="primary" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                            (click)="deleteSRDoc(element.srDocId,i)">delete </mat-icon>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="documentDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: documentDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'training'" fxFlex="100%">
+            <mat-card class="card-style" fxLayout="column">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm" fxLayout="column">
+                  <div fxLayout="row" fxLayoutAlign="end end" style="padding: 10px;">
+                    <button *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn"
+                      mat-raised-button class="space" color="primary" (click)="addTrainingInfo()">
+                      {{ 'COMMON_ADD' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table mat-table [dataSource]="trainingDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="trainingTypeName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'TRAINING_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.trainingTypeName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="trainingCompany">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'TRAINING_COMPANY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.trainingCompany}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="trainingDtDispView">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'TRAINED_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.trainingDtDispView}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="traineerName">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'TRAINEER_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.traineerName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="traineerContactNo">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'TRAINEER_CONTACT_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.traineerContactNo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="traineerEmailId">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'TRAINEER_EMAIL_ID' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.traineerEmailId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedBy">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <button mat-button class="mat-icon-button" (click)="editViewTrainingInfo(element,'edit')"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="modeDisplay && ! updateByBatch">
+                            <mat-icon color="primary">edit</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button" (click)="editViewTrainingInfo(element,'view')"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                            <mat-icon color="primary">visibility</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="trainingDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: trainingDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'hand_over_items'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm">
+
+                  <div class="top-content row">
+                    <div fxFlex="100">
+                      <div fxLayout="row">
+                        <div fxFlex="25">
+                          <div class="example-full-width">
+                            <mat-checkbox class="example-margin" color="primary"
+                              formControlName="handoverCompletedStatus" (change)="setHandoverCompletedate($event)"
+                              [disabled]="disableHandOver">
+                              {{'HANDOVER_COMPLETE_STATUS' | translate }}
+                            </mat-checkbox>
+                          </div>
+                        </div>
+                        <div fxFlex="25">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class=" input-label"> {{'ASSET_HAND_OVER_DT' | translate}} </mat-label>
+                            <input matInput (click)="handoverDt.open()" [matDatepicker]="handoverDt"
+                              [min]="srBreakDownGeneralForm.controls.actualInstalledDtDisp.value"
+                              formControlName="handoverCompletedDtDisp" (keypress)="dateValidationinstall($event)"
+                              [disabled]="disableHandOver" class="input-field">
+                            <mat-datepicker-toggle matSuffix [for]="handoverDt"></mat-datepicker-toggle>
+                            <mat-datepicker #handoverDt></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                        <div fxFlex="25"
+                          *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn">
+                          <div fxLayoutAlign=" start center">
+                            <button mat-raised-button class="space" color="primary"
+                              (click)="updateHandoverDateByCheckingConfirmationFoBatchUpdate()"
+                              [disabled]="!handoverCompleted">
+                              {{'UPDATE_HANDOVER_DATE' | translate}}</button>
+                          </div>
+                        </div>
+                        <div fxFlex="25">
+                          <div fxLayoutAlign="end end" style="padding: 10px;">
+                            <button
+                              *ngIf="srBreakDownGeneralForm.controls.srType.value == 'INSTALLATION' && completeBtn"
+                              mat-raised-button class="space" color="primary" (click)="addHandOverInfo()"
+                              [disabled]="handoverCompleted">
+                              {{ 'COMMON_ADD' | translate }}</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="example-container">
+                    <table mat-table [dataSource]="handOverItemsDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="handOverItemType">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'HAND_OVER_ITEM_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.handOverItemType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="handOverDtDispView">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'HAND_OVER_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.handOverDtDispView}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="employeeNameDIsp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'EMPLOYEE_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.employeeNameDIsp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="handOverRemarks">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'HAND_OVER_REMARKS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.handOverRemarks}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedBy">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <button mat-button class="mat-icon-button" (click)="editViewHandOverInfo(element,'edit')"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="modeDisplay && ! updateByBatch">
+                            <mat-icon color="primary">edit</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button" (click)="editViewHandOverInfo(element,'view')"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                            <mat-icon color="primary">visibility</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="handOverItemDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: handOverItemDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'user_gate_pass'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm">
+                  <div class="purchase-request-btn" fxLayoutAlign="end end" style="padding: 10px;">
+                    <button *ngIf="completeBtn" mat-raised-button class="space" color="primary"
+                      (click)="gatePassAddEdit(0,'Add')">
+                      {{ 'GENERATE_GATE_PASS' | translate }}</button>
+                  </div>
+                  <div class="example-container">
+                    <table mat-table [dataSource]="gatePassDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="gatePassNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GATE_PASS_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.gatePassNo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="gatePassStatus">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'GATE_PASS_STATUS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.gatePassStatus}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="deliveryTo">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_TO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryTo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="deliveryToName">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_TO_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryToName}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="deliveryMode">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_MODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryMode}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="deliveryTakenByPerson">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_TAKEN_BY_PERSON' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryTakenByPerson}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="deliveryTakenByContactNo">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_TAKEN_BY_CONTACT_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryTakenByContactNo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="deliveryTakenByEmailId">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERY_TAKEN_BY_EMAIL_ID' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.deliveryTakenByEmailId}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <button mat-button class="mat-icon-button"
+                            (click)="gatePassAddEdit(element.gatePassHdrId,'edit')"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="modeDisplay">
+                            <mat-icon color="primary">edit</mat-icon>
+                          </button>
+                          <button mat-button class="mat-icon-button"
+                            (click)="gatePassAddEdit(element.gatePassHdrId,'view')"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                            <mat-icon color="primary">visibility</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="gatePassDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: gatePassDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_re_opened'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srBreakDownGeneralForm">
+                  <div class="example-container">
+                    <table mat-table [dataSource]="reOpenedDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="reOpenedBy">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_RE_OPENED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.reOpenedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="reOpenedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_RE_OPENED_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.reOpenedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="reOpenedRemarks">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_RE_OPENED_REMARKS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.reOpenedRemarks}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedBy">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="updatedDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_UPDATED_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="reOpenedDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: reOpenedDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div *ngIf="activetab == 'sr_images'" fxFlex="100%">
+            <div style="border-bottom: solid 1px;">
+              <mat-card *ngIf="srCreatedImagesDisp.length>0">
+                <div class="title mb-5">{{'SR_ACTIVITY_IMAGES' | translate}}:</div>
+                <img *ngFor="let imageUrl of srCreatedImagesDisp" [src]="imageUrl" class="img-style"
+                  (click)="viewImage(imageUrl)">
+              </mat-card>
+              <mat-card *ngIf="srCreatedImagesDisp.length==0">
+                <div class="title mb-5">{{'SR_ACTIVITY_IMAGES' | translate}}: {{'COMMON_MISSING' | translate}}
+                </div>
+              </mat-card>
+            </div>
+
+            <div style="border-bottom: solid 1px;">
+              <mat-card *ngIf="srCompletedImagesDisp.length>0">
+                <div class="title mb-5">{{'SR_COMPLETION_IMAGES' | translate}}:</div>
+                <img *ngFor="let imageUrl of srCompletedImagesDisp" [src]="imageUrl" class="img-style"
+                  (click)="viewImage(imageUrl)">
+              </mat-card>
+              <mat-card *ngIf="srCompletedImagesDisp.length==0">
+                <div class="title mb-5">{{'SR_COMPLETION_IMAGES' | translate}}: {{'COMMON_MISSING' | translate}}
+                </div>
+              </mat-card>
+            </div>
+
+            <div>
+              <mat-card *ngIf="srFeedbackCallerSignDisp.length>0">
+                <div class="title mb-5">{{'SR_CLOSURE_IMAGES' | translate}}:</div>
+                <img *ngFor="let imageUrl of srFeedbackCallerSignDisp" [src]="imageUrl" class="img-style"
+                  (click)="viewImage(imageUrl)">
+                  <br>
+                  <div> <span class="title">{{ 'SR_CALLER_NAME' | translate }} : </span>
+                    <span>{{srBreakDownGeneralForm.controls.callerName.value}}</span>
+                  </div>
+                 <span>{{srBreakDownGeneralForm.controls.srClosedDtDisp.value}}</span>
+              </mat-card>
+              
+              <mat-card *ngIf="srFeedbackCallerSignDisp.length==0">
+                <div class="title mb-5">{{'SR_CLOSURE_IMAGES' | translate}}: {{'COMMON_MISSING' | translate}}
+                </div>
+              </mat-card>
+              
+            </div>
+
+            <div id="myModal" class="modal">
+              <span class="close" (click)="closeViewImage()">&times;</span>
+              <img class="modal-content" [src]="imageDisp">
+            </div>
+
+          </div>
+
+          <div *ngIf="activetab == 'sr_feedback'" fxFlex="100%">
+            <mat-card class="card-style">
+              <mat-card-content class="feedback-card">
+                <div class="feedback-container">
+                  <div class="feedback-data">
+                    <div class="title">Feedback</div>
+                    <div class="value">{{ srBreakDownGeneralForm.controls.srFeedback.value }}</div>
+                  </div>
+                  <div class="feedback-data">
+                    <div class="title">Remarks</div>
+                    <div class="value">{{ srBreakDownGeneralForm.controls.srFeedbackCallerRemarks.value }}</div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

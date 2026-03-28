@@ -1,0 +1,46 @@
+<!-- <mat-card style="height: 71vh;overflow-y: auto;"> -->   
+           
+<mat-card style="height: auto">
+  <mat-card-content>
+  <div fxlayout="row">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center"> 
+      <div fxFlex></div> 
+      <mat-list-item>
+        <button class="work-log-btns" (click)="ngOnInit()" mat-raised-button color="primary">{{'COMMON_REFRESH' | translate}}</button>
+      </mat-list-item> 
+      <mat-list-item>
+        <button (click)="exportReportForWorkLog()" mat-raised-button color="primary">{{'REPORT_EXPORT' | translate}}</button>
+      </mat-list-item> 
+    </mat-toolbar-row> 
+  </div>
+
+  <div fxlayout="row">
+    <div class="page">
+      <div class="page__demo">
+        <div class="main-container page__container">
+          <div class="timeline">
+            <div class="timeline__group" *ngFor="let activity of assetTransactionActivityList;">
+              <span class="timeline__year">{{activity.year}}</span>
+              <div class="timeline__box" *ngFor="let transaction of activity.listOfAssetTransactionActivityTOList">
+                <div class="timeline__date">
+                  <span class="timeline__day">{{transaction.day}}</span>
+                  <span class="timeline__month">{{transaction.month}}</span>
+                </div>
+                <div class="timeline__post">
+                  <div class="timeline__content">
+                    <h5 class="heading">{{transaction.assetTransName}}</h5>
+                    <p class="data">{{transaction.assetTransSrcDesc}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</mat-card-content>  
+
+</mat-card>

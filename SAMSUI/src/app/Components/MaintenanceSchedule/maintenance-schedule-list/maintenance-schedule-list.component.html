@@ -1,0 +1,359 @@
+<div fxFlex="100">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+            <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+                <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+                        [routerLink]="['/home/dashboard']">
+                        <mat-icon class="small-icon">home</mat-icon>
+                    </a>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+                    <mat-list-item fxLayoutAlign="start center" class="bread-crumb-content">{{'MENU_SERVICE'| translate}}
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+                      </mat-list-item>
+                <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+                    {{'MENU_MAINTENANCE'| translate}}
+                </mat-list-item>
+            </mat-list>
+        </mat-toolbar-row>
+    </div>
+
+    <div class="content_section_background">
+
+        <div class="row">
+
+            <div class="table_section" fxFlex="100%">
+
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="panel-header">
+                            {{'COMMON_SEARCH'| translate}}
+                        </mat-panel-title>
+                        <mat-panel-description fxLayoutAlign="end end">
+                            <mat-icon>search</mat-icon>
+                          </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+                        <div fxLayout="column" fxFlex="75" fxLayout.lt-md="column" fxFlex.lt-md="100">
+                            <div fxLayout="row" fxLayoutAlign="start center">
+
+                                <div fxFlex="34" class="mt--3-px">
+                                    <div class="form-group ng-select-top">
+                                        <div class="example-full-width">
+                                            <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                                            <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField"
+                                                (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" appendTo="body"
+                                                [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})"
+                                                (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')"
+                                                (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                                                (change)="selectedLocationData($event)" [(ngModel)]="scheduleHdrModel.locationName" [ngModelOptions]="{standalone: true}"
+                                                class="input-field">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div fxFlex="33">
+                                    <div class="form-group ng-select-top">
+                                        <div class="example-full-width">
+                                            <span class="input-label">{{'MAINTENANCE_SCHEDULE_TYPE' | translate}}</span>
+                                            <!-- <ng-select  [items]="scheduleTypeList"
+                                                bindLabel="scheduleType" bindValue="scheduleType"
+                                                [(ngModel)]="scheduleHdrModel.scheduleType"
+                                                [ngModelOptions]="{standalone: true}" tabindex="2" appendTo="body">
+                                            </ng-select> -->
+                                            <ng-select [items]="srTypeCombo" required bindLabel="srTypeName" bindValue="srTypeName"
+                                                (search)="loadSrTypeComboData($event)" (click)="loadSrTypeComboData($event)" [virtualScroll]="true"
+                                                (scrollToEnd)="loadSrTypeComboData({})" (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')" (clear)="loadSrTypeComboData('clear')" [loading]="scrollsyncSrType" loadingText="Loading..."
+                                                (change)="selectedScheduleTypeData($event)" [(ngModel)]="scheduleHdrModel.scheduleTypeName"></ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div fxFlex="33">
+                                    <div class="form-group ng-select-top">
+                                        <div class="example-full-width">
+                                            <span class="input-label">{{'MAINTENANCE_SCHEDULE_FREQUENCY' | translate}}
+                                            </span>
+                                            <ng-select [items]="frequencyCombo" required bindLabel="frequencyName" bindValue="frequencyId"
+                                            (search)="frequencyComboData($event)" (click)="frequencyComboData($event)" [virtualScroll]="true"
+                                            (scrollToEnd)="frequencyComboData({})" (keyup.backspace)="frequencyComboData($event.target.value ? $event : 'back')" (clear)="frequencyComboData('clear')" [loading]="scrollfrequencySync" loadingText="Loading..."
+                                            (change)="selectedfrequencyData($event)" [(ngModel)]="scheduleHdrModel.frequency" appendTo="body">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div fxFlex="34" class="mt-4-px">
+                                    <div class="form-group">
+                                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                            <mat-label class="input-label">{{ 'MAINTENANCE_SCHEDULE_NAME' | translate }}
+                                            </mat-label>
+                                            <input matInput tabindex="1" [(ngModel)]="scheduleHdrModel.scheduleTitle"
+                                                [ngModelOptions]="{standalone: true}" class="input-field">
+                                        </mat-form-field>
+                                        
+                                    </div>
+                                </div>
+
+                                <div fxFlex="33">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'MAINTENANCE_FROM_DATE' | translate}}
+                                        </mat-label>
+                                        <input matInput [(ngModel)]="scheduleHdrModel.startDateDisp"
+                                            [ngModelOptions]="{standalone: true}" tabindex="5" (click)="picker1.open()"
+                                            [matDatepicker]="picker1" (keypress)="dateValidation($event)"
+                                            class="input-field">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div fxFlex="33">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                        <mat-label class="input-label">{{'MAINTENANCE_END_DATE' | translate}}
+                                        </mat-label>
+                                        <input matInput tabindex="6" [(ngModel)]="scheduleHdrModel.endDateDisp"
+                                            [ngModelOptions]="{standalone: true}" (click)="picker2.open()"
+                                            [matDatepicker]="picker2" (keypress)="dateValidation($event)"
+                                            class="input-field">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                           
+                            <div fxLayout="row" fxLayoutAlign="start center">
+                                <div  fxFlex="33" class="form-group" style="margin-top: -5px;">
+                                    <div class="example-full-width">
+                                      <span class="input-label"> {{ 'ASSET_CODE' | translate }}
+                                      </span>
+                                      <ng-select autofocus #srLocFocus [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+                                        (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                                        [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                                        loadingText="Loading..." (change)="selectedAssetCodeData($event)" [(ngModel)]="scheduleHdrModel.assetCode" tabindex="4" appendTo="body">
+                                      </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div fxFlex="25" fxLayout="row" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                            <div fxFlex="100" fxLayoutAlign="end end" style="margin-bottom: 10px;">
+                                <button mat-raised-button class="space for-desktop" color="primary"
+                                    matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                                    tabindex="7" (click)="searchMaintenance()">{{'COMMON_SEARCH' | translate}}</button>
+                                <button mat-raised-button class="space for-desktop" color="primary"
+                                    matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'"
+                                    tabindex="8" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+
+                                <button mat-raised-button class="space for-mobile" color="primary"
+                                    matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                                    tabindex="7" (click)="searchMaintenance()">
+                                    <mat-icon>search</mat-icon>
+                                </button>
+                                <button mat-raised-button class="space for-mobile" color="primary"
+                                    matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'"
+                                    tabindex="8" (click)="clear()">
+                                    <mat-icon>clear_all</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+                <hr>
+
+                <mat-toolbar>
+                    <span class="example-spacer"></span>
+                    
+                    <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length"
+                    [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+                    <span class="example-spacer"></span>
+
+                    <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+                        <mat-icon>view_week</mat-icon>
+                      </button>
+                
+                      <div class="custom-dialog" *ngIf="showManageColumns">
+                        <div>
+                          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+                        </div>
+                        <hr>
+                        <div class="custom-dialog-body" *ngIf="showManageColumns">
+                          <div id="column1">        
+                            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+                            <span>{{'LOCATION_NAME' | translate}}</span>
+                            <br>
+                            
+                            <input type="checkbox" [checked]="displayedColumns.includes('scheduleTitle')"(change)="toggleColumn('scheduleTitle')">
+                            <span>{{'MAINTENANCE_SCHEDULE_NAME' | translate}}</span>
+                            <br>
+                            
+                            <input type="checkbox" [checked]="displayedColumns.includes('scheduleType')" (change)="toggleColumn('scheduleType')">
+                            <span>{{'MAINTENANCE_SCHEDULE_TYPE' | translate}}</span>
+                            <br>
+                            
+                            <input type="checkbox" [checked]="displayedColumns.includes('priority')" (change)="toggleColumn('priority')">
+                            <span>{{'MAINTENANCE_SCHEDULE_PRIORITY' | translate}}</span>
+                            <br>
+                          </div>
+                    
+                          <div id="column2">
+                            <input type="checkbox" (change)="toggleColumn('frequency')" [checked]="displayedColumns.includes('frequency')">
+                            <span>{{'MAINTENANCE_SCHEDULE_FREQUENCY' | translate}}</span> <br>
+                    
+                            <input type="checkbox" (change)="toggleColumn('totalAsset')" [checked]="displayedColumns.includes('totalAsset')">
+                            <span>{{'ASSET_COUNT' | translate}}</span> <br>
+                    
+                            <input type="checkbox" (change)="toggleColumn('occurances')" [checked]="displayedColumns.includes('occurances')">
+                            <span>{{'MAINTENANCE_OCCURANCES' | translate}}</span> <br>
+                    
+                            <input type="checkbox" (change)="toggleColumn('active')" [checked]="displayedColumns.includes('active')">
+                            <span>{{'MAINTENANCE_SCHEDULE_STATUS' | translate}}</span> <br>
+                          </div>
+                    
+                          <div id="column3">
+                            <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+                            <span>{{'COMMON_CREATED_BY_DT' | translate}}</span><br>
+
+                            <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+                            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span>
+
+                          </div>
+                        </div>
+                    
+                        <hr>
+                        
+                        <div fxLayoutAlign="end end">
+                          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                            {{'COMMON_OK' | translate}}
+                          </button>
+                          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                            {{'COMMON_RESET' | translate}}
+                          </button>
+                        </div>
+                        
+                      </div>
+
+                    <button mat-raised-button color="primary" class="space sqr-btn"
+                    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'" (click)="createMaintenanceSchedule(0,'add')" *ngIf="modelAccessModule.createFlagDisplay"><mat-icon>add</mat-icon></button>
+
+                    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+                    matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                    (click)="createMaintenanceSchedule(selectedItem,'edit')">
+                    <mat-icon>edit</mat-icon>
+                    </button>
+
+                    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+                    matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                    (click)="createMaintenanceSchedule(selectedItem,'view')">
+                    <mat-icon>visibility</mat-icon>
+                    </button>
+
+                    <button mat-raised-button color="primary" class="space" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                      [matTooltipPosition]="'below'" (click)="generateScheduleMaintenanceReport()">{{'REPORT_EXPORT' | translate}}
+                    </button>
+
+                </mat-toolbar>
+
+                <div class="example-container">
+                    <table class="schedule-maintenance-list" mat-table [dataSource]="maintenanceScheduleDataSource" matSort
+                        (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc"
+                        matSortDisableClear>
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef class="table-head-data"><span>Select</span></th>
+                            <td mat-cell *matCellDef="let element">
+                              <mat-checkbox color="primary" class="example-margin" (change)="selectAssets(element)"
+                               [checked]="selectedItem == element?.scheduleHdrId">
+                              </mat-checkbox>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sNo">
+                            <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                          </ng-container>
+                        <ng-container matColumnDef="locationName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                                {{element?.locationName}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="scheduleTitle">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                {{'MAINTENANCE_SCHEDULE_NAME' | translate}} </th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                                {{ element?.scheduleTitle }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="scheduleType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                {{'MAINTENANCE_SCHEDULE_TYPE' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                                {{ element?.scheduleTypeName }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="priority">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                {{'MAINTENANCE_SCHEDULE_PRIORITY' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.priority}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="frequency">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                {{'MAINTENANCE_SCHEDULE_FREQUENCY' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.frequency}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="totalAsset">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{'ASSET_COUNT' | translate}}</th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" > {{element?.assetCount}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="occurances">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'MAINTENANCE_OCCURANCES' |
+                                translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                                {{ element?.occurances }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="active">
+                            <th mat-header-cell *matHeaderCellDef> {{'MAINTENANCE_SCHEDULE_STATUS' | translate}} </th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                                {{ (element?.active === true) ? 'ACTIVE': 'INACTIVE' }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="createdBy">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_CREATED_BY_DT' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.createdBy}} /<br> {{element?.createdByDtDisp}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="updatedDt">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_BY_DATE' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.updatedDtDisp}} //<br> {{element?.updatedBy}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+
+                    <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>

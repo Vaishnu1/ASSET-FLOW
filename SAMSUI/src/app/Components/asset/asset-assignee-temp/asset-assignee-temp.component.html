@@ -1,0 +1,126 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row">
+    <div fxFlex="80">
+      <h6 class="dialogue-box-header">{{ 'ASSET_ASSIGNEE' | translate}}</h6>
+    </div>
+    <div fxFlex="25" fxLayoutAlign="end start">
+      <button mat-raised-button color="primary"
+      (click)="exit(formGroup.value, formGroup.valid,false)" class="space">{{'COMMON_BACK' | translate }}</button>
+      <button mat-raised-button class="space" color="primary" (click)="onAdd()" [disabled]="isViewMode">
+        {{'COMMON_ADD' | translate}}</button>
+      <button id="submit" mat-raised-button class="space rightbutton" color="primary" (click)="exit(formGroup.value, formGroup.valid,true)" [disabled]="formGroup.invalid || isViewMode">
+        {{'COMMON_SUBMIT' | translate}}</button>
+    </div>
+  </div>
+
+  <div class="form-panel">
+          <mat-card>
+            <mat-card-content>
+
+          <div id="submit" [formGroup]="formGroup" novalidate>
+            <div formArrayName="assetAssigneeData">
+              <table class="asset-history-table" mat-table [dataSource]="formGroup.controls.assetAssigneeData.value">
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">
+                    {{ 'COMMON_S_NO' | translate }}</th>
+                    
+                  <td mat-cell *matCellDef="let element; let i = index;" class="text-center">
+                      {{(i+1)}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="toAssigneeId">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">
+                    {{'ASSET_ASSIGNED_PERSON' | translate}}</th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <ng-select [items]="assignToPersonCombo" class="input-field" bindLabel="employeeFirstName" [readonly]="isViewMode"
+                    bindValue="employeeFirstName" (search)="loadAssignToComboData($event)"
+                    (click)="loadAssignToComboData($event)" [virtualScroll]="true" id="toAssigneeName"
+                    (scrollToEnd)="loadAssignToComboData({})" (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')"  (clear)="loadAssignToComboData('clear')" [loading]="scrollsyncAssignToPerson"
+                    loadingText="Loading..." (change)="selectedAssignToPerson($event,i)" name="toAssigneeName"
+                    [(ngModel)]="element.toAssigneeName" [ngModelOptions]="{standalone: true}"> </ng-select>
+                    
+                  <div class="err-field select-field-err-msg"
+                    *ngIf="formGroup.controls['assetAssigneeData']['controls'][i]['controls']['toAssigneeName'].invalid && formGroup.controls['assetAssigneeData']['controls'][i]['controls']['toAssigneeName'].errors.required">
+                    "{{'ASSET_ASSIGNED_PERSON' | translate }}" Is Required
+                  </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="vlOldQty">
+                  <th mat-header-cell *matHeaderCellDef class="text-center"> {{'VL_OLD_QTY' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index;" class="text-center">
+                     {{element?.vlOldQty | translate}}
+                   </td>
+                </ng-container>
+                <ng-container matColumnDef="vlNewQty">
+                  <th mat-header-cell *matHeaderCellDef class="text-center new-vl-qty"  style="width: 80px;"> {{'VL_NEW_QTY' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <mat-form-field class="example-full-width certificate-input new-vl-qty" [floatLabel]="'always'" style="width: 80px;">
+                      <input type="number" matInput  [(ngModel)]="element.vlNewQty" (blur)="setvlNewQtyValue($event,i)" [ngModelOptions]="{standalone: true}" 
+                      [min]="0"  [disabled]="isViewMode || trackedLicence">
+                    </mat-form-field>
+                    <div  class="err-field date-err-msg"
+                      *ngIf="formGroup.controls['assetAssigneeData']['controls'][i]['controls']['vlNewQty'].invalid && formGroup.controls['assetAssigneeData']['controls'][i]['controls']['vlNewQty'].errors.required">
+                        {{'VL_NEW_QTY' | translate }} is Required 
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="assigneeTypeId">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">
+                    {{'ASSET_ASSIGNEE_TYPE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i=index" >
+                    <ng-select class="form-control" [items]="assetAssigneeTypeNameCombo"  bindLabel="assigneeTypeName" [readonly]="isViewMode"
+                      bindValue="assigneeTypeName" (search)="loadAssigneeTypeComboData($event)" (click)="loadAssigneeTypeComboData($event)"
+                      [virtualScroll]="true" (scrollToEnd)="loadAssigneeTypeComboData({})"  (keyup.backspace)="loadAssigneeTypeComboData($event.target.value ? $event : 'back')"  (clear)="loadAssigneeTypeComboData('clear')" 
+                      [loading]="scrollsyncAssigneeType" loadingText="Loading..." type="text"
+                      id="assigneeTypeName" (change)="selectedAssigneeType($event,i);"
+                      [(ngModel)]="element.assigneeTypeName" [ngModelOptions]="{standalone: true}"
+                      name="assigneeTypeName"></ng-select>
+                    
+                  <div class="err-field select-field-err-msg"
+                  *ngIf="formGroup.controls['assetAssigneeData']['controls'][i]['controls']['assigneeTypeName'].invalid && formGroup.controls['assetAssigneeData']['controls'][i]['controls']['assigneeTypeName'].errors.required">
+                  "{{'ASSET_ASSIGNEE_TYPE' | translate }}" Is Required
+                </div>
+              </td>
+                </ng-container>
+                <ng-container matColumnDef="endDate">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">
+                    {{'ASSINED_END_DATE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <mat-form-field class="example-full-width asn-dt"[floatLabel]="'always'">
+                      <input [disabled]="isViewMode" matInput (click)="endDateDisp.open()" [matDatepicker]="endDateDisp" (dateChange)="installationDateValidation($event,i)"
+                      [(ngModel)]="element.endDateDisp" [min]="todayDate" [ngModelOptions]="{standalone: true}" >
+                      <mat-datepicker-toggle [for]="endDateDisp" matSuffix></mat-datepicker-toggle>
+                      <mat-datepicker #endDateDisp></mat-datepicker>
+                    </mat-form-field>
+                </td>
+                </ng-container>
+                <ng-container matColumnDef="defaultPersonIncharge">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">
+                    {{'PERSON_INCHARGE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index;"  class="text-center">
+                    <mat-checkbox [(ngModel)]="element.defaultPersonIncharge" [disabled]="isViewMode"
+                      [ngModelOptions]="{standalone: true}" color="primary" class="example-margin"
+                      (change)="checkDefaultPIC(i)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="text-center"> {{'COMMON_DELETE' | translate}} </th>
+                  <td mat-cell *matCellDef="let element; let i = index;" class="text-center"> 
+                    <button color="primary" mat-raised-button class="space sqr-btn" [disabled]="isViewMode" 
+                      matTooltip="{{ 'COMMON_DELETE' | translate }}" (click)="deleteRegistration(element.assetTemporaryId ,i)">
+                      <mat-icon>delete</mat-icon>
+                    </button> 
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+
+              </table>
+              </div>
+            </div>
+            </mat-card-content>
+          </mat-card>
+  </div>
+</div>

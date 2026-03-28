@@ -1,0 +1,69 @@
+<mat-icon class="close-icon-large" (click)="closeDialog()">highlight_off</mat-icon>
+
+<form [formGroup]="exportExcelFileFormGroup">
+  <div class="row closebutton">
+    <div class="col-md-10">
+      <h6 class="section_title"> {{ 'ASSET_VOLUME_IMPORT' | translate }}/{{ 'ASSET_VOLUME_EXPORT' | translate }}
+        {{ 'ASSET_VOLUME_LICENSE' | translate }} </h6>
+    </div>
+  </div>
+
+  <fieldset>
+
+    <div class="col-md-12">
+
+      <div class="col-md-12 row" style="margin: 5% 0 5% -5%">
+
+        <div class="col-md-4">
+          <button mat-raised-button color="primary" (click)="downloadSampleTemplate()">
+            Download Sample Excel Template
+          </button>
+        </div>
+
+      </div>
+
+      <div class="col-md-12 row" style="margin: 5% 0 5% 0">
+
+        <div class="col-md-10">
+
+          <mat-form-field [floatLabel]="'always'">
+            <mat-label class="example-label input-label">Upload File</mat-label>
+            <input matInput readonly value=" {{ exportExcelFileFormGroup.controls.filePath.value }}">
+          </mat-form-field>
+
+        </div>
+
+        <div class="col-md-2 rightbutton">
+          <div class="row">
+            <input style="display:none" id="imgModelupload" type="file" name="organizFile" formControlName="filePath"
+              (change)="handleFileInput($event.target.files)" />
+            <button mat-raised-button color="warn" onclick="document.getElementById('imgModelupload').click()"
+              matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+              {{ 'ASSET_VOLUME_BROWSE' | translate }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-12 row">
+
+        <div class="col-md-10 rightbutton" style="margin-left: 25%">
+          <div class="row">
+            <button class="space" mat-raised-button color="primary" [disabled]="exportExcelFileFormGroup.invalid">
+              {{ 'ASSET_VOLUME_IMPORT' | translate }}
+            </button>
+
+            <button class="space" mat-raised-button color="primary" [disabled]="exportExcelFileFormGroup.invalid"
+              (click)="clearBrowseFile()">
+              {{ 'COMMON_CLEAR' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </fieldset>
+
+</form>

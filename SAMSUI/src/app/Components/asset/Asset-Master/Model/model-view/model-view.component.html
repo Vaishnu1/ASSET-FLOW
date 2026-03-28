@@ -1,0 +1,361 @@
+<div class="top-content row">
+    <div class="col-md-12">
+      <mat-toolbar-row>
+        <nav aria-label="breadcrumb" class="breadcrumblink">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">
+                <mat-icon class="breadcrumbicon">home</mat-icon>
+              </a></li>
+            <li class="breadcrumb-item">{{'MENU_ASSET' | translate}}</li>
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/model']">{{'MENU_MODEL' | translate}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{'COMMON_VIEW' | translate}}</li>
+          </ol>
+        </nav>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+    </div>
+  </div>
+  <div class="row margin-fix">
+    <div class="col-md-12 row">
+      <div class="col-md-3">
+        <mat-card class="card-design">
+          <mat-card-content>
+            <span class="font-style"> {{'COMMON_BASIC_INFORMATION' | translate}} </span>
+            <div class="content-style">
+                <div class="col-md-12">
+                  <p>{{'MODEL_NAME' | translate}} : {{modelData.modelName}}</p>
+                  <p>{{'MODEL_NO' | translate}} : {{modelData.modelNo}}</p>
+                  <p>{{'MANUFACTURER' | translate}} : {{modelData.manufacturerName}}</p>
+                  <p>{{'MODEL_LIFE_SPAN' | translate}} : {{modelData.lifeSpan}}</p>
+                  <p>{{'ASSET_GROUP' | translate }}  : {{modelAssetData.assetGroupName}}</p>
+                  <p>{{'ASSET_CATEGORY' | translate }} : {{modelAssetData.assetCategoryName}}</p>
+                  <p>{{'ASSET_SUB_CATEGORY' | translate }} : {{modelAssetData.subCategoryName}}</p>
+                  <p>{{'ASSET_TYPE' | translate }}: {{modelAssetData.assetTypeName}}</p>
+                </div>
+              </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-9" style="margin-bottom:5%;">
+        <mat-tab-group [@.disabled]="true">
+          <mat-tab label="Specification" *ngIf="showSpecification">
+            <mat-card>
+              <mat-card-content>
+                  <div class="content-style">
+                      <div class="col-md-12 row">
+                        <div class="col-md-6" *ngIf="showEndOfLife">
+                          <p>{{ 'MODEL_EOL' | translate }} : {{modelData.modelAttribute1}}</p>
+                        </div>
+                        <div class="col-md-6">
+                          <p>{{ 'MODEL_EOS' | translate }} : {{modelData.modelAttribute2}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="col-md-6">
+                            <p>{{ 'MODEL_EOP' | translate }} : {{modelData.modelAttribute3}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{ 'MODEL_PMF_COMPLEXITY' | translate }} : {{modelData.pmfComplexity}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="col-md-12">
+                          <p>{{ 'COMMON_REMARKS' | translate }}: {{modelData.modelAttribute4}}</p>
+                        </div>
+                      </div>
+                    </div>
+              </mat-card-content>
+            </mat-card>
+            
+          </mat-tab>
+          <mat-tab label="Depreciation" *ngIf="showDepreciation">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <div class="col-md-6">
+                      <p>{{ 'MODEL_DEPRICIATION_METHOD' | translate }} : {{modelData.depiciationMethod}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p>{{ 'ASSET_SCRAB_VAL' | translate }} : {{modelData.scrapValue}}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="col-md-6">
+                      <p>{{ 'ASSET_RESIDUAL_VAL' | translate }} : {{modelData.residualValue}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p>{{ 'ASSET_WRITTEN_DOWN_VAL' | translate }} : {{modelData.returnDownValue}}</p>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Spare Parts" *ngIf="showSpareParts">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="sparePartsDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'COMMON_DESC' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemDesc}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.manufacturerName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uomCode}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="sparePartsDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: sparePartsDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Accessories" *ngIf="showAccessories">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="accessoriesDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_DESC' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemDesc}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.manufacturerName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uomCode}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="accessoriesDispCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: accessoriesDispCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Consumables" *ngIf="showConsumables">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="consumablesDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ITEM_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="itemDesc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_DESC' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.itemDesc}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="manufacturerName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MANUFACTURER' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.maker}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uomCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uomCode}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="consumableDispCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: consumableDispCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Document" *ngIf="showDocument">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="documentDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DOCUMENT_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DOCUMENT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docType}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="documentDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: documentDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Self Analysis" *ngIf="showSelfAnalysis">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="selfAnalysisDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DEFECT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectTag">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DEFECT_TAG' | translate }}</th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectTag}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectQuestion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_QUESTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectQuestion}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="selfAnalysisDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: selfAnalysisDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Additional Info" *ngIf="showAdditionalInfo">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="additionalInfoDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }}</th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="infoName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.infoName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="infoLabel">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_LABEL' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.infoLabel}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="infoTitle">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_TITLE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.infoTitle}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="infoDetails">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DETAILS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.infoDetails}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="additionalInfoDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: additionalInfoDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Check Points" *ngIf="showCheckList">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="checkPointsDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="checkPointName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_MONITORING_POINT_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.checkPointName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="uom">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'UOM_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="duration">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DURATION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.duration}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="frequency">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_FREQUENCY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.frequency}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="checkPointsDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: checkPointsDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+          <mat-tab label="Solution Bank" *ngIf="showSolutionBank">
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div class="col-md-12 row">
+                    <table mat-table [dataSource]="solutionBankDataSource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DEFECT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectTag">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_DEFECT_TAG' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectTag}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectCause">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_ROOT_CAUSE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectCause}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="defectSolution">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'MODEL_SOLUTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.defectSolution}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="solutionBankDisCol;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: solutionBankDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+        </mat-tab-group>
+        
+      </div> 
+    </div>
+  </div>
+
+  

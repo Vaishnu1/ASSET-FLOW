@@ -1,0 +1,141 @@
+<div class="page-wrapper">
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div class="breadcrumb-strip">
+
+    <div class="breadcrumb">
+      <mat-icon class="home-icon">home</mat-icon>
+      <span>Settings</span>
+      <mat-icon>keyboard_arrow_right</mat-icon>
+      <span class="active">Email Server Config</span>
+    </div>
+
+    <div class="top-actions">
+      <button mat-raised-button color="primary" (click)="goBack()">Back</button>
+      <!-- <button mat-raised-button color="primary" (click)="clear()">Clear</button>
+      <button mat-raised-button color="primary" [disabled]="serverForm.invalid" (click)="saveConfig()">Add</button> -->
+      
+    </div>
+
+  </div>
+
+
+  <!-- ===== HEADER ===== -->
+  <div class="asset-header-tabs">
+    <span class="tab active">Email Server Configuration</span>
+  </div>
+
+
+  <!-- ===== FORM ===== -->
+  <div class="form-card">
+
+  <form [formGroup]="serverForm">
+
+  <div class="form-grid">
+
+    <!-- Organization -->
+    <div class="form-field">
+      <label>Email Id</label>
+      <input class="plain-input" [disabled]="true" formControlName="fromEmailId">
+     
+    </div>
+
+    <!-- Entity -->
+    <div class="form-field">
+      <label>Email Name</label>
+      <input class="plain-input" [disabled]="true" formControlName="fromEmailName">
+      
+    </div>
+
+    <!-- Security -->
+    <div class="form-field">
+      <label>Security Type</label>
+      <ng-select
+        formControlName="securityType"
+        [disabled]="true"
+        >
+      </ng-select>
+    </div>
+
+    <!-- SMTP Host -->
+    <div class="form-field">
+      <label>SMTP Host</label>
+      <input class="plain-input" [disabled]="true" formControlName="smtpHost">
+    </div>
+
+    <!-- SMTP Port -->
+    <div class="form-field">
+      <label>SMTP Port</label>
+      <input type="number" class="plain-input" [disabled]="true" formControlName="smtpPortNumber">
+    </div>
+
+    <!-- SMTP Username -->
+    <div class="form-field">
+      <label>SMTP Username</label>
+      <input class="plain-input" [disabled]="true" formControlName="smtpUserName">
+    </div>
+
+    <!-- SMTP Password -->
+    <div class="form-field">
+      <label>SMTP Password</label>
+      <input class="plain-input" [disabled]="true" formControlName="smtpPassword">
+    </div>
+
+    <!-- From Email -->
+    <!-- <div class="form-field">
+      <label>From Email</label>
+      <input class="plain-input" formControlName="fromEmailId">
+    </div> -->
+
+    <!-- From Name -->
+    <!-- <div class="form-field">
+      <label>From Name</label>
+      <input class="plain-input" formControlName="fromEmailName">
+    </div> -->
+
+    <!-- Reply Email -->
+    <!-- <div class="form-field">
+      <label>Reply To Email</label>
+      <input class="plain-input" formControlName="replyToEmailId">
+    </div> -->
+
+    <!-- Attachment -->
+    <div class="form-field">
+      <label>Max Attachment Size</label>
+      <input type="number" class="plain-input" [disabled]="true" formControlName="maxAttachmentSize">
+    </div>
+
+    <!-- Connections -->
+    <div class="form-field">
+      <label>Max Concurrent Connections</label>
+      <input type="number" class="plain-input" [disabled]="true" formControlName="maxConcurrentConnectionCount">
+    </div>
+
+  </div>
+
+
+  <!-- CHECKBOXES -->
+  <div class="checkbox-row">
+
+    <mat-checkbox formControlName="secured">
+      Secured
+    </mat-checkbox>
+
+    <mat-checkbox formControlName="verifyCertificate">
+      Verify Certificate
+    </mat-checkbox>
+
+    <mat-checkbox formControlName="active">
+      Active
+    </mat-checkbox>
+
+    <mat-checkbox formControlName="isMaster">
+      Master
+    </mat-checkbox>
+
+  </div>
+
+  </form>
+  </div>
+
+</div>

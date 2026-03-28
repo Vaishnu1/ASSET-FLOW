@@ -1,0 +1,228 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'MANUFACTURER_SERVICE_CENTER_TAB' | translate }} </h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+
+  <form [formGroup]="serviceCentreFormGroup">
+    <div fxLayout="column">
+      <div fxLayout="row" fxFlex="100">
+
+        <div fxFlex="34">
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Characters">
+              <mat-label class="input-label">{{ 'MANUFACTURER_SERVICE_CENTER_NAME' | translate }}
+              </mat-label>
+              <input #serviceCenterName class="input-field" matInput required formControlName="serviceLocationName"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="100" (input)="checkFormFields('serviceCenterName')" (keyup)="checkFormFieldSpecialCharValidation('serviceCenterName')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.serviceLocationName.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.serviceLocationName.errors && serviceCentreFormGroup.controls.serviceLocationName.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.serviceLocationName.errors.required">
+                  "{{ 'MANUFACTURER_SERVICE_CENTER_NAME' | translate }}" Is Required</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Characters">
+              <span class="input-label">{{ 'COMMON_ADDRESS_1' | translate }}<span class="mandatory-style"> *</span></span>
+              <input autofocus matInput required class="input-field" formControlName="address1"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="100" (input)="checkFormFields('address1')" (keyup)="checkFormFieldSpecialCharValidation('address1')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.address1.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.address1.errors && serviceCentreFormGroup.controls.address1.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.address1.errors.required">
+                  "{{ 'COMMON_ADDRESS_1' | translate }}" Is Required </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Characters">
+              <mat-label class="input-label">{{ 'COMMON_ADDRESS_2' | translate }}</mat-label>
+              <input autofocus matInput class="input-field" formControlName="address2"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="100" (input)="checkFormFields('address2')" (keyup)="checkFormFieldSpecialCharValidation('address2')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.address2.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.address2.errors && serviceCentreFormGroup.controls.address2.touched">
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" style="margin-top: 20px">
+            <mat-checkbox formControlName="active" color="primary" class="input-label">{{ 'COMMON_ACTIVE' | translate }}</mat-checkbox>
+          </div>
+
+        </div>
+
+        <div fxFlex="33">
+
+          <div class="form-group" style="height: 52px;">
+            <div class="example-full-width">
+              <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}<span class="mandatory-style"> *</span></span>
+              <ng-select class=" input-field" formControlName="country" [items]="countries"
+                (search)="getCountryData($event)" (click)="getCountryData({})" bindLabel="countryName"
+                (change)="getCountryList($event)" bindValue="countryName" id="country"
+                [loading]="countryScrollsync" loadingText="Loading...">
+              </ng-select>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.country.errors && serviceCentreFormGroup.controls.country.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.country.errors.required">
+                  Kindly Select The "{{'COMMON_COUNTRY' | translate }}" </div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group" style="height: 57px;">
+            <div class="example-full-width">
+              <span class="input-label">{{ 'COMMON_STATE' | translate }} <span class="mandatory-style">*</span> </span>
+              <ng-select id="state" class=" input-field" formControlName="state" [items]="states"
+                bindLabel="stateName" (search)="getStateData($event)" [virtualScroll]="true"
+                (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="statecrollSync" loadingText="Loading..."
+                (click)="getStateData({})" (change)="getStateList($event)" bindValue="stateName">
+              </ng-select>
+              <mat-error
+                  *ngIf="serviceCentreFormGroup.controls.state.invalid && serviceCentreFormGroup.controls.state.touched">
+                  <div class="err-field" *ngIf="serviceCentreFormGroup.controls.state.errors.required">
+                    Kindly Select The "{{ 'COMMON_STATE' | translate }}"</div>
+                </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group" style="height: 60px;">
+            <div class="example-full-width">
+              <span class="input-label">{{ 'COMMON_CITY' | translate }}<span class="mandatory-style"> *</span>
+                </span>
+                <ng-select  formControlName="city" [items]="cities" bindLabel="cityName"
+                (search)="getCityData($event)" (click)="getCityData({})" (scrollToEnd)="getCityData({})" (keyup.backspace)="getCityData($event.target.value ? $event : 'back')" (clear)="getCityData('clear')"
+                (change)="getCityList($event)" [virtualScroll]="true" loadingText="Loading..."
+                [loading]="cityscrollsync" bindValue="cityName">
+              </ng-select>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.city.invalid && serviceCentreFormGroup.controls.city.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.city.errors.required">
+                  Kindly Select The "{{ 'COMMON_CITY' | translate }}" </div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group" style="height: 44px;">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 10 Characters">
+              <span class="input-label">{{ 'PIN_CODE' | translate }}<span class="mandatory-style">*</span></span>
+              <input autofocus matInput required class="input-field" formControlName="postalCode"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="10" (keypress)="numberOnly($event)">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.postalCode.value?.length || 0}}/10</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.postalCode.errors && serviceCentreFormGroup.controls.postalCode.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.postalCode.errors.required">
+                  "{{'PIN_CODE' | translate }}" Is Required </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+        </div>
+
+        <div fxFlex="33">
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Characters">
+              <span class="input-label">{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON' | translate
+                }}<span class="mandatory-style"> *</span></span>
+              <input autofocus matInput required class="input-field" formControlName="contactPersonName"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="100" (input)="checkFormFields('contactPersonName')" (keyup)="checkFormFieldSpecialCharValidation('contactPersonName')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.contactPersonName.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.contactPersonName.errors && serviceCentreFormGroup.controls.contactPersonName.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonName.errors.required">
+                  "{{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON' | translate }}" Is Required </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 15 Characters">
+              <mat-label class="input-label">{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_LAND_LINE_NO' |
+                translate }}</mat-label>
+              <input autofocus matInput class="input-field" formControlName="contactPersonLandLineNo"
+                oninput="this.value = this.value.toUpperCase()"  [maxlength]="15"  [minlength]="10" (input)="checkFormFields('contactPersonLandLineNo')" (keyup)="checkFormFieldSpecialCharValidation('contactPersonLandLineNo')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.contactPersonLandLineNo.value?.length || 0}}/15</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.contactPersonLandLineNo.errors && serviceCentreFormGroup.controls.contactPersonLandLineNo.touched">
+                  <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonLandLineNo.errors.pattern?false:serviceCentreFormGroup.controls.contactPersonLandLineNo.errors.minlength">
+                    "{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_LAND_LINE_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonLandLineNo.errors.pattern">
+                  Kindly Enter Valid "{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_LAND_LINE_NO' | translate }}" </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 15 Characters">
+              <span class="input-label">{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_PHONE_NO' |
+                translate }}<span class="mandatory-style"> *</span></span>
+              <input autofocus matInput required class="input-field" formControlName="contactPersonPhoneNo"
+                oninput="this.value = this.value.toUpperCase()"  [maxlength]="15"  [minlength]="10" (input)="checkFormFields('contactPersonPhoneNo')" (keyup)="checkFormFieldSpecialCharValidation('contactPersonPhoneNo')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.contactPersonPhoneNo.value?.length || 0}}/15</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.contactPersonPhoneNo.errors && serviceCentreFormGroup.controls.contactPersonPhoneNo.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonPhoneNo.errors.required">
+                  "{{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_PHONE_NO' | translate }}" Is Required</div>
+                  <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonPhoneNo.errors.pattern?false:serviceCentreFormGroup.controls.contactPersonPhoneNo.errors.minlength">
+                    "{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonPhoneNo.errors.pattern">
+                  Kindly Enter Valid "{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_PHONE_NO' | translate }}"</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 50 Characters">
+              <span class="input-label">{{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_EMAIL_ID' |
+                translate }}<span class="mandatory-style"> *</span></span>
+              <input autofocus matInput required class="input-field" formControlName="contactPersonEmailId"
+                oninput="this.value = this.value.toUpperCase()" [maxlength]="50" (input)="checkFormFields('contactPersonEmailId')" (keyup)="checkFormFieldSpecialCharValidation('contactPersonEmailId')">
+              <mat-hint align="end">
+                {{serviceCentreFormGroup.controls.contactPersonEmailId.value?.length || 0}}/50</mat-hint>
+              <mat-error
+                *ngIf="serviceCentreFormGroup.controls.contactPersonEmailId.errors && serviceCentreFormGroup.controls.contactPersonEmailId.touched">
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonEmailId.errors.required">
+                  "{{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_EMAIL_ID' | translate }}" Is Required </div>
+                <div class="err-field" *ngIf="serviceCentreFormGroup.controls.contactPersonEmailId.errors.pattern">
+                  {{ 'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"  </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="headingDisplay != 'View'" style="margin-top: 20px;">
+        <div>
+          <button mat-raised-button class="space" color="primary" (click)="submit()"
+            [disabled]="serviceCentreFormGroup.invalid">{{ displayButton }}
+          </button>
+          <button mat-raised-button class="space" color="primary" (click)="clear()" [disabled]="disableClearButton"> {{
+            'COMMON_CLEAR' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

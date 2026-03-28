@@ -1,0 +1,62 @@
+<div fxLayout="column" fxFlexFill>
+    <div class="content_section_background" style="padding-top:0.5%">
+        <form [formGroup]="assetSearchFormGroup">
+            <div fxLayout="column" fxFlex="100">
+                <div fxLayout="row" fxFlex="100">
+                    <span class="contract-search-panel-header">
+                        {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET'| translate}}
+                    </span>
+                </div>
+                <div fxLayout="row" fxFlex="100">
+                    <div class="form-group" fxFlex="50">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">{{ 'ASSET_CODE' | translate }}</mat-label>
+                            <input matInput formControlName="assetCode"
+                            oninput="this.value = this.value.toUpperCase()"  class="input-field">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group" fxFlex="50">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">{{ 'ASSET_SERIAL_NO' | translate }}</mat-label>
+                            <input matInput formControlName="serialNo"
+                            oninput="this.value = this.value.toUpperCase()"  class="input-field">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxFlex="100">
+                    <div class="form-group" fxFlex="50">
+                        <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                        <ng-select formControlName="assetSubCat" [virtualScroll]="true"
+                        (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" 
+                        (scrollToEnd)="listOfSubCategory({})" (clear)="listOfSubCategory('clear')"
+                        (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" 
+                        [loading]="scrollsyncAssetSubCategory" loadingText="Loading..."
+                        (change)="getSubCategoryComboValue($event)" [items]="subCategoryName" bindLabel="subCategoryName"
+                        bindValue="subCategoryName"  class="input-field example-full-width contract-asset-list-page">
+                        </ng-select>
+                    </div>
+                    <div class="form-group" fxFlex="50">
+                        <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                        <ng-select class=" input-field contract-asset-list-page example-full-width" formControlName="assetModel"
+                        (click)="listOfAllModel({})" [virtualScroll]="true" (search)="listOfAllModel($event)"
+                        (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"
+                        (clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)" loadingText="Loading..."
+                        [items]="modelCombo" bindLabel="modelName" bindValue="modelName" [loading]="scrollsyncModel">
+                        </ng-select>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="end end" fxFlex="100" class="form-group">
+                    <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_BACK' | translate}}"
+                        [matTooltipPosition]="'below'"  (click)="back()">{{'COMMON_BACK' | translate}}
+                    </button>
+                    <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="clear()">{{'COMMON_CLEAR' | translate}}
+                    </button>
+                    <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                        [matTooltipPosition]="'below'" (click)="searchContractAsset();">{{'COMMON_SEARCH' | translate}}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

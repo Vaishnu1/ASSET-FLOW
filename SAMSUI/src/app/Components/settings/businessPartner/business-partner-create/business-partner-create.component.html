@@ -1,0 +1,247 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <mat-toolbar-row fxFlex="50">
+        <mat-list aria-label="breadcrumb" fxLayoutAlign="start center">
+          
+          <mat-list-item>
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon>home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+
+          <mat-list-item>{{ 'MENU_SETTING' | translate }}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+
+          <mat-list-item>
+            <a (click)="backToOrganization()" style="cursor: pointer;">{{ 'MENU_ORGANIZATION' | translate }}
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+
+          <mat-list-item>{{ 'MENU_BUSINESS_PARTNER' | translate }}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item aria-current="page">{{headingDisplay}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+
+      <div fxFlex="50" fxLayoutAlign="end center">
+        <button mat-raised-button color="primary" class="space" (click)="exit()"> {{'COMMON_BACK' | translate }} </button>
+      
+        <button *ngIf="headingDisplay != 'View'" mat-raised-button color="primary" class="space" (click)="clear()"    
+          [disabled]="buttonDisableInEdit"> {{'COMMON_CLEAR' | translate }} </button>
+      
+        <button mat-raised-button color="primary" class="space" (click)="save()" *ngIf="!modeDisplay"    
+          [disabled]="businessPartnerForm.invalid || uploadFlagBusinessPartner || headingDisplay == 'View'">
+          <span *ngIf="!uploadFlagBusinessPartner">{{buttonSubmit}}</span>
+          <span *ngIf="uploadFlagBusinessPartner">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="card">
+        <form fxLayout="column" [formGroup]="businessPartnerForm">
+            <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                    <div style="padding: 10px;" fxFlex="40" fxFlex.sm="40" fxFlex.xs="40">
+                        <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                <mat-label class="input-label"> {{'BUSINESS_PARTNER_NAME' | translate }} <span class="mandatory-style">*</span> </mat-label>
+                                <input #businessPartnerNamefocus matInput class="input-field" formControlName="businessPartnerName" 
+                                    (change)="tabelValidation()" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" tabindex="1">
+                                <mat-hint align="end">{{businessPartnerForm.controls.businessPartnerName.value?.length || 0}}/100</mat-hint>
+                                <mat-error *ngIf="businessPartnerForm.controls.businessPartnerName.invalid && businessPartnerForm.controls.businessPartnerName.touched">
+                                    <div *ngIf="businessPartnerForm.controls.businessPartnerName.errors.required"> {{'BUSINESS_PARTNER_NAME' | translate }} is Required </div>
+                                    <div *ngIf="businessPartnerForm.controls.businessPartnerName.errors.maxlength"> {{'BUSINESS_PARTNER_NAME' | translate }} maximum length is 100 </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="padding: 10px;" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+                        <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_20 }}">
+                                <mat-label class="input-label"> {{'BUSINESS_PARTNER_CODE' | translate }} <span class="mandatory-style">*</span></mat-label>
+                                <input matInput class="input-field" formControlName="businessPartnerCode" 
+                                    (change)="tabelValidation()" [maxlength]="20" oninput="this.value = this.value.toUpperCase()" tabindex="2">
+                                <mat-hint align="end">{{businessPartnerForm.controls.businessPartnerCode.value?.length || 0}}/20</mat-hint>
+                                <mat-error *ngIf="businessPartnerForm.controls.businessPartnerCode.invalid && businessPartnerForm.controls.businessPartnerCode.touched">
+                                    <div *ngIf="businessPartnerForm.controls.businessPartnerCode.errors.maxlength"> {{'BUSINESS_PARTNER_CODE' | translate }} maximum length is 20 </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="padding: 10px;" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+                        <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                <mat-label class="example-label">{{'BUSINESS_PARTNER_ACTIVE_FROM' | translate }} <span class="mandatory-style">*</span>
+                                </mat-label>
+                                <input matInput class="input-field" formControlName="activeFromDtDisp" tabindex="3" 
+                                   (click)="activeFromDt.open()" [matDatepicker]="activeFromDt">
+                                <mat-datepicker-toggle matSuffix [for]="activeFromDt"></mat-datepicker-toggle>
+                                <mat-datepicker #activeFromDt [readonly]="false"></mat-datepicker>
+                                <mat-error *ngIf="businessPartnerForm.controls.activeFromDtDisp.invalid && businessPartnerForm.controls.activeFromDtDisp.touched">
+                                  <div style="font-size: 10px" *ngIf="businessPartnerForm.controls.activeFromDtDisp.errors.required">
+                                    {{'BUSINESS_PARTNER_ACTIVE_FROM' | translate}} is Required </div>
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 10px;" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+                        <div class="form-group">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="example-label">{{'BUSINESS_PARTNER_ACTIVE_TILL' | translate }}
+                            </mat-label>
+                            <input matInput class="input-field" formControlName="activeTillDtDisp" tabindex="4" readonly (click)="picker2.open()"
+                              [matDatepicker]="picker2" [min]="businessPartnerForm.controls.activeFromDtDisp.value">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 [readonly]="false"></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <hr>
+
+            <div style="margin-bottom:5%;">
+                <div [@.disabled]="true">
+                    <mat-tab-group [selectedIndex]="selectedIndex">
+                        <mat-tab>
+                            <ng-template mat-tab-label> {{'BUSINESS_PARTNER_ROLE_INFO' | translate}}
+                                <mat-icon *ngIf="partnerRolesNotSelected" class="mandatory-style">error</mat-icon>
+                            </ng-template>
+                            <mat-card>
+                                <mat-card-content>
+                                    <div fxLayout="row">
+     
+                                        <div fxFlex="50" class="add-group-container-table">
+                                          <table mat-table [dataSource]="partnerRolesSource" class="mat-elevation-z8" fxFlex="row">
+                                            <ng-container matColumnDef="businessPartnerRoleName">
+                                              <th mat-header-cell *matHeaderCellDef> {{'BUSINESS_PARTNER_ROLE_NAME' | translate}} </th>
+                                              <td mat-cell *matCellDef="let element"> {{element.businessPartnerRoleName}} </td>
+                                            </ng-container>
+                                  
+                                            <ng-container matColumnDef="roleActive">
+                                              <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTIVE' | translate}} </th>
+                                              <td mat-cell *matCellDef="let element">
+                                                <mat-slide-toggle [checked]="element.roleActive" (click)="updateBtnflag()" [(ngModel)]="element.roleActive" color="primary"
+                                                  [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                                              </td>
+                                            </ng-container>
+                                  
+                                            <tr mat-header-row *matHeaderRowDef="partnerRolesDisplayedColumns;sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: partnerRolesDisplayedColumns;"></tr>
+                                          </table>
+                                        </div>
+                                        
+                                      </div>
+                                </mat-card-content>
+                            </mat-card>        
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label> {{'BUSINESS_PARTNER_SITE_TAB' | translate }}
+                                <mat-icon *ngIf="businessPartnerSiteList.length==0" class="mandatory-style">error</mat-icon>
+                            </ng-template>
+                            <mat-card>
+                                <mat-card-content>
+                                    <div fxLayout="column" class="content-style">
+                                        <div fxLayout="row" fxFlex="100">
+                                            <div fxLayout="row" fxFlex="100">
+                                              <div fxFlex="80"></div>
+                                              <div fxFlex="20" fxLayoutAlign="end center">
+                                                <button mat-raised-button color="primary" class="space"
+                                                  style="margin-top: 5px;margin-bottom: 5px;" [disabled]="businessPartnerForm.invalid || modeDisplay"
+                                                  (click)="addBusinessPartnerSite(0,null,'add','PARTNER')">{{'BUSINESS_PARTNER_SITE_ADD' | translate }}
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="example-container">
+                                            <table mat-table [dataSource]="businessPartnerSiteList" matSort fxFlexFill>
+                                                <ng-container matColumnDef="sno">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSiteName">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'BUSINESS_PARTNER_SITE_NAME' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteName}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSiteArea">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_AREA' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteArea}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSiteCity">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_CITY' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteCity}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSiteState">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_STATE' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteState}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSiteCurCd">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'CURRENCY_CD' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteCurCd}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="contactPersonName">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_CONTACT_NAME' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.contactPersonName}} </td>
+                                                  </ng-container>
+
+                                                  <ng-container matColumnDef="partnerSiteContactEmailId">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_EMAIL_ID' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSiteContactEmailId}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="partnerSitePersonPhoneNo">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_PHONE_NO' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.partnerSitePersonPhoneNo}} </td>
+                                                  </ng-container>
+                          
+                                                  <ng-container matColumnDef="action">
+                                                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate }} </th>
+                                                    <td mat-cell *matCellDef="let element; let i=index;">
+                                                      <button *ngIf="!modeDisplay" mat-button class="mat-icon-button"
+                                                        matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                                                        (click)="addBusinessPartnerSite(element,i,'edit','supplier')">
+                                                        <mat-icon color="primary">edit</mat-icon>
+                                                      </button>
+                                                      <button *ngIf="modeDisplay" mat-button class="mat-icon-button"
+                                                        matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                                                        (click)="addBusinessPartnerSite(element,i,'view','supplier')">
+                                                        <mat-icon color="primary">visibility</mat-icon>
+                                                      </button>
+                                                      <!-- <button mat-button class="mat-icon-button"  matTooltip="{{ 'DELETE' | translate }}" (click)="DeleteSupplierSite(element.id,i)"><mat-icon color="primary">delete</mat-icon></button> -->
+                                                    </td>
+                                                  </ng-container>
+
+                                                  <tr mat-header-row *matHeaderRowDef="businessPartnerSiteDispCols;sticky: true"></tr>
+                                                  <tr mat-row *matRowDef="let element; columns: businessPartnerSiteDispCols;">
+                                            </table>
+                                            <mat-card class="no_records_found" *ngIf="businessPartnerSiteList.length == 0 && !subloaderBusinessPartnerSite">
+                                                {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                                            <mat-card class="no_records_found" *ngIf="subloaderBusinessPartnerSite" fxLayoutAlign="center center">
+                                                <mat-spinner [diameter]="40"></mat-spinner>
+                                            </mat-card>
+                                          </div>  
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>        
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

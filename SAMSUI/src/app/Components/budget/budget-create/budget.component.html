@@ -1,0 +1,299 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_BUDGET'|
+          translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" style="cursor: pointer;" fxLayoutAlign="start center"
+          (click)="BudgetLink()" aria-current="page">
+          {{'BUDGET_ITEM'| translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+          {{headingDisplay}}
+        </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+
+      <button mat-raised-button color="primary" class="space" (click)="exit()"> {{'COMMON_BACK' | translate }} </button>
+
+      <button *ngIf="!modeDisplay" mat-raised-button color="primary" class="space" (click)="clear()"
+        [disabled]="buttonDisableInEdit">
+        {{ 'COMMON_CLEAR' | translate }}</button>
+
+      <button *ngIf="!modeDisplay" mat-raised-button class="space" color="primary" (click)="save()"
+        [disabled]="budgetListFormGroup.invalid || uploadBudget ">
+        <span *ngIf="!uploadBudget">{{buttonDisplay}}</span>
+      </button>
+
+    </mat-toolbar-row>
+  </div>
+
+  
+
+    <form [formGroup]="budgetListFormGroup" fxFlex="100" fxLayout="column">
+      <mat-card class="card-design mb-31">
+        <mat-card-content>
+          <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+            <div fxFlex="75" fxLayout="row" fxLayout.lt-md="row" fxFlex.lt-md="100">
+              <div fxFlex="34" class="h-60-px">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style"> *</span></span>
+                <ng-select #focusLocationName class=" example-full-width" formControlName="locationName"
+                  (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                  (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                  (scrollToEnd)="listofLocationName({})" (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')" (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                  bindValue="locDisplayField" tabindex="1" required>
+                </ng-select>
+                <mat-error
+                   *ngIf="budgetListFormGroup.controls.locationName.invalid && budgetListFormGroup.controls.locationName.touched">
+                   <div class="err-field" *ngIf="budgetListFormGroup.controls.locationName.errors.required">
+                     {{'LOCATION_NAME' | translate}} is Required </div>
+                </mat-error>
+              </div>
+
+              <div fxFlex="33">
+                <div class="h-60-px">
+                  <span class="input-label">Year<span class="mandatory-style">*</span></span>
+                  <ng-select class=" example-full-width" formControlName="year" [items]="listOfYears" bindLabel="name"
+                    bindValue="name" required>
+                  </ng-select>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.year.invalid && budgetListFormGroup.controls.year.touched">
+                   <div class="err-field" *ngIf="budgetListFormGroup.controls.year.errors.required">
+                     Year is Required </div>
+                </mat-error>
+                </div>
+                <div class="h-60-px" >
+                  <span class="input-label">{{ 'LOCATION_FY_START_MONTH' | translate }}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" example-full-width" formControlName="fyStartMonth" [items]="listofMonth"
+                    bindLabel="name" bindValue="name" required>
+                  </ng-select>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.fyStartMonth.invalid && budgetListFormGroup.controls.fyStartMonth.touched">
+                   <div class="err-field" *ngIf="budgetListFormGroup.controls.fyStartMonth.errors.required">
+                     {{'LOCATION_FY_START_MONTH' | translate}} is Required </div>
+                </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="33">
+                <div class="h-60-px">
+                  <span class="input-label">{{ 'COMMON_CURRENCY_CODE' | translate }}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select id="curCd" class=" example-full-width" [items]="currencycdList"
+                    [virtualScroll]="true" formControlName="curCd" (search)="listOfCurrencyCd($event)"
+                    (click)="listOfCurrencyCd({})" (scrollToEnd)="listOfCurrencyCd({})" (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')" (clear)="listOfCurrencyCd('clear')" loadingText="Loading..." [loading]="scrollcurCdsync"
+                    bindLabel="curCd" bindValue="curCd" required>
+                  </ng-select>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.curCd.invalid && budgetListFormGroup.controls.curCd.touched">
+                   <div class="err-field" *ngIf="budgetListFormGroup.controls.curCd.errors.required">
+                     {{'COMMON_CURRENCY_CODE' | translate}} is Required </div>
+                </mat-error>
+                </div>
+                <div  class="h-60-px">
+                  <span class="input-label">{{ 'LOCATION_FY_END_MONTH' | translate }}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" example-full-width" formControlName="fyEndMonth" [items]="listofMonth" bindLabel="name"
+                    bindValue="name" required>
+                  </ng-select>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.fyEndMonth.invalid && budgetListFormGroup.controls.fyEndMonth.touched">
+                   <div class="err-field" *ngIf="budgetListFormGroup.controls.fyEndMonth.errors.required">
+                     {{'LOCATION_FY_END_MONTH' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column" fxFlex="25" fxHide.lt-md>
+              
+                <div fxFlex="100" fxLayout="column" class="h-60-px mt--2-px" >
+                  <mat-form-field  [floatLabel]="'always'" id="budgetName" class="example-full-width">
+                    <span class="input-label">{{'BUDGET_NAME'| translate}}<span class="mandatory-style"> *</span></span>
+                    <input #customerfocus matInput formControlName="budgetName" required [maxlength]="100">
+                  </mat-form-field>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.budgetName.invalid && budgetListFormGroup.controls.budgetName.touched">
+                   <div style="font-size: 11px;margin-top: -15px;" *ngIf="budgetListFormGroup.controls.budgetName.errors.required">
+                     {{'BUDGET_NAME' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+
+                <div  fxFlex="100" fxLayout="column" class="h-60-px mt--27-px"> 
+                  <mat-form-field   [floatLabel]="'always'"  class="example-full-width">
+                    <span class="input-label">{{'BUDGET_STATUS'| translate}}
+                      <span class="mandatory-style">*</span></span>
+                    <input #customerfocus matInput formControlName="budgetStatus" >
+                  </mat-form-field>
+                  <mat-error
+                   *ngIf="budgetListFormGroup.controls.budgetStatus.invalid && budgetListFormGroup.controls.budgetStatus.touched">
+                   <div style="font-size: 11px; margin-top: -15px;" *ngIf="budgetListFormGroup.controls.budgetStatus.errors.required">
+                     {{'BUDGET_STATUS' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+            
+            </div>
+            <div fxLayout="row" fxFlex="100"  fxHide.md fxHide.gt-md style="margin-top: 10px;">
+              
+              <div fxFlex="34"></div>
+              <div  fxFlex="33" class="h-60-px" style="margin-top: -10px;">
+                <mat-form-field  [floatLabel]="'always'" id="budgetName" class="example-full-width">
+                  <span class="input-label">{{'BUDGET_NAME'| translate}}<span class="mandatory-style"> *</span></span>
+                  <input #customerfocus matInput formControlName="budgetName" required [maxlength]="100">
+                </mat-form-field>
+                <mat-error
+                   *ngIf="budgetListFormGroup.controls.budgetName.invalid && budgetListFormGroup.controls.budgetName.touched">
+                   <div style="font-size: 11px ;margin-top: -15px; " *ngIf="budgetListFormGroup.controls.budgetName.errors.required">
+                     {{'BUDGET_NAME' | translate}} is Required </div>
+                  </mat-error>
+              </div>
+
+              <div  fxFlex="33" class="h-60-px"  style="margin-top: -22px;"> 
+                <mat-form-field   [floatLabel]="'always'"  class="example-full-width">
+                  <span class="input-label">{{'BUDGET_STATUS'| translate}}<span class="mandatory-style">
+                      *</span></span>
+                  <input #customerfocus matInput formControlName="budgetStatus" required >
+                </mat-form-field>
+                <mat-error
+                   *ngIf="budgetListFormGroup.controls.budgetStatus.invalid && budgetListFormGroup.controls.budgetStatus.touched">
+                   <div style="font-size: 11px ;margin-top: -15px;" *ngIf="budgetListFormGroup.controls.budgetStatus.errors.required">
+                     {{'BUDGET_STATUS' | translate}} is Required </div>
+                  </mat-error>
+              </div>
+          
+          </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="division"></div>
+
+      <div fxLayout="row" style="background: #fff; padding: 10px;">
+        <div fxFlex="25">
+          <span class="input-label">{{ 'BUDGET_ITEM' | translate }} </span>
+          <ng-select [items]="budgetItems" required bindLabel="budgetItem" bindValue="budgetItem"
+            loadingText="Loading..." (change)="selectedBudgetItem($event)" [virtualScroll]="true" appendTo="body"
+            formControlName="budgetItem" appendTo="body">
+          </ng-select>
+        </div>
+        <div fxFlex="4"></div>
+        <div fxFlex="25">
+          <button *ngIf="!modeDisplay" mat-raised-button class="space button-padding" color="primary"
+            (click)="addBudgetItem()" [disabled]="scrollSyncBudgetListCombo">
+            {{ 'COMMON_ADD' |translate}}
+          </button>
+        </div>
+      </div>
+
+      <div fxLayout="column">
+        <mat-card class="card-style white-bg">
+          <mat-card-content>
+            <form [formGroup]="budgetDetailFormGroup">
+              <table #matAssignee mat-table class="customTable" fxFlex="100" [dataSource]="budgetItemList">
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'COMMON_S_NO' | translate }}</th>
+                  <td mat-cell *matCellDef="let element;let i = index;"> {{(i+1)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Budget Item">
+                  <th mat-header-cell *matHeaderCellDef>{{'BUDGET_ITEM' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-form-field class="example-full-width">
+                      <input matInput [(ngModel)]="element.budgetItem" [ngModelOptions]="{standalone: true}"
+                        id="budgetItem" class="form-control" readonly>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Budget Amount">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'BUDGET_AMOUNT' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+
+                    <mat-form-field class="example-full-width">
+                      <input matInput [(ngModel)]="element.budgetAmount" [ngModelOptions]="{standalone: true}"
+                        style="font-size: 12px" [disabled]="modeDisplay" name="budgetAmount" type="text"
+                        id="budgetAmount" class="form-control">
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Actual Spent">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{'ACTUAL_SPENT' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-form-field class="example-full-width">
+                      <input matInput [(ngModel)]="element.actualSpent" [ngModelOptions]="{standalone: true}"
+                        style="font-size: 12px" name="actualSpent" type="text" id="actualSpent" class="form-control"
+                        readonly>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FY Budget Amount">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'PREVIOUS_YEAR' | translate }} {{ 'BUDGET_AMOUNT' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+
+                    <mat-form-field class="example-full-width">
+                      <input matInput [(ngModel)]="element.previousYearBudget" [ngModelOptions]="{standalone: true}"
+                        style="font-size: 12px" name="previousYearBudget" type="text" id="previousYearBudget"
+                        class="form-control" readonly>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FY Actual Spent">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'PREVIOUS_YEAR' | translate }} {{ 'ACTUAL_SPENT' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+
+                    <mat-form-field class="example-full-width">
+                      <input matInput [(ngModel)]="element.previousYearActualAmount"
+                        [ngModelOptions]="{standalone: true}" style="font-size: 12px" name="previousYearActualAmount"
+                        type="text" id="previousYearActualAmount" class="form-control" readonly>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+
+                    <button matTooltip="Add detail" mat-button class="mat-icon-button"
+                      (click)="budgetItemDetail(element.budgetItem,i,mode)" *ngIf="!modeDisplay">
+                      <mat-icon color="primary">add</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'COMMON_VIEW' | translate }}" mat-button class="mat-icon-button"
+                      (click)="budgetItemDetail(element.budgetItem,i,mode)" *ngIf="modeDisplay" id="view">
+                      <mat-icon color="primary">visibility</mat-icon>
+                    </button>
+
+                    <button matTooltip="{{'COMMON_DELETE' | translate}}" mat-button class="mat-icon-button"
+                      (click)="deleteRegistration(element.budgetItem,i)" *ngIf="!modeDisplay">
+                      <mat-icon color="primary">delete</mat-icon>
+                    </button>
+
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+              </table>
+
+            </form>
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </form>
+  
+</div>

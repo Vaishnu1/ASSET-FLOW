@@ -1,0 +1,194 @@
+<div class="top-content row">
+  <div class="col-md-12">
+    <mat-toolbar-row>
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a></li>
+          <li class="breadcrumb-item">{{ 'MENU_MASTER' | translate }}</li>
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/organization']">{{ 'LOCATION' | translate }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">View</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+
+</div>
+<div class="row col-md-12">
+  <div class="col-md-3">
+    <mat-card class="card-design" style="margin-left: 15px !important;">
+      <mat-card-content>
+        <table class="model-table">
+          <tr>
+            <th class="outerth">{{ 'ORGANIZATION_NAME' | translate }}</th>
+            <td>:</td>
+            <td>{{locationCreateFormGroup.controls.orgName.value}}</td>
+          </tr>
+          <tr>
+            <th class="outerth">{{ 'LOCATION_NAME' | translate }}</th>
+            <td>:</td>
+            <td>{{locationCreateFormGroup.controls.locationName.value}}</td>
+          </tr>
+          <tr>
+            <th class="outerth">{{ 'LOCATION_CD' | translate }}</th>
+            <td>:</td>
+            <td>{{locationCreateFormGroup.controls.locationCode.value}}</td>
+          </tr>
+
+          <tr>
+            <th class="outerth">{{ 'REGION_NAME' | translate }}</th>
+            <td>:</td>
+            <td>{{locationCreateFormGroup.controls.regionName.value}}</td>
+          </tr>
+          <tr>
+            <th>{{ 'LEGAL_ENTITY' | translate }}</th>
+            <td>:</td>
+            <td>{{locationCreateFormGroup.controls.legalEntityName.value}}</td>
+          </tr>
+
+          <tr>
+            <th>{{ 'LOCATION_TYPE' | translate }}</th>
+            <td>:</td>
+            <td>
+              {{this.locationCreateFormGroup.controls.enableCustomerEntry.value?'End User':'Service Provider'}}
+            </td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-md-9 mb-50">
+    <mat-tab-group [@.disabled]="true">
+      <mat-tab label="{{ 'COMMON_ADDRESS_INFO' | translate }}">
+        <mat-card>
+          <mat-card-content>
+            <table class="model-table">
+                <tr>
+                  <th class="innerth"> {{ 'COMMON_STREET' | translate }} </th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locAddress1.value}}</td>
+                </tr>
+                <tr>
+                  <th class="innerth">{{ 'COMMON_AREA' | translate }}</th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locAddress2.value}}</td>
+                </tr>
+                <tr>
+                  <th class="innerth"> {{ 'COMMON_CITY' | translate }} </th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locCity.value}}</td>
+                </tr>
+                <tr>
+                    <th class="innerth">{{ 'COMMON_STATE' | translate }}</th>
+                    <td>:</td>
+                    <td>{{locationCreateFormGroup.controls.locState.value}}</td>
+                  </tr>
+                <tr>
+                  <th class="innerth">{{ 'COMMON_COUNTRY' | translate }} </th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locCountry.value}}</td>
+                </tr>
+                <tr>
+                  <th class="innerth">{{ 'COMMON_ZIP_CODE' | translate }}</th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locPinCode.value}}</td>
+                </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="{{ 'COMMON_CONTACT_INFO' | translate }}">
+        <mat-card>
+          <mat-card-content>
+            <table class="model-table">
+                <tr>
+                  <th class="innerth"> {{ 'COMMON_CONTACT_NAME' | translate }} </th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.contactName.value}}</td>
+                </tr>
+                <tr>
+                  <th class="innerth">{{ 'COMMON_EMAIL_ID' | translate }}</th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.locEmailId.value}}</td>
+                </tr>
+                <tr>
+                  <th class="innerth">{{ 'COMMON_PHONE_NO' | translate }}</th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.contactPhoneNo.value}}</td>
+                </tr>
+
+                <tr>
+                  <th class="innerth">{{ 'COMMON_ALT_PHONE_NO' | translate }}</th>
+                  <td>:</td>
+                  <td>{{locationCreateFormGroup.controls.altPhoneNo.value}}</td>
+                </tr>
+
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="{{ 'LOCATION_REGISTRATION_INFO' | translate }}">
+        <mat-card>
+          <mat-card-content>
+            <div class="content-style">
+                <div class="reg-container">
+                  <table mat-table [dataSource]="locRegistrationList" matSort>
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> {{ 'REGISTRATION_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.registrationName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="info">
+                      <th mat-header-cell *matHeaderCellDef> {{ 'REGISTRATION_NO' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.registrationNo}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedregsiterColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedregsiterColumns">
+                  </table>
+                </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="{{ 'LOCATION_DEPARTMENT_INFO' | translate }}">
+        <mat-card>
+          <mat-card-content>
+            <div class="content-style">
+                <div class="department-container"> 
+                  <table mat-table [dataSource]="locDepartmentList" >
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="depName">
+                      <th mat-header-cell *matHeaderCellDef> {{ 'DEPARTMENT_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.departmentName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reportingInchargeName">
+                      <th mat-header-cell *matHeaderCellDef> {{ 'DEPARTMENT_REPORTING_INCHARGE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.inchargeName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="designation">
+                      <th mat-header-cell *matHeaderCellDef> {{ 'DESIGNATION_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element"> {{element.designation}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="depTableColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: depTableColumns;">
+                  </table> 
+                </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div>
+</div>  

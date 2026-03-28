@@ -1,0 +1,132 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="space-evenly center" fxFlex="100" fxFlexFill>
+
+    <div fxFlex="35" fxLayoutAlign="start center">
+      <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+        <input matInput #setFocus type="search" name="search" id="search"
+          placeholder="Search {{ 'MENU_REGION' | translate }}" (input)="onSearchChange($event.target.value)">
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="65" fxLayoutAlign="end center">
+    </div>
+
+  </div>
+  <mat-toolbar>
+    <span>{{'MENU_REGION'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+    <!-- <button color="primary" mat-raised-button class="space sqr-btn"
+    matTooltip="Help" (click)="userManual()">
+    <mat-icon>help_outline</mat-icon>
+  </button> -->
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay" (click)="openRegionCreateDialog(0)"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openRegionCreateDialog(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openRegionCreateDialog(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+  <div class="org-container-table" fxLayout="column">
+
+    <table fxFlex="100" mat-table [dataSource]="regiondataSource" matSort (matSortChange)="customSort($event)"
+      matSortActive="name" matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectRegion(element)" [checked]="selectedItem.regionId == element?.regionId"></mat-checkbox></td>
+      </ng-container>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="regionCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:12%;"> {{ 'REGION_CODE' | translate }} </th>
+        <td mat-cell (click)="selectRegion(element)" *matCellDef="let element" style="width:12%;" matTooltip="{{element.regionCode}}"> {{element?.regionCode}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="regionName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:46%;"> {{ 'REGION_NAME' | translate }} </th>
+        <td mat-cell (click)="selectRegion(element)" *matCellDef="let element" style="width:46%;" matTooltip="{{element.regionName}}">{{element?.regionName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> {{ 'COMMON_UPDATED_BY' | translate }} </th>
+        <td mat-cell (click)="selectRegion(element)" *matCellDef="let element" style="width: 15%;"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;">{{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell (click)="selectRegion(element)" *matCellDef="let element" style="width: 15%;"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+    <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+
+  </div>
+
+</div>
+
+
+<!-- Tax View -->
+<ng-template #viewDialog>
+  <h2 matDialogTitle> View {{ 'REGION' | translate }}</h2>
+  <mat-dialog-content style="width: 400px; height: auto">
+    <table style="width: auto; margin-left: 50px;">
+      <tr>
+        <th>{{ 'REGION_NAME' | translate }} </th>
+        <td>&nbsp; : &nbsp;</td>
+        <td>{{tempViewData?.regionName}}</td>
+      </tr>
+      <tr>
+        <th>{{ 'REGION_DESC' | translate }}</th>
+        <td>&nbsp; : &nbsp;</td>
+        <td>{{tempViewData?.regionDesc}}</td>
+      </tr>
+    </table>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" fxLayoutAlign="center center">
+    <button mat-raised-button mat-dialog-close (click)="cancel()" class="rightbutton" color="primary">{{ 'COMMON_BACK' |
+      translate }}</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- user manual -->
+<div id="mySidenav" class="sidenav">
+  <a class="closebtn" (click)="closeNav()">&times;</a>
+  <div class="sidenav-header">
+    <h3>User Manual</h3>
+  </div>
+  <div class="sidenav-search">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input class="search-input" type="search" name="search" size="55"/>
+  </div>
+
+    <div class="help-body">
+      <iframe [src]="sanitizedUserManualUrl" class="user-manual-iframe"></iframe>
+    </div>
+
+    <div class="exmaple">
+      
+    </div>
+
+  <!-- inside box -->
+  <!-- <div class="sidenav-body">
+    <p>box</p>
+  </div> -->
+  <!-- Add other content here -->
+</div>

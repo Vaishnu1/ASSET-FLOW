@@ -1,0 +1,62 @@
+.section_title {
+    font-size: 22px;
+    color: #445c8f;
+    padding:20px 0px;
+}
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-label
+{
+    font-size: 18px !important;
+    color:#333 !important;
+}
+.headerrow{
+    border-bottom:1px solid #e5e5e5;
+}
+::ng-deep .mat-dialog-container {
+    padding:15px;
+    overflow: hidden;
+}
+.modalform {
+    padding:20px;
+}
+.mat-raised-button {
+    color:#fff !important;
+    min-width: 30px !important;
+}
+
+
+  /* Static Drop Down */
+
+  
+  ::ng-deep .ng-select .ng-select-container  {            
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+  }
+  
+
+
+  tr {
+      height: 15px;
+  }
+
+  ::ng-deep .mat-elevation-z8 {
+     box-shadow:none;
+  }
+
+  ::ng-deep th.mat-header-cell {
+    width:50px!important;
+}
+
+.top-space{
+    margin-top:20px;
+}
+
+.centrebutton{
+    text-align: center;
+    margin-left:10px
+}
+
+input{
+    padding-top:20px!important;
+}

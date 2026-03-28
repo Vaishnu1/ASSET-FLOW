@@ -1,0 +1,179 @@
+.example-full-width {
+    width: 95%;
+  }
+
+  .example-label{
+    font-size: 12px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color:#000000;
+}
+
+.form-group{
+    margin-bottom: 0.5rem !important;
+    font-size: 12px !important;
+    margin-left:7%;
+    font-weight: 400;
+  }
+
+  input.mat-input-element {
+    margin-top: 0.70em ;
+    font-size: 12px !important;
+  } 
+  
+
+
+  .space{
+    margin-left: 10px;
+  }
+
+  .modalform {
+    padding:0px;
+}
+
+.content-style {
+  padding-top: 10px;
+  min-height: 18px;
+
+}
+
+.card-style {
+  /* box-shadow:1px 1px 10px #d4d4d4; */
+  border-radius: 0%;
+  margin-bottom: 20px;
+}
+
+.example-container {
+  width: 100%;
+  height: 100%;
+  /* margin-left: 1.5%; */
+}
+
+.breadcrumblink{
+  float: left;
+}
+
+.breadcrumblink{
+  float: left;
+}
+
+.card-design{
+  margin-left: 1%;
+  border-radius: 0%;
+  box-shadow:1px 1px 10px #d4d4d4; 
+  width:100%;
+  margin-right: 1%;
+}
+
+.content-style{
+  padding-top: 10px;
+}
+
+.card-style{
+  border-radius: 0%;
+  min-height: 400px;
+  margin-bottom: 20px;
+  z-index:800;
+}
+
+::ng-deep .mat-card:not([class*=mat-elevation-z])
+{
+  box-shadow: none !important;
+}
+
+.whitecolor {
+  color: #ffffff !important;
+}
+/* Default design for Table */
+tr.mat-header-row {
+  height: 35px;
+}
+
+.mat-header-cell {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+
+button{
+  /* float: right; */
+  margin-top:0.5%;
+}
+
+.space{
+  margin-left: 10px;
+}
+
+.mat-card-content {
+  padding: 10px !important;
+  background-color: #ffffff;
+  margin-right:15px;
+  margin-top:5px;
+  /* margin-left:-15px; */
+}
+
+.action_icon {
+  cursor: pointer;
+}
+
+.card-design{
+  margin-left: 1%;
+  border-radius: 0%;
+  box-shadow:1px 1px 10px #d4d4d4; 
+  width:100%;
+  margin-right: 1%;
+}
+
+.rightbuttonFooter
+{
+text-align: right;
+padding-bottom: 10px;
+}
+/* 
+.border{
+  margin-left:10px;
+  margin-left:-20px;
+} */
+
+.action_icon {
+  cursor: pointer;
+}
+
+.no-record-found{
+  text-align: center !important;
+  background-color: white !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: black;
+}
+
+.mat-card{
+  border-radius: 0px !important;
+  padding: 10px !important;
+} 
+
+.h-30-px-mb-2-px{
+  height: 30px;
+  margin-bottom: 2.5px;
+}
+
+.mt-top-12px{
+  margin-top: 12px;
+}
+
+.h-26px{
+  height: 26px;
+}
+
+.mr-10px {
+  margin-right: 10px;
+}
+
+.ng-select-error {
+  font-weight: 400;
+  line-height: 1.125;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  letter-spacing: normal;
+  font-size: 11px;
+  margin-top: 5px;
+}

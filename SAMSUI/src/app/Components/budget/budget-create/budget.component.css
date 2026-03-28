@@ -1,0 +1,80 @@
+.division{
+    margin-bottom: 20px;
+}
+
+#startMonthTab{
+    margin-left: 7px;
+}
+
+#endMonthTab{
+    margin-left: 7px;
+}
+ 
+.space {
+    margin-right: 10px;
+}
+
+
+#budgetName{
+    margin-top: -12px; 
+}
+
+#budgetInput{
+    margin-left: -100px;
+}
+
+#budgetStatus{
+
+    margin-top: -12px;
+    margin-left: 24px;
+    padding-left: 0px;
+}
+
+#view{ 
+    margin-top: -5%;
+}
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 10px;
+}
+
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type { 
+    padding-right: 10px;
+}
+
+/* .badget-status-field {
+    margin-top: -9px;
+} */
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 5px;
+} 
+ 
+
+.customTable input {
+    width: 90%;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    max-width: 123px;
+    word-break: break-word;
+}
+.example-full-width{
+    width: 95% !important;
+}
+mat-card{
+    padding: 10px !important;
+    border-radius: 0% !important;
+}
+
+.h-60-px{
+    height: 60px;
+}
+
+.mt--2-px{
+    margin-top: -3px;
+}
+
+.mt--27-px{
+    margin-top: -27px;
+}

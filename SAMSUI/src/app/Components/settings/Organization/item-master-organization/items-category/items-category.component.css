@@ -1,0 +1,13 @@
+.card-style{
+    border-radius: 0%; 
+    margin-bottom: 20px;
+    z-index:800;
+}
+
+.example-full-width {
+    width: 95%;
+}
+
+.space{
+    margin-right: 5px;
+}

@@ -1,0 +1,22 @@
+.pad-1-per{
+  padding: 1%;
+}
+
+.close-icon {
+  color: red;
+  cursor: pointer;
+}
+
+.example-full-width {
+  width: 95%;
+}
+
+
+.mandatory-style {
+  color: crimson;
+}
+
+::ng-deep .SubdepartmentCreateComponent-dialog-dropdown .ng-dropdown-panel-items {
+  height: 140px !important;
+  overflow-y: scroll !important;
+}

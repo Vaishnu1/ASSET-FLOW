@@ -1,0 +1,248 @@
+<form>
+  <mat-card class="card-style">
+    <mat-card-content>
+
+      <div class="content-style" style="padding-top: 0.5%;">
+
+        <div class="example-container">
+
+          <table mat-table [dataSource]="workflowNotificationDataSource" multiTemplateDataRows>
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center"> {{'COMMON_S_NO' | translate}} </th>
+              <td mat-cell *matCellDef="let element; let i=dataIndex;" style="text-align: center;;" class="table-cell-data"> {{(i+1)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="transactionNo">
+              <th mat-header-cell [hidden]="transactionIdShow" *matHeaderCellDef class="table-head-data allign-center">
+                {{ 'WORKFLOW_TRANSACTION_NO' | translate }} / <br/> {{ 'WORKFLOW_TRANSACTION_SOURCE' | translate }} </th>
+              <td mat-cell [hidden]="transactionIdShow" *matCellDef="let element" class="table-cell-data allign-center">
+               {{element?.transactionNo}} <br/> <br/> {{element?.transactionSource | translate}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="workflowDescriptionTO.workflowName">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center"> {{ 'WORKFLOW_DESCRIPTION' | translate }} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center"> {{element?.workflowName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="levelName">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">{{'WORKFLOW_LEVEL_NAME' | translate }}</th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element.levelName}} <br/> <br/> <span class="{{element?.levelApprovalStatus.replace(' ','')}}">{{element?.levelApprovalStatus}}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="employeeName1">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">
+                {{'WORKFLOW_EMP_1' | translate }} / <br/> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element.employeeName1}} <br/> <br/> <span class="{{element?.emp1ApproveStatus.replace(' ','')}}">{{element?.emp1ApproveStatus}}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="condition1">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">{{'WORKFLOW_CONDITION_1' | translate }}</th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center"> {{element.condition1}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="employeeName2">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">
+                {{'WORKFLOW_EMP_2' | translate }} / <br/> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element.employeeName2}} <br/> <br/> <span class="{{element?.emp2ApproveStatus.replace(' ','')}}">{{element?.emp2ApproveStatus}}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="condition2">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">{{'WORKFLOW_CONDITION_2' | translate }}</th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center"> {{element.condition2}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="employeeName3">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">
+                {{'WORKFLOW_EMP_3' | translate }} / <br/> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element.employeeName3}} <br/> <br/> <span class="{{element?.emp3ApproveStatus.replace(' ','')}}">{{element?.emp3ApproveStatus}}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdDt">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">
+                {{'COMMON_REQUESTED_BY' | translate}} / <br/> {{'COMMON_DATE' | translate}} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element?.createdBy}} <br/> <br/> {{element?.createdDtDisp}}
+              </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="supercededBy">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data allign-center">
+                {{'SUPER_ADMIN' | translate}} / <br/> {{'COMMON_DATE' | translate}} </th>
+              <td mat-cell *matCellDef="let element" class="table-cell-data allign-center">
+                {{element?.approvalSupersededByName}} <br/> <br/> {{element?.approvalSupersededDtDisp}}
+              </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="action" >
+                <th mat-header-cell  [hidden]="!show" *matHeaderCellDef class="table-head-data allign-center" >
+                    {{ 'COMMON_ACTION' | translate }} </th>
+                <td mat-cell  [hidden]="!show" *matCellDef="let element" class="table-cell-data allign-center">
+
+                <button mat-icon-button class="mat-icon-button" matTooltip="{{ 'COMMON_APPROVE' | translate }}" color="primary" (click)="confirmApproveMethod()" [disabled]="isViewMode"
+                    *ngIf="(((retirementStatusId == retirementStatus || retirementStatusId == salvageStatus || retirementStatusId == disposalStatus || retirementStatusId == scrapStatus) && (retirementStatusId != retirmentRejectStatus && retirementStatusId != salvageRejectStatus && retirementStatusId != disposeRejectStatus && retirementStatusId != scrapRejectStatus) && approvebuttonEnable && ((employeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (employeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (employeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                    (poStatus && POApproveButtonEnable && ((POEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (POEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (POEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                    (prStatus && PRApproveButtonEnable && ((PREmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (PREmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (PREmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                    (stockindentStatus && StockIndentApproveButtonEnable && ((StockIndentEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (StockIndentEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (StockIndentEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                    (stockTransferStatus && stockTransferApproveButton && ((stockTransferEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (stockTransferEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (stockTransferEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                      (preInwardShow && preInwardStatusId == preinwardStatus && PreInwardApproveButtonEnable && ((preInwardEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (preInwardEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (preInwardEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+
+                      (itemShow && itemStatus =='UNMATCHED' && itemApprove && ((itemApprovalEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (itemApprovalEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (itemApprovalEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                       (loanShow && (loanStatusId ==requestForLoan || loanStatusId==requestForReturn) && loanApprove && ((loanEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (loanEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (loanEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                         (assetRegistrationStatusId == assetStatusId && assetRegistrationApproveButton && ((assetRegistrationEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (assetRegistrationEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (assetRegistrationEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                          (gatePassStatusId > 0 && gatePassApproveButton && ((gatePassEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (gatePassEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (gatePassEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                          (workOrderStatusId >0 && workOrderApproveButton && ((workOrderEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (workOrderEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (workOrderEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED')) && ((workOrderEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'REJECTED') || (workOrderEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'REJECTED') || (workOrderEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'REJECTED') || (element.superAdmin && element.levelApprovalStatus!= 'REJECTED'))) ||
+
+                           (contractApproveButton && ((contractEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (contractEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (contractEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                           (grnStatus && GRNApproveButtonEnable && ((GRNEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (GRNEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (GRNEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                           (physicalAuditStatus && phyAuditAprroveButton && ((physicalAuditEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (physicalAuditEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (physicalAuditEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                           (supplierInvoiceStatus && supplierInvoiceApproveButton && ((supplierInvoiceEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (supplierInvoiceEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (supplierInvoiceEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                           (rtvStaus && rtvApproveButton && ((rtvEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (rtvEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (rtvEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                           (AssetRelocationApproveButtonEnable && ((assetRelocationEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (assetRelocationEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (assetRelocationEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED')))) && (element.levelSeqNo ==nextApproverLevel) || 
+                           
+                           (AssetCodeChangeApproveButtonEnable && ((AssetCodeChangeEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (AssetCodeChangeEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (AssetCodeChangeEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ">
+                    <mat-icon ><a>spellcheck</a></mat-icon></button>
+
+                <button mat-icon-button  class="close-icon-large" matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rejectRetirementMethod()" [disabled]="isViewMode"
+                    *ngIf="(((retirementStatusId == retirementStatus || retirementStatusId == salvageStatus || retirementStatusId == disposalStatus || retirementStatusId == scrapStatus) && (retirementStatusId != retirmentRejectStatus && retirementStatusId != salvageRejectStatus && retirementStatusId != disposeRejectStatus && retirementStatusId != scrapRejectStatus) && approvebuttonEnable && ((employeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (employeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (employeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (loanShow && (loanStatusId ==requestForLoan || loanStatusId==requestForReturn) && loanApprove && ((loanEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (loanEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (loanEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (itemShow && itemStatus =='UNMATCHED' && itemApprove && ((itemApprovalEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (itemApprovalEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (itemApprovalEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (poStatus && POApproveButtonEnable && ((POEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (POEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (POEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (prStatus && PRApproveButtonEnable && ((PREmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (PREmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (PREmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (stockindentStatus && StockIndentApproveButtonEnable && ((StockIndentEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (StockIndentEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (StockIndentEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (stockTransferStatus && stockTransferApproveButton && ((stockTransferEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (stockTransferEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (stockTransferEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (workOrderStatusId >0 && workOrderApproveButton && ((workOrderEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (workOrderEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (workOrderEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED')) && ((workOrderEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'REJECTED') || (workOrderEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'REJECTED') || (workOrderEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'REJECTED') || (element.superAdmin && element.levelApprovalStatus!= 'REJECTED')))
+
+                     ||
+
+                     (gatePassStatusId && gatePassApproveButton && ((gatePassEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (gatePassEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (gatePassEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (preInwardShow && preInwardStatusId == preinwardStatus && PreInwardApproveButtonEnable && ((preInwardEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (preInwardEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (preInwardEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (contractApproveButton && ((contractEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (contractEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (contractEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (grnStatus && GRNApproveButtonEnable && ((GRNEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (GRNEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (GRNEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (physicalAuditStatus && phyAuditAprroveButton && ((physicalAuditEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (physicalAuditEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (physicalAuditEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (supplierInvoiceStatus && supplierInvoiceApproveButton && ((supplierInvoiceEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (supplierInvoiceEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (supplierInvoiceEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (rtvStaus && rtvApproveButton && ((rtvEmpId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (rtvEmpId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (rtvEmpId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (assetRegistrationStatusId == assetStatusId && assetRegistrationApproveButton && ((assetRegistrationEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (assetRegistrationEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (assetRegistrationEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED'))) ||
+
+                     (AssetRelocationApproveButtonEnable && ((assetRelocationEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (assetRelocationEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (assetRelocationEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED')))) && (element.levelSeqNo ==nextApproverLevel) ||
+                     
+                     (AssetCodeChangeApproveButtonEnable && ((AssetCodeChangeEmployeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (AssetCodeChangeEmployeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (AssetCodeChangeEmployeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED') || (element.superAdmin && element.levelApprovalStatus!= 'APPROVED')))">
+                    <mat-icon ><a>cancel</a></mat-icon></button>
+                <!-- <button mat-raised-button  class="upload" color="primary" (click)="uploadDocumentListMethod()"
+                    *ngIf="((retirementStatusId == retirementStatus || retirementStatusId == salvageStatus || retirementStatusId == disposalStatus || retirementStatusId == scrapStatus) && (retirementStatusId != retirmentRejectStatus && retirementStatusId != salvageRejectStatus && retirementStatusId != disposeRejectStatus && retirementStatusId != scrapRejectStatus) && approvebuttonEnable && ((employeeId == element.employeeId1 && element.emp1ApproveStatus != 'APPROVED') || (employeeId ==element.employeeId2 && element.emp2ApproveStatus != 'APPROVED') || (employeeId == element.employeeId3 && element.emp3ApproveStatus != 'APPROVED'))) && (element.levelSeqNo ==nextApproverLevel)" >
+                    {{'MODEL_DOCUMENT' | translate}}</button> -->
+                </td>
+              </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                  <td mat-cell *matCellDef="let element" [attr.colspan]="workflowNotificationDispColumns.length">
+                    <div class="example-element-detail" [@detailExpand]="element == workflowNotificationExpandedDataSource ? 'expanded' : 'collapsed'">
+                      <table class="table">
+                        <thead>
+                        </thead>
+
+                        <tbody>
+                          <tr  *ngFor="let subElement of element.workFlowRejectList ; let j=index;">
+                            <td class="table-cell-data allign-center">
+                              <span style='font-size:12px;'>&#9658;</span>
+                            </td>
+
+                            <td [hidden]="transactionIdShow" class="table-cell-data allign-center">{{subElement?.transactionNo}} <br/> <br/> {{subElement?.transactionSource}}</td>
+
+                            <td class="table-cell-data allign-center">{{subElement?.workflowName}}</td>
+
+                            <td class="table-cell-data allign-center">
+                              {{subElement.levelName}} <br/> <br/>
+                              <span class="{{subElement?.levelApprovalStatus.replace(' ','')}}">{{subElement?.levelApprovalStatus}}</span>  <br/> <br/>
+                              {{subElement.rejectRemarks}}
+                            </td>
+
+                            <td class="table-cell-data allign-center">
+                              {{subElement.employeeName1}} <br/> <br/>
+                              <span class="{{subElement?.emp1ApproveStatus.replace(' ','')}}">{{subElement?.emp1ApproveStatus}}</span>
+                            </td>
+
+                            <td class="table-cell-data allign-center">{{element.condition1}}</td>
+
+                            <td class="table-cell-data allign-center">
+                              {{subElement.employeeName2}} <br/> <br/>
+                              <span class="{{subElement?.emp2ApproveStatus.replace(' ','')}}">{{subElement?.emp2ApproveStatus}}</span>
+                            </td>
+
+                            <td class="table-cell-data allign-center">{{element.condition2}}</td>
+
+                            <td class="table-cell-data allign-center">
+                              {{subElement.employeeName3}} <br/> <br/>
+                              <span class="{{subElement?.emp3ApproveStatus.replace(' ','')}}">{{subElement?.emp3ApproveStatus}}</span>
+                            </td>
+
+                            <td class="table-cell-data allign-center"> {{subElement?.createdBy}} <br/> <br/> {{subElement?.createdDtDisp}} </td>
+
+
+                          </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="workflowNotificationDispColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: workflowNotificationDispColumns;" class="example-element-row"
+              [class.example-expanded-row]="workflowNotificationExpandedDataSource === element"
+              (click)="workflowNotificationExpandedDataSource = workflowNotificationExpandedDataSource === element ? null : element">
+            </tr>
+          </table>
+
+          <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}
+          </mat-card>
+          <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40" fxLayoutAlign="center center"></mat-spinner>
+          </mat-card>
+
+        </div>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</form>

@@ -1,0 +1,69 @@
+<mat-icon class="close-icon-large" (click)="close()">highlight_off</mat-icon>
+<form [formGroup]="srBreakDownForm">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <mat-card class="mb-30">
+        <mat-card-header>
+          <mat-card-title>{{ 'SR_REASSIGN' | translate }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content class="info">
+
+          <div class="row">
+
+            <div class="col-md-12">
+              <div class="example-full-width">
+                <p class="input-label"> {{ 'SR_REASSIGN_TO' | translate }} <span class="mandatory-style">*</span></p>
+                <ng-select [items]="personInchargeCombo" required bindLabel="employeeFirstName" bindValue="employeeFirstName"
+                (search)="loadPersonInchargeComboData($event)" (click)="loadPersonInchargeComboData($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadPersonInchargeComboData({})"  (keyup.backspace)="loadPersonInchargeComboData({})"   (clear)="loadPersonInchargeComboData('clear')" [loading]="scrollsyncPersonIncharge"
+                loadingText="Loading..." (change)="selectedPersonInchargeData($event)" formControlName="reAssignedTo">
+                </ng-select>
+                <mat-error *ngIf="srBreakDownForm.controls.reAssignedTo.invalid && srBreakDownForm.controls.reAssignedTo.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.reAssignedTo.errors.required">
+                    {{ 'SR_REASSIGN_TO' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-12">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                hintLabel="{{ CommonhintMsg.MAX_500}}">
+                <mat-label class="example-label input-label"> {{ 'SR_REASSIGN_REMARKS' | translate }} </mat-label>
+                <textarea matInput formControlName="remarks" [maxlength]="500"></textarea>
+                <mat-hint align="end">{{srBreakDownForm.controls.remarks.value?.length || 0}}/500</mat-hint>
+                <mat-error *ngIf="srBreakDownForm.controls.remarks.invalid && srBreakDownForm.controls.remarks.touched">
+                  <div *ngIf="srBreakDownForm.controls.remarks.errors.maxlength">{{ 'SR_REASSIGN_REMARKS' | translate }} Maximum Length is 500 </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+              <div class="float-right submit-button-position">
+                <button mat-raised-button class="space" color="primary" [disabled]="srBreakDownForm.invalid"
+                  (click)="reassignServiceRequest()">
+                  <span *ngIf="!uploadFlag"> {{'COMMON_SUBMIT' | translate}} </span>
+                  <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button>
+              </div>
+            </div>
+          </div>
+
+        </mat-card-content>
+
+      </mat-card>
+
+    </div>
+  </div>
+
+</form>

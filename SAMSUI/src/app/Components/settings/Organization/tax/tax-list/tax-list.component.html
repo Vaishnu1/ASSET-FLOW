@@ -1,0 +1,83 @@
+<div fxLayout="column">
+
+  <div fxLayout="row" fxLayoutAlign="space-evenly center" fxFlex="100">
+    <div fxFlex="35" fxLayoutAlign="start center">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <input matInput #setFocus type="search" name="search" id="search"
+          placeholder="Search {{ 'MENU_TAX' | translate }}" (input)="onSearchChange($event.target.value)">
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="65" fxLayoutAlign="end center">
+    </div>
+  </div>
+
+  <mat-toolbar>
+    <span>{{'MENU_TAX'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay" (click)="openDialog(0,'create')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openDialog(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openDialog(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+
+  <div class="org-container-table" fxLayout="column">
+
+    <table mat-table [dataSource]="taxdataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+      matSortDirection="asc" matSortDisableClear fxFlex="100">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectTax(element)" [checked]="selectedItem.taxId == element?.taxId"></mat-checkbox></td>
+      </ng-container>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="taxCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> {{ 'TAX_NAME' | translate }} </th>
+        <td mat-cell (click)="selectTax(element)" *matCellDef="let element" style="width: 10%;" matTooltip="{{element.taxCode}}"> {{element.taxCode}} </td>
+      </ng-container>
+      <ng-container matColumnDef="taxComputation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">{{ 'TAX_COMPUTATION' | translate }}
+        </th>
+        <td mat-cell (click)="selectTax(element)" *matCellDef="let element" style="width: 20%;" matTooltip="{{element.taxComputation}}"> {{element.taxComputation}}</td>
+      </ng-container>
+      <ng-container matColumnDef="taxRate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%; text-align: center;">{{ 'TAX_AMOUNT' | translate }} </th>
+        <td mat-cell (click)="selectTax(element)" *matCellDef="let element" style="width: 20%; text-align: center;" matTooltip="{{element.taxRate}}"> {{element.taxRate}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> {{ 'COMMON_UPDATED_BY' | translate }}
+        </th>
+        <td mat-cell (click)="selectTax(element)" *matCellDef="let element" style="width: 15%;"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;">{{ 'COMMON_UPDATED_DT' | translate }}
+        </th>
+        <td mat-cell (click)="selectTax(element)" *matCellDef="let element" style="width: 15%;"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+    <mat-card *ngIf="subloader" fxLayoutAlign="center center" class="no_records_found">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+
+  </div>
+
+</div>

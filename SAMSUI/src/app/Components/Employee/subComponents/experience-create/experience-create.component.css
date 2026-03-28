@@ -1,0 +1,61 @@
+.section_title {
+    font-size: 22px;
+    color: #445c8f;
+    padding:0px 0px;
+    margin:-8px 0px;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-label
+{
+    font-size: 18px !important;
+    color:#333 !important;
+}
+.headerrow{
+    border-bottom:1px solid #e5e5e5;
+}
+::ng-deep .mat-dialog-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.modalform {
+    padding:20px;
+}
+.mat-raised-button {
+    color:#fff !important;
+    min-width: 30px !important;
+}
+.closebutton {
+    margin-top: -20px; 
+    margin-right: -35px; 
+}
+.closebutton button {
+    border-radius: 0px !important;
+    height: 33px;
+    width: 40px !important;
+    padding: 0px 7px !important;
+}
+.space {
+    margin-right: 15px;
+}
+.mt-15 {
+    margin-top:15px;
+}
+.ng-select {
+    margin-bottom: 1rem !important;
+}
+.action_icon {
+    cursor: pointer;
+  }
+
+  .mb-10 {
+    margin-bottom: 10px;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.skill-create-button {
+    display: grid;
+    justify-content: center;
+}

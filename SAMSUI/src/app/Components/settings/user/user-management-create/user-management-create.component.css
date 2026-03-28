@@ -1,0 +1,85 @@
+.space {
+  margin-left: 10px;
+}
+
+.card-design {
+  /* margin-left: 1%; */
+  border-radius: 0%;
+  box-shadow: 1px 1px 10px #d4d4d4;
+  width: 100%;
+  margin-right: 1%;
+}
+
+.panel-form-po{
+  border-radius: 10px;
+  margin-left: 0px;
+  margin-right: 0px;     
+  margin-bottom: 5px;
+  /* background-color: cornsilk; */
+  padding: 0% 1% 1% 1%;
+}
+
+.title {
+  font-size: 13px !important;
+  font-style: Aleo;
+  color: rgb(20, 117, 110);
+  font-weight: 501;
+}
+
+.subtitle {
+  margin-left: 15px !important;
+  font-size: 14px !important;
+  color: #302e7e;
+}
+
+.value {
+  font-size: 12px !important;
+  /* font-weight: lighter; */
+  font-family: Roboto,Helvetica Neue,sans-serif !important;
+}
+
+h6{
+  font-weight: 500;
+}
+
+.user-create-inputs {
+  margin-bottom: 10px;
+}
+.example-full-width{
+  width: 95% !important;
+}
+mat-card{
+  padding: 10px !important;
+}
+
+h4 {
+  margin-bottom: 2px;
+}
+
+.mt-13-px {
+  margin-top: 13px;
+}
+
+.mt-15-px {
+  margin-top: 15px;
+}
+
+.mt-32-px {
+  margin-top: 32px;
+}
+
+.mt-10-px {
+  margin-top: 10px;
+}
+
+.mt-4-px {
+  margin-top: 4px;
+}
+
+.h_40_px{
+  height: 40px;
+}
+
+.mt-25-px{
+  margin-top: 25px;
+}

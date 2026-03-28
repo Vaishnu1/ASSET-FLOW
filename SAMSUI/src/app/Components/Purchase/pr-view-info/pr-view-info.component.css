@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  button{
+    margin-top: -40px;
+  }
+
+  .item-request-pr-list{
+    min-width: 130%;
+      overflow-x: scroll;
+  }
+
+  .item-request-po-list{
+    min-width: 110%;
+      overflow-x: scroll;
+  }
+
+  .item-request-stock-indent-list{
+    min-width: 110%;
+      overflow-x: scroll;
+  }
+ 
+  .item-request-pr-list{
+    min-width: 100%;
+    overflow-x: scroll;
+  }
+  
+  .item-request-pr-list td.mat-cell {
+    max-width: 90px;
+  }
+
+  .contract-list-table{
+    min-width: 100%;
+    overflow-x: scroll;
+  }
+  .contract-list-table td.mat-cell {
+    max-width: 100px;
+  }
+  .hidden {
+    display: none; 
+  }
+  .diplay{
+    display: block;
+  }

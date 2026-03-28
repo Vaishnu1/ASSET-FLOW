@@ -1,0 +1,17 @@
+<!-- <mat-icon class="close-icon-large" (click)="closeMonthWise()">highlight_off</mat-icon>
+
+<div class="hgt-175">
+  <div echarts [options]="optionData" class="chart" theme="roma"></div>
+</div> -->
+
+<mat-icon class="close-icon-large" (click)="closeMonthWise()">highlight_off</mat-icon>
+<div class="row">
+  <div class="col-md-12">
+    <div class="cardheader-title2">
+      <p> {{ headingDisplay }} </p>
+    </div>
+    <div class="hgt-175">
+      <div echarts [options]="optionData" class="chart" (chartClick)="onChartClick($event)" theme="roma"></div>
+    </div>
+  </div>
+</div>

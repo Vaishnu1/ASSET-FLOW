@@ -1,0 +1,17 @@
+.space{
+    margin-left: 10px;
+}
+
+table{
+    width:100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.custom-field-tbl {
+    margin-top: 8px;
+    max-height: 425px;
+    overflow-y: auto;
+}

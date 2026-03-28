@@ -1,0 +1,51 @@
+.custom-field-blocks{
+    min-height: 440px;
+    overflow-y: auto;
+}
+
+.space{
+    margin: 0px 5px;
+  }
+
+  .heading-panel{
+      border-bottom: 1px solid #a6b4cf;
+  }
+
+  .header-panel{
+    margin-top: 10px;
+  }
+
+  .field-block{
+    margin-bottom: 3px;
+  }
+
+  .select-field-err-msg{
+    margin-bottom: -15px;
+  }
+
+  ::ng-deep ul{
+    margin-block-start: 0em !important;
+ }
+
+ ::ng-deep li{
+  margin-bottom: 5px !important;
+}
+
+.note-message{
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-size: 14px;
+}
+
+.custom-field-table{
+  min-width: 100%;
+  overflow-x: scroll;
+}
+
+.input-field-1{
+  margin-top: 12px;
+  padding-bottom: 11.5px;
+}
+
+.style-margin{
+  margin-top: 44px;
+}

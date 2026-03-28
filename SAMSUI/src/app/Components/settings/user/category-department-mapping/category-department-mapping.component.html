@@ -1,0 +1,149 @@
+<div fxLayout="column">
+  <div fxLayout="row" style="margin: 10px;">
+    <div fxFlex="90" fxLayoutAlign="start start">
+      <h4 class="dialogue-box-header ">{{'USER_CATEGORY_-_DEPARTMENT_MAPPING_FOR' | translate }} {{userName}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+    <mat-icon class="close-icon" (click)="closeCategoryDepartmentModal()">highlight_off
+    </mat-icon>
+  </div> 
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <span *ngIf="uploadBtnFlag" class="mandatory-style">{{error_msg}}</span>
+  </div>
+
+  <!-- <div fxLayout="row" class="dep_cat-container-table">
+    <div fxFlex="49">
+      <table mat-table [dataSource]="locDepartmentList" matSort fxFlex="95">
+        <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+        </ng-container>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef style="width:35%;">
+            <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin float-right"
+              [(ngModel)]="selectAllFlag" (change)="selectAll(selectAllFlag);updateBtnFlag()">{{'COMMON_SELECT_ALL' | translate }}
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:start;">
+            <mat-checkbox [(ngModel)]="element.active" (change)="updateBtnFlag()" [ngModelOptions]="{standalone: true}" color="primary"
+              class="example-margin">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="departmentName">
+          <th mat-header-cell *matHeaderCellDef style="width:55%;">
+            {{ 'DEPARTMENT_NAME' | translate }} </th>
+          <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.departmentName}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedDepartmentColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedDepartmentColumns;">
+      </table>
+    </div>
+    <div fxFlex="2"></div>
+    <div fxFlex="49">
+      <table mat-table [dataSource]="categoryList" matSort fxFlex="95">
+        <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+        </ng-container>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef style="width:35%;">
+            <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin float-right"
+              [(ngModel)]="selectAllFlagCategory" (change)="selectAllCategory(selectAllFlagCategory);updateBtnFlag()">
+              {{'COMMON_SELECT_ALL' | translate }}</mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:start;">
+            <mat-checkbox [(ngModel)]="element.active" (change)="updateBtnFlag()" [ngModelOptions]="{standalone: true}" color="primary"
+              class="example-margin">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="categoryName">
+          <th mat-header-cell *matHeaderCellDef style="width:55%;">
+            {{ 'USER_CATEGORY' | translate }} </th>
+          <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.categoryName}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedCategoryColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedCategoryColumns;">
+      </table>
+    </div>
+    <div fxFlex="100" fxLayout="row" class="card-style" fxLayoutAlign="center center">
+      <button mat-raised-button type="button" color="primary" [disabled]="uploadBtnFlag"
+        (click)="saveOrUpdateCategoryDepartmentMapping($event)">{{'COMMON_SUBMIT' | translate}}</button>
+    </div>
+  </div> -->
+ 
+  <div class="cat-dept-mapping-table-container">
+
+    <div class="dept-table">
+      <table mat-table [dataSource]="locDepartmentList" matSort>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+      </ng-container>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef style="width:35%;">
+          <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin float-right"
+            [(ngModel)]="selectAllFlag" (change)="selectAll(selectAllFlag);updateBtnFlag()">{{'COMMON_SELECT_ALL' | translate }}
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:start;">
+          <mat-checkbox [(ngModel)]="element.active" (change)="updateBtnFlag()" [ngModelOptions]="{standalone: true}" color="primary"
+            class="example-margin">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="departmentName">
+        <th mat-header-cell *matHeaderCellDef style="width:55%;">
+          {{ 'DEPARTMENT_NAME' | translate }} </th>
+        <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.departmentName}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedDepartmentColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedDepartmentColumns;">
+      </table>
+   </div>
+
+    <div class="cat-table">
+      <table mat-table [dataSource]="categoryList" matSort>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+      </ng-container>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef style="width:35%;">
+          <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin float-right"
+            [(ngModel)]="selectAllFlagCategory" (change)="selectAllCategory(selectAllFlagCategory);updateBtnFlag()">
+            {{'COMMON_SELECT_ALL' | translate }}</mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:start;">
+          <mat-checkbox [(ngModel)]="element.active" (change)="updateBtnFlag()" [ngModelOptions]="{standalone: true}" color="primary"
+            class="example-margin">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="categoryName">
+        <th mat-header-cell *matHeaderCellDef style="width:55%;">
+          {{ 'USER_CATEGORY' | translate }} </th>
+        <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.categoryName}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedCategoryColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedCategoryColumns;">
+      </table>
+    </div>
+
+    <div fxFlex="100" fxLayout="row" class="card-style" fxLayoutAlign="center center">
+      <button mat-raised-button type="button" color="primary" [disabled]="uploadBtnFlag"
+        (click)="saveOrUpdateCategoryDepartmentMapping($event)">{{'COMMON_SUBMIT' | translate}}</button>
+    </div>
+
+  </div>
+
+      
+
+
+</div>

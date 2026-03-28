@@ -1,0 +1,180 @@
+<div fxLayout="column" fxFlex="100%">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_SETTING' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{'MENU_IMPORT' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+
+<div  fxLayout="column" fxFlex="100">
+  
+  <mat-card>
+    <mat-card-content fxLayout="column" fxFlex="100">
+      <h4 class="input-label">Select Module Name to Import </h4>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="25" class="form-group">
+          <span class="input-label"> {{ 'MENU_IMPORT' | translate }} <span class="mandatory-style">*</span> </span>
+          <ng-select class="example-full-width" tabindex="1" appendTo="body" [(ngModel)] = "selectedModule"
+          [items]="importModules" bindLabel="name" bindValue="name" (change)="selectedImportModule($event)">
+          </ng-select>
+        </div>
+
+        <div fxFlex="20">
+          <div class="form-group" *ngIf="enableCustFields">
+            <mat-checkbox color="primary"  fxLayoutAlign="center center" *ngIf="enableCustFields" [(ngModel)]="custFields"
+            class="input-label licence-check-box" [tabIndex]=5>{{ 'CUSTOM_FIELDS' |
+            translate }}</mat-checkbox>
+  
+            <div class="form-group mt-15"  *ngIf="enableCustFields && custFields" fxHide.md fxHide.gt-md>
+              <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+              <ng-select  [tabIndex]=7 [(ngModel)]="subCategoryName" 
+                (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" [virtualScroll]="true"
+                (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" [loading]="subScrollsync" loadingText="Loading..."
+                (change)="getSubCategoryComboValue($event)" [items]="subCategoryData"
+                bindLabel="subCategoryName" bindValue="subCategoryName" appendTo="body">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div fxFlex="25">
+          <div class="form-group" *ngIf="enableCustFields && custFields" fxHide.sm fxHide.xs>
+            <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+            <ng-select  [tabIndex]=7 [(ngModel)]="subCategoryName" 
+              (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" [virtualScroll]="true"
+              (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" [loading]="subScrollsync" loadingText="Loading..."
+              (change)="getSubCategoryComboValue($event)" [items]="subCategoryData"
+              bindLabel="displayName" bindValue="displayName" appendTo="body">
+            </ng-select>
+          </div>
+        </div>
+
+        <div fxFlex="25" fxLayoutAlign="center center">
+          <button mat-raised-button [disabled]="!moduleSelectFlag" (click)="downloadSampleFile()" class="space" color="primary">
+            <mat-icon>download</mat-icon>&nbsp;&nbsp;{{'COMMON_DOWNLOAD_TEMPLATE' | translate}}
+          </button>
+        </div>
+
+        <div fxFlex="30" fxLayoutAlign="start center">
+          <div fxFlex="32" fxLayout="row" fxLayoutAlign="start center">
+            <button color="primary" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab
+              matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'" [disabled]="!moduleSelectFlag">
+              <mat-icon>attachment</mat-icon>
+            </button>
+              <input style="display:none" id="imgModelupload" #fileUploader type="file" name="organizFile"
+              (change)="handleFileInput($event.target.files)" />
+          </div>
+
+          <div fxFlex="68" class="form-group">
+            <button mat-raised-button [disabled]="!fileUploadFlag" (click)="uploadImportFile()" class="space" color="primary">
+              <mat-icon>file_upload</mat-icon>&nbsp;&nbsp;{{'COMMON_UPLOAD' | translate}}
+            </button>
+          </div>
+        </div>
+
+      </div>
+      
+      <div fxLayout="row" class="pt-10px">
+        <span fxFlex="70"></span>
+        <span fxFlex="30" class="fileName" fxLayoutAlign="start center">{{this.fileName}}</span>
+      </div>
+      
+    </mat-card-content>
+  </mat-card>
+
+  <div fxLayout="column" fxFlex="100" class="mt-18px">
+
+    <div fxLayout="row" class="space-between">   
+
+      <mat-form-field fxFlex="21" [floatLabel]="'always'">  
+        <input matInput type="search" #searchSet name="search" id="search"
+        placeholder="Search" (input)="onSearchChange($event.target.value)"> 
+      </mat-form-field> 
+  </div>
+
+  <mat-toolbar>
+    <span>{{'MENU_REPORT'| translate}} List</span>
+    <span class="example-spacer"></span>
+    <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+      [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_REFRESH' | translate }}" [matTooltipPosition]="'below'"
+    (click)="loadList()"><mat-icon>refresh</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" 
+    matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" (click)="downloadDocument(selectedItem.serverFilePath)">
+    <mat-icon>cloud_download</mat-icon>
+  </button>
+  
+</mat-toolbar>
+
+
+  <div fxLayout="row" class="space-between" fxLayoutAlign="start center"> 
+    <div class="table_section">
+      <div class="import-reports-container-table">
+        <table mat-table [dataSource]="viewRequestMain">
+          <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef> {{'COMMON_SELECT' | translate}} </th>
+              <td mat-cell *matCellDef="let element; let i=index;"> 
+                <mat-checkbox color="primary" class="example-margin" (change)="selectReport(element)"
+                 [checked]="selectedItem.requestId == element.requestId"></mat-checkbox>
+              </td>
+          </ng-container>
+          <ng-container matColumnDef="no">
+            <th mat-header-cell *matHeaderCellDef> {{'REPORT_REQUEST_NO' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)"> {{element.requestNo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> {{'REPORT_REPORT_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)"> {{element.programName}}</td>
+          </ng-container>
+          <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef> {{'REPORT_START_DT' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)"> {{element.requestDtDisplay}} </td>
+          </ng-container> 
+          <ng-container matColumnDef="completedDate">
+            <th mat-header-cell *matHeaderCellDef> {{'REPORT_END_DT' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)"> {{element.requestEndDtDisp}} </td>         
+          </ng-container> 
+          <ng-container matColumnDef="requestedBy">
+            <th mat-header-cell *matHeaderCellDef> {{'COMMON_UPLOADED_BY' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)"> {{element?.requestedBy}} </td>
+          </ng-container> 
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> {{'COMMON_STATUS' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectReport(element)">        
+              <span class="{{element?.requestStatusDisp.replace(' ','')}}">{{element?.requestStatusDisp}} </span> 
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+          </tr>
+        </table>
+        <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderViewRequest">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+        <mat-card class="no_records_found" *ngIf="subLoaderViewRequest" fxLayoutAlign="center cenetr"> 
+            <mat-spinner [diameter]="60"></mat-spinner>
+        </mat-card> 
+
+      </div>
+
+    </div> 
+  </div>
+
+  </div>
+
+</div>
+
+</div>

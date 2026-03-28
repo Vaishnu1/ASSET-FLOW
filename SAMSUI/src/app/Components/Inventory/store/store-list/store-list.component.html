@@ -1,0 +1,185 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center">
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item  fxLayoutAlign="start center" >{{'MENU_INVENTORY' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item >{{'MENU_STORE' | translate}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>  
+  </div> 
+
+  <div fxLayout="row" fxFlex="100" fxFlexFill>
+    <div fxFlex="35"  fxLayoutAlign="start center">  
+        
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'"> 
+          <input matInput type="search" #searchCategory name="search" id="search" class="form-control input-label search-item" 
+            placeholder="Search Store"
+            (input)="onSearchChange($event.target.value)">
+        </mat-form-field>
+    </div>
+
+    <!-- <div fxFlex="50" fxLayoutAlign="end center">
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+      [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+    </mat-paginator>
+    </div>
+
+    <div fxFlex="15" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" 
+      (click)="createOrEditOrViewStore('0', 'create')">{{ 'COMMON_CREATE' | translate }}</button>        
+    </div> -->
+    
+  </div>
+
+  <hr />
+
+  <mat-toolbar>
+    <!-- <span>{{'MENU_STORE'| translate}} List</span> -->
+    <span class="example-spacer"></span>
+
+    <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+      [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+    </mat-paginator>
+    <span class="example-spacer"></span>
+
+    <button mat-raised-button color="primary"  class="space sqr-btn" *ngIf="modelAccessModule.createFlagDisplay"
+    [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+    (click)="createOrEditOrViewStore('0', 'create')"><mat-icon>add</mat-icon></button>
+
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="createOrEditOrViewStore(selectedItem,'edit')"  *ngIf="modelAccessModule.updateFlagDisplay">
+    <mat-icon >edit</mat-icon>
+    </button>
+
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary"  class="space sqr-btn"
+    (click)="createOrEditOrViewStore(selectedItem,'view')" matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="modelAccessModule.readFlagDisplay">
+    <mat-icon >visibility</mat-icon>
+    </button>
+
+  </mat-toolbar>
+
+  <div class="example-container">
+          
+  <div fxLayout="row">
+        
+      <table mat-table [dataSource]="storeMainDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc"
+      matSortDisableClear >
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+      </ng-container>
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef> {{'COMMON_SELECT' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i=index;"> 
+              <mat-checkbox color="primary" class="example-margin" (change)="selectStore(element)"
+              [checked]="selectedItem.storeId == element?.storeId">
+             </mat-checkbox>    
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="storeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'STORE' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.storeName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="locationName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LOCATION_NAME' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.locationName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="storeTypeTO.storeTypeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_STORE_TYPE' | translate}}  </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.storeTypeName}}</td>
+        </ng-container>
+        <ng-container matColumnDef="storeDescription">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'COMMON_DESC' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.storeDescription}} </td>
+          </ng-container> 
+        <ng-container matColumnDef="blockName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BUILDING_BLOCK' | translate}}  </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.blockName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="floorName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BUILDING_FLOOR' | translate}}  </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.floorName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="segmentName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BUILDING_SEGMENT' | translate}}  </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.segmentName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="roomName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BUILDING_ROOM' | translate}}  </th>
+          <td mat-cell *matCellDef="let element" (click)="selectStore(element)"> {{element.roomName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="defaultStore">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'DEFAULT_STORE' | translate}}  </th>
+          <td mat-cell *matCellDef="let element"> {{element.defaultStore ? 'Yes' : 'No'}} </td>
+        </ng-container>
+               
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;">           
+        </tr>
+      </table> 
+      
+  </div>
+  
+  <div fxLayout="row">
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderStore">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+    <mat-card class="no_records_found" *ngIf="subLoaderStore"  fxLayoutAlign="center center"> 
+        <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+</div>
+          
+
+<!-- View page for Item -->
+<ng-template #dialogViewPage>
+    <h2> View {{'STORE_MENU' | translate }} </h2>
+    <mat-dialog-content style="width: 600px; height: 400px">
+        <table class="model-table">
+          <tr class="style-design">
+            <th>{{'STORE' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.storeName}}</td>
+          </tr>
+          <tr>
+            <th>{{'INVENTORY_STORE_TYPE' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.storeTypeName}}</td>
+          </tr>
+          <tr>
+            <th>{{'COMMON_DESC' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.storeDescription}}</td>
+          </tr>
+          <tr>
+            <th>{{'BUILDING_BLOCK' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.blockName}}</td>
+          </tr>
+          <tr>
+            <th>{{'BUILDING_FLOOR' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.floorName}}</td>
+          </tr>
+          <tr>
+            <th>{{'BUILDING_SEGMENT' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.segmentName}}</td>
+          </tr>
+          <tr>
+            <th>{{'BUILDING_ROOM' | translate }}</th>
+            <td>:</td>
+            <td>{{viewData?.roomName}}</td>
+          </tr>
+        </table>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button mat-dialog-close (click)="cancel()" class="space col-md-4" color="primary">{{'COMMON_BACK' | translate }}</button>
+    </mat-dialog-actions>
+  </ng-template>
+  

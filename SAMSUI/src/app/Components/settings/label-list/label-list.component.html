@@ -1,0 +1,153 @@
+<div fxLayout="column" fxFlexFill fxFlex="100">
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-toolbar-row class="breadcrumb-padding" fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="end center">
+        <mat-list-item class="breadcrumb-item">
+          <a href="#" href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item>{{'MENU_SETTING' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'MENU_LABEL' | translate}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+  </div>
+
+  <form fxLayout="row" [formGroup]="labelForm" fxFlex="100">
+
+    <div fxFlex="25" fxFlex.sm="25" fxFlex.xs="25">
+      <mat-card class="card-design">
+        <mat-card-content>
+          <div fxLayout="column" class="content-style">
+            <div class="form-group">
+              <p class="input-label"> {{'LOCATION_NAME' | translate}} <span class="mandatory-style astric-size">*</span> </p>
+              <ng-select   (search)="listOfLocation($event)"
+                formControlName="locationName" (click)="listOfLocation({})" (scrollToEnd)="listOfLocation({})" (keyup.backspace)="listOfLocation($event.target.value ? $event : 'back')" (clear)="listOfLocation('clear')"
+                [loading]="scrollsync" loadingText="Loading..." (change)="getLocationList($event)"
+                [virtualScroll]="true" [items]="locationList" bindLabel="locDisplayField" bindValue="locationName">
+              </ng-select>
+              <mat-error *ngIf="labelForm.controls.locationName.invalid && labelForm.controls.locationName.touched">
+                <div class="err-field" *ngIf="labelForm.controls.locationName.errors.required">
+                  Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+              </mat-error>
+            </div>
+
+            <div >
+              <p class="input-label"> {{'LABEL_MODULE_NAME' | translate}} </p>
+              <ng-select  [items]="moduleName" bindLabel="label" bindValue="name"
+                formControlName="moduleName">
+              </ng-select>
+            </div>
+
+            <div style="margin-top: 5px;">
+              <span class="input-label">{{'LABEL_LANGUAGE_CODE' | translate}}</span>
+              <ng-select  formControlName="languageCode" [items]="languageCode" bindLabel="name"
+                bindValue="name">
+              </ng-select>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <mat-form-field [floatLabel]="'always'" style="width: 100%;">
+                <mat-label class="example-label input-label">{{ 'LABEL_ACTUAL_VALUE' | translate}}</mat-label>
+                <input matInput formControlName="labelActualValue">
+              </mat-form-field>
+            </div>
+
+            <div>
+              <p class="input-label">{{'LABEL_TYPE' | translate}}</p>
+              <ng-select  formControlName="labelType" [items]="labelTypeList" bindLabel="name"
+                bindValue="name">
+              </ng-select>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <div fxLayoutAlign="center center">
+                <button fxHide.sm fxHide.xs mat-raised-button (click)="search()" color="primary" class="space"
+                  [disabled]="labelForm.invalid">
+                  {{'COMMON_SEARCH' | translate}}</button>
+                <button fxHide.gt-sm mat-raised-button (click)="search()" color="primary" class="space"
+                  [disabled]="labelForm.invalid">
+                  <mat-icon matTooltip="Search">search</mat-icon>
+                </button>
+
+                <button fxHide.sm fxHide.xs mat-raised-button (click)="reset()" color="primary"
+                  class="space">{{'COMMON_CLEAR' |
+                  translate}}</button>
+                <button fxHide.gt-sm mat-raised-button (click)="reset()" color="primary" class="space">
+                  <mat-icon matTooltip="Clear">clear_all</mat-icon>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="3" fxFlex.sm="3" fxFlex.xs="3"></div>
+
+    <div fxFlex="72" fxFlex.sm="72" fxFlex.xs="72" fxLayout="column">
+      <div>
+        <div fxFlex="85" fxFlex.sm="85" fxFlex.xm="85" fxLayoutAlign="end center">
+          <mat-paginator #paginatorUsers [pageSizeOptions]="[10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+        </div>
+
+        <div fxFlex="15" fxFlex.sm="15" fxFlex.xm="15" fxLayoutAlign="end center" *ngIf="modelAccessModule.createFlagDisplay">
+          <button mat-raised-button color="primary" (click)="saveUpdate()" [disabled]="labelForm.controls.locationName.value == ''">
+            <span *ngIf="!uploadFlagUser"> {{'COMMON_SUBMIT' | translate}} </span>
+            <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>
+          </button>
+        </div>
+      </div>
+
+      <div fxLayout="column"  class="label-conf-container-table" >
+        <table mat-table [dataSource]="labelMessageDisp">
+
+          <ng-container matColumnDef="sNo">
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}</th>
+            <td mat-cell *matCellDef="let element;let i = index;"> {{getIndexValue(i+1)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="labelKey">
+            <th mat-header-cell *matHeaderCellDef> {{ 'LABEL_KEY_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element"> {{element.labelKey}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="labelActualValue">
+            <th mat-header-cell *matHeaderCellDef> {{ 'LABEL_ACTUAL_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element"> {{element.labelActualValue}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="labelUpdateValue">
+            <th mat-header-cell *matHeaderCellDef> {{ 'LABEL_UPDATED_VALUE' | translate }} </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field class="example-full-width">
+                <input matInput maxlength="20" [(ngModel)]="element.labelUpdateValue" [ngModelOptions]="{standalone: true}"
+                class="form-control" style="font-size: 12px;color:rgba(0,0,0,0.87);" type="text" name="labelUpdateValue"
+                id="empCodeId" placeholder="">  
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+
+        </table>
+
+        <div>
+          <mat-card fxLayoutAlign="center center" *ngIf="length=='0'" class="no_records_found">{{ 'COMMON_NO_RECORDS_FOUND' | translate }}
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+</div>

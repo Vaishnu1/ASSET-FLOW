@@ -1,0 +1,35 @@
+.example-width-notify {
+    width: 95%;
+    height: 30px;
+    }
+
+.form-group{
+    margin-bottom: 0rem !important;
+    font-size: 15px !important;
+    margin-top:2%;
+    font-weight: 400;
+    width: 90%;
+    }
+
+.email-container-inner-table{
+    max-height: 50vh !important;
+    overflow: auto;
+    min-height: 50vh !important;
+    }
+    
+.iemail-container-inner-table table {
+    width: 100%;
+    }
+
+.input-field-1{
+    margin-top: 12px;
+    padding-bottom: 11.5px;
+  }
+
+.example-width-notify-table{
+    width: 95%;
+  }
+
+.bttn-space{
+    margin-left: 10px;
+}

@@ -1,0 +1,231 @@
+<div fxLayout="column" fxFlexfill>
+    <div fxLayout="row">
+      <div fxFlex="90">
+        <h4 class="dialogue-box-header" id="heading">{{ 'ASSET_INFO' | translate }}</h4>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+    <div fxLayout="row">
+        <div [@.disabled]="true" fxFlex="100">
+            <div class="row">
+                <mat-tab-group>
+                    <mat-tab label="{{'ASSET_PURCHASE_INFO' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style" fxFlex="50">
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'SUPPLIER_NAME' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.supplierName.value}} </div>
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_YEAR_MANUFACTURER' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.yearOfManufacture.value}} </div>
+                                            <!-- <p> {{'ASSET_YEAR_MANUFACTURER' | translate}} :
+                                                {{assetMainForm.controls.yearOfManufacture.value}} </p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_PUR_ORD_NO' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.purchaseOrderNo.value}} </div>
+                                            <!-- <p>{{'ASSET_PUR_ORD_NO' | translate}}:
+                                                {{assetMainForm.controls.purchaseOrderNo.value}}</p> -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_PUR_DATE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.purchaseDtDisp.value}} </div>
+                                            <!-- <p> {{'ASSET_PUR_DATE' | translate}} :
+                                                {{assetMainForm.controls.purchaseDtDisp.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'CURRENCY_CD' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.purchaseCurrencyCode.value}} </div>
+                                            <!-- <p> {{'CURRENCY_CD' | translate}} :
+                                                {{assetMainForm.controls.purchaseCurrencyCode.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_EXC_RATE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.exchangeRt.value}} </div>
+                                            <!-- <p>{{'ASSET_EXC_RATE' | translate}}: {{assetMainForm.controls.exchangeRt.value}}
+                                            </p> -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_ORGI_PUR_AMT' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.originalPurchaseAmt.value}} </div>
+                                            <!-- <p>{{'ASSET_ORGI_PUR_AMT' | translate}}:
+                                                {{assetMainForm.controls.originalPurchaseAmt.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> Local Purchase Amount </div>
+                                            <div class="value"> {{assetMainForm.controls.localPurchaseAmt.value}} </div>
+                                            <!-- <p>Local Purchase Amount: {{assetMainForm.controls.localPurchaseAmt.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_LOC_TAX_RATE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.localTaxRate.value}} </div>
+                                            <!-- <p>{{'ASSET_LOC_TAX_RATE' | translate}}:
+                                                {{assetMainForm.controls.localTaxRate.value}}</p> -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_LOC_TAX_AMT' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.localTaxAmt.value}} </div>
+                                            <!-- <p>{{'ASSET_LOC_TAX_AMT' | translate}}:
+                                                {{assetMainForm.controls.localTaxAmt.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_TOT_AMT' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.totalPurchaseAmt.value}} </div>
+                                            <!-- <p>{{'ASSET_TOT_AMT' | translate}}:
+                                                {{assetMainForm.controls.totalPurchaseAmt.value}}</p> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div fxFlex="50">
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_AMC_PERCENT' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.amcPercent.value}} </div>
+                                            <!-- <p>{{'ASSET_AMC_PERCENT' | translate}} :
+                                                {{assetMainForm.controls.amcPercent.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_AMC_VALUE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.amcValue.value}} </div>
+                                            <!-- <p>{{'ASSET_AMC_VALUE' | translate}}: {{assetMainForm.controls.amcValue.value}}
+                                            </p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_AMC_ESCALATION_PER' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.amcEscalationPercentage.value}} </div>
+                                            <!-- <p>{{'ASSET_AMC_ESCALATION_PER' | translate}}:
+                                                {{assetMainForm.controls.amcEscalationValue.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_AMC_ESCALATION_VALUE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.amcEscalationValue.value}} </div>
+                                            <!-- <p>{{'ASSET_AMC_ESCALATION_VALUE' | translate}}:
+                                                {{assetMainForm.controls.amcEscalationPercentage.value}}</p> -->
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_CMC_PERCENT' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.cmcPercent.value}} </div>
+                                            <!-- <p>{{'ASSET_CMC_PERCENT' | translate}}:
+                                                {{assetMainForm.controls.cmcPercent.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_CMC_VALUE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.cmcValue.value}} </div>
+                                            <!-- <p> {{'ASSET_CMC_VALUE' | translate}}: {{assetMainForm.controls.cmcValue.value}}
+                                            </p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_CMC_ESCALATION_PER' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.cmcEscalationPercentage.value}} </div>
+                                            <!-- <p> {{'ASSET_CMC_ESCALATION_PER' | translate}}:
+                                                {{assetMainForm.controls.cmcEscalationPercentage.value}}</p> -->
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 10px;">
+                                            <div class="title"> {{ 'ASSET_CMC_ESCALATION_VALUE' | translate }} </div>
+                                            <div class="value"> {{assetMainForm.controls.cmcEscalationValue.value}} </div>
+                                            <!-- <p> {{'ASSET_CMC_ESCALATION_PER' | translate}}:
+                                                {{assetMainForm.controls.cmcEscalationPercentage.value}}</p> -->
+                                        </div>
+    
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                    <mat-tab label="{{'ASSET_CONTRACT_DETAILS' | translate}}">
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                                <div class="content-style" style="padding-top: 0.5%;">
+                                    <div class="example-container">
+                                      <table mat-table [dataSource]="contractDataSource" matSort>
+                  
+                                        <ng-container matColumnDef="sno">
+                                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="contractNo">
+                                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_NUMBER' | translate }} / <br />
+                                            {{ 'COMMON_TITLE' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.contractNo}} <br /> <br />
+                                            {{element?.contractName}} </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="coverageType">
+                                          <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_COVERAGE_TYPE' | translate }} / <br />
+                                            {{ 'CONTRACT_TYPE' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.coverageType}} <br /> <br />
+                                            {{element?.contractType}} </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="contractingPartyType">
+                                          <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PARTY' | translate }} / <br />
+                                            {{ 'COMMON_NAME' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.contractingPartyType}} <br /> <br />
+                                            {{element?.contractPartyName}} </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="contractStatus">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CONTRACT_STATUS' | translate }}
+                                          </th>
+                                          <td mat-cell *matCellDef="let element">
+                                            <span class="{{element?.contractStatus.replace(' ','')}}">{{element?.contractStatus | translate }} <br />
+                                              <br /> </span>
+                                            <span
+                                              class="{{element?.woApprovalStatus.replace(' ','')}}">{{element?.woApprovalStatus}}</span>
+                                          </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="contractStartDtDisp">
+                                          <th mat-header-cell *matHeaderCellDef>{{ 'CONTRACT_START_DATE' | translate }}/ <br />
+                                            {{ 'CONTRACT_END_DATE' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.contractStartDtDisp}} <br /> <br />
+                                            {{element?.contractEndDtDisp}} </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="active">
+                                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element">
+                                            <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                                            <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+                                          </td>
+                                        </ng-container>
+                  
+                                        <ng-container matColumnDef="netContractValue">
+                                          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                                            {{ 'CONTRACT_AMOUNT' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element" style="text-align:center;">
+                                            <span class="currency">{{element?.netContractValue.toLocaleString()}}</span>
+                                          </td>
+                                        </ng-container>
+                  
+                                        <tr mat-header-row *matHeaderRowDef="contractDisplayCol;sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let element; columns: contractDisplayCol;">
+                                      </table>
+                                      <mat-card class="no_records_found" *ngIf="contractLength=='0'" fxLayoutAlign="center center">
+                                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                                      </mat-card>
+                                    </div>
+                                  </div>
+                            </mat-card-content>
+                        </mat-card>    
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>    

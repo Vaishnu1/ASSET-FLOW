@@ -1,0 +1,133 @@
+<!-- <div fxLayout="column">
+
+                <table class="item-request-pr-list" mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="totalAssetCount">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'TOTAL_ASSETS' | translate }}</th>
+                      <td mat-cell *matCellDef="let element">{{ element.totalAssetCount }}</td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="auditedAssetCount">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'ASSET_PHY_NO_ASSET_UNAUDITED' | translate }}</th>
+                      <td mat-cell *matCellDef="let element">{{ element.auditedAssetCount }}</td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="unAvailableAssetAuditNames">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'ASSET_PHY_AUDIT_NAME' | translate }}</th>
+                      <td mat-cell *matCellDef="let element">{{ element.unAvailableAssetAuditNames }}</td>
+                    </ng-container>
+                  
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                  
+                  <div>
+                    <p *ngIf="availableToProcessAssetCount > 0" class="confirmation-content">Do you want to create Audit for balance {{availableToProcessAssetCount}} assets?<br>
+                    <p *ngIf="availableToProcessAssetCount <= 0" class="confirmation-content">Audit cannot be created for these assets. Because these assets are already added in another Audit.<br>
+ 
+
+                    <div class=" rightbutton" fxLayoutAlign="center center">
+                        <button *ngIf="availableToProcessAssetCount > 0" class=" space button-color" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+                        <button *ngIf="availableToProcessAssetCount > 0" mat-raised-button  color="primary" (click)="Proceed()" class=" space button-color"> Yes </button>
+                        <button *ngIf="availableToProcessAssetCount <= 0" class=" space button-color" mat-raised-button color="primary" (click)="Cancel()"> Close </button>
+                    </div>
+                  </div>
+
+    
+</div> -->
+
+<div fxLayout="column">
+
+  <h2 class="dialog-title">Warning</h2>
+
+  <!-- Summary Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" class="item-request-pr-list uniform-table mat-elevation-z1">
+
+      <ng-container matColumnDef="totalAssetCount">
+        <th mat-header-cell *matHeaderCellDef>{{ 'TOTAL_ASSETS' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.totalAssetCount }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="auditedAssetCount">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ASSET_PHY_NO_ASSET_UNAUDITED' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.auditedAssetCount }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="cnlAssetCount">
+        <th mat-header-cell *matHeaderCellDef>{{ 'CNL_ASSET_COUNT' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ cnlAssetData?.length || 0 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="unAvailableAssetAuditNames">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ASSET_PHY_AUDIT_NAME' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.unAvailableAssetAuditNames }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <br>
+
+  <!-- Scrollable Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="cnlAssetData" class="item-request-pr-list uniform-table mat-elevation-z1">
+
+      <ng-container matColumnDef="assetCode">
+        <th mat-header-cell *matHeaderCellDef>{{ 'ASSET_CODE' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.assetCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="verificationStatus">
+        <th mat-header-cell *matHeaderCellDef>{{ 'VERIFICATION_STS' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.verificationStatus }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notFoundRemarks">
+        <th mat-header-cell *matHeaderCellDef>{{ 'NOT_FOUND_REMARKS' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.notFoundRemarks }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="cnlDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: cnlDisplayedColumns;"></tr>
+    </table>
+  </div>
+
+  <br>
+
+  <!-- Message and Buttons -->
+  <div>
+    <p *ngIf="availableToProcessAssetCount > 0" class="confirmation-content">
+      Do you want to create Audit for balance {{availableToProcessAssetCount}} assets?<br>
+    </p>
+    <p *ngIf="availableToProcessAssetCount <= 0" class="confirmation-content">
+      Audit cannot be created for these assets. Because these assets are already added in another Audit.<br>
+    </p>
+  </div>
+
+  <br>
+
+  <div class="radio-group-wrapper" *ngIf="availableToProcessAssetCount > 0">
+    <mat-radio-group [(ngModel)]="cnlDecision" class="ceid-radio-group">
+      <mat-radio-button value="WITHCNL">
+        Continue with CNL assets
+      </mat-radio-button>
+      <mat-radio-button  value="WITHOUTCNL">
+        Continue without CNL assets
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+
+  <div class="rightbutton" fxLayoutAlign="center center">
+    <button *ngIf="availableToProcessAssetCount > 0" class="space button-color" mat-raised-button color="primary"
+      (click)="Cancel()">No</button>
+    <button *ngIf="availableToProcessAssetCount > 0" mat-raised-button color="primary" (click)="Proceed()" [disabled]="!cnlDecision"
+      class="space button-color">Yes</button>
+    <button *ngIf="availableToProcessAssetCount <= 0" class="space button-color" mat-raised-button color="primary"
+      (click)="Cancel()">Close</button>
+  </div>
+
+</div>

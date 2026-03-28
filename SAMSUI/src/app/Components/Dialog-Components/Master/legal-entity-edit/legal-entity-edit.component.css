@@ -1,0 +1,30 @@
+.section_title {
+    font-size: 22px;
+    color: #445c8f;
+    padding:20px 0px;
+}
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-label
+{
+    font-size: 18px !important;
+    color:#333 !important;
+}
+.headerrow{
+    border-bottom:1px solid #e5e5e5;
+}
+::ng-deep .mat-dialog-container {
+    padding:15px;
+    overflow: hidden;
+}
+.modalform {
+    padding:20px;
+}
+.mat-raised-button {
+    color:#fff !important;
+    min-width: 30px !important;
+}
+tr {
+    line-height: 30px !important;
+}
+th {
+    width:30% !important;
+}

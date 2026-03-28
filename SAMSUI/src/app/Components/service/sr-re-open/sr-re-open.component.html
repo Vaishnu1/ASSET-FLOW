@@ -1,0 +1,52 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title">{{'SR_RE_OPEN' | translate}} </h4>
+      </div>
+      
+      <!-- <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon" (click)="close()">highlight_off</mat-icon>
+      </div> -->
+    </div> 
+ 
+    <div fxLayout="column"> 
+      <form [formGroup]="srReOpenForm" fxLayout="column"> 
+       
+        <div class="form-group" >
+          <mat-form-field  class="example-full-width" [floatLabel]="'always'" >
+            <mat-label class="example-label input-label"> {{'SR_RE_OPENED_BY' | translate}} </mat-label>
+            <input matInput formControlName="reOpenedBy">
+          </mat-form-field>
+        </div>
+
+       
+
+        <div class="form-group" >
+          <mat-form-field  class="example-full-width" [floatLabel]="'always'" >
+            <mat-label class="example-label input-label"> {{'SR_RE_OPENED_DT' | translate}} </mat-label>
+            <input matInput formControlName="reOpenedBy">
+          </mat-form-field>
+        </div>
+
+       
+
+        <div class="form-group" >
+          <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'SR_RE_OPENED_REMARKS' | translate}} </mat-label>
+            <textarea matInput rows = "5" formControlName="reOpenedRemarks" [maxlength]="500"></textarea>
+            <mat-hint align="end">{{srReOpenForm.controls.reOpenedRemarks.value?.length || 0}}/500</mat-hint>
+          </mat-form-field>
+        </div>
+
+
+        <div  class="reopen-model"> 
+            <button mat-raised-button class="space" color="primary" [disabled]="srReOpenForm.invalid" (click)="reOpenSRByCheckingConfirmation()">
+              <span > {{buttonDisplay}} </span>
+            </button> 
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

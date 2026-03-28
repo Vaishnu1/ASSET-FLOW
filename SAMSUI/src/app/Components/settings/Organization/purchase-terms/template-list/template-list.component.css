@@ -1,0 +1,24 @@
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    margin-top: -10px;
+  }
+  
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    max-width: 190px;
+    word-break: break-word;
+  }
+  
+  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 10px;
+    min-width: 30px;
+  }
+
+  .space{
+    margin-right: 5px;
+  }

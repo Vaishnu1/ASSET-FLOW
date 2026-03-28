@@ -1,0 +1,621 @@
+<div fxFlex="100" fxLayout="column"> 
+  <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+        <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>
+              </a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_WORKFLOW'| translate}} <mat-icon>keyboard_arrow_right</mat-icon> 
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+            {{'MENU_WORKFLOW_APPROVAL'| translate}}   
+          </mat-list-item>
+        </mat-list>
+        <span class="example-spacer"></span>
+        <div fxFlex></div> 
+      </mat-toolbar-row>
+    </div> 
+ 
+    <div fxLayout="row">
+      <div [@.disabled]="true" fxFlex="100">
+        <mat-tab-group>
+      
+        <mat-tab>
+          <ng-template mat-tab-label>
+            {{'MENU_WORKFLOW_APPROVAL'| translate}}-({{countOfUnreadWorkflowNotifications}})
+          </ng-template> 
+      
+          <div class="content_section_background" style="padding-top:0.5%">
+            <div fxLayout="column">
+              <div class="table_section">
+      
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="panel-header">
+                      {{'COMMON_SEARCH'| translate}}
+                    </mat-panel-title>
+                    <mat-panel-description fxLayoutAlign="end end">
+                      <mat-icon>search</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+
+                          
+                <div fxLayout="column" fxFlex="100%">
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <div fxFlex="29"> 
+                      <span class="input-label">{{ 'WORKFLOW_PROCESS_NAME' | translate }}</span>
+                      <ng-select class=" input-field" [(ngModel)]="workflowApprovalModel.workflowProcessName" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfWorkflowProcess($event)" (click)="listOfWorkflowProcess({})"
+                        (change)="setWorkflowProcess($event)" [virtualScroll]="true" appendTo="body"
+                        (scrollToEnd)="listOfWorkflowProcess({})" (keyup.backspace)="listOfWorkflowProcess($event.target.value ? $event : 'back')" (clear)="listOfWorkflowProcess('clear')" [loading]="scrollProcessSync"  tabindex="7">
+                        <ng-option  *ngFor="let list of processCombo" [value]="list.workflowProcessId" > {{list.workflowProcessName | translate}}</ng-option> 
+                      </ng-select>
+                    </div>
+                    <div fxFlex="2"></div>
+                    <div fxFlex="29"> 
+                      <span class="input-label">{{'WORKFLOW_DESCRIPTION' | translate}}</span>
+                      <ng-select class=" input-field" [(ngModel)]="workflowApprovalModel.workflowName"
+                        [ngModelOptions]="{standalone: true}" (search)="listOfWorkflowDescription($event)"
+                        (click)="listOfWorkflowDescription({})" (change)="setWorkflowDescription($event)"
+                        [items]="workflowDescriptionCombo" [virtualScroll]="true" appendTo="body"
+                        (scrollToEnd)="listOfWorkflowDescription({})" (keyup.backspace)="listOfWorkflowDescription($event.target.value ? $event : 'back')" (clear)="listOfWorkflowDescription('clear')" [loading]="scrollWorkflowDescriptionSync"
+                        bindLabel="workflowName" bindValue="workflowName">
+                      </ng-select>
+                    </div>
+                    <div fxFlex="2"></div>
+                    <div fxFlex="38" fxHide.lt-md fxLayoutAlign="end end">   
+                      <button mat-raised-button color="primary" tabindex="7"
+                      (click)="searchWorkflowNotification()">{{'COMMON_SEARCH' | translate}}</button>
+                    <button mat-raised-button class="workflow-clear-button" color="primary"
+                      tabindex="8"
+                      (click)="clear()">{{'COMMON_CLEAR' | translate}}</button> 
+                    </div>
+
+                    <div fxFlex="38" fxHide.md fxHide.gt-md fxLayoutAlign="end end">   
+                      <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                      [matTooltipPosition]="'below'" tabindex="7"
+                      (click)="searchWorkflowNotification()"><mat-icon>search</mat-icon></button>
+                    <button mat-raised-button class="workflow-clear-button" color="primary"
+                      matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="8"
+                      (click)="clear()"><mat-icon>clear_all</mat-icon></button> 
+                    </div>
+                  </div>
+                </div>
+ 
+      
+                </mat-expansion-panel>
+      
+                <hr>
+                <mat-toolbar>
+                  <span class="example-spacer"></span>
+
+                  <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+                    [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+                  <span class="example-spacer"></span>
+            
+                  <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+                  matTooltip="{{ 'COMMON_EDIT' | translate }}"  *ngIf="modelAccessModule.updateFlagDisplay"
+                  (click)="workflowNotificationEdit(selectedItem,'edit')">
+                  <mat-icon>edit</mat-icon></button>
+            
+                  <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+                  *ngIf="modelAccessModule.readFlagDisplay"  matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                  (click)="workflowNotificationEdit(selectedItem,'view')">
+                  <mat-icon>visibility</mat-icon></button>
+            
+                </mat-toolbar>
+
+                <div class="workflow-notification-container-table">
+                <div fxLayout="row">
+      
+                  <table mat-table [dataSource]="workflowNotificationDataSource" matSort (matSortChange)="customSort($event)"
+                    matSortActive="name" matSortDirection="asc" matSortDisableClear>
+      
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef style="width:4%"> {{'COMMON_SELECT' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;"> 
+                        <mat-checkbox color="primary" class="example-margin" (change)="selectWorkflowApproval(element)"
+                        [checked]="selectedItem.workflowApprovalId == element?.workflowApprovalId">
+                       </mat-checkbox></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sNo">
+                      <th mat-header-cell *matHeaderCellDef class="table-head-data col-width" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="transactionNo">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                        {{ 'WORKFLOW_TRANSACTION_NO_SOURCE' | translate }} </th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element?.transactionNo}} <br /> <br />
+                        {{element?.transactionSource | translate}}
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="workflowDescriptionTO.workflowName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                        {{ 'WORKFLOW_DESCRIPTION' | translate }} </th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;"> {{element?.workflowName}}
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="levelName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                        {{'WORKFLOW_LEVEL_NAME' | translate }}</th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element.levelName}} <br /> <br />
+                        <span class="{{element?.levelApprovalStatus.replace(' ','')}}">{{element?.levelApprovalStatus}}</span>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="employeeName1">
+                      <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                        {{'WORKFLOW_EMP_1' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element.employeeName1}} <br /> <br />
+                        <span class="{{element?.emp1ApproveStatus.replace(' ','')}}">{{element?.emp1ApproveStatus}}</span>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="condition1">
+                      <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                        {{'WORKFLOW_CONDITION_1' | translate }}</th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;"> {{element.condition1}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="employeeName2">
+                      <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                        {{'WORKFLOW_EMP_2' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element.employeeName2}} <br /> <br />
+                        <span class="{{element?.emp2ApproveStatus.replace(' ','')}}">{{element?.emp2ApproveStatus}}</span>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="condition2">
+                      <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                        {{'WORKFLOW_CONDITION_2' | translate }}</th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;"> {{element.condition2}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="employeeName3">
+                      <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                        {{'WORKFLOW_EMP_3' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element.employeeName3}} <br /> <br />
+                        <span class="{{element?.emp3ApproveStatus.replace(' ','')}}">{{element?.emp3ApproveStatus}}</span>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="createdDt">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                        {{'COMMON_REQUESTED_BY_DATE' | translate}}</th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element?.createdBy}} <br /> <br /> {{element?.createdDtDisp}}
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="updatedDt">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                        {{'COMMON_UPDATED_BY_DATE' | translate}}</th>
+                      <td mat-cell (click)="selectWorkflowApproval(element)" *matCellDef="let element" style="text-align: center;">
+                        {{element?.updatedBy}} <br /> <br /> {{element?.updatedDtDisp}}
+                      </td>
+                    </ng-container>
+      
+                    <tr mat-header-row *matHeaderRowDef="workflowNotificationDispColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: workflowNotificationDispColumns;"
+                      [ngStyle]="{'background-color':getColorBasedOnRead(row)}"
+                      [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="selectedRow(row)"></tr>
+      
+                  </table>
+      
+                </div>
+
+                
+                <div fxLayout="row"> 
+                  <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+                  <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                  </mat-card>
+                </div>
+              </div>
+      
+              </div>
+            </div>
+          </div>
+      
+        </mat-tab>
+
+        <mat-tab>
+
+          <ng-template mat-tab-label>
+            {{'ALERT_AND_NOTIFICATIONS_TAB_HEADING' | translate}}-({{countOfUnreadEmailNotifications}})
+          </ng-template>
+      
+          <div class="content_section_background" style="padding-top:0.5%">
+            <div fxLayout="column" class="table_section">
+      
+                <mat-toolbar>
+                  <span>{{'ALERT_AND_NOTIFICATIONS_TAB_HEADING'| translate}} List</span>
+                  <span class="example-spacer"></span>
+            
+                  <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="lengthOfNotifications" [pageIndex]="pageIndex"
+                  [pageSize]="pageSize" (page)="getServerDataForNotifications($event)"></mat-paginator>
+                  <span class="example-spacer"></span>
+            
+                  <button [disabled]=" selectedItem1 == 0"  mat-raised-button color="primary" class="space sqr-btn"
+                  *ngIf="modelAccessModule.readFlagDisplay"  matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                  (click)="openNotificationExplanationDialog(selectedItem1)">
+                  <mat-icon>visibility</mat-icon></button>
+            
+                </mat-toolbar>
+                <div class="workflow-notification-container-table">
+                <div fxLayout="row"  fxFlex="100" style="padding-top:0.5%"> 
+                  <table mat-table [dataSource]="emailListDataSource" matSort
+                    (matSortChange)="customSortForNotifications($event)" matSortActive="name" matSortDirection="asc"
+                    matSortDisableClear>
+      
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef style="width:4%"> {{'COMMON_SELECT' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;"> 
+                        <mat-checkbox color="primary" class="example-margin" (change)="selectApproval(element)"
+                        [checked]="selectedItem1.emailInfoId == element?.emailInfoId">
+                       </mat-checkbox></td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="emailInformationTO.emailSubject">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{'ALERT_AND_NOTIFICATIONS_EMAIL_SUBJECT' | translate}}</th>
+                      <td mat-cell (click)="selectApproval(element)" *matCellDef="let element;"> {{element?.emailSubject}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="createdBy">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{'ALERT_AND_NOTIFICATIONS_TRIGGERED_BY' | translate}}</th>
+                      <td mat-cell (click)="selectApproval(element)" *matCellDef="let element;"> {{element?.createdBy}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="msgDestinationEmailId">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{'ALERT_AND_NOTIFICATIONS_EMAIL_TO' | translate}}</th>
+                      <td mat-cell (click)="selectApproval(element)" *matCellDef="let element;"> {{element?.msgDestinationEmailId}} </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="createdDt">
+                      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'ALERT_AND_NOTIFICATIONS_TRIGGERED_DATE' | translate}}</th>
+                      <td mat-cell (click)="selectApproval(element)" *matCellDef="let element;"> {{element?.createdDtDisp}} </td>
+                    </ng-container>
+      
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                      [ngStyle]="{'background-color':getColorBasedOnReadStateOfEmailNotification(row)}"
+                      [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="selectedRowForEmailNotification(row)">
+                    </tr>
+      
+                  </table> 
+                </div>
+                
+                <div fxLayout="row">
+                  <mat-card class="no_records_found" *ngIf="lengthOfNotifications=='0' && !subLoaderForNotifications">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+                  <mat-card class="no_records_found" *ngIf="subLoaderForNotifications"  fxLayoutAlign="center center" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+        </mat-tab>
+        
+        </mat-tab-group>
+      </div>
+
+    </div> 
+</div>
+ 
+
+<!-- <div [@.disabled]="true">
+  <mat-tab-group>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      {{'MENU_WORKFLOW_APPROVAL'| translate}}-({{countOfUnreadWorkflowNotifications}})
+    </ng-template> 
+
+    <div class="content_section_background" style="padding-top:0.5%">
+      <div class="row">
+        <div class="table_section col-md-12">
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{'COMMON_SEARCH'| translate}} {{'MENU_WORKFLOW_APPROVAL'| translate}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="col-md-12">
+              <div class="row">
+
+                <div class="col-md-3">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label">{{ 'WORKFLOW_PROCESS_NAME' | translate }}</span>
+                      <ng-select  [(ngModel)]="workflowApprovalModel.workflowProcessName"
+                        [ngModelOptions]="{standalone: true}" (search)="listOfWorkflowProcess($event)" appendTo="body"
+                        (click)="listOfWorkflowProcess({})" (change)="setWorkflowProcess($event)" [virtualScroll]="true"
+                        (scrollToEnd)="listOfWorkflowProcess({})" (keyup.backspace)="listOfWorkflowProcess($event.target.value ? $event : 'back')" (clear)="listOfWorkflowProcess('clear')" [loading]="scrollProcessSync" [items]="processCombo"
+                        bindLabel="workflowProcessName" bindValue="workflowProcessName" tabindex="7">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'WORKFLOW_DESCRIPTION' | translate}}</span>
+                      <ng-select  [(ngModel)]="workflowApprovalModel.workflowName"
+                        [ngModelOptions]="{standalone: true}" (search)="listOfWorkflowDescription($event)"
+                        (click)="listOfWorkflowDescription({})" (change)="setWorkflowDescription($event)"
+                        [items]="workflowDescriptionCombo" [virtualScroll]="true" appendTo="body"
+                        (scrollToEnd)="listOfWorkflowDescription({})" (keyup.backspace)="listOfWorkflowDescription($event.target.value ? $event : 'back')" (clear)="listOfWorkflowDescription('clear')" [loading]="scrollWorkflowDescriptionSync"
+                        bindLabel="workflowName" bindValue="workflowName">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+
+                </div>
+
+                <div class="col-md-3">
+
+                  <div class="form-group">
+                    <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                      [matTooltipPosition]="'below'" tabindex="7"
+                      (click)="searchWorkflowNotification()">{{'COMMON_SEARCH' | translate}}</button>
+                    <button mat-raised-button style="margin-left: 2px;" color="primary"
+                      matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="8"
+                      (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </mat-expansion-panel>
+
+          <hr>
+          <div class="example-container">
+
+            <table mat-table [dataSource]="workflowNotificationDataSource" matSort (matSortChange)="customSort($event)"
+              matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:5%"> {{'COMMON_S_NO' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index;" style="text-align: center;width:5%;">
+                  {{getIndexValue(i+1)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="transactionNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;width:5%">
+                  {{ 'WORKFLOW_TRANSACTION_NO_SOURCE' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:5%">
+                  {{element?.transactionNo}} <br /> <br />
+                  {{element?.transactionSource}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="workflowDescriptionTO.workflowName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;width:5%">
+                  {{ 'WORKFLOW_DESCRIPTION' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:5%"> {{element?.workflowName}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="levelName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;width:10%">
+                  {{'WORKFLOW_LEVEL_NAME' | translate }}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element.levelName}} <br /> <br />
+                  <span class="{{element?.levelApprovalStatus.replace(' ','')}}">{{element?.levelApprovalStatus}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="employeeName1">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:10%">
+                  {{'WORKFLOW_EMP_1' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element.employeeName1}} <br /> <br />
+                  <span class="{{element?.emp1ApproveStatus.replace(' ','')}}">{{element?.emp1ApproveStatus}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="condition1">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:5%">
+                  {{'WORKFLOW_CONDITION_1' | translate }}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:5%"> {{element.condition1}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="employeeName2">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:10%">
+                  {{'WORKFLOW_EMP_2' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element.employeeName2}} <br /> <br />
+                  <span class="{{element?.emp2ApproveStatus.replace(' ','')}}">{{element?.emp2ApproveStatus}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="condition2">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:5%">
+                  {{'WORKFLOW_CONDITION_2' | translate }}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:5%"> {{element.condition2}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="employeeName3">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:10%">
+                  {{'WORKFLOW_EMP_3' | translate }} / <br /> {{'WORKFLOW_APPROVE_STATUS' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element.employeeName3}} <br /> <br />
+                  <span class="{{element?.emp3ApproveStatus.replace(' ','')}}">{{element?.emp3ApproveStatus}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdDt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;width:10%">
+                  {{'COMMON_REQUESTED_BY_DATE' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element?.createdBy}} <br /> <br /> {{element?.createdDtDisp}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedDt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;width:10%">
+                  {{'COMMON_UPDATED_BY_DATE' | translate}}</th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:10%">
+                  {{element?.updatedBy}} <br /> <br /> {{element?.updatedDtDisp}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center;width:15%">
+                  {{ 'COMMON_ACTION' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width:15%">
+                  <button mat-icon-button *ngIf="modelAccessModule.readFlagDisplay"
+                    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="workflowNotificationEdit(element,'view')">
+                    <mat-icon color="primary"><a>visibility</a></mat-icon>
+                  </button>
+                  <button mat-icon-button *ngIf="modelAccessModule.updateFlagDisplay"
+                    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="workflowNotificationEdit(element,'edit')">
+                    <mat-icon color="primary"><a>edit</a></mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="workflowNotificationDispColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: workflowNotificationDispColumns;"
+                [ngStyle]="{'background-color':getColorBasedOnRead(row)}"
+                [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="selectedRow(row)"></tr>
+
+            </table>
+
+            <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+              {{'COMMON_NO_RECORDS_FOUND' | translate}}
+            </mat-card>
+            <mat-card class="loader" *ngIf="subLoader">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </mat-tab>
+
+  <mat-tab>
+
+    <ng-template mat-tab-label>
+      {{'ALERT_AND_NOTIFICATIONS_TAB_HEADING' | translate}}-({{countOfUnreadEmailNotifications}})
+    </ng-template>
+
+    <div class="content_section_background" style="padding-top:0.5%">
+      <div class="row">
+        <div class="table_section col-md-12">
+
+          <div class="col-md-12 row" style="margin-top: 10px;">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8 rightbutton">
+              <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="lengthOfNotifications"
+                [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerDataForNotifications($event)">
+              </mat-paginator>
+            </div>
+
+          </div>
+
+          <div class="example-container">
+            <table mat-table [dataSource]="emailListDataSource" matSort
+              (matSortChange)="customSortForNotifications($event)" matSortActive="name" matSortDirection="asc"
+              matSortDisableClear>
+
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef>{{'COMMON_S_NO' | translate}}</th>
+                <td mat-cell *matCellDef="let element; let i=index;"> {{i + 1 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="emailInformationTO.emailSubject">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  {{'ALERT_AND_NOTIFICATIONS_EMAIL_SUBJECT' | translate}}</th>
+                <td mat-cell *matCellDef="let element;"> {{element?.emailSubject}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdBy">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  {{'ALERT_AND_NOTIFICATIONS_TRIGGERED_BY' | translate}}</th>
+                <td mat-cell *matCellDef="let element;"> {{element?.createdBy}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="msgDestinationEmailId">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  {{'ALERT_AND_NOTIFICATIONS_EMAIL_TO' | translate}}</th>
+                <td mat-cell *matCellDef="let element;"> {{element?.msgDestinationEmailId}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdDt">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>{{'ALERT_AND_NOTIFICATIONS_TRIGGERED_DATE' | translate}}</th>
+                <td mat-cell *matCellDef="let element;"> {{element?.createdDtDisp}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }}</th>
+                <td mat-cell *matCellDef="let element;"> 
+                  <button mat-icon-button
+                    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openNotificationExplanationDialog(element)">
+                    <mat-icon color="primary"><a>visibility</a></mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                [ngStyle]="{'background-color':getColorBasedOnReadStateOfEmailNotification(row)}"
+                [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="selectedRowForEmailNotification(row)">
+              </tr>
+
+            </table>
+
+            <mat-card class="no_records_found" *ngIf="lengthOfNotifications=='0' && !subLoaderForNotifications">
+              {{'COMMON_NO_RECORDS_FOUND' | translate}}
+            </mat-card>
+            <mat-card class="loader" *ngIf="subLoaderForNotifications">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </mat-tab>
+  </mat-tab-group>
+</div> -->

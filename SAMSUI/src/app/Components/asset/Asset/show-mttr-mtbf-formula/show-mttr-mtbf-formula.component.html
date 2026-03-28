@@ -1,0 +1,15 @@
+<div fxLayout="column" class="formula-container" fxLayoutGap="10px">
+  
+  <!-- Top Bar with Close Button -->
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-icon-button (click)="Cancel()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Image -->
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <img [src]="imgSrc" alt="MTTR/MTBF Formula" style="max-width: 100%; height: auto;">
+  </div>
+
+</div>

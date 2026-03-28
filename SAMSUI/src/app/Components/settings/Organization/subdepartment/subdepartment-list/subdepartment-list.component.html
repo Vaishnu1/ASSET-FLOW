@@ -1,0 +1,140 @@
+<div fxLayout="column">
+
+  <div style="padding-top: 0.5%;">
+
+    <mat-expansion-panel fxLayout="column" hideToggle >
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}} {{'SUB_DEPARTMENT_NAME'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div fxLayout="row" fxFlexFill class="pad-1-per" >
+
+        <div fxFlex="25" fxFlex.xs="30" fxFlex.sm="30" class="pad-1-per" fxFlexFill>
+          <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+          <ng-select class=" example-full-width" [(ngModel)]="subdepartment.departmentName"
+            [ngModelOptions]="{standalone: true}" tabindex="1" (search)="listOfDepartment($event)"
+            (click)="listOfDepartment({})" (change)="getDepartmentNameComboValue($event)" [items]="departmentList"
+            appendTo="body" [virtualScroll]="true" (scrollToEnd)="listOfDepartment({})" (keyup.backspace)="listOfDepartment($event.target.value ? $event : 'back')" (clear)="listOfDepartment('clear')" [loading]="scrollsync"
+            loadingText="Loading..." bindLabel="departmentName" bindValue="departmentName">
+          </ng-select>
+        </div>
+
+        <div fxFlex="25" fxFlex.xs="30" fxFlex.sm="30" class="pad-1-per" fxFlexFill>
+          <span class="input-label"> {{ 'MENU_SUB_DEPARTMENT' | translate }} </span>
+          <ng-select class=" example-full-width" [(ngModel)]="subdepartment.subDepartmentName"
+            [ngModelOptions]="{standalone: true}" tabindex="2" (search)="listOfSubDepartment($event)"
+            (click)="listOfSubDepartment({})" (change)="getSubDepartmentNameComboValue($event)"
+            [items]="subDepartmentList" [virtualScroll]="true" (scrollToEnd)="listOfSubDepartment({})" (keyup.backspace)="listOfSubDepartment($event.target.value ? $event : 'back')" (clear)="listOfSubDepartment('clear')"
+            [loading]="scrollsyncSubDepartment" appendTo="body" loadingText="Loading..." bindLabel="subDepartmentName"
+            bindValue="subDepartmentName">
+          </ng-select>
+        </div>
+
+        <div fxFlex="20" fxHide.sm fxHide.xs></div>
+
+        <div class="pad-1-per" fxFlex="30" fxFlex.sm="40" fxLayoutAlign="end center">
+          <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary"
+            (click)="searchSubDepartment($event)">{{'COMMON_SEARCH' | translate }}</button>
+          <button mat-raised-button fxHide.gt-sm matTooltip="Search" class="space" color="primary"
+            (click)="searchSubDepartment($event)">
+            <mat-icon>search</mat-icon>
+          </button>
+
+          <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary"
+            (click)="clearSearch()">{{ 'COMMON_CLEAR' | translate }}</button>
+          <button mat-raised-button fxHide.gt-sm matTooltip="Clear" class="space" color="primary"
+            (click)="clearSearch()">
+            <mat-icon>clear_all</mat-icon>
+          </button>
+
+          <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary"
+            (click)="generateSubDeptReportExport()" [disabled]="length=='0' && !subloader">{{ 'REPORT_EXPORT' |
+            translate }}</button>
+          <button mat-raised-button fxHide.gt-sm matTooltip="Export" class="space" color="primary"
+            (click)="generateSubDeptReportExport()" [disabled]="length=='0' && !subloader">
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    </mat-expansion-panel>
+
+  </div>
+
+  <hr>
+  <mat-toolbar>
+    <span>{{'SUB_DEPARTMENT_NAME'| translate}}</span>
+    <span class="example-spacer"></span>
+    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+  [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+  <button mat-raised-button class="space sqr-btn" color="primary"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+    *ngIf="modelAccessModule.createFlagDisplay"
+    (click)="openSubDeptCreateDialog(0,'add')"><mat-icon>add</mat-icon>
+  </button>
+  <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+    matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openSubDeptCreateDialog(selectedItem,'edit')">
+    <mat-icon>edit</mat-icon>
+  </button>
+    <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+    matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openSubDeptCreateDialog(selectedItem,'view')">
+    <mat-icon>visibility</mat-icon>
+  </button>
+</mat-toolbar>
+
+  <div class="org-container-table" fxLayout="column">
+
+    <table mat-table [dataSource]="subdepartmentdataSource" matSort (matSortChange)="customSort($event)"
+      matSortActive="name" matSortDirection="asc" matSortDisableClear  fxFlex="100">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+          <mat-checkbox color="primary" class="example-margin" (change)="selectSubDepartment(element)" [checked]="selectedItem.subDepartmentId == element.subDepartmentId"></mat-checkbox></td>
+    </ng-container>
+    <ng-container matColumnDef="sno">
+      <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+      <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+    </ng-container>
+      <ng-container matColumnDef="departmentTO.departmentName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 18%;"> {{ 'DEPARTMENT_NAME' | translate }}</th>
+        <td mat-cell (click)="selectSubDepartment(element)" *matCellDef="let element" style="width: 18%;"  matTooltip="{{element.departmentName}}">{{element?.departmentName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="subDepartmentCode">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header style="width: 15%;">{{ 'SUB_DEPARTMENT_CODE' | translate }} </th>
+        <td mat-cell (click)="selectSubDepartment(element)" *matCellDef="let element" style="width: 15%;" matTooltip="{{element.subDepartmentCode}}">{{ element?.subDepartmentCode }}</td>
+      </ng-container>
+      <ng-container matColumnDef="subDepartmentName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;">{{ 'SUB_DEPARTMENT_NAME' | translate }} </th>
+        <td mat-cell (click)="selectSubDepartment(element)" *matCellDef="let element" style="width: 30%;" matTooltip="{{element.subDepartmentName}}">{{element?.subDepartmentName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;"> {{ 'COMMON_UPDATED_BY' | translate }}</th>
+        <td mat-cell (click)="selectSubDepartment(element)" *matCellDef="let element" style="width:15%;"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;">{{ 'COMMON_UPDATED_DT' | translate }}</th>
+        <td mat-cell (click)="selectSubDepartment(element)" *matCellDef="let element" style="width:15%;"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+    <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+
+  </div>
+
+
+
+</div>

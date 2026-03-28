@@ -1,0 +1,56 @@
+.no-record-found{
+    margin: 1% 0 0 50%;
+    text-align: center !important;
+    background-color: white !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: black;
+  }
+
+.example-full-width {
+  width: 95% !important;
+}
+
+.space {
+  margin-left: 5px;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  margin-bottom: 1%;
+}
+
+tr th:not(:first-child) {
+  min-width: 175px;
+}
+
+.item-desc-list-table{
+  min-width: 360px !important;
+}
+
+.item-select-list-table{
+  min-width: 38px !important;
+}
+
+.item-min-wd{
+   min-width: 146%;
+}
+
+.pd-lt-30{
+  padding-right: 30%;
+}
+
+.item-container-table {
+  max-height: 62vh !important;
+  overflow: auto;
+}
+
+.item-container-table table {
+  width: 100%;
+}
+
+.department-list{
+  table-layout: fixed;
+}

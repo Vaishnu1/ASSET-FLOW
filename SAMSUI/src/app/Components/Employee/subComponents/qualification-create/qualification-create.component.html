@@ -1,0 +1,89 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="mb-10"> 
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header">Qualification</h4>
+      </div>
+      
+      <div fxFlex="5" fxLayoutAlign="end start"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+  
+    <div fxLayout="row"> 
+    <form [formGroup]="empQualificationForm" fxFlex="100">  
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                <mat-label class="input-label"> {{'EMPLOYEE_QUALIFICATION' | translate}} </mat-label>
+                <input matInput class="input-field" #companyNameF formControlName="qualificationName" required [maxlength]="100">
+                <mat-hint align="end">{{empQualificationForm.controls.qualificationName.value?.length || 0}}/100</mat-hint>
+                <mat-error *ngIf="empQualificationForm.controls.qualificationName.invalid && empQualificationForm.controls.qualificationName.touched">
+                  <div *ngIf="empQualificationForm.controls.qualificationName.errors.required"> {{'EMPLOYEE_QUALIFICATION' | translate}} is
+                    Required </div>
+                </mat-error>
+            </mat-form-field>
+            </div>  
+              <div class="form-group">
+                <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'EMPLOYEE_FROM_DATE' | translate}}</mat-label>
+                    <input required matInput class="input-field" (click)="picker.open()" required [matDatepicker]="picker" formControlName="startDateDisp" (keypress)="dateValidation($event)" (dateChange)="getFromDate($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="empQualificationForm.controls.startDateDisp.invalid && empQualificationForm.controls.startDateDisp.touched">
+                      <div *ngIf="empQualificationForm.controls.startDateDisp.errors.required"> {{'EMPLOYEE_FROM_DATE' | translate}} is
+                        Required </div>
+                    </mat-error>
+                </mat-form-field>
+              </div>  
+            <div class="form-group">
+              <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="input-label">{{'EMPLOYEE_TO_DATE' | translate}}</mat-label>
+                <input matInput class="input-field" (click)="picker1.open()" [matDatepicker]="picker1" required formControlName="completedDateDisp" (dateChange)="getToDt($event)" [min]="minToDate" (keypress)="dateValidation1($event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="empQualificationForm.controls.completedDateDisp.invalid && empQualificationForm.controls.completedDateDisp.touched">
+                    <div *ngIf="empQualificationForm.controls.completedDateDisp.errors.required"> {{'EMPLOYEE_TO_DATE' | translate}} is
+                      Required </div>
+                  </mat-error>
+              </mat-form-field>
+            </div>  
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                <mat-label class="input-label"> {{'EMPLOYEE_UNIVERSITY' | translate}} </mat-label>
+                <input matInput class="input-field" formControlName="university" required [maxlength]="100">
+                <mat-hint align="end">{{empQualificationForm.controls.university.value?.length || 0}}/100</mat-hint>
+                <mat-error *ngIf="empQualificationForm.controls.university.invalid && empQualificationForm.controls.university.touched">
+                  <div *ngIf="empQualificationForm.controls.university.errors.required"> {{'EMPLOYEE_UNIVERSITY' | translate}} is
+                    Required </div>
+                  <div *ngIf="empQualificationForm.controls.university.errors.maxlength"> {{'EMPLOYEE_UNIVERSITY' | translate}} Maximum length is 100 </div>
+                </mat-error>
+              </mat-form-field>
+            </div>  
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="input-label"> {{'EMPLOYEE_PERCENTAGE' | translate}} </mat-label>
+                <input matInput class="input-field" matInput formControlName="percentage">
+                <mat-error *ngIf="empQualificationForm.controls.percentage.invalid && empQualificationForm.controls.percentage.touched">
+                  <div *ngIf="empQualificationForm.controls.percentage.errors.required"> {{'EMPLOYEE_PERCENTAGE' | translate}} is
+                    Required </div>
+                  <div *ngIf="empQualificationForm.controls.percentage.errors.pattern"> {{'EMPLOYEE_PERCENTAGE' | translate}} contains only numbers. </div>
+                  <div *ngIf="empQualificationForm.controls.percentage.errors.maxlength"> {{'EMPLOYEE_PERCENTAGE' | translate}} Maximum length is 4 </div>
+                </mat-error>
+              </mat-form-field>
+            </div>  
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="input-label"> {{'EMPLOYEE_YEAR_OF_PASSED' | translate}} </mat-label>
+                <input matInput class="input-field" formControlName="yearOfPassing" readonly>
+              </mat-form-field>
+            </div> 
+ 
+          <div fxLayout="row" class="mt-15" fxLayoutAlign="center center"> 
+            <button mat-raised-button type="button" (click)="addEmpQualification()" color="primary" 
+            [disabled]="empQualificationForm.invalid || !empQualificationForm.dirty">{{'COMMON_SUBMIT' | translate}}</button>
+          </div>
+ 
+      </form>
+    </div>
+  </div>
+</div>

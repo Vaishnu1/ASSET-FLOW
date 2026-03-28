@@ -1,0 +1,118 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <mat-toolbar-row fxFlex="35">
+      <mat-list aria-label="breadcrumb" class="breadcrumblink" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="breadcrumbicon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'MENU_SETTING'| translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'NUMBERCONTROL'| translate}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+  </div>
+
+  <div class="content_section_background">
+    <div fxLayout="column">
+      <div fxLayout="row">
+        <mat-form-field fxFlex="35" [floatLabel]="'always'">
+          <mat-label >Search {{'NUMBERCONTROL' | translate}}</mat-label>
+          <input matInput type="search" #searchSet name="search" id="search"
+            (input)="onSearchChange($event.target.value)">
+        </mat-form-field>
+
+        <div fxFlex="65"></div>
+      </div>
+
+      <hr />
+
+      <mat-toolbar>
+        <span>{{'NUMBERCONTROL'| translate}} List</span>
+        <span class="example-spacer"></span>
+
+        <mat-paginator #paginatorUsers [pageSizeOptions]="[5,10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+        <span class="example-spacer"></span>
+
+        <button mat-raised-button color="primary"  class="space sqr-btn" *ngIf="modelAccessModule.createFlagDisplay"
+        [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+        (click)="openNumberControlDialog(0,'create')"><mat-icon>add</mat-icon></button>
+
+        <button [disabled]=" selectedItem == 0" mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openNumberControlDialog(selectedItem,'edit')"  *ngIf="modelAccessModule.updateFlagDisplay">
+        <mat-icon >edit</mat-icon>
+        </button>
+
+        <button [disabled]=" selectedItem == 0" mat-raised-button color="primary"  class="space sqr-btn" (click)="openNumberControlDialog(selectedItem,'view')" matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="modelAccessModule.readFlagDisplay">
+        <mat-icon >visibility</mat-icon>
+        </button>
+
+      </mat-toolbar>
+
+      <div fxLayout="column" class="example-container">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+          matSortDirection="asc" matSortDisableClear>
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="width: 5%;"> {{'COMMON_SELECT'|translate}} </th>
+            <td mat-cell *matCellDef="let element; let i=index;"> 
+              <mat-checkbox color="primary" class="example-margin" (change)="selectNumberControl(element)"
+              [checked]="selectedItem.numberCtrlId == element?.numberCtrlId">
+             </mat-checkbox>  
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="locationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' | translate}}</th>
+            <td mat-cell *matCellDef="let element" (click)="selectNumberControl(element)"> {{ element?.locationName }} </td>
+          </ng-container>
+          <ng-container matColumnDef="numberCtrlName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'NUMBERCONTROL'|translate}}</th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)"> {{element.numberCtrlName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="numberCtrlDesc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'NUMBER_CONTROL_DESC'|translate}} </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)"> {{element.numberCtrlDesc}} </td>
+          </ng-container>
+          <ng-container matColumnDef="numberCtrlModuleDisp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LABEL_MODULE_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)">
+              {{ element?.numberCtrlModuleDisp }}</td>
+          </ng-container>
+          <ng-container matColumnDef="prefixCd">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'NUMBERCONTROL_PREFIX' | translate}} </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)">
+              {{ element?.prefixCd }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="suffixCd">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'NUMBERCONTROL_SUFFIX'| translate}}
+            </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)"> {{element.suffixCd}}</td>
+          </ng-container>
+          <ng-container matColumnDef="lastNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'NUMBERCONTROL_LASTNUMBER'| translate}} </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)"> {{element.lastNumber}} </td>
+          </ng-container>
+          <ng-container matColumnDef="maxNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{'NUMBERCONTROL_MAXNUMBER'| translate}} </th>
+            <td mat-cell *matCellDef="let element"  (click)="selectNumberControl(element)"> {{element.maxNumber}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+          </tr>
+        </table>
+        <mat-card fxLayoutAlign="center center" class="no_records_found" *ngIf="length=='0' && !subLoader">
+          {{'COMMON_NO_RECORDS_FOUND' | translate}}
+        </mat-card>
+        <mat-card fxLayoutAlign="center center" class="no_records_found" *ngIf="subLoader">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

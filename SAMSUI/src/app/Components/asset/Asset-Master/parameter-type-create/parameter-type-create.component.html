@@ -1,0 +1,36 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_PARAMETER_TYPE' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeParameterTypeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="parameterTypeForm">
+    <div fxLayout="column">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="input-label"> {{ 'SR_PARAMETER_TYPE' | translate }} </mat-label>
+        <input matInput formControlName="parameterTypeName" required #parameterTypeFocus
+          (input)="checkUniqueConstrainForParameterType()" [maxlength]="100"
+          oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{parameterTypeForm.controls.parameterTypeName.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="parameterTypeForm.controls.parameterTypeName.errors && parameterTypeForm.controls.parameterTypeName. touched">
+          <div class="err-field" *ngIf="parameterTypeForm.controls.parameterTypeName.errors.required">"{{ 'SR_PARAMETER_TYPE' | translate
+          }}" Is Required </div>
+          <div class="err-field" *ngIf="parameterTypeForm.controls.parameterTypeName.errors.notUnique">{{ErrorMsgParameterType}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutAlign="center center" style="margin-top:20px;">
+      <!-- <button mat-raised-button class="space col-md-3" (click)="closeParameterTypeModal()" color="primary">{{ 'COMMON_BACK' | translate }}</button> -->
+      <button mat-raised-button class="space" color="primary" (click)="submitParameterType()"
+        [disabled]="parameterTypeForm.invalid || !parameterTypeForm.dirty || uploadParameterTypeFlag">
+        <span *ngIf="!uploadParameterTypeFlag">{{displayButton}}</span>
+        <span *ngIf="uploadParameterTypeFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+  </form>
+</div>

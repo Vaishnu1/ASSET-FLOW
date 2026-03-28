@@ -1,0 +1,357 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="35">
+      <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a>{{'MENU_INVENTORY' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{'MENU_STOCK_INDENT' | translate}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+  </div>
+
+  <!-- Mat Table Code -->
+  <div class="content_section_background">
+    <div fxLayout="column">
+      <div class="table_section ">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-header">
+              {{'COMMON_SEARCH'| translate}}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end end">
+              <mat-icon>search</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div fxFlex="100">
+            <form fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxFlex.lt-md="100">
+              <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                <div fxFlex="34">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'LOCATION_NAME' | translate}} </span>
+                      <ng-select #focusLocationName class=" input-field" [(ngModel)]="stockIndentModel.locationName"
+                        (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                        (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                        (scrollToEnd)="listofLocationName({})"
+                        (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                        (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                        bindValue="locDisplayField" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                        appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'STOCK_INDENT_NO' | translate }}</mat-label>
+                        <input matInput tabindex="1" [(ngModel)]="stockIndentModel.indentNo"
+                          [ngModelOptions]="{standalone: true}" class="input-field">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'STOCK_REQUEST_BY' | translate }} </span>
+                      <ng-select [(ngModel)]="stockIndentModel.requestedBy" tabindex="3"
+                        [ngModelOptions]="{standalone: true}" (search)="loadPersonInchargeComboData($event)"
+                        (click)="loadPersonInchargeComboData({})" (change)="selectedPersonInchargeData($event)"
+                        (scrollToEnd)="loadPersonInchargeComboData({})"
+                        (keyup.backspace)="loadPersonInchargeComboData({})" [virtualScroll]="true" appendTo="body"
+                        [loading]="scrollsyncPersonIncharge" [items]="personInchargeCombo" bindLabel="employeeFirstName"
+                        bindValue="employeeFirstName">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{'STOCK_INDENT_DT' | translate }}</mat-label>
+                        <input matInput (click)="indentDt.open()" tabindex="2" [matDatepicker]="indentDt"
+                          [(ngModel)]="stockIndentModel.indentDtDisp" [ngModelOptions]="{standalone: true}"
+                          class="input-field">
+                        <mat-datepicker-toggle matSuffix [for]="indentDt"></mat-datepicker-toggle>
+                        <mat-datepicker #indentDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group">
+
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'STOCK_SR_NO' | translate }} </span>
+                      <ng-select [items]="srNoCombo" tabindex="5" bindLabel="srNo" bindValue="srNo"
+                        [(ngModel)]="stockIndentModel.srNo" [ngModelOptions]="{standalone: true}" appendTo="body"
+                        (search)="loadServiceRequestNumbers($event)" (click)="loadServiceRequestNumbers($event)"
+                        [virtualScroll]="true" (scrollToEnd)="loadServiceRequestNumbers({})"
+                        (keyup.backspace)="loadServiceRequestNumbers($event.target.value ? $event : 'back')"
+                        (clear)="loadServiceRequestNumbers('clear')" [loading]="scrollSRNosync" loadingText="Loading..."
+                        (change)="selectedSRNo($event)" tabindex="5"></ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'STOCK_INDENT_STATUS' | translate }} </span>
+                      <ng-select tabindex="4" [(ngModel)]="stockIndentModel.indentStatus"
+                        [ngModelOptions]="{standalone: true}" [items]="indentStatus" appendTo="body"
+                        bindLabel="indentStatus" bindValue="indentStatus" (change)="setIndentStatus($event)">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100">
+
+                <div class="form-group" fxFlex.lt-md="34" fxFlex="100">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class=" input-label">{{'STOCK_REQUEST_DT' | translate }}</mat-label>
+                      <input matInput (click)="requestedDt.open()" tabindex="6" [matDatepicker]="requestedDt"
+                        [(ngModel)]="stockIndentModel.requestedDtDisp" [ngModelOptions]="{standalone: true}"
+                        class="input-field">
+                      <mat-datepicker-toggle matSuffix [for]="requestedDt"></mat-datepicker-toggle>
+                      <mat-datepicker #requestedDt></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxLayoutAlign="end end" fxHide.lt-md>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="7" (click)="searchStockIndent()">{{'COMMON_SEARCH' |
+                    translate}}</button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="8" (click)="clear()">{{'COMMON_CLEAR' |
+                    translate}}</button>
+                  <button mat-raised-button class="space" color="primary" tabindex="9"
+                    matTooltip="{{'REPORT_EXPORT' | translate}}" (click)="generateReport()">{{'REPORT_EXPORT' |
+                    translate}}</button>
+                </div>
+                <div fxLayoutAlign="end end" fxFlex.lt-md="66" fxHide.md fxHide.gt-md>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="7"
+                    (click)="searchStockIndent()"><mat-icon>search</mat-icon></button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="8"
+                    (click)="clear()"><mat-icon>clear_all</mat-icon></button>
+                  <button mat-raised-button class="space" color="primary" tabindex="9"
+                    matTooltip="{{'REPORT_EXPORT' | translate}}"
+                    (click)="generateReport()"><mat-icon>file_download</mat-icon></button>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+
+        </mat-expansion-panel>
+
+        <hr />
+
+        <mat-toolbar>
+          <!-- <span>{{'MENU_STOCK_INDENT'| translate}} List</span> -->
+          <span class="example-spacer"></span>
+
+          <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+          </mat-paginator>
+          <span class="example-spacer"></span>
+
+          <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+            <mat-icon>view_week</mat-icon>
+          </button>
+    
+          <div class="custom-dialog" *ngIf="showManageColumns">
+            <div>
+              <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+            </div>
+            <hr>
+            <div class="custom-dialog-body" *ngIf="showManageColumns">
+              <div id="column1">        
+                <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+                <span>{{'LOCATION_NAME' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('indentNo')"(change)="toggleColumn('indentNo')">
+                <span>{{'STOCK_INDENT_NO' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('indentDt')" (change)="toggleColumn('indentDt')">
+                <span>{{'STOCK_INDENT_DT' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('requestedBy')" (change)="toggleColumn('requestedBy')">
+                <span>{{'STOCK_REQUEST_BY' | translate}}</span>
+                <br>
+              </div>
+        
+              <div id="column2">
+                <input type="checkbox" (change)="toggleColumn('requestedDt')" [checked]="displayedColumns.includes('requestedDt')">
+                <span>{{'STOCK_REQUEST_DT' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('totalIndentValue')" [checked]="displayedColumns.includes('totalIndentValue')">
+                <span>{{'STOCK_INDENT_VALUE' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('indentStatus')" [checked]="displayedColumns.includes('indentStatus')">
+                <span>{{'STOCK_INDENT_STATUS' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('indentApprovalStatus')" [checked]="displayedColumns.includes('indentApprovalStatus')">
+                <span>{{'APPROVAL_STATUS' | translate}}</span> <br>
+              </div>
+        
+              <div id="column3">
+                <input type="checkbox" (change)="toggleColumn('srNo')" [checked]="displayedColumns.includes('srNo')">
+                <span>{{'STOCK_SR_NO' | translate}}</span>
+              </div>
+            </div>
+        
+            <hr>
+            
+            <div fxLayoutAlign="end end">
+              <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                {{'COMMON_OK' | translate}}
+              </button>
+              <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                {{'COMMON_RESET' | translate}}
+              </button>
+            </div>
+            
+          </div>
+  
+
+          <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay" class="space sqr-btn"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            (click)="createStockIndent('add')"><mat-icon>add</mat-icon></button>
+
+          <button [disabled]="enableActionBtn || checkApprovalValid() || enableActionBtnForCancel " mat-raised-button color="primary"
+            class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+            *ngIf="modelAccessModule.updateFlagDisplay " (click)="createStockIndent('Edit')">
+            <mat-icon>edit</mat-icon></button>
+
+          <button [disabled]="enableActionBtn" mat-raised-button color="primary" class="space sqr-btn"
+            *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+            (click)="createStockIndent('view')">
+            <mat-icon>visibility</mat-icon></button>
+
+          <button [disabled]="enableActionBtn" mat-raised-button color="primary" class="space sqr-btn"
+            matTooltip="{{ 'COMMON_PDF' | translate }}" (click)="generateStockIndentPDF()">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+            matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="confirmStockIndentApprove()">
+            <mat-icon>spellcheck</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+            matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rejectStockIndentApprove()">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+          <button [disabled]="enableActionBtnForCancel" color="primary" mat-raised-button class="space sqr-btn" 
+          matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="stockIndentCancel()">
+          <mat-icon>clear</mat-icon>
+          </button>
+
+        </mat-toolbar>
+
+        <div class="example-container">
+          <table class='stock-indent-list-table' mat-table [dataSource]="stockIndentMainDataSource" matSort (matSortChange)="customSort($event)"
+            matSortActive="name" matSortDirection="asc" matSortDisableClear>
+           
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'COMMON_SELECT' | translate }} </th>
+              <td mat-cell *matCellDef="let element;let i = index;">
+                <mat-checkbox color="primary" class="example-margin" (change)="selectStockIndent(element)"
+                  [checked]="compareValue(element)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+            </ng-container>
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'LOCATION_NAME' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.locationName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="indentNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_INDENT_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.indentNo}}</td>
+            </ng-container>
+            <ng-container matColumnDef="indentDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_INDENT_DT' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element.indentDtDisp}}</td>
+            </ng-container>
+            <ng-container matColumnDef="requestedBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_REQUEST_BY' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.requestedBy}}</td>
+            </ng-container>
+            <ng-container matColumnDef="requestedDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_REQUEST_DT' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.requestedDtDisp}}</td>
+            </ng-container>
+            <ng-container matColumnDef="totalIndentValue">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_INDENT_VALUE' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.totalIndentValue}}</td>
+            </ng-container>
+            <ng-container matColumnDef="indentStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_INDENT_STATUS' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" class="{{element?.indentStatus.replace(' ','')}}"
+                (click)="selectStockIndent(element)">{{element?.indentStatus}}</td>
+            </ng-container>
+            <ng-container matColumnDef="indentApprovalStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'APPROVAL_STATUS' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;"
+                class="{{element?.indentApprovalStatus.replace(' ','')}}" (click)="selectStockIndent(element)">
+                {{element?.indentApprovalStatus}}</td>
+            </ng-container>
+            <ng-container matColumnDef="srNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'STOCK_SR_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectStockIndent(element)">
+                {{element?.srNo}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+          </table>
+          <mat-card class="no_records_found" fxLayoutAlign="center center"
+            *ngIf="length=='0' && !subLoaderStockIndentMain">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+          <mat-card class="no_records_found" *ngIf="subLoaderStockIndentMain" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

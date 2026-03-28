@@ -1,0 +1,196 @@
+<div fxLayout="row" fxLayoutAlign="start center">
+  <div fxFlex="35">
+    <mat-toolbar-row aria-label="breadcrumb">
+      <mat-list fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content">
+          <a [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item class="bread-crumb-content">
+          <a>Notification</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item class="active bread-crumb-content">
+          Email Notification
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+</div>
+
+<div class="content_section_background">
+
+  <mat-expansion-panel hideToggle [formGroup]="searchForm">
+    <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+            Search Email 
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+             <mat-icon>search</mat-icon>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+
+
+    <div fxLayout="row" fxLayoutAlign="space-between" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" style="width:100%;">
+
+
+      <div fxFlex="25" class="form-group">
+        <span class="input-label">Template Name</span>
+        <ng-select appendTo="body"  [items]="templateNames"
+  formControlName="templateName"></ng-select>
+      </div>
+
+      <div fxFlex="25" class="form-group">
+        <span class="input-label">Process</span>
+        <ng-select
+  [items]="moduleList"
+  bindLabel="moduleName"
+  bindValue="moduleId"
+  formControlName="module"
+  
+  appendTo="body">
+</ng-select>
+
+      </div>
+
+      <div fxFlex="25" class="form-group">
+        <span class="input-label">Status</span>
+        <ng-select
+  [items]="processList"
+  bindLabel="processName"
+  bindValue="processId"
+  formControlName="process"
+  appendTo="body">
+</ng-select>
+
+      </div>
+
+      <div fxFlex="10" class="rightbutton"  fxLayoutAlign="center center">
+
+        <button mat-raised-button color="primary" class="space btn" (click)="onSearch()">Search</button>
+        <button mat-raised-button color="primary" class="space btn" (click)="onClearSearch()">Clear</button>
+      </div>
+
+    </div>
+  </mat-expansion-panel>
+
+  <hr/>
+
+  <mat-toolbar>
+
+    <span>Email Template List</span>
+    <span class="example-spacer"></span>
+
+    <mat-paginator
+      [pageSizeOptions]="[25,50,100]"
+      [length]="length"
+      [pageSize]="pageSize"
+      (page)="getServerData($event)">
+    </mat-paginator>
+
+    <button mat-raised-button class="space sqr-btn" color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <button mat-raised-button
+        class="space sqr-btn"
+        [color]="enableActionBtn ? '' : 'warn'"
+        [disabled]="enableActionBtn"
+        (click)="onEdit()">
+       <mat-icon>edit</mat-icon>
+    </button>
+
+    <button mat-raised-button
+        class="space sqr-btn"
+        [color]="enableActionBtn ? '' : 'warn'"
+        [disabled]="enableActionBtn"
+        (click)="onView()">
+       <mat-icon>visibility</mat-icon>
+    </button>
+
+  </mat-toolbar>
+
+  <div class="example-container">
+    <table class="email-notification-table" mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="selectAll($event)"></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox (change)="selectTemplates(element)"
+                        [checked]="compareValue(element)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef>S.No</th>
+        <td mat-cell *matCellDef="let element; let i = index;">
+          {{ getIndexValue(i) }}
+        </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="template_name">
+       <th mat-header-cell *matHeaderCellDef>Template Name</th>
+       <td mat-cell *matCellDef="let element">
+          {{ element.templateName }}
+       </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="process_name">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.processName }}
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="module_name">
+        <th mat-header-cell *matHeaderCellDef>Process</th>
+        <td mat-cell *matCellDef="let element">
+           {{ element.moduleName }}
+         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="is_active">
+        <th mat-header-cell *matHeaderCellDef>Active</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.is_active == 1 ? 'Yes' : 'No' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="created_by">
+        <th mat-header-cell *matHeaderCellDef>Created By / Date</th>
+        <td mat-cell *matCellDef="let element">
+           {{element.created_by}} / {{element.createdDate | date:'dd MMM yyyy, h:mm a'}}
+
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updated_by">
+        <th mat-header-cell *matHeaderCellDef>Updated By / Date</th>
+        <td mat-cell *matCellDef="let element">
+           {{element.updated_by}} / {{element.updatedDate | date:'dd MMM yyyy, h:mm a'}}
+
+        </td>
+      </ng-container>
+
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <mat-card *ngIf="dataSource.data.length == 0" fxLayoutAlign="center center">
+      No records found
+    </mat-card>
+  </div>
+
+</div>

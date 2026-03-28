@@ -1,0 +1,37 @@
+<div fxLayout="column">
+  <form fxLayout="column" [formGroup]="cancelForm">
+  <div>
+    <h4 *ngIf="((confirmHeading!= null && confirmHeading!= '') && confirmHeading!= undefined)"
+      class="dialogue-box-header"> {{confirmHeading}} Confirmation </h4>
+    <h4 *ngIf="(confirmHeading === null || confirmHeading === '' )" class="dialogue-box-header"> Cancel Confirmation
+    </h4>
+
+  </div>
+  <div>
+    <p *ngIf="((confirmHeading!= null && confirmHeading!= '') && confirmHeading!= undefined)" class="cancel-content">Are
+      you Sure? You want to {{confirmHeading | lowercase}} {{titleName}}.</p>
+    <p *ngIf="(confirmHeading === null || confirmHeading === '')" class="cancel-content"> Are you sure to cancel the
+      {{titleName}} ? <br> <span style="font-size: 13px;color: red;">{{note}}</span></p>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+        <mat-label class="input-label"> {{'COMMON_CANCEL_REASON' | translate }} <span class="mandatory-style">*</span>
+        </mat-label>
+        <textarea matInput class="input-field" formControlName="cancelReason" [tabIndex]=1
+            [maxlength]="500" oninput="this.value = this.value.toUpperCase()"></textarea>
+        <mat-hint align="end">{{cancelForm.controls.cancelReason.value?.length || 0}}/500
+        </mat-hint>
+        <mat-error *ngIf="cancelForm.controls.cancelReason.invalid && cancelForm.controls.cancelReason.touched">
+          <div class="err-field" *ngIf="cancelForm.controls.cancelReason.errors.required">
+            "{{ 'COMMON_CANCEL_REASON' | translate}}" Is Required </div>
+        </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class=" rightbutton" fxLayoutAlign="center center" fxLayout="row" fxFlex="100">
+    <button class=" space" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+    <button mat-raised-button color="primary" [disabled]="cancelForm.invalid || isDisabled" (click)="Proceed()"> Yes </button>
+  </div>
+  </form>
+</div>

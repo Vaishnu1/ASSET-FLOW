@@ -1,0 +1,30 @@
+.department-container {
+    max-height: 76vh !important;
+    overflow: auto;
+    min-height: 75vh;
+    /* display: flex;
+    flex-direction: column; */
+    /* min-width: 300px; */
+  }
+
+.department-list{
+    min-width: 130%;
+    overflow-x: scroll;
+}
+
+.form-width {
+    width: 85%;
+}
+
+.btn-margin-5px {
+    margin: 5px;
+}
+
+.input-box {
+    border-bottom: 1px solid #6a6d70 !important;
+}
+
+.no_records_found {
+    width: 100%;
+    text-align: center;
+  }

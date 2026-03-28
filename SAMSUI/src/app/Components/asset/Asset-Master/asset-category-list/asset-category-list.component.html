@@ -1,0 +1,428 @@
+<div fxLayout="column">
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center">
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item fxLayoutAlign="start center" class="bread-crumb-content">{{'MENU_ASSET'| translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content">{{'MENU_MASTER'| translate}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+    <div fxFlex="14" fxFlex.sm="2" fxFlex.xs="2">
+
+      <div fxLayoutAlign="center start">
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list style="padding-top: 0%; cursor: pointer;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+
+        <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_category'}"
+          (click)="Active_Tab_Change('asset_category')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_category'" class="category-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_category'" class="category-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET' | translate }}
+        </mat-list-item> -->
+
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'asset_category'}"
+          (click)="Active_Tab_Change('asset_category')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_category'" class="category-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_category'" class="category-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_CATEGORY' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" *ngIf="assetSubCategoryModuleAccess.createFlagDisplay || assetSubCategoryModuleAccess.readFlagDisplay || assetSubCategoryModuleAccess.updateFlagDisplay || assetSubCategoryModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_subcateory'}"
+          (click)="Active_Tab_Change('asset_subcateory')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_subcateory'" class="sub-category-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_subcateory'" class="sub-category-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_SUB_CATEGORY' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" *ngIf="assetTypeModuleAccess.createFlagDisplay || assetTypeModuleAccess.readFlagDisplay || assetTypeModuleAccess.updateFlagDisplay || assetTypeModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_type'}"
+          (click)="Active_Tab_Change('asset_type')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_type'" class="asset-type-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_type'" class="asset-type-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_TYPE' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" *ngIf="deviceCodeModuleAccess.createFlagDisplay || deviceCodeModuleAccess.readFlagDisplay || deviceCodeModuleAccess.updateFlagDisplay || deviceCodeModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'device_code'}"
+          (click)="Active_Tab_Change('device_code')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'device_code'" class="wo-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'device_code'" class="wo-icon-white">
+          </mat-icon>
+          {{ 'DEVICE_CODE' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" *ngIf="assetGroupModuleAccess.createFlagDisplay || assetGroupModuleAccess.readFlagDisplay || assetGroupModuleAccess.updateFlagDisplay || assetGroupModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_group'}"
+          (click)="Active_Tab_Change('asset_group')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_group'" class="asset-group-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_group'" class="asset-group-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_GROUP' | translate }}
+        </mat-list-item>
+        <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_manufacturer'}"
+          (click)="Active_Tab_Change('asset_manufacturer')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_manufacturer'" class="asset-manufacturer-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_manufacturer'" class="asset-manufacturer-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_MANUFACTURER' | translate }}
+        </mat-list-item> -->
+        <mat-list-item class="Tab ml-25" *ngIf="modelModuleAccess.createFlagDisplay || modelModuleAccess.readFlagDisplay || modelModuleAccess.updateFlagDisplay || modelModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_model'}"
+          (click)="Active_Tab_Change('asset_model')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_model'" class="asset-model-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_model'" class="asset-model-icon-white">
+          </mat-icon>
+          {{ 'MENU_MODEL' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'service_parameter'}"
+          (click)="Active_Tab_Change('service_parameter')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'service_parameter'" class="service-parameter-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'service_parameter'" class="service-parameter-icon-white">
+          </mat-icon>
+          {{ 'MENU_SERVICE_PARAMETER' | translate }}
+        </mat-list-item>
+        <mat-list-item class="Tab ml-25" *ngIf="statutoryReqModuleAccess.createFlagDisplay || statutoryReqModuleAccess.readFlagDisplay || statutoryReqModuleAccess.updateFlagDisplay || statutoryReqModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'statutory_requirement'}"
+          (click)="Active_Tab_Change('statutory_requirement')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'statutory_requirement'" class="statutory-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'statutory_requirement'" class="statutory-icon-white">
+          </mat-icon>
+          {{ 'MENU_STATUTORY_REQUIREMENT' | translate }}
+        </mat-list-item>
+        <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'customer'}"
+          (click)="Active_Tab_Change('customer')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'customer'" class="customer-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'customer'" class="customer-icon-white">
+          </mat-icon>
+          {{ 'MENU_CUSTOMER' | translate }}
+        </mat-list-item> -->
+        <mat-list-item class="Tab ml-25" *ngIf="customFieldsModuleAccess.createFlagDisplay || customFieldsModuleAccess.readFlagDisplay || customFieldsModuleAccess.updateFlagDisplay || customFieldsModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'custom-field'}"
+          (click)="Active_Tab_Change('custom-field')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'custom-field'" class="sub-category-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'custom-field'" class="sub-category-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET_CUSTOM_FIELD' | translate }}
+        </mat-list-item>
+        <mat-list-item *ngIf="batchAssetsModuleAccess.createFlagDisplay || batchAssetsModuleAccess.readFlagDisplay || batchAssetsModuleAccess.updateFlagDisplay || batchAssetsModuleAccess.deleteFlagDisplay" class="Tab ml-25" [ngClass]="{'active-menu-item':Active_Tab === 'batch-asset'}"
+          (click)="Active_Tab_Change('batch-asset')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'batch-asset'" class="batch-assets-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'batch-asset'" class="batch-assets-icon-white">
+          </mat-icon>
+          {{ 'BATCH_ASSET_SUB_MENU' | translate }}
+        </mat-list-item>
+
+      </mat-nav-list>
+
+      <mat-sidenav-container fxHide.gt-sm>
+        <mat-sidenav #sidenav style="margin-top: 53px;">
+          <mat-nav-list fxLayout="column" fxShow="true">
+
+            <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_category'}"
+          (click)="Active_Tab_Change('asset_category')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'asset_category'" class="category-icon-blue">
+          </mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'asset_category'" class="category-icon-white">
+          </mat-icon>
+          {{ 'MENU_ASSET' | translate }}
+        </mat-list-item> -->
+
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_category'}"
+              (click)="Active_Tab_Change('asset_category')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_category'" class="category-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_category'" class="category-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_CATEGORY' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" *ngIf="assetSubCategoryModuleAccess.createFlagDisplay || assetSubCategoryModuleAccess.readFlagDisplay || assetSubCategoryModuleAccess.updateFlagDisplay || assetSubCategoryModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_subcateory'}"
+              (click)="Active_Tab_Change('asset_subcateory')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_subcateory'" class="sub-category-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_subcateory'" class="sub-category-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_SUB_CATEGORY' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" *ngIf="assetTypeModuleAccess.createFlagDisplay || assetTypeModuleAccess.readFlagDisplay || assetTypeModuleAccess.updateFlagDisplay || assetTypeModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_type'}"
+              (click)="Active_Tab_Change('asset_type')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_type'" class="asset-type-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_type'" class="asset-type-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_TYPE' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" *ngIf="deviceCodeModuleAccess.createFlagDisplay || deviceCodeModuleAccess.readFlagDisplay || deviceCodeModuleAccess.updateFlagDisplay || deviceCodeModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'device_code'}"
+              (click)="Active_Tab_Change('device_code')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'device_code'" class="asset-type-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'device_code'" class="asset-type-icon-white">
+              </mat-icon>
+              {{ 'DEVICE_CODE' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" *ngIf="assetGroupModuleAccess.createFlagDisplay || assetGroupModuleAccess.readFlagDisplay || assetGroupModuleAccess.updateFlagDisplay || assetGroupModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_group'}"
+              (click)="Active_Tab_Change('asset_group')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_group'" class="asset-group-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_group'" class="asset-group-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_GROUP' | translate }}
+            </mat-list-item>
+            <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'asset_manufacturer'}"
+              (click)="Active_Tab_Change('asset_manufacturer')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_manufacturer'" class="asset-manufacturer-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_manufacturer'" class="asset-manufacturer-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_MANUFACTURER' | translate }}
+            </mat-list-item> -->
+            <mat-list-item class="Tab" *ngIf="modelModuleAccess.createFlagDisplay || modelModuleAccess.readFlagDisplay || modelModuleAccess.updateFlagDisplay || modelModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'asset_model'}"
+              (click)="Active_Tab_Change('asset_model')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'asset_model'" class="asset-model-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'asset_model'" class="asset-model-icon-white">
+              </mat-icon>
+              {{ 'MENU_MODEL' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'service_parameter'}"
+              (click)="Active_Tab_Change('service_parameter')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'service_parameter'" class="service-parameter-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'service_parameter'" class="service-parameter-icon-white">
+              </mat-icon>
+              {{ 'MENU_SERVICE_PARAMETER' | translate }}
+            </mat-list-item>
+            <mat-list-item class="Tab" *ngIf="statutoryReqModuleAccess.createFlagDisplay || statutoryReqModuleAccess.readFlagDisplay || statutoryReqModuleAccess.updateFlagDisplay || statutoryReqModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'statutory_requirement'}"
+              (click)="Active_Tab_Change('statutory_requirement')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'statutory_requirement'" class="statutory-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'statutory_requirement'" class="statutory-icon-white">
+              </mat-icon>
+              {{ 'MENU_STATUTORY_REQUIREMENT' | translate }}
+            </mat-list-item>
+            <!-- <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'customer'}"
+              (click)="Active_Tab_Change('customer')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'customer'" class="customer-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'customer'" class="customer-icon-white">
+              </mat-icon>
+              {{ 'MENU_CUSTOMER' | translate }}
+            </mat-list-item> -->
+            <mat-list-item class="Tab" *ngIf="customFieldsModuleAccess.createFlagDisplay || customFieldsModuleAccess.readFlagDisplay || customFieldsModuleAccess.updateFlagDisplay || customFieldsModuleAccess.deleteFlagDisplay" [ngClass]="{'active-menu-item':Active_Tab === 'custom-field'}"
+              (click)="Active_Tab_Change('custom-field')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'custom-field'" class="sub-category-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'custom-field'" class="sub-category-icon-white">
+              </mat-icon>
+              {{ 'MENU_ASSET_CUSTOM_FIELD' | translate }}
+            </mat-list-item>
+            <mat-list-item *ngIf="batchAssetsModuleAccess.createFlagDisplay || batchAssetsModuleAccess.readFlagDisplay || batchAssetsModuleAccess.updateFlagDisplay || batchAssetsModuleAccess.deleteFlagDisplay" class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'batch-asset'}"
+              (click)="Active_Tab_Change('batch-asset')" fxLayoutAlign="start center">
+              <mat-icon *ngIf="Active_Tab != 'batch-asset'" class="batch-assets-icon-blue">
+              </mat-icon>
+              <mat-icon *ngIf="Active_Tab === 'batch-asset'" class="batch-assets-icon-white">
+              </mat-icon>
+              {{ 'BATCH_ASSET_SUB_MENU' | translate }}
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-sidenav>
+      </mat-sidenav-container>
+
+    </div>
+
+
+    <div fxFlex="83" fxFlex.sm="93" fxFlex.xs="93">
+
+      <!-- <div *ngIf="Active_Tab === 'asset_view'" fxFlex="100" fxFlexFill>
+        <div fxLayout="column" fxFlex="100" fxFlexFill>
+          
+          <div class="pie-chart">
+          <h2>Asset Category</h2>
+
+            <div 
+            style="height: 350px !important; width: 750px !important; bottom: 0px !important" echarts
+            class="demo-chart" [options]="option1" theme={{theme}}>
+          </div>
+
+          </div> -->
+
+          <!-- <div class="pie-chart" style="margin-bottom:-30px">
+            <h2>Asset Sub Category</h2>
+
+          <div 
+          style="height: 350px !important; width: 750px !important; bottom: 0px !important" echarts
+          class="demo-chart" [options]="option2" theme={{theme}}>
+        </div>
+        </div> -->
+
+          <!-- <br><br>
+
+          <img src="assets/images/asset_master_diagram.png" alt="image" class="asset-master-img" style="margin-bottom:20px">
+
+        </div>
+      </div> -->
+
+      <div *ngIf="Active_Tab === 'asset_category'" fxFlex="100" fxFlexFill>
+        <div fxLayout="column" fxFlex="100" fxFlexFill>
+          <div fxLayout="row" fxFlex="100" fxFlexFill>
+            <div fxFlex="35" fxLayoutAlign="start center">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="input-label">Search {{'MENU_ASSET_CATEGORY' | translate}}</mat-label>
+                <input matInput type="search" #searchCategory name="search" id="search" class="form-control input-label"
+                  (input)="onSearchChange($event.target.value)">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="45" fxLayoutAlign="end center"></div>
+
+            <div fxFlex="20" fxLayoutAlign="end center"></div>
+
+          </div>
+
+          <mat-toolbar>
+            <span>{{'MENU_ASSET_CATEGORY'| translate}}</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+          <button mat-raised-button class="space sqr-btn" color="primary"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            *ngIf="modelAccessModule.createFlagDisplay" (click)="openAssetCategoryCreate(0)"><mat-icon>add</mat-icon>
+          </button>
+          <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+            matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="openAssetCategoryCreate(selectedItem, false)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button [disabled]="selectedItem == 0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+          matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="openAssetCategoryCreate(selectedItem, true)">
+          <mat-icon>visibility</mat-icon>
+          </button>
+          <button [disabled]="length=='0'" color="primary" mat-raised-button class="space sqr-btn btnpadding"
+            matTooltip="{{ 'REPORT_EXPORT' | translate }}" (click)="generateReportForAssetCategory()">
+            {{ 'REPORT_EXPORT' | translate }} </button>
+        </mat-toolbar>
+
+          <div fxLayout="column" class="category-container-table">
+            <table mat-table [dataSource]="assetCategorydataSource" matSort (matSortChange)="customSort($event)"
+              matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlex="100">
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+                <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+                  <mat-checkbox color="primary" class="example-margin" (change)="selectAssetCategory(element)" [checked]="selectedItem.assetCategoryId == element?.assetCategoryId"></mat-checkbox></td>
+              </ng-container>
+
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+                <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetCategoryCode">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 14%; text-align: left;"> {{ 'ASSET_CATEGORY_CODE' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" matTooltip="{{element.assetCategoryCode}}" class="table-cell-data"style="width: 14%; text-align: left;"> {{element.assetCategoryCode}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetCategoryName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 30%; text-align: left;"> {{ 'ASSET_CATEGORY' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" matTooltip="{{element.assetCategoryName}}" class="table-cell-data"style="width: 30%; text-align: left;"> {{element.assetCategoryName}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assetCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 8%; text-align: center;"> {{ 'ASSET_CATEGORY_COUNT' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" matTooltip="{{element.assetCount}}" class="table-cell-data"style="width: 8%; text-align: center;"> {{element.assetCount}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="subCategoryCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 10%; text-align: center;"> {{ 'ASSET_SUB_CATEGORY_COUNT' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" matTooltip="{{element.subCategoryCount}}" class="table-cell-data"style="width: 10%; text-align: center;"> {{element.subCategoryCount}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 10%; text-align: left;">{{ 'COMMON_UPDATED_BY' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" class="table-cell-data"style="width: 15%; text-align: left;"> {{element.updatedBy}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedDt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-head-data"
+                  style="width: 10%; text-align: left;"> {{ 'COMMON_UPDATED_DT' | translate }} </th>
+                <td mat-cell (click)="selectAssetCategory(element)" *matCellDef="let element" class="table-cell-data" style="width: 10%; text-align: left;"> {{element.updatedDtDisp}}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+              </tr>
+            </table>
+            <mat-card class="no_records_found" fxLayoutAlign="center center"
+              *ngIf="length=='0' && !subLoaderAssetCategory">
+              {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+            <mat-card class="no_records_found" *ngIf="subLoaderAssetCategory" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="Active_Tab === 'asset_subcateory'" fxFlexFill>
+        <app-asset-sub-category-list></app-asset-sub-category-list>
+      </div>
+      <div *ngIf="Active_Tab === 'asset_type'" fxFlexFill>
+        <app-asset-type-list></app-asset-type-list>
+      </div>
+      <!-- <div *ngIf="Active_Tab === 'asset_status'">
+              <app-asset-status-list></app-asset-status-list>
+          </div> -->
+      <div *ngIf="Active_Tab === 'asset_group'" fxFlexFill>
+        <app-asset-group-list></app-asset-group-list>
+      </div>
+      <div *ngIf="Active_Tab === 'device_code'" fxFlexFill>
+        <app-device-code></app-device-code>
+      </div>
+      <!-- <div *ngIf="Active_Tab === 'asset_manufacturer'" fxFlexFill>
+        <app-asset-manufacturer></app-asset-manufacturer>
+      </div> -->
+      <div *ngIf="Active_Tab === 'asset_model'" fxFlexFill>
+        <app-model-list></app-model-list>
+      </div>
+      <div *ngIf="Active_Tab === 'service_parameter'" fxFlexFill>
+        <app-service-parameter></app-service-parameter>
+      </div>
+      <div *ngIf="Active_Tab === 'statutory_requirement'" fxFlexFill>
+        <app-statutory-requirement-list></app-statutory-requirement-list>
+      </div>
+      <!-- <div *ngIf="Active_Tab === 'customer'" fxFlexFill>
+        <app-customer-list></app-customer-list>
+      </div> -->
+      <div *ngIf="Active_Tab === 'custom-field'" fxFlexFill>
+        <app-asset-sub-category-custom-fields></app-asset-sub-category-custom-fields>
+      </div>
+      <div *ngIf="Active_Tab === 'batch-asset'" fxFlexFill>
+        <app-batch-asset-list></app-batch-asset-list>
+      </div>
+    </div>
+  </div>
+</div>

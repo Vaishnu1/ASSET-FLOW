@@ -1,0 +1,149 @@
+.breadcrumblink{
+  float: left;
+}
+.example-full-width {
+  width: 95%;
+}
+
+.content_section{
+  height: calc(100px - 100px) !important;  
+  width: 98%;           
+}
+.mat-card {
+  margin-bottom: 1%;
+}
+.check-box{
+  margin-top:4rem;
+}
+.space{
+  margin-left: 10px;
+} 
+
+fieldset .scheduleInfo 
+{
+/* margin-top: 16px; */
+border: 1px solid #363434   !important;
+padding: 10px;       
+position: relative;
+border-radius:2px;
+/* background-color:#f5f5f5; */
+padding-left:10px!important;
+
+border-top: 1px solid #363434   !important;
+border-bottom: 1px solid #363434   !important;
+border-left: 1px solid #363434   !important;
+border-right: 1px solid #363434   !important;
+
+} 
+
+legend{
+background: transparent !important; 
+font-size: 13px;
+width: auto;
+border: 1px;
+border-radius: 4px;
+padding: 0px 6px 1px 8px; 
+}
+
+/* th.mat-header-cell{
+  font-size: 14px !important;
+  color:#fff; 
+  background: grey; 
+  font-weight: 501 !important;  
+  
+} */
+tr.mat-row{
+  height: 20%;
+}
+tr.mat-header-row {
+  height: 20%;
+}
+.mat-form-field {
+  font-size: inherit;
+  font-weight: 400;
+  line-height: 2.1;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+.rightbutton {
+  text-align: right;
+  float: right;
+  margin-right: 1%;
+}
+
+.rightbuttonFooter
+{
+text-align: right;
+padding-bottom: 10px;
+}
+
+.btmfooter{
+  padding-right: 1px;
+  position: fixed;
+  bottom: 0px;
+  background-color:#4a27271f;
+  width: 100%;
+  height: 45px;
+  z-index:1000;
+ }
+
+ .card-design{
+  border-radius: 0%;
+  width:100%;
+  margin-right: 1%;
+}
+
+.mb-31{
+  margin-top: 5px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.form-group{
+  margin-bottom: 0rem !important;
+  font-size: 15px !important;
+  margin-left:7%;
+  font-weight: 400;
+  padding: 5px 0px;
+}
+
+.Booked{
+  color: darkorange;
+}
+
+.Approved{
+  color: darkgreen;
+}
+
+/* .table-head {
+  padding: 5px;
+} */
+
+table, th, td{
+  border: 1px solid gray;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: left;
+}
+
+.font-style-combo {
+  font-size: 12px!important;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  font-weight: 480;
+}
+
+.card {
+  border: 0;
+  color: #333333;
+  background: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  min-height: 500px;
+}
+
+.item-desc {
+  font: 400 13px Arial;
+    border-bottom: 1px solid;
+    margin-bottom: 0px;
+    padding-bottom: 7px;
+}

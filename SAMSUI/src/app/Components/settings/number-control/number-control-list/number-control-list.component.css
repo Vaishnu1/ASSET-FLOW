@@ -1,0 +1,101 @@
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    width: 80% !important;
+}
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    margin-bottom: 1%;
+    width:100%
+}
+
+.mat-form-field {
+    font-size: 11px;
+    /* width: 100%; */
+}
+
+.mat-table {
+    max-height: 500px;
+}
+
+.frm-search {
+    width: 100% !important;
+}
+.search-reference {
+    margin-top: -14px;
+    margin-bottom: 10px;
+    top: 2px;
+    z-index: 150;
+}
+
+.breadcrumbicon {
+    padding-top: 2px !important;
+}
+
+.rightbutton {
+    text-align: right;
+}
+
+.actionicon {
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.mat-button,
+.mat-raised-button a {
+    color: #ffffff !important;
+    font-size: 13px !important;
+}
+
+.demo-dialog-custom-animation-close {
+    opacity: 0;
+    transition: all 1s linear, opacity 1ms;
+    transform: rotate(0deg);
+}
+
+
+
+
+
+::ng-deep .mat-select-value-text {
+    font-size: 13px !important;
+}
+
+::ng-deep .mat-drawer-container {
+    background: #ffffff !important;
+}
+
+.content_section_background {
+    /* margin: 0px 15px 0px 18px; */
+    min-height: 500px;
+
+}
+
+::ng-deep .mat-tooltip {
+    color: #000 !important;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 7px;
+    font-size: 12px;
+}
+
+.example-full-width {
+    width: 90% !important;
+}
+
+.example-label {
+    font-size: 20px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    color: #000000;
+}
+
+input.mat-input-element {
+    margin-top:12px;
+}
+
+

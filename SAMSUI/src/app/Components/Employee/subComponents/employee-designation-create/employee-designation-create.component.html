@@ -1,0 +1,126 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="mb-10"> 
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header"> Designation </h4>
+      </div>
+      
+      <div fxFlex="5"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+    
+    <div fxLayout="row"> 
+      <form [formGroup]="empDesignationForm" fxFlex="100"> 
+
+        <div fxLayout="row"> 
+            <div class="form-group" fxFlex="100"> 
+            <span class="input-label"> {{'DESIGNATION_NAME' | translate}} <span class="mandatory-style">*</span> </span>               
+              <ng-select class=" input-field" #designationNameF
+                        formControlName="designationName"
+                        (search) ="listOfDesignation($event)" 
+                        (click) = "listOfDesignation({})"
+                        (change)="getDesignationValue($event)"
+                        [items]="designationList" 
+                        [virtualScroll]="true" 
+                        (scrollToEnd)="listOfDesignation({})" (keyup.backspace)="listOfDesignation($event.target.value ? $event : 'back')" (clear)="listOfDesignation('clear')" 
+                        [loading]="scrollDesignationsync"
+                        bindLabel="designationName" bindValue="designationName">
+              </ng-select>
+              <mat-error *ngIf="empDesignationForm.controls.designationName.invalid && empDesignationForm.controls.designationName.touched">
+                <div *ngIf="empDesignationForm.controls.designationName.errors.required" class="err-field"> {{'DESIGNATION_NAME' | translate}} is
+                  Required </div>
+              </mat-error>
+            </div> 
+        </div>
+        <div fxLayout="row"> 
+            <div class="form-group" fxFlex="100">
+              <mat-form-field  class="example-full-width"  fxFlex="100" [floatLabel]="'always'">
+                <mat-label class="input-label">{{'EMPLOYEE_FROM_DATE' | translate}}</mat-label>
+                <input matInput class="input-field" (click)="picker.open()" [matDatepicker]="picker" formControlName="fromDateDisp"
+                (keypress)="dateValidation1($event)" tabindex="18"  (dateChange)="getFromDate($event)" required>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="empDesignationForm.controls.fromDateDisp.invalid && empDesignationForm.controls.fromDateDisp.touched" class="selectError">
+                  <div *ngIf="empDesignationForm.controls.fromDateDisp.errors.required"> {{'EMPLOYEE_FROM_DATE' | translate}} is
+                    Required </div>
+                </mat-error>
+              </mat-form-field>
+            </div> 
+        </div>
+        <div fxLayout="row" class="mb-10"> 
+            <div class="form-group" fxFlex="100">
+              <div class="input-label">
+                <mat-checkbox formCOntrolName="currentJob" color="primary" (change)="currentJob($event)">Currently Working </mat-checkbox>
+              </div>
+            </div> 
+        </div>
+        <div fxLayout="row" *ngIf="showToDate"> 
+          <div class="form-group" fxFlex="100">
+            <mat-form-field  class="example-full-width"  fxFlex="100" [floatLabel]="'always'">
+              <mat-label class="input-label">{{'EMPLOYEE_TO_DATE' | translate}}</mat-label>
+              <input matInput class="input-field" (click)="picker1.open()" [matDatepicker]="picker1" formControlName="tillDateDisp" (keypress)="dateValidation($event)" [min]="minToDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div> 
+        </div> 
+        <div fxLayout="row">
+          <div class="form-group" fxFlex="100">
+              <span class="input-label"> {{'EMPLOYEE_REPORTING_MANAGER' | translate}} <span class="mandatory-style">*</span> </span>
+              <ng-select class=" input-field"
+              formControlName="reportingPersonName"
+              (search) ="listOfEmployees($event)" 
+              (scrollToEnd) = "listOfEmployees({})" (keyup.backspace) = "listOfEmployees($event.target.value ? $event : 'back')" (clear) = "listOfEmployees('clear')"
+              (change)="getEmployeeValue($event)"
+              (click) = "listOfEmployees({})"
+              [items]="employeeList"
+              [virtualScroll]="true" 
+              [loading]="scrollReportingManagersync"
+              dropdownPosition =top
+               bindLabel="employeeFirstName"
+                bindValue="employeeFirstName">
+            </ng-select>
+            <mat-error *ngIf="empDesignationForm.controls.reportingPersonName.invalid && empDesignationForm.controls.reportingPersonName.touched" class="selectError">
+              <div *ngIf="empDesignationForm.controls.reportingPersonName.errors.required" class="err-field"> {{'EMPLOYEE_REPORTING_MANAGER' | translate}} is
+                Required </div>
+            </mat-error>
+          </div>
+        </div>
+
+        <div fxLayout="row">
+          <div class="form-group" fxFlex="100">
+              <span class="input-label"> {{'EMPLOYEE_REPORTING_HOD' | translate}} <span class="mandatory-style">*</span>  </span>
+              <ng-select class=" input-field"
+              formControlName="reportingHodName"
+              (search) ="listOfReportingHOD($event)" 
+              (scrollToEnd) = "listOfReportingHOD({})" (keyup.backspace) = "listOfReportingHOD($event.target.value ? $event : 'back')" (clear) = "listOfReportingHOD('clear')"
+              (change)="getReportingHodValue($event)"
+              [virtualScroll]="true" 
+              (scrollToEnd)="listOfReportingHOD({})" 
+              [loading]="scrollReportingHod"
+              dropdownPosition =top
+              (click) = "listOfReportingHOD({})"
+              [items]="reportingList" 
+              bindLabel="employeeFirstName"
+               bindValue="employeeFirstName">
+            </ng-select>
+            <mat-error *ngIf="empDesignationForm.controls.reportingHodName.invalid && empDesignationForm.controls.reportingHodName.touched" class="selectError">
+              <div *ngIf="empDesignationForm.controls.reportingHodName.errors.required" class="err-field"> {{'EMPLOYEE_REPORTING_HOD' | translate}} is
+                Required </div>
+            </mat-error>
+            </div>
+        </div>
+        <div fxLayout="row mt-15" class="create-emp-button">  
+            <button mat-raised-button type="button" class="space" (click)="addEmpDesignation()" color="primary" 
+            [disabled]="empDesignationForm.invalid || !empDesignationForm.dirty">
+            <span *ngIf="!uploadEmpDesingation">{{'COMMON_SUBMIT' | translate}}</span>
+            <span *ngIf="uploadEmpDesingation">{{'COMMON_LOADING' | translate}}</span>  
+          </button> 
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+ 

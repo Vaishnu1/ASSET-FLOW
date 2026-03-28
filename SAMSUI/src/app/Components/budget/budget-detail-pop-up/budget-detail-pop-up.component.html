@@ -1,0 +1,217 @@
+<div fxLayout="column" class="budget-detail-popup">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="65">
+        <h4 class="section_title">Capital Expenditure Details</h4>
+      </div> 
+
+      <div fxFlex="30">
+        <button mat-raised-button class="space" *ngIf="!modeDisplay" id="search" color="primary" (click)="save()"
+        [disabled]="budgetDetailFormGroup.invalid || uploadBudgetDetails ">
+        <span *ngIf="!uploadBudgetDetails">{{buttonDisplay}}</span>
+        <span *ngIf="uploadBudgetDetails">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+ 
+    <div fxLayout="row">
+      <form [formGroup]="budgetDetailFormGroup" fxFlex="100">
+        
+      <div fxLayout="row"> 
+        <div fxFlex="47">
+          <div class="form-group">
+            <span class="input-label" style="text-align:center;width:35%;text-align: center"> Asset Group<span
+                class="mandatory-style">*</span>
+            </span>
+            <ng-select  formControlName="assetGroupName" (click)="listOfAllAssetGroup({})"
+              [virtualScroll]="true" (search)="listOfAllAssetGroup($event)" (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')"
+              (change)="getAssetGroupComboValue($event);" [items]="assetGroup" bindLabel="assetGroupName"
+              bindValue="assetGroupName" class="form-control" loadingText="Loading...">
+            </ng-select>
+          </div>
+        </div>
+        <div fxFlex="3"></div>
+        
+        <div fxFlex="25">
+          <div class="form-group">
+            <span class="input-label" style="text-align:center;width:100%;text-align: center"> {{'MODEL_NAME' | translate}}
+            </span>
+            <ng-select  (click)="listOfAllModel({})" [virtualScroll]="true"
+              (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')" [items]="modelCombo" bindLabel="modelName"
+              (change)="getModelComboValue($event);" bindValue="modelName" [loading]="scrollSyncModel"
+              loadingText="Loading..." formControlName="modelName">
+            </ng-select>
+          </div>
+        </div> 
+        <div fxFlex="3"></div>
+        
+        <div fxFlex="22">
+          <button mat-raised-button class="space button-padding" id="addAssetGroup" color="primary"
+            [disabled]='scrollSyncAddAssetGroup' (click)="addAssetGroup()">
+            Add Asset Group
+          </button>
+        </div>
+      </div>
+ 
+      <div fxLayout="row">  
+        <div fxFlex="48"></div>
+        <div fxFlex="31" class="total-budget-amt input-label" fxLayoutAlign="end center">Total Budget Amount:</div>
+        <div fxFlex="3"></div>
+        <div fxFlex="22">
+          <div class="form-group">
+            <mat-form-field class="example-full-width"> 
+              <input matInput style="font-size: 12px" id="inputBoxOfTotalAmount" formControlName="totalAmount" class="form-control input-field"
+              readonly> 
+           </mat-form-field> 
+          </div>
+        </div> 
+      </div> 
+       
+      <div fxLayout="row">  
+        <div fxFlex="35"></div>
+        <div fxFlex="31" class="total-budget-amt input-label">Current Budget Name</div>
+        <div fxFlex="3"></div>
+        <div fxFlex="31">
+          <div class="form-group">
+            <div id="budgetName" >
+              <span class="input-label"  > Compare {{'BUDGET_NAME'| translate}} </span>
+              <ng-select  [disabled]= "modeDisplay" [(ngModel)]="budget.budgetName" [ngModelOptions]="{standalone: true}"
+              (click)="listOfBudgetName({})" [virtualScroll]="true" (search)="listOfBudgetName($event)"
+              (scrollToEnd)="listOfBudgetName({})" (keyup.backspace)="listOfBudgetName($event.target.value ? $event : 'back')" (clear)="listOfBudgetName('clear')" (change)="confirmForPreviousYear($event)" [items]="budgetNameList"
+              bindLabel="budgetName" bindValue="budgetName" [loading]="scrollsyncBudgetName"
+              loadingText="Loading..." required>
+            </ng-select>
+            </div>
+          </div>
+        </div> 
+      </div> 
+  
+        <div fxLayout="column" id="detailsTable">
+
+          <table mat-table matSort #matAssignee [dataSource]="budgetDataSource">
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                {{ 'COMMON_S_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i =index" style="text-align: center">
+                {{(i+1)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetGroup">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center"> Asset Group/{{'MODEL_NAME' | translate}} <br/>{{ 'MANUFACTURER' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element; let i =index" style="text-align:center;text-align: center">
+                
+                  {{ element?.assetGroupName }} <br/> {{ element?.modelName}}<br/>
+                  {{element?.manufacturerName}}
+
+              </td>
+            </ng-container> 
+
+            <ng-container  matColumnDef="procurementType">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center"> {{ 'PROCUREMENT_TYPE' | translate }}<br/>{{ 'PROCUREMENT_REASON' | translate }}
+                <span class="mandatory-style">*</span>
+              </th>
+              <td mat-cell *matCellDef="let element; let i =index">
+                <ng-select  [items]="procurementTypeData" [disabled]= "modeDisplay" [(ngModel)]="element.procurementType"
+                  [ngModelOptions]="{standalone: true}" [virtualScroll]="true" bindLabel="procurementTypeValue"
+                  class="form-control" (change)="procurementType(element,i)" bindValue="procurementTypeValue"
+                  loadingText="Loading..." required>
+                </ng-select> <br/>
+                <ng-select  [items]="procurementReasonData"
+                  [disabled]="element.procurementType !='Replacement' || modeDisplay"  [(ngModel)]="element.procurementReason"
+                  [ngModelOptions]="{standalone: true}" (change)="procurementReason(element,i)" class="form-control"
+                  [virtualScroll]="true" bindLabel="procurementReasonValue" bindValue="procurementReasonValue"
+                  loadingText="Loading...">
+                  </ng-select>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center"> Quantity <span
+                  class="mandatory-style">*</span></th>
+              <td mat-cell *matCellDef="let element; let i = index"> 
+                <mat-form-field class="example-full-width"> 
+                  <input matInput (change)="calculations(element,i)" [disabled]= "modeDisplay" [(ngModel)]="element.quantity"
+                  [ngModelOptions]="{standalone: true}" style="font-size: 12px" type="text" required> 
+               </mat-form-field>   
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unitPrice">
+              <th mat-header-cell class="create-budget-input" *matHeaderCellDef style="text-align: center"> {{ 'UNIT_PRICE' | translate }} <span
+                  class="mandatory-style">*</span></th>
+              <td mat-cell *matCellDef="let element; let i = index">
+
+                <mat-form-field class="example-full-width"> 
+                  <input matInput class="create-budget-input" [(ngModel)]="element.unitPrice" [disabled]= "modeDisplay"[ngModelOptions]="{standalone: true}"
+                  style="font-size: 12px" (change)="calculations(element,i)" type="text" class="form-control" required> 
+               </mat-form-field>    
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="budgetAmount">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center"> {{ 'BUDGET_AMOUNT' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element; "> 
+                  
+                <mat-form-field class="example-full-width"> 
+                  <input matInput class="create-budget-input" [(ngModel)]="element.budgetAmount"  [ngModelOptions]="{standalone: true}"
+                  style="font-size: 12px" type="text" class="form-control" readonly> 
+               </mat-form-field> 
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="pyQuantity">
+                <th mat-header-cell *matHeaderCellDef style="color: red !important;text-align: center"> Quantity</th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"> 
+                    {{element?.pyQuantity}}
+                </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="pyUnitPrice">
+                <th mat-header-cell *matHeaderCellDef style="color: red !important;text-align: center"> {{ 'UNIT_PRICE' | translate }} </th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"> 
+                    {{element?.pyUnitPrice}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pyActualSpent">
+                  <th mat-header-cell *matHeaderCellDef style="color: red !important;text-align: center"> {{ 'ACTUAL_SPENT' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"> 
+                      {{element?.pyActualSpent}}
+                  </td>
+                </ng-container>
+        
+              <ng-container matColumnDef="pyBudgetAmount">
+                <th mat-header-cell *matHeaderCellDef style="color: red !important;text-align: center"> {{ 'BUDGET_AMOUNT' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element; " style="text-align: center;"> 
+                    {{element?.pyBudgetAmount}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{ 'COMMON_ACTION' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;"  style="text-align: center">
+                    <mat-icon class="action_icon" *ngIf="!modeDisplay" color="primary"
+                      matTooltip="{{'COMMON_DELETE' | translate}}"
+                      (click)="deleteRegistration(element.bdCapexDtlId,i)">delete </mat-icon>
+                  </td>
+                </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="budgetItemDisplayCol;sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: budgetItemDisplayCol;"></tr> 
+
+          </table> 
+
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

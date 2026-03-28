@@ -1,0 +1,66 @@
+<div fxLayout="column">
+    <div class="content_section_background">
+        <div fxLayout="column">
+
+            <hr />
+
+            <mat-toolbar>
+                <span>{{'MENU_PURHCASE_PARAMETER'| translate}} List</span>
+                <span class="example-spacer"></span>
+
+                <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+                    [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+                </mat-paginator>
+                <span class="example-spacer"></span>
+
+                <button mat-raised-button class="space col-md-5" color="primary" [disabled]="selectedItems.length === 0" (click)="addSelectedParameter()">
+                    Add
+                </button>
+
+                <button mat-raised-button class="space col-md-5" color="primary" (click)="closeModal()">
+                    Close
+                </button>
+            </mat-toolbar>
+
+            <div fxFlex="100" class="example-container">
+                <table class="purchase-order-list" mat-table [dataSource]="poTCParameterMainDataSource" matSort
+                    (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc"
+                    matSortDisableClear>
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select </th>
+                        <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+                            <mat-checkbox color="primary" class="example-margin" (change)="toggleSelection(element)"
+                                [checked]="isSelected(element)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sNo">
+                        <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+                      </ng-container>
+                    <ng-container matColumnDef="parameterName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:16%;" > {{'PURCHASE_PARAMETER_NAME' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" (click)="toggleSelection(element)" style="width:16%;"> {{element?.tcParameterName}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="parameterInputType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:16%;"> {{'PURCHASE_PARAMETER_INPUT_TYPE' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" (click)="toggleSelection(element)" style="width:16%;">{{element?.tcParameterInputType}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="parameterInputValue">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PURCHASE_PARAMETER_INPUT_VALUES' | translate}} </th>
+                        <td mat-cell *matCellDef="let element" (click)="toggleSelection(element)">{{element?.tcParameterInputValues}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                </table>
+                <mat-card class="no_records_found" *ngIf="length=='0' && !subloader">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+                <mat-card class="no_records_found" *ngIf="subloader" fxFlex="100" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

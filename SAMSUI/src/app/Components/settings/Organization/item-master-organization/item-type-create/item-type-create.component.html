@@ -1,0 +1,87 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <div fxFlex="95">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_ITEM_TYPE' | translate}}</h4>
+    </div>
+    <div fxFlex="5" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+    <form class="modalform" [formGroup]="itemTypeForm">
+      <div fxLayout="column" fxFlex="100"  > 
+        <div fxLayout="column">
+          <div class="form-group mb-10-px" >
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}" style="width: 100%;">
+              <span class="input-label">{{'ITEM_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+                <input matInput formControlName="itemTypeName" #itemType oninput="this.value = this.value.toUpperCase()"
+                (input)="checkUniqueConstrainForItemType()" [maxlength]="50" class="input-field">
+                <mat-hint align="end" oninput="this.value = this.value.toUpperCase()">{{itemTypeForm.controls.itemTypeName.value?.length || 0}}/50</mat-hint>
+                <mat-error *ngIf="itemTypeForm.controls.itemTypeName.errors && itemTypeForm.controls.itemTypeName.touched">
+                  <div *ngIf="itemTypeForm.controls.itemTypeName.errors.required">"{{'ITEM_TYPE' | translate}}" Is Required</div>
+                  <div *ngIf="itemTypeForm.controls.itemTypeName.errors.notUnique">{{ErrorMsg}}</div>
+                </mat-error>                
+              </mat-form-field>
+          </div>
+        </div> 
+     
+        <div fxLayout="column"> 
+          <div class="form-group">
+              <span class="input-label mt-12-px">{{ 'ITEM_CATEGORY' | translate }} <span class="mandatory-style">*</span></span>
+              <ng-select class="input-field" style="min-width: 100%;" formControlName="itemCategoryName" (search)="listofItemCategory($event)" required
+                (click)="listofItemCategory({})" (change)="getItemCategoryComboValue($event)" [items]="itemCateogoryList"
+                [virtualScroll]="true" (scrollToEnd)="listofItemCategory({})" (keyup.backspace)="listofItemCategory($event.target.value ? $event : 'back')" (clear)="listofItemCategory('clear')" 
+                [loading]="scrollItemCategorysync" bindLabel="categoryName" bindValue="categoryName">
+              </ng-select>
+              <mat-error *ngIf="itemTypeForm.controls.itemCategoryName.invalid && itemTypeForm.controls.itemCategoryName.touched">
+                <div class="err-field" *ngIf="itemTypeForm.controls.itemCategoryName.errors.required">
+                 Kindly Select The "{{'ITEM_CATEGORY' | translate }}" </div>
+              </mat-error>
+          </div> 
+          <div class="form-group mt-12-px">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <span class="input-label">{{'COMMON_DESC' | translate }}</span>
+              <!-- (input)="checkFormFields('itemTypeDesc')" (keyup)="checkFormFieldSpecialCharValidation('itemTypeDesc')" -->
+              <input matInput formControlName="itemTypeDesc" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end">{{itemTypeForm.controls.itemTypeDesc.value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-group ">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <span class="input-label">{{'HSN_CODE' | translate }}</span>
+              <input matInput formControlName="hsnCode" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end">{{itemTypeForm.controls.hsnCode.value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+          </div>   
+
+          <div class="form-group ">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <span class="input-label">{{'GL_ACC_CODE' | translate }}</span>
+              <input matInput formControlName="glAccCode" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end">{{itemTypeForm.controls.glAccCode.value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+          </div>   
+
+          <div class="form-group ">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <span class="input-label">{{'SL_ACC_CODE' | translate }}</span>
+              <input matInput formControlName="slAccCode" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end">{{itemTypeForm.controls.slAccCode.value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+          </div>   
+      </div>
+
+        <div fxLayout="column">
+          <div fxLayoutAlign="center center" class="pd-20-px"> 
+            <button mat-raised-button type="button" color="primary" (click)="createitemtype()"  [style.visibility]="headingDisplay=='View' ? 'hidden': 'visible'" [disabled]="itemTypeForm.invalid || !itemTypeForm.dirty">
+                <span *ngIf="!uploadFlagUser"> {{buttonDisplay}} </span> 
+                <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>  
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+</div>

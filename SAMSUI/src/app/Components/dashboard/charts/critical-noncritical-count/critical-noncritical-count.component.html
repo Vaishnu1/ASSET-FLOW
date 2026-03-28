@@ -1,0 +1,8 @@
+<mat-card>
+  <mat-icon class="close-icon-large" (click)="closeCriticalModal()">highlight_off</mat-icon>
+  <div class="hgt-175">
+    <div echarts [options]="option" class="chart" 
+        (chartClick)="onChartClick($event)" theme="roma"></div>
+  </div>  
+</mat-card>
+

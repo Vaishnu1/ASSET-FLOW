@@ -1,0 +1,194 @@
+<div class="top-content row">
+  <div class="col-md-12">
+    <mat-toolbar-row>   
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']"><mat-icon class="breadcrumbicon">home</mat-icon></a></li>
+          <li class="breadcrumb-item">Purchase</li>
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/purchaseRequest']">Purchase Request</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+</div>
+<form class="content_section margin_fix" [formGroup]="Form">
+  <div class="row">
+    <div class="col-md-12 row">
+      <div class="col-md-12" style="margin-bottom:5%;">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span>Location</span>
+              <ng-select  [items]="locationlist" bindLabel="name" formControlName="Locationlist"></ng-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label"> SR No </mat-label>
+                  <input matInput readonly>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label"> PR No </mat-label>
+                  <input matInput readonly>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">PR Date</mat-label>
+                <input matInput (click)="picker.open()" [matDatepicker]="picker" (keypress)="dateValidation($event)" formControlName="PRdate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <span>CEID</span>
+                <ng-select  [items]="ceidlist " bindLabel="name" formControlName="CEIDlist"></ng-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label"> PR Status </mat-label>
+                  <input matInput readonly>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+                <span>PR Type</span>
+                <ng-select  [items]="prtypelist " bindLabel="name" formControlName="PRtype"></ng-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <span>Remarks</span>
+                <textarea matInput></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-10">
+          <div class="col-md-12">
+            <button mat-raised-button color="primary" class="pull-right" (click)="addItem()"> Add Product </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="Table_Section">
+              <table class="table table-bordered">
+                  <thead class="table_head">
+                    <tr>
+                        <th class="S_No" style="width:2%">S.No</th>
+                        <th style="width:10%">Item Code</th>
+                        <th style="width:10%;">Supplier</th>
+                        <th style="width:10%;">Suppliler Site</th>
+                        <th style="width:8%;">Currency Code</th>
+                        <th style="width:7%;">UOM</th>
+                        <th style="width:8%;">Req Qty</th>
+                        <th style="width:10%;">Unit Price</th>
+                        <th style="width:10%;">Total</th>
+                        <th style="width:10%;">Tax</th>
+                        <th style="width:10%;">Req Date</th>
+                        <th class="Action" style="width:5%;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="items" *ngFor="let item of Form.controls['items']['controls']; let i = index;" >
+                        <tr [formGroupName]="i">
+                          <td style="width:2%"> {{ i+1 }} </td>
+                          <td class="Form_Select" style="width:10%">
+                              <ng-select  [items]="itemcodelist" bindLabel="name" formControlName="Itemcode"></ng-select>
+                          </td>
+                          <td class="Form_TextArea" style="width:10%">
+                              <ng-select  [items]="supplierlist" bindLabel="name" formControlName="Suppliername"></ng-select>
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                              <ng-select  [items]="suppliersitelist" bindLabel="name" formControlName="Suppliersite"></ng-select>
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                            <ng-select  [items]="currencycodelist" bindLabel="name" formControlName="Currencycode"></ng-select>
+                          </td>
+                          <td class="Form_Input" style="width:7%">
+                            <ng-select  [items]="uomlist" bindLabel="name" formControlName="UOM"></ng-select>
+                          </td>
+                          <td class="Form_Input" style="width:8%">
+                              <input matInput formControlName="Req_Qty" >
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                              <input matInput formControlName="Unit_Price">
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                              <input matInput readonly formControlName="Total">
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                            <!-- <ejs-multiselect id='sample-list2' [dataSource]='taxlist' [mode]='box'
+                              [fields]='fields' formControlName="Tax"></ejs-multiselect> -->
+                              <ng-select class="NgSelect" 
+                              [items]="taxlist" 
+                              [bindLabel]="'Name'"
+                              [bindValue]="'_id'"
+                              [searchable]="true" 
+                              [multiple]="true"
+                              [hideSelected]="true"
+                              >
+                           </ng-select>
+                          </td>
+                          <td class="Form_Input" style="width:10%">
+                              <input formControlName="Req_Date" matInput [matDatepicker]="picker" (click)="picker.open()" (keypress)=KeyPress($event)>
+                              <mat-datepicker #picker></mat-datepicker>
+                          </td>
+                          <td style="width:5%">
+                              <button (click)="Delete(i)" *ngIf="items?.length > 1" class="Bg_Danger" mat-mini-fab color="warn" >
+                                  <mat-icon class="material-icons">delete</mat-icon>
+                              </button> 
+                            </td>
+                        </tr>
+                    </ng-container>
+                  </tbody>
+              </table>
+              <div class="row">
+                <div class="col-md-11 text-right">
+                    <label>Total without Tax :</label>
+                </div>
+                <div class="col-md-1">
+                    <span></span>
+                </div>
+                <div class="col-md-11 text-right">
+                    <label>Tax Amount :</label>
+                </div>
+                <div class="col-md-1">
+                    <span></span>
+                </div>
+                <div class="col-md-11 text-right">
+                    <label>Total Amount :</label>
+                </div>
+                <div class="col-md-1">
+                    <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+<div class="footer">
+  <button mat-button class="space"> Exit</button>
+  <button mat-button class="space"> Submit</button>
+</div>

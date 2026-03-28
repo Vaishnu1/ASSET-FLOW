@@ -1,0 +1,12 @@
+.pad-1-per{
+  padding: 1%;
+}
+
+.close-icon {
+  color: red;
+  cursor: pointer;
+}
+
+.example-full-width {
+  width: 95%;
+}

@@ -1,0 +1,227 @@
+<div fxLayout="column">
+    <div fxFlex="100">
+      <div fxLayout="row" class="main-heading">
+        <div fxFlex="90">
+          <h4 class="section_title"> {{'BULK_ASSET_REASSIGN' | translate}} </h4>
+        </div>
+  
+        <div fxFlex="10" class="first-title">
+          <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+        </div>
+      </div> 
+    </div>
+
+    <mat-card class="card-style card-space">
+        <mat-card-content>
+          <div class="content-style" >
+            <div fxLayout="column" fxFlex="100">
+              <div>
+                <form [formGroup]="assetAssigneeForm">
+                  <div fxLayout="row" fxFlex="100">
+                    <div fxFlex="30">
+                      <div class="form-group">
+                        <span class="input-label"> {{ 'ASSET_ASSIGNED_PERSON_NAME' | translate }} <span
+                            class="mandatory-style">*</span> </span>
+                        <ng-select [items]="assignToPersonCombo" class="input-field" bindLabel="employeeFirstName"
+                          bindValue="employeeFirstName" tabindex="2" (search)="loadAssignToComboData($event)"
+                          (click)="loadAssignToComboData($event)" [virtualScroll]="true"
+                          (scrollToEnd)="loadAssignToComboData({})" (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')" (clear)="loadAssignToComboData('clear')" [loading]="scrollsyncAssignToPerson"
+                          loadingText="Loading..." (change)="selectedAssignToPerson($event)"
+                          formControlName="assignToEmpName" required> </ng-select>
+                        <div
+                          *ngIf="!assetAssigneeForm.controls.assignToEmpName.invalid && assetAssigneeForm.controls.assignToEmpName.touched">
+                        </div>
+                        <mat-error
+                          *ngIf="assetAssigneeForm.controls.assignToEmpName.invalid && assetAssigneeForm.controls.assignToEmpName.touched">
+                          <div class="err-field"
+                            *ngIf="assetAssigneeForm.controls.assignToEmpName.errors.required">
+                            Kindly Select The "{{'ASSET_ASSIGNED_PERSON_NAME' | translate}}"</div>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div fxFlex="5"></div>
+                    <div fxFlex="10" fxLayoutAlign="start center">
+                      <button mat-raised-button class="space rightbutton" color="primary"
+                        [disabled]="!diableAssigneeAddButton" (click)="addNewAssetAssignee()">
+                        {{'COMMON_ADD' | translate}}</button>
+                    </div>
+                    <div fxFlex="40"></div>
+                    <div fxFlex="15" fxLayoutAlign="end end">
+                        <button mat-raised-button class="space rightbutton" color="primary"
+                          [disabled]="assetAssigneeDataSource.length == 0" (click)="reAssigneeSave()">
+                          {{'COMMON_REASSIGN' | translate}}</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="card-style">
+        <mat-card-content>
+          <div class="content-style" >
+            <div fxLayout="column" fxFlex="100">
+              <div class="example-container" style="padding-top: 0.5%;" style="overflow-x: scroll;">
+                <table #matAssignee mat-table [dataSource]="assetAssigneeDataSource">
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef style=" text-align: center">
+                      {{ 'COMMON_S_NO' | translate }}</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="text-align: center">
+                      {{(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="deptName">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'DEPARTMENT_NAME' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:left;">
+                      <mat-form-field class="example-full-width certificate-input" [floatLabel]="'always'">
+                        <input  [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput class="customTable" [(ngModel)]="element.departmentName"
+                          [ngModelOptions]="{standalone: true}" style="font-size: 12px" name="departmentName"
+                          type="text" id="departmentName" class="form-control" readonly>
+                      </mat-form-field>
+                    </td>
+
+                  </ng-container>
+
+                  <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'ASSET_ASSIGNED_PERSON_NAME' | translate}} </th>
+
+                    <td mat-cell *matCellDef="let element" style="text-align:left;">
+                      <mat-form-field class="example-full-width certificate-input" [floatLabel]="'always'">
+                        <input [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput class="customTable" [(ngModel)]="element.assignToEmpName"
+                          [ngModelOptions]="{standalone: true}" style="font-size: 12px" name="assignToEmpName"
+                          type="text" id="assignToEmpName" class="form-control" readonly>
+                      </mat-form-field>
+                    </td>
+
+                  </ng-container>
+
+                  <!-- <ng-container matColumnDef="assigneeType">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'ASSET_ASSIGNEE_TYPE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i=index" style="text-align:left;">
+                      <ng-select  [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" class="form-control" [items]="assetAssigneeTypeNameCombo"  bindLabel="assigneeTypeName"
+                       appendTo="body" bindValue="assigneeTypeName" tabindex="11"
+                        (search)="loadAssigneeTypeComboData($event)" (click)="loadAssigneeTypeComboData($event)"
+                        [virtualScroll]="true" (scrollToEnd)="loadAssigneeTypeComboData({})" (keyup.backspace)="loadAssigneeTypeComboData($event.target.value ? $event : 'back')" (clear)="loadAssigneeTypeComboData('clear')"
+                        [loading]="scrollsyncAssigneeType" loadingText="Loading..." type="text"
+                        id="assigneeTypeName" (change)="selectedAssigneeType($event,i);"
+                        [(ngModel)]="element.assigneeTypeName" [ngModelOptions]="{standalone: true}"
+                        name="assigneeTypeName"></ng-select>
+                    </td>
+                  </ng-container> -->
+
+                  <!-- <ng-container matColumnDef="startDt">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'ASSIGNED_START_DATE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element;let i=index" style="text-align:center;">
+                      <mat-form-field class="assignee-tab-width" [floatLabel]="'always'">
+                        <input [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput (click)="startDtDisp.open()" [matDatepicker]="startDtDisp" (dateChange)="expArrStartDataValidation($event,i)"
+                        [(ngModel)]="element.startDtDisp" [ngModelOptions]="{standalone: true}" >
+                        <mat-datepicker-toggle [for]="startDtDisp" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #startDtDisp></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="endDt">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'ASSINED_END_DATE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element;let i=index" style="text-align:center;">
+                      <mat-form-field class="assignee-tab-width" [floatLabel]="'always'">
+                        <input [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput (click)="endDt.open()" [matDatepicker]="endDt" (dateChange)="expArrEndDataValidation($event,i)"
+                        [(ngModel)]="element.endDtDisp" [min]="element.startDtDisp" [ngModelOptions]="{standalone: true}" >
+                        <mat-datepicker-toggle [for]="endDt" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #endDt></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                  </ng-container> -->
+
+                  <!-- <ng-container matColumnDef="emailId">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'COMMON_EMAIL_ID' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:center;">
+                      <mat-form-field class="assignee-tab-email" [floatLabel]="'always'">
+                        <input [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput class="customTable" name="assignedPersonEmail" type="text"
+                          id="assignedPersonEmail" class="form-control" readonly style="font-size: 12px;"
+                          [(ngModel)]="element.assignedPersonEmail" [ngModelOptions]="{standalone: true}">
+                      </mat-form-field>
+                    </td>
+                  </ng-container> -->
+
+                  <!-- <ng-container matColumnDef="phoneNo">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:right;">
+                      {{'COMMON_PHONE_NO' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:right;">
+                      <mat-form-field class="assignee-tab-phn" [floatLabel]="'always'">
+                        <input [disabled]="(element.approvalStatus == 'REJECTED' || isViewMode) && element.defaultPersonIncharge" matInput class="customTable" [(ngModel)]="element.assignedPersonContactNumber"
+                          [ngModelOptions]="{standalone: true}" style="font-size: 12px"
+                          name="assignedPersonContactNumber" type="text" id="assignedPersonContactNumber"
+                          class="form-control" readonly>
+                      </mat-form-field>
+                    </td>
+                  </ng-container> -->
+
+                  <ng-container matColumnDef="primaryTechnician">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'PRIMARY_TECHNICIAN' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i=index" style="text-align:center;">
+                      <mat-checkbox [(ngModel)]="element.primaryTechnician" [disabled]="(element.secondaryTechnician)"
+                        [ngModelOptions]="{standalone: true}" color="primary" class="example-margin">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="secondaryTechnician">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'SECONDARY_TECHNICIAN' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i=index" style="text-align:center;">
+                      <mat-checkbox [(ngModel)]="element.secondaryTechnician"  [disabled]="(element.primaryTechnician)"
+                        [ngModelOptions]="{standalone: true}" color="primary" class="example-margin">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="pmPATechnician">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'PMPA_TECHNICIAN' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:center;">
+                      <mat-checkbox [(ngModel)]="element.pmPaTechnician"
+                        [ngModelOptions]="{standalone: true}" color="primary" class="example-margin">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="qaTechnician">
+                    <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                      {{'QA_TECHNICIAN' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="text-align:center;">
+                      <mat-checkbox [(ngModel)]="element.qaTechnician"
+                        [ngModelOptions]="{standalone: true}" color="primary" class="example-margin">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i = index;">
+                      <button color="warn" mat-icon-button (click)="deleteAssetAssignee(i)"><mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="assigneeDisplayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: assigneeDisplayedColumns;"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+</div>

@@ -1,0 +1,416 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="35">
+      <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a>{{'MENU_ASSET' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{'MENU_INWARD_INVENTORY_SR'| translate}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+  </div>
+
+
+  <div class="content_section_background" style="padding-top:0.5%">
+    <div fxLayout="column">
+      <div class="table_section">
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-header">
+              {{'COMMON_SEARCH'| translate}}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end end">
+              <mat-icon class="mandatory-style">search</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div fxFlex="100" fxLayout="row" fxFlex.lt-md="100" fxLayout.lt-md="column">
+            <div fxFlex="75" fxLayout="row" fxFlex.lt-md="100" fxLayout.lt-md="row">
+              <div fxFlex="34">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                  <ng-select [items]="locationCombo" class="input-field example-full-width" bindLabel="locDisplayField"
+                    bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                    (click)="loadLocationComboData($event)" appendTo="body" [virtualScroll]="true"
+                    (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                    (change)="selectedLocationData($event)" [(ngModel)]="asset.locationName"
+                    [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+
+                <div class="form-group">
+                  <span class="input-label">{{ 'ASSET_CATEGORY' | translate }}</span>
+                  <ng-select class=" input-field example-full-width"
+                    [(ngModel)]="asset.assetCategoryName" appendTo="body" [ngModelOptions]="{standalone: true}"
+                    (search)="listOfCategory($event)" (click)="listOfCategory({})"
+                    (change)="getCategoryComboValue($event)" [virtualScroll]="true" (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')"
+                    loadingText="Loading..." [loading]="scrollsyncAssetCategory" [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div fxFlex="33">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                  <ng-select class=" input-field example-full-width" [(ngModel)]="asset.modelName"
+                    [ngModelOptions]="{standalone: true}" (click)="listOfAllModel({})" [virtualScroll]="true"
+                    (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')"
+                    (change)="getModelComboValue($event)" [items]="modelCombo" bindLabel="modelName"
+                    bindValue="modelName" [loading]="scrollsyncModel" loadingText="Loading..." required appendTo="body">
+                  </ng-select>
+                </div>
+
+
+                <div class="form-group">
+                  <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                  <ng-select class=" input-field example-full-width" [(ngModel)]="asset.subCategoryName"
+                    appendTo="body" [ngModelOptions]="{standalone: true}" (search)="listOfSubCategory($event)"
+                    (click)="listOfSubCategory({})" [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')"
+                    loadingText="Loading..." (change)="getSubCategoryComboValue($event)" [items]="subCategoryName"
+                    bindLabel="subCategoryName" bindValue="subCategoryName" [loading]="scrollsyncAssetSubCategory">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div fxFlex="33">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} </span>
+                  <ng-select class=" input-field example-full-width" [(ngModel)]="asset.businessPartnerName"
+                    [ngModelOptions]="{standalone: true}" (search)="listOfSupplier($event)" (click)="listOfSupplier({})"
+                    [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" loadingText="Loading..."
+                    (change)="fetchIdOfSupplier($event)" [items]="supplierList" bindLabel="businessPartnerName"
+                    bindValue="businessPartnerName" appendTo="body" [loading]="scrollSupplierNamesync">
+                  </ng-select>
+                </div>
+
+
+                <div class="form-group">
+                  <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                  <ng-select class=" input-field example-full-width" [(ngModel)]="asset.manufacturerName"
+                    appendTo="body" [ngModelOptions]="{standalone: true}" (search)="listOfManufacturer($event)"
+                    (click)="listOfManufacturer({})" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                    (change)="getManfacturerComboValue($event)" [items]="manufactuer" bindLabel="businessPartnerName"
+                    bindValue="businessPartnerName" [loading]="scrollsyncmanufactuer" loadingText="Loading...">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <div fxFlex="25" fxLayout="column" fxFlex.lt-md="100" fxLayout.lt-md="row">
+
+
+              <div fxFlex="34" style="margin-right: 10px;font-size: 14px !important;">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" style="padding-top: 16px;">
+                  <mat-label class="input-label"> {{'ASSET_PUR_DATE' | translate}} </mat-label>
+                  <input matInput class="input-field" (click)="purchaseDt.open()" [matDatepicker]="purchaseDt" [(ngModel)]="asset.purchaseDtDisp" [ngModelOptions]="{standalone: true}" (dateChange)="dateValidationinstall($event)">
+                  <mat-datepicker-toggle matSuffix [for]="purchaseDt"></mat-datepicker-toggle>
+                  <mat-datepicker #purchaseDt></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div fxFlex="33" >
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" style="padding-top: 8px;">
+                  <mat-label class="input-label">{{ 'ASSET_PUR_ORD_NO' | translate }}</mat-label>
+                  <input matInput class="input-field" [(ngModel)]="asset.purchaseOrderNo"
+                    [ngModelOptions]="{standalone: true}" oninput="this.value = this.value.toUpperCase().trim()">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group" fxFlex="33" fxLayoutAlign="end end" fxHide.sm fxHide.xs>
+                <button mat-raised-button class="space" color="primary"
+                  (click)="searchAsset()">{{'COMMON_SEARCH' | translate}}</button>
+                <button mat-raised-button class="space" color="primary"
+                  (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+                  <button mat-raised-button class="space" color="primary" (click)="generateReport()">{{'REPORT_EXPORT' |
+                    translate}}</button>
+              </div>
+
+              <div class="form-group" fxFlex="33" fxLayoutAlign="end end" fxHide.md fxHide.gt-md>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="searchAsset()">
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="clear()">
+                  <mat-icon>clear_all</mat-icon>
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </mat-expansion-panel>
+
+        <hr>
+
+        <mat-toolbar>
+          <span class="example-spacer"></span>
+          <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+            <!-- custom column -->
+        <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+          <mat-icon>view_week</mat-icon>
+        </button>
+        
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('purchaseOrderNo')"(change)="toggleColumn('poNpurchaseOrderNoumber')">
+            <span>{{'ASSET_PUR_ORD_NO' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('poDate')" (change)="toggleColumn('poDate')">
+            <span>{{'ASSET_PUR_DATE' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('assetCategoryName')" (change)="toggleColumn('assetCategoryName')">
+            <span>{{'ASSET_CATEGORY' | translate}}</span>
+            <br>
+          </div>
+    
+          <div id="column2">
+            <input type="checkbox" (change)="toggleColumn('assetSubCategoryName')" [checked]="displayedColumns.includes('assetSubCategoryName')">
+            <span>{{'ASSET_SUB_CATEGORY' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('assetGrpName')" [checked]="displayedColumns.includes('assetGrpName')">
+            <span>{{'ASSET_GROUP' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('modelName')" [checked]="displayedColumns.includes('modelName')">
+            <span>{{'MODEL_NAME' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('manufacurer')" [checked]="displayedColumns.includes('manufacurer')">
+            <span>{{'MANUFACTURER' | translate}}</span> <br>
+          </div>
+    
+          <div id="column3">
+            <input type="checkbox" (change)="toggleColumn('supplier')" [checked]="displayedColumns.includes('supplier')">
+            <span>{{'SUPPLIER_NAME' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('assetStatus')" [checked]="displayedColumns.includes('assetStatus')">
+            <span>{{'INWARD_STATUS' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('ownershipType')" [checked]="displayedColumns.includes('ownershipType')">
+            <span>{{'ASSET_OWNERSHIP_TYPE' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('transactionSrc')" [checked]="displayedColumns.includes('transactionSrc')">
+            <span>{{'WORKFLOW_TRANSACTION_SOURCE' | translate}}</span><br>
+            
+          </div>
+
+          <div id="column4">
+            <input type="checkbox" (change)="toggleColumn('createdInfo')" [checked]="displayedColumns.includes('createdInfo')">
+            <span>{{'COMMON_CREATED_BY' | translate}}/{{'COMMON_CREATED_DT' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('updatedInfo')" [checked]="displayedColumns.includes('updatedInfo')">
+            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span><br>
+            
+          </div>
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+      <!-- custom column end -->
+
+          <button [disabled]="selectedItem==0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+            matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="editAsset(selectedItem,'edit')">
+            <mat-icon>edit</mat-icon>
+          </button>
+            <button [disabled]="selectedItem==0" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+            matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="editAsset(selectedItem,'view')">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+        </mat-toolbar>
+
+        <div class="example-container" fxLayout="column">
+          <table id="assetInwardListTable" class="asset-inward-list-table" mat-table [dataSource]="dataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+            matSortDirection="asc" matSortDisableClear fxFlex="100">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data">Select</th>
+              <td mat-cell *matCellDef="let element;let i = index;">
+                <mat-checkbox color="primary" class="example-margin" (change)="selectAssets(element)" [checked]="selectedItem == element?.assetHdrId">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{'COMMON_S_NO' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectAssets(element)"> {{getIndexValue(i+1)}} </td>
+            </ng-container>
+            
+            <!-- <ng-container matColumnDef="locationCode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'USER_LOCATION_CODE' | translate}} </th>
+              <td mat-cell *matCellDef="let element"
+                matTooltip="{{ element?.locationCode }}" (click)="selectAssets(element)" >
+                {{ element?.locationCode }}
+              </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                {{ element?.locationCode }} - {{ element?.locationName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="purchaseOrderNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_PUR_ORD_NO' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                {{ element?.purchaseOrderNo }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="poDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_PUR_DATE' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)">
+                {{ element?.purchaseDtDisp }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetCategoryName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_CATEGORY' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.assetCategoryName}}">
+                {{ element?.assetCategoryName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetSubCategoryName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_SUB_CATEGORY' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.subCategoryName}}">
+                {{ element?.subCategoryName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetGrpName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_GROUP' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.assetGroupName}}">
+                {{ element?.assetGroupName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="modelName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'MODEL_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.modelName}}">
+                {{ element?.modelName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="manufacurer">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'MANUFACTURER' | translate}} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.manufacturerName}}">
+                {{ element?.manufacturerName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="supplier">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'SUPPLIER_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" matTooltip="{{element?.supplierName}}">
+                {{ element?.supplierName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell *matHeaderCellDef>{{'INWARD_STATUS' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{ element?.processStatus | translate }} </td>
+            </ng-container>
+            <ng-container matColumnDef="ownershipType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_OWNERSHIP_TYPE' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.ownershipType}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="transactionSrc">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'WORKFLOW_TRANSACTION_SOURCE' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.transactionSrc}} 
+              <button *ngIf="element.transactionSrc == 'ASSET TRANSFER'" mat-icon-button color="primary" matTooltip="{{ 'ASSET_TRANSFER_INFO' | translate }}"
+                (click)="viewAssetTransferInfo(element.assetHdrId)">
+                <mat-icon>info</mat-icon>
+              </button>
+              </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_BY' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                {{element?.createdBy}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_DT' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                {{element?.createdDtDisp}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="updatedDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_UPDATED_DT' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                {{element?.updatedDtDisp}}</td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="createdInfo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style=" min-width: 150px;"> {{'COMMON_CREATED_BY' | translate}}/{{'COMMON_CREATED_DT' | translate}} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.createdBy}} <br>
+                {{element?.createdDtDisp}}
+              </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="updatedInfo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style=" min-width: 150px;"> {{'COMMON_UPDATED_BY_DATE' | translate}} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectAssets(element)"> {{element?.updatedBy}} <br>
+                {{element?.updatedDtDisp}}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}
+          </mat-card>
+
+          <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </mat-card>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

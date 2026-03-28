@@ -1,0 +1,73 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'CERTIFICATION_AUTHORITY' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="certificationAuthorityForm">
+    <div fxLayout="column">
+
+        <div>
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="input-label">{{ 'CERTIFICATION_AUTHORITY_NAME' | translate }}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input autofocus matInput  class="input-field" formControlName="certificationAuthorityName"
+              oninput="this.value = this.value.toUpperCase()" (input)="checkUniqueConstrainForCertificationAuthorityName()">
+            <mat-hint align="end">
+              {{certificationAuthorityForm.controls.certificationAuthorityName.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="certificationAuthorityForm.controls.certificationAuthorityName.errors && certificationAuthorityForm.controls.certificationAuthorityName.touched">
+              <div class="err-field" *ngIf="certificationAuthorityForm.controls.certificationAuthorityName.errors.required">
+                "{{ 'CERTIFICATION_AUTHORITY_NAME' | translate }}" Is Required </div>
+              <div class="err-field" *ngIf="certificationAuthorityForm.controls.certificationAuthorityName.errors.maxlength">Certificate
+                {{ 'CERTIFICATION_AUTHORITY_NAME' | translate }}
+                Maximum Length is 100 </div>
+                <div class="err-field" *ngIf="certificationAuthorityForm.controls.certificationAuthorityName.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+        <div style="margin-top:10px;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="input-label"> {{ 'CERTIFICATION_ISSUING_AUTHORITY' | translate }}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput class="input-field" formControlName="issuingAuthority"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">
+              {{certificationAuthorityForm.controls.issuingAuthority.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="certificationAuthorityForm.controls.issuingAuthority.errors && certificationAuthorityForm.controls.issuingAuthority.touched">
+              <div class="err-field" *ngIf="certificationAuthorityForm.controls.issuingAuthority.errors.required">
+                "{{ 'CERTIFICATION_ISSUING_AUTHORITY' | translate }}" Is Required</div>
+              <div class="err-field" *ngIf="certificationAuthorityForm.controls.issuingAuthority.errors.maxlength">{{ 'CERTIFICATION_ISSUING_AUTHORITY' | translate }}
+                Maximum Length is 100 </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+    </div>
+
+    <div >
+        <div class="checkBox">
+          <mat-checkbox color="primary" formControlName="active" class="input-label">{{ 'COMMON_ACTIVE' | translate }}</mat-checkbox>
+        </div>
+    </div>
+
+
+    <div fxLayoutAlign="center center" style="margin-top:20px;">
+      <div *ngIf="mode != 'view'">
+        <button mat-raised-button class="space" color="primary" (click)="submit()"
+          [disabled]="certificationAuthorityForm.invalid || !certificationAuthorityForm.dirty">{{ displayButton }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>

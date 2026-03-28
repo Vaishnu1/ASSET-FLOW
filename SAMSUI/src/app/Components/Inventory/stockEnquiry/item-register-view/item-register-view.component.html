@@ -1,0 +1,139 @@
+<div class="top-content row">
+    <div class="col-md-12 row">
+      <div class="col-md-9">
+      <mat-toolbar-row>   
+        <nav aria-label="breadcrumb" class="breadcrumblink">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']"><mat-icon class="breadcrumbicon">home</mat-icon></a></li>
+            <li class="breadcrumb-item">Inventory</li>
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/stockEnquiryList']">Stock Enquiry</a></li>
+            <li class="breadcrumb-item active" aria-current="page">View</li>
+          </ol>
+        </nav>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+    </div>
+     <div class="col-md-3">
+        <div class="rightbutton" style="margin-right: 0px !important; ">
+          <button mat-raised-button class="space" color="primary" (click)="back()"> {{ 'BACK' | translate }}</button>
+        </div>
+      </div>
+    </div>   
+  </div>
+  <form [formGroup]="itemRegisterViewForm">
+      <div class="row">
+           <div class="col-md-12 row">
+              <div class="col-md-8">
+                  <mat-card class="mb-30">
+                      <mat-card-subtitle class="fontSize">Item Register </mat-card-subtitle>
+                        <div style="display: flex !important">
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'ITEM_NAME' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.itemCd.value}} </div>
+                                  </div>
+                                  <br />
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'ITEM_DESC' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.itemDesc.value}} </div>
+                                    </div>
+                                  
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'INVENTORY_STK_IN_HAND' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.stkInHand.value}} </div>
+                                  </div>
+                                  <br />
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'INVENTORY_AVAILABLE_QTY' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.acceptQty.value}} </div>
+                                    </div>
+                                  
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'INVENTORY_REJECT_QTY' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.rejectQty.value}} </div>
+                                    </div>
+                                 
+                                  <br />
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'UOM_CODE' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.uomCd.value}} </div>
+                                  </div>
+                                  
+                              </div>
+                          </div>
+                          <div class="col-md-2">
+                              <div class="form-group">
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'STORE' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.storeName.value}} </div>
+                                  </div>
+                                  <br />
+                                  <div class="col-md-12">
+                                      <div class="row title"> {{ 'ITEM_OEM_CODE' | translate }} </div>
+                                      <div class="row value"> {{itemRegisterViewForm.controls.oemCode.value}} </div>
+                                    </div>
+                                  
+                              </div>
+                          </div>
+                        </div>
+                   </mat-card>
+                </div>
+           </div>
+      </div>
+  </form>
+  <div class="example-container mb-30">
+
+
+      <table mat-table [dataSource]="ItemRegisterMainDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc"
+     matSortDisableClear >
+       <ng-container matColumnDef="sno">
+           <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+           <td mat-cell *matCellDef="let element; let i=index;"> {{getIndexValue(i+1)}} </td>
+       </ng-container>
+       <ng-container matColumnDef="transactionNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_REFERENCE_NO' | translate}} </th>
+          <td mat-cell *matCellDef="let element">{{element.transactionNo}}</td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="itemCd">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ITEM' | translate}} </th>
+         <td mat-cell *matCellDef="let element">{{element.itemCd}}</td>
+       </ng-container>
+       <ng-container matColumnDef="itemDesc">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'DESC' | translate}} </th>
+         <td mat-cell *matCellDef="let element"> {{element.itemDesc}}</td>
+       </ng-container> -->
+       <ng-container matColumnDef="transDtDisp">
+           <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_TRANSACTION_DATE' | translate}}</th>
+           <td mat-cell *matCellDef="let element"> {{element.transDtDisp}} </td>
+         </ng-container> 
+       <ng-container matColumnDef="transactionDesc">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_SOURCE' | translate}} </th>
+         <td mat-cell *matCellDef="let element"> {{element.transactionDesc}} </td>
+       </ng-container>
+       <ng-container matColumnDef="inQty">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_IN_QTY' | translate}} </th>
+         <td mat-cell *matCellDef="let element"> {{element.inQty}} </td>
+       </ng-container>
+       <ng-container matColumnDef="outQty">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_OUT_QTY' | translate}} </th>
+         <td mat-cell *matCellDef="let element"> {{element.outQty}} </td>
+       </ng-container>
+       <ng-container matColumnDef="balanceQty">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORY_BALANCE_QTY' | translate}} </th>
+         <td mat-cell *matCellDef="let element"> {{element.balanceQty}} </td>
+       </ng-container>
+       <tr mat-header-row *matHeaderRowDef="displayedColumnsItemRegister;sticky: true"></tr>
+       <tr mat-row *matRowDef="let element; columns: displayedColumnsItemRegister;">           
+       </tr>
+     </table> 
+
+  </div>

@@ -1,0 +1,7 @@
+.pdfViwerStyle {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border-color: #DDDDDD;
+    box-shadow: none;
+    padding: 5px;
+}

@@ -1,0 +1,291 @@
+
+<div fxLayout="column" fxFlex="100">
+    <div fxLayout="row">
+      <div fxFlex="90">
+        <h5 class="section_title dialogue-box-header">{{'MENU_ASSET_RELOCATION_APPROVAL' | translate}} - Batch No. {{data.batchNo}}</h5>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+        <mat-icon class="close-icon-large close-icon" (click)="closeRelocationModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'ASSET_INFO' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content fxLayout="column">
+            <div fxLayout="column">
+                  <mat-card fxFlex="100" fxLayout="row">
+                    <div fxLayout="column" fxFlex="40">
+                      <div style="color: #445c8f ; font-size: 12px; text-align:left; margin: 3px;"> {{ 'SOURCE_LOC_NAME' | translate }}: {{data.sourceLocName}}</div>
+                      <div style="color: #445c8f ; font-size: 12px; text-align:left; margin: 3px;">{{ 'SOURCE_DEPT_NAME' | translate }}: {{data.sourceDept}}</div>
+                      <div style="color: #445c8f ; font-size: 12px; text-align:left; margin: 3px;"> {{ 'SOURCE_SUB_DEPT_NAME' | translate }} : {{data.sourceSubDept}}</div>
+                    </div>
+                    <div fxFlex="15" fxLayoutAlign="center start" fxLayout="column">
+                      <mat-icon style="color: #3fbb2f ; font-size: 90px; margin-top: -70px;">arrow_right_alt</mat-icon>
+                    </div>
+                    <div fxLayout="column" fxFlex="40">
+                      <div style="color: #445c8f ; font-size:12px;text-align:left; margin: 3px;">{{ 'RELOCATE_LOC_NAME' | translate }}: {{data.relocateLocation}}</div>
+                      <div style="color: #445c8f ; font-size: 12px; text-align:left; margin: 3px;">{{ 'RELOCATE_DEPT_NAME' | translate }}: {{data.relocateDept}}</div>
+                      <div style="color: #445c8f ; font-size: 12px; text-align:left; margin: 3px;"> {{ 'RELOCATE_SUB_DEPT' | translate }} : {{data.relocateSubDept}}  </div>
+                    </div>
+                  </mat-card>
+            </div>
+
+            <div fxLayout="row">
+              <div class="example-container pad-wid">
+                <div fxLayout="row">
+                  <table #matAssignee1 mat-table fxFlex="100" [dataSource]="dataSource" multiTemplateDataRows *ngIf="dataUpdate">
+                    <!-- <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=dataIndex;" (click)="toggleRow(element)"> {{i+1}} </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=dataIndex;"> {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="assetCode">
+                      <th mat-header-cell *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+                      <td mat-cell *matCellDef="let element"> {{element?.assetCode}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="assetGroupName">
+                      <th mat-header-cell *matHeaderCellDef>{{'ASSET_GROUP' | translate}}</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.assetHdrTO.assetGroupName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="assetCategoryName">
+                      <th mat-header-cell *matHeaderCellDef> {{'ASSET_CATEGORY' | translate}} </th>
+                      <td mat-cell *matCellDef="let element" >
+                        {{ element?.assetHdrTO.assetCategoryName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialNo">
+                        <th mat-header-cell *matHeaderCellDef>{{'ASSET_SERIAL_NO' | translate}}</th>
+                        <td mat-cell *matCellDef="let element"> {{element?.assetHdrTO.serialNo}} </td>
+                      </ng-container>
+                    <ng-container matColumnDef="assetStatus">
+                      <th mat-header-cell *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+                      <td mat-cell *matCellDef="let element">
+                          {{element?.assetHdrTO.assetStatus | translate}}
+                    </td>
+                    </ng-container>
+                    <ng-container matColumnDef="relocateStatusName">
+                        <th mat-header-cell *matHeaderCellDef>{{'RELOCATE_STATUS' | translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element?.relocateStatusName | translate}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="avilableQty">
+                      <th mat-header-cell *matHeaderCellDef>{{'VOLUME_LICENCE_QTY' | translate}}</th>
+                      <td mat-cell *matCellDef="let element">
+                          {{element?.assetHdrTO.volumeLicenseQty | translate}}
+                    </td>
+                  </ng-container>
+                   <!--  <ng-container matColumnDef="raiseWO">
+                      <th mat-header-cell *matHeaderCellDef>{{'RAISE_WO' | translate}}</th>
+                      <td mat-cell *matCellDef="let element">
+                        <div>
+                          <mat-checkbox color="primary" [(ngModel)]="element.raiseWO" [disabled]="element.assetHdrTO.modelTO.installationType == 'NONE' || element.assetHdrTO.modelTO.installationType == 'IN HOUSE' || element.assetHdrTO.modelTO.installationType == 'SELF INSTALLATION' || element.assetHdrTO.volumeLicensePresent || isViewMode" >
+                          </mat-checkbox>
+                        </div>
+                    </td>
+                  </ng-container> -->
+                  <!-- <ng-container matColumnDef="assetAssignee">
+                    <th mat-header-cell class="td-adtby" *matHeaderCellDef style="text-align: center">
+                      {{'ASSET_ASSIGNEE' | translate}}</th>
+                    <td mat-cell *matCellDef="let element;let i=dataIndex;" style="text-align: center">
+                      <button style="text-align: center" mat-icon-button color="primary" [disabled]="isViewMode" matTooltip="{{ 'COMMON_ADD' | translate }}/
+                      {{ 'COMMON_EDIT' | translate }} {{ 'ASSET_ASSIGNEE' | translate }}" (click)="addTempAssignee(i)">
+                      <div class="plus-icon add-circle-icon"></div>
+                    </button>
+                    </td>
+                  </ng-container> -->
+                    <ng-container matColumnDef="delete">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_DELETE' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button *ngIf="!isViewMode" class="mat-icon-button" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                          (click)="removeAssets(element.assetRelocateId)" [disabled]="isViewMode">
+                          <mat-icon color="primary"><a>delete_outline</a></mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="expansionArrow">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td mat-cell *matCellDef="let element" (click)="toggleRow(element)">
+                        <span class="mat-expansion-indicator ng-tns-c242-6 ng-trigger ng-trigger-indicatorRotate ng-star-inserted"
+                        style="transform: rotate(0deg);"></span>
+                      </td>
+                    </ng-container> -->
+
+                    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                  <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element; let k = dataIndex;" [attr.colspan]="displayedColumns.length">
+                      <div class="example-element-detail"
+                          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                      <div class="inner-table">
+                        <table #matAssignee mat-table [dataSource]="element.assetTemporaryAssigneeList">
+                          <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let j=index;"> {{j+1}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="fromAssignee">
+                            <th mat-header-cell *matHeaderCellDef> {{'FROM_ASSIGNEE' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement"> {{innerElement?.fromAssigneeName}}</td>
+                          </ng-container>
+                          <ng-container matColumnDef="toAssignee">
+                            <th mat-header-cell *matHeaderCellDef> {{'TO_ASSIGNEE' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let j=index">
+                              <ng-select [items]="assignToPersonCombo" class="input-field to-assignee-dropdown" bindLabel="employeeFirstName"
+                              bindValue="employeeFirstName" (search)="loadAssignToComboData($event)"
+                              (click)="loadAssignToComboData($event)" [virtualScroll]="true"
+                              (scrollToEnd)="loadAssignToComboData({})" (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')" (clear)="loadAssignToComboData('clear')"
+                               (change)="selectedAssignToPerson($event,element,k,j)"
+                               [(ngModel)]="innerElement.toAssigneeName" [ngModelOptions]="{standalone: true}"
+                              [disabled]="isViewMode"> </ng-select>
+
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="assigneeTypeName">
+                            <th mat-header-cell *matHeaderCellDef> {{'ASSET_ASSIGNEE_TYPE' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let j=index">
+                              <ng-select [items]="assetAssigneeTypeNameCombo" class="input-field to-assignee-dropdown" [readonly]="innerElement.toAssigneeName == '' || isViewMode"
+                              bindLabel="assigneeTypeName" bindValue="assigneeTypeName"
+                              (search)="loadAssigneeTypeComboData($event)" (click)="loadAssigneeTypeComboData($event)"
+                              [virtualScroll]="true" (scrollToEnd)="loadAssigneeTypeComboData({})" (keyup.backspace)="loadAssigneeTypeComboData($event.target.value ? $event : 'back')" (clear)="loadAssigneeTypeComboData('clear')" type="text"
+                              id="assigneeTypeName" (change)="selectedAssigneeType($event,innerElement);"
+                              required [(ngModel)]="innerElement.assigneeTypeName" [ngModelOptions]="{standalone: true}"> </ng-select>
+
+                              <div class="err-field select-field-err-msg"
+                                *ngIf="!(innerElement.toAssigneeName == '') && innerElement.assigneeTypeName == ''">
+                                Kindly Select The "{{'ASSET_ASSIGNEE_TYPE' | translate }}"
+                              </div>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="endDt">
+                            <th mat-header-cell *matHeaderCellDef> {{'ASSINED_END_DATE' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let i = index;">
+                                <mat-form-field class="example-full-width date_field_box" [floatLabel]="'always'">
+                                  <input matInput (click)="endDateDisp.open()" [matDatepicker]="endDateDisp" (dateChange)="installationDateValidation($event,k,i)"
+                                   [(ngModel)]="innerElement.endDateDisp" [ngModelOptions]="{standalone: true}" [min]="todayDate" [disabled]="innerElement.toAssigneeName == '' || isViewMode">
+                                  <mat-datepicker-toggle [for]="endDateDisp" matSuffix></mat-datepicker-toggle>
+                                  <mat-datepicker #endDateDisp></mat-datepicker>
+                                </mat-form-field>
+
+                                <div class="err-field date-err-msg"
+                                  *ngIf="!(innerElement.toAssigneeName == '') && innerElement.endDateDisp == ''">
+                                  Kindly Select The "{{'ASSINED_END_DATE' | translate }}"
+                                </div>
+
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="primaryTechnician">
+                            <th mat-header-cell *matHeaderCellDef style="text-align:center;">{{'PRIMARY_TECHNICIAN' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let i = index;" style="text-align:center;">
+                              <mat-checkbox [(ngModel)]="innerElement.primaryTechnician" [disabled]="innerElement.assigneeTypeName != 'TECHNICIAN' || innerElement.secondaryTechnician"
+                                [ngModelOptions]="{standalone: true}" color="primary">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="secondaryTechnician">
+                            <th mat-header-cell *matHeaderCellDef style="text-align:center;">{{'SECONDARY_TECHNICIAN' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let i = index;" style="text-align:center;">
+                              <mat-checkbox [(ngModel)]="innerElement.secondaryTechnician" [disabled]="innerElement.assigneeTypeName != 'TECHNICIAN' || innerElement.primaryTechnician"
+                                [ngModelOptions]="{standalone: true}" color="primary">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>
+
+                          <!-- <ng-container matColumnDef="primaryTechnician">
+                            <th mat-header-cell *matHeaderCellDef> {{'PRIMARY_TECHNICIAN' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let i = index;">
+                              <div >
+                                <mat-checkbox color="primary" [(ngModel)]="innerElement.defaultPersonIncharge"
+                                 [ngModelOptions]="{standalone: true}"
+                                 (change)="checkDefaultPI(element,k,i)" [disabled]="innerElement.toAssigneeName == '' || isViewMode">
+                                </mat-checkbox>
+                              </div>
+                            </td>
+                          </ng-container> -->
+                          <ng-container matColumnDef="vlOldQty">
+                            <th mat-header-cell *matHeaderCellDef> {{'VL_OLD_QTY' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement">
+                             {{innerElement?.vlOldQty}}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="vlNewQty">
+                            <th mat-header-cell *matHeaderCellDef> {{'VL_NEW_QTY' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement; let i = index;">
+                              <mat-form-field class="example-full-width certificate-input" [floatLabel]="'always'">
+                                <input type="number" matInput  [(ngModel)]="innerElement.vlNewQty"
+                                [min]="0" (input)="vlQtyValidation()" [disabled]="isViewMode || element?.assetHdrTO.trackIndividualLicense">
+                              </mat-form-field>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="delete">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_DELETE' | translate}} </th>
+                            <td mat-cell *matCellDef="let innerElement;let i = index;">
+                              <button mat-icon-button class="mat-icon-button" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                                (click)="deleteRegistration(innerElement.assetTemporaryId,k,i)" [disabled]="isViewMode">
+                                <mat-icon color="primary"><a>delete_outline</a></mat-icon>
+                              </button>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="innerDisplayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: innerDisplayedColumns;"></tr>
+                        </table>
+                      </div>
+                      </div>
+                      <div class="err-field err-msg">{{errs[k]}}</div>
+                    </td>
+                  </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                    [class.example-element-row]="innerElement?.assignToEmpName != ''"
+                    [class.example-expanded-row]="expandedElement === element">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                  </table>
+                </div>
+
+                <div fxLayout="row">
+                  <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+
+                  <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                    <mat-spinner  [diameter]="40" fxLayoutAlign="center center"></mat-spinner>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin-top: 10px;">
+              <button *ngIf="!isViewMode" mat-raised-button class="space" color="primary" (click)="save()"
+              [disabled]="disableUpdateButton || isViewMode">{{'COMMON_SUBMIT' | translate}}</button>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+        <mat-card class="card-style">
+          <mat-card-content>
+        <app-common-workflow-approval-tab [transactionId]=relocationId [transactionSource]=transactionSource [assetRelocationEmployeeId] = employeeId  [AssetRelocationApproveButtonEnable] = approvebuttonEnable
+        (confirmAssetRelocation) = transferWorkflowApproval(true) (rejectAssetRelocation)=transferWorkflowApproval(false) [relocationViewMode]=isViewMode>
+        </app-common-workflow-approval-tab>
+        </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+    </mat-tab-group>
+
+
+</div>

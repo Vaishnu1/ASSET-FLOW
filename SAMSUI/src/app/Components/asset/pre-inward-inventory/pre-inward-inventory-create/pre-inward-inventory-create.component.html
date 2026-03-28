@@ -1,0 +1,442 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div  fxLayout="row" fxLayout.xs="column"  fxLayout.sm="column"  fxLayout.md="column" fxLayoutAlign="start center">
+
+    <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb" fxLayoutAlign="start center" fxFlex="30">
+      <mat-list fxLayoutAlign="start center" fxLayout="row" >
+        <mat-list-item>
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item>{{ 'MENU_ASSET' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active link" aria-current="page" ><a (click)="exit()" >{{'SR_PRE_INWARD_INVENTORY' | translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon></mat-list-item>
+        <mat-list-item class="active" aria-current="page" >{{ headingDisplay }}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+    <div fxLayout="row" fxFlex="70" style="width: 100%;">
+      <div fxFlex="100">
+        <div fxLayoutAlign="center center" fxFlex="60">
+          <div class="mandatory-style status-style">
+            {{ 'COMMON_CREATED_BY_DT' | translate }} : {{piInventoryForm.controls.createdBy.value}} &nbsp;&nbsp; {{piInventoryForm.controls.createdDtDisp.value}}
+
+            </div>
+        </div>
+
+        <div fxLayoutAlign="end center" fxFlex="40">
+          <button mat-raised-button color="primary" class="space" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+          <button mat-raised-button color="primary" class="space" (click)="clear()" [disabled]="buttonDisableInEdit"
+            *ngIf="headingDisplay != 'View'">{{ 'COMMON_CLEAR' | translate }}</button>
+          <button mat-raised-button class="space" color="primary" (click)="saveInwardInventory(piInventoryForm.dirty)"
+            *ngIf="headingDisplay != 'View'" [disabled]="disableSubmitBtn || piInventoryForm.invalid || this.piInventoryForm.controls.inwardInventoryDtlList.value.length == 0 || this.piInventoryForm.controls.inwardInventoryDtlList.value == null">
+            <span> {{buttonSubmit}} </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content_section" style="margin-top: 0.5px;">
+
+    <div fxLayout="column" fxFlex="100" >
+
+        <form [formGroup]='piInventoryForm' fxLayout="column">
+          <div fxLayout="row" fxFlex="100">
+
+            <div fxFlex="21">
+
+              <div class="form-group example-full-width pos-rel t-8-px h-55-px" >
+                <p class="spacing input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                    class="mandatory-style">*</span> </p>
+                <ng-select [items]="locationCombo" class="input-field" required #locationNameFocus
+                  bindLabel="locDisplayField" (search)="loadLocationComboData($event,true)"
+                  (click)="loadLocationComboData($event ,true)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({},true)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',true)" (clear)="loadLocationComboData('clear',true)"
+                  [loading]="scrollsync" loadingText="Loading..." (change)="selectedLocationData($event);checkForPoNumberExistence();"
+                  formControlName="locationName"></ng-select>
+                  <mat-error
+                  *ngIf="piInventoryForm.controls.locationName.invalid && piInventoryForm.controls.locationName.touched">
+                  <div class="err-field" *ngIf="piInventoryForm.controls.locationName.errors.required">
+                    Kindly Select The "{{'LOCATION_NAME' | translate }}"</div>
+                </mat-error>
+              </div>
+
+              <div class="form-group">
+                <mat-form-field class="example-full-width t-6-px" [floatLabel]="'always'">
+                  <mat-label class="input-label"> {{'PURCHASE_PO_NUMBER' | translate}} <span
+                      class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="poNumber" oninput="this.value = this.value.toUpperCase()"
+                  (input)="checkForPoNumberExistence()">
+                  <mat-error
+                    *ngIf="piInventoryForm.controls.poNumber.invalid && piInventoryForm.controls.poNumber.touched">
+                    <div class="err-field" *ngIf="piInventoryForm.controls.poNumber.errors.required">
+                      "{{'PURCHASE_PO_NUMBER' | translate}}" Is Required </div>
+                      <div class="err-field" *ngIf="piInventoryForm.controls.poNumber.errors.notUnique">"{{'PURCHASE_PO_NUMBER' | translate}}" {{ErrorMsg}}</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <mat-checkbox class="input-label mt-10-px" formControlName="internalPoNumber" (change)="assetWithoutPo()">
+              {{'PI_PO_WITHOUT_NO' | translate}}</mat-checkbox>
+
+              <div class="form-group">
+                <mat-form-field class="example-full-width t-13-px input-lable-font svg"[floatLabel]="'always'">
+                  <span class="input-label">{{'PURCHASE_PO_DATE' | translate}}
+                    <span class="mandatory-style" *ngIf="docUploadRequired"> *</span>
+                  </span>
+                  <input matInput (click)="poDateDisp.open()" [matDatepicker]="poDateDisp"
+                    formControlName="poDateDisp" [max]="piInventoryForm.controls.currentDate.value" (dateChange)="checkDifferenceOfDates()" class=" input-field">
+                  <mat-datepicker-toggle [for]="poDateDisp" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #poDateDisp></mat-datepicker>
+                  <mat-error  class="err-field">
+                    Kindly Select The "{{'PURCHASE_PO_DATE' | translate}}"
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group mt-10-px">
+                <mat-form-field class="example-full-width t-6-px" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="input-label"> {{'CAPEX_NO' | translate}} <span class="mandatory-style" *ngIf="docUploadRequired"> *</span></mat-label>
+                  <input matInput formControlName="capexNumber" oninput="this.value = this.value.toUpperCase().trim()" class="input-field" [maxlength]="500">
+                  <mat-hint align="end">{{piInventoryForm.controls.capexNumber.value?.length || 0}}/500
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+
+            </div>
+
+            <div fxFlex="23">
+
+              <div class="form-group mt-7-px">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SUPPLIER_NAME' | translate }}<span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select class="input-field" formControlName="businessPartnerName" (search)="listOfSupplier($event)"
+                    (click)="listOfSupplier({})" [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')"
+                    [loading]="scrollSupplierNamesync" loadingText="Loading..." (change)="fetchIdOfSupplier($event)"
+                    [items]="supplierList" bindLabel="businessPartnerName" bindValue="businessPartnerName" required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="piInventoryForm.controls.businessPartnerName.invalid && piInventoryForm.controls.businessPartnerName.touched">
+                    <div class="err-field" *ngIf="piInventoryForm.controls.businessPartnerName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_NAME' | translate }}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-group mt-10-px">
+                <div class="example-full-width">
+                  <span class="input-label"> {{'SUPPLIER_SITE_NAME' | translate }} </span>
+                  <ng-select class=" input-field" formControlName="businessPartnerSiteName"
+                    (search)="listOfSupplierApproved($event)" (click)="listOfSupplierApproved({})" [virtualScroll]="true"
+                    (scrollToEnd)="listOfSupplierApproved({})" (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')" (clear)="listOfSupplierApproved('clear')" [loading]="scrollApprovedSuppliersync"
+                    loadingText="Loading..." (change)="fetchIdOfSupplierApproved($event)" [items]="supplierLocationList"
+                    bindLabel="comboDisp" bindValue="comboDisp">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="form-group mt-10-px">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate }} </mat-label>
+                  <textarea formControlName="partnerSiteAddress" matInput class="input-field form-control" 
+                  [maxlength]="500" style="height: 60px;"></textarea>
+                  <mat-hint align="end">{{piInventoryForm.controls.partnerSiteAddress.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="23">
+              <div class="form-group mt-7-px">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SERVICE_PROVIDER_NAME' | translate }}<span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select class=" input-field" formControlName="serviceProviderName" (search)="listOfServiceProvider($event)"
+                    (click)="listOfServiceProvider({})" [virtualScroll]="true" (scrollToEnd)="listOfServiceProvider({})" (keyup.backspace)="listOfServiceProvider($event.target.value ? $event : 'back')"  (clear)="listOfServiceProvider('clear')"
+                    [loading]="scrollServiceProviderNamesync" loadingText="Loading..." (change)="fetchIdOfServiceProvider($event)"
+                    [items]="ServiceProviderList" bindLabel="businessPartnerName" bindValue="businessPartnerName" required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="piInventoryForm.controls.serviceProviderName.invalid && piInventoryForm.controls.serviceProviderName.touched">
+                    <div class="err-field" *ngIf="piInventoryForm.controls.serviceProviderName.errors.required">
+                      Kindly Select The "{{'SERVICE_PROVIDER_NAME' | translate }}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-group mt-10-px">
+                <div class="example-full-width">
+                  <span class="input-label"> {{'SERVICE_PROVIDER_SITE_NAME' | translate }} </span>
+                  <ng-select class=" input-field" formControlName="serviceProviderSiteName"
+                    (search)="listOfServiceProviderApproved($event)" (click)="listOfServiceProviderApproved({})" [virtualScroll]="true"
+                    (scrollToEnd)="listOfServiceProviderApproved({})" (keyup.backspace)="listOfServiceProviderApproved($event.target.value ? $event : 'back')" (clear)="listOfServiceProviderApproved('clear')" [loading]="scrollApprovedServiceProvidersync"
+                    loadingText="Loading..." (change)="fetchIdOfServiceProviderApproved($event)" [items]="ServiceProviderLocationList"
+                    bindLabel="comboDisp" bindValue="comboDisp">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="form-group mt-10-px">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate }} </mat-label>
+                  <textarea formControlName="serviceProviderSiteAddress" matInput class="input-field form-control" 
+                  [maxlength]="500" style="height: 60px;"></textarea>
+                  <mat-hint align="end">{{piInventoryForm.controls.serviceProviderSiteAddress.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="21">
+              <div class="form-group">
+                <mat-form-field class="example-full-width input-lable-font svg" [floatLabel]="'always'">
+                  <span class="input-label">{{'PI_EXPECTED_ARRIVAL_DT' | translate}}
+                    <span class="mandatory-style" *ngIf="docUploadRequired"> *</span>
+                  </span>
+                  <input matInput (click)="expectedArrivalDtDisp.open()" [matDatepicker]="expectedArrivalDtDisp"
+                    formControlName="expectedArrivalDtDisp" [min]="piInventoryForm.controls.poDateDisp.value" class=" input-field">
+                  <mat-datepicker-toggle [for]="expectedArrivalDtDisp" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #expectedArrivalDtDisp></mat-datepicker>
+                  <mat-error *ngIf="piInventoryForm.controls.expectedArrivalDtDisp.invalid && piInventoryForm.controls.expectedArrivalDtDisp.touched">
+                    <div class="err-field" *ngIf="piInventoryForm.controls.expectedArrivalDtDisp.errors.required">
+                      Kindly Select The "{{'PI_EXPECTED_ARRIVAL_DT' | translate }}"</div>
+                      <div class="err-field" *ngIf="this.isPoDateSmallerThanExpArrivalDate">
+                        {{'PI_EXPECTED_ARRIVAL_DT' | translate }} should be greater than {{'PURCHASE_PO_DATE' | translate}} </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group example-full-width ">
+                <span class="spacing input-label"> {{ 'PURCHASE_SHIP_TO' | translate }} <span
+                    class="mandatory-style">*</span> </span>
+                <ng-select [items]="locationCombo" required class="input-field"
+                  bindLabel="locDisplayField" bindValue="locDisplayField" (search)="loadLocationComboData($event,false)"
+                  (click)="loadLocationComboData($event,false)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({},false)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',false)" (clear)="loadLocationComboData('clear',false)"
+                  [loading]="scrollshiptosync" loadingText="Loading..." (change)="selectedLocationDataVal($event);checkForPoNumberExistence();"
+                  formControlName="shipTo"></ng-select>
+                  <mat-error
+                  *ngIf="piInventoryForm.controls.shipTo.invalid && piInventoryForm.controls.shipTo.touched">
+                  <div class="err-field" *ngIf="piInventoryForm.controls.shipTo.errors.required">
+                    Kindly Select The "{{'PURCHASE_SHIP_TO' | translate }}" Branch</div>
+                </mat-error>
+              </div>
+
+              <div class="form-group">
+                <mat-form-field class="example-full-width mt-10-px" [floatLabel]="'always'">
+                  <mat-label class="input-label"> {{'PI_STATUS' | translate}}
+                  </mat-label>
+                  <input matInput formControlName="preInwStatusName" class="input-field">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label"> {{'PRE_INWARD_NUMBER' | translate}}
+                  </mat-label>
+                  <input matInput formControlName="preInwardNumber" class="input-field">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label space"> {{ 'PO_DOCUMENT' | translate }}
+                    <span class="mandatory-style" *ngIf="docUploadRequired">*</span>
+                  </span>
+  
+                  <button mat-mini-fab color="grey" matSuffix onclick="document.getElementById('poDocUpload').click()"
+                    matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+                    <mat-icon>attachment</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" matTooltip="Download PO Document"
+                    *ngIf="docFilePath != null && docFilePath != undefined && docFilePath != ''"
+                    [matTooltipPosition]="'below'" (click)="downloadPODocument()">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" matTooltip="View PO Document"
+                    *ngIf="(docFilePath != null && docFilePath != undefined && docFilePath != '') && showPoDocView"
+                    [matTooltipPosition]="'below'" (click)="viewPODocument()">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </div>
+                <div class="example-full-width" style="font-size: 14px;color: rgb(48, 4, 131);">
+                  {{docFileName}} </div>
+                <input style="display:none" id="poDocUpload" type="file" name="organizFile" multiple
+                  (change)="handleFileInput($event.target.files)" />
+              </div>
+
+            </div>
+
+            <div fxFlex="12">
+              <!-- <div fxLayout="row"> -->
+                <div class="form-group mt-7-px">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label"> {{'PI_TOTAL_UNIT_PRICE' | translate}}
+
+                    </mat-label>
+                    <input matInput type="number" class="input-field" formControlName="totalUnitPrice">
+                    <mat-error
+                      *ngIf="piInventoryForm.controls.totalUnitPrice.invalid && piInventoryForm.controls.totalUnitPrice.touched">
+                      <div class="err-field" *ngIf="piInventoryForm.controls.totalUnitPrice.errors.required">
+                        "{{'PI_TOTAL_UNIT_PRICE' | translate}}" Is Required </div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label"> {{'PI_TOTAL_QTY' | translate}}
+                    </mat-label>
+                    <input matInput type="number" class="input-field" formControlName="totalQty">
+                  </mat-form-field>
+                </div>
+              <!-- </div> -->
+
+              <!-- <div fxLayout="row"> -->
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label"> {{'PI_TOTAL_TAX_AMOUNT' | translate}}
+                    </mat-label>
+                    <input matInput type="number" formControlName="totalTaxAmount" class="input-field">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label"> {{'PI_NET_AMOUNT' | translate}}
+                    </mat-label>
+                    <input matInput type="number" formControlName="totalAmt" class="input-field">
+                  </mat-form-field>
+                </div>
+              <!-- </div> -->
+            </div>
+          </div>
+
+          <div fxLayout="column" class="mt-20-px">
+            <div>
+              <div [@.disabled]="true">
+                <mat-tab-group>
+
+                  <mat-tab>
+                    <ng-template mat-tab-label>
+                      {{'MODEL' | translate }}
+                      <div *ngIf="!modeDisplay">
+                        <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+                      </div>
+                    </ng-template>
+                    <mat-card class="card-style">
+                      <mat-card-content>
+                        <div class="row rightbutton" fxLayoutAlign="end center">
+                          <div fxFlex ="83"  *ngIf="formTwoValid" >
+                            <p style="color: red; font-size: 18px;"> This Asset Requires Statutory Document To Be Attached. Kindly Check. </p>
+                          </div>
+                          <button fxFlex ="5" mat-raised-button class="shift-left" color="primary"
+                          [disabled]="this.piInventoryForm.controls.poNumber.invalid || this.piInventoryForm.controls.businessPartnerName.invalid || this.piInventoryForm.controls.capexNumber.invalid ||
+                          this.piInventoryForm.controls.expectedArrivalDtDisp.invalid || this.piInventoryForm.controls.poDateDisp.invalid || this.piInventoryForm.controls.locationName.invalid || this.piInventoryForm.controls.shipTo.invalid"
+                            *ngIf="headingDisplay != 'View'" (click)="addModel(0,null,'add')">{{'COMMON_ADD' | translate}}</button>
+                        </div>
+                        <div class="model-table-container" style="margin-top: 0.5%;">
+                          <table mat-table [dataSource]="inwardInventoryDtlList" style="width: 100%;">
+                            <ng-container matColumnDef="sno">
+                              <th mat-header-cell *matHeaderCellDef style="width: 5%;"> {{'COMMON_S_NO' | translate}} </th>
+                              <td mat-cell *matCellDef="let element; let i=index;" style="width: 5%;"> {{getIndexValue(i+1)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="modelName">
+                              <th mat-header-cell *matHeaderCellDef style="width: 5%;"> {{'MODEL_NAME' | translate}} </th>
+                              <td mat-cell *matCellDef="let element" style="width: 5%; padding-right: 2px;"> {{ element.modelName }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="businessPartnerName">
+                              <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'MANUFACTURER' | translate}}</th>
+                              <td mat-cell *matCellDef="let element" style="width: 10%; padding-right: 2px;"> {{element?.businessPartnerName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="assetCategory">
+                              <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'ASSET_CATEGORY_SUB_CATEGORY' | translate}}</th>
+                              <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element?.assetCategoryName}} <br/> <br/>
+                                {{element?.assetSubCategoryName}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                              <th mat-header-cell *matHeaderCellDef style="width: 15%;">{{'ASSET_GROUP' | translate}}</th>
+                              <td mat-cell *matCellDef="let element" style="width: 15%; padding-right: 2px;"> {{element?.assetGroupName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="qty">
+                              <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'PI_TOTAL_QTY' | translate}} </th>
+                              <td mat-cell *matCellDef="let element" style="text-align: left; width: 7%;"> {{element?.prQuantity}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="unitPrice">
+                              <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'UNIT_PRICE' | translate}} </th>
+                              <td mat-cell *matCellDef="let element" style="text-align: left; width: 7%;"> {{element?.originalPurchaseAmount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="taxAmount">
+                              <th mat-header-cell *matHeaderCellDef style="width: 8%;"> {{'PI_UNIT_TAX_AMOUNT' | translate}}
+                              </th>
+                              <td mat-cell *matCellDef="let element" style="text-align: left; width: 8%;"> {{element?.prTaxAmount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalAmount">
+                              <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'PI_TOTAL_AMOUNT' | translate}}
+                              </th>
+                              <td mat-cell *matCellDef="let element" style="text-align: left; width: 7%;"> {{element?.prTotalAmount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                              <th mat-header-cell *matHeaderCellDef style="width: 10%;"> {{'COMMON_ACTION' | translate}}
+                              </th>
+                              <td mat-cell *matCellDef="let element let i=index;" style="width: 10%;">
+                                <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                                  (click)="addModel(element,i,'edit')" [disabled]="headingDisplay == 'View'">
+                                  <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                                  (click)="addModel(element,i,'view')">
+                                  <mat-icon>visibility</mat-icon>
+                                </button>
+                                <button mat-icon-button color="warn" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                                  (click)="deleteModelInfo(i)" *ngIf="element.inwardInventoryDtlId == 0">
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                            </tr>
+                          </table>
+                          <mat-card class="no_records_found" fxLayoutAlign="center center" *ngIf="length == 0 && !subloaderModel">
+                            {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                          <mat-card class="no_records_found" *ngIf="subloaderModel" fxLayoutAlign="center center">
+                            <mat-spinner [diameter]="40"></mat-spinner>
+                          </mat-card>
+                        </div>
+
+                      </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+
+                  <mat-tab *ngIf="piInventoryForm.controls.inwardInventoryHdrId.value > 0" label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+                    <mat-card class="card-style">
+                      <mat-card-content>
+                    <app-common-workflow-approval-tab [transactionId]=preInwardId
+                    [transactionSource]=transactionSource [preInwardEmployeeId] =employeeId
+                    [preInwardStatusId] =piInventoryForm.controls.preInwStatusId.value
+                    [PreInwardApproveButtonEnable] = approvebuttonEnable
+                    (checkStatutoryDocumentValue) = preWorkflowApproval(true)
+                    (PreInwardReject) = preWorkflowApproval(false)>
+                    </app-common-workflow-approval-tab>
+                    </mat-card-content>
+                    </mat-card>
+                  </mat-tab>
+
+                </mat-tab-group>
+
+              </div>
+            </div>
+
+          </div>
+
+        </form>
+
+    </div>
+
+  </div>
+
+</div>

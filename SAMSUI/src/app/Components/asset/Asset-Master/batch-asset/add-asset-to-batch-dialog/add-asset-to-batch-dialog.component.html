@@ -1,0 +1,286 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h6 class="section_title">
+        <span>{{ 'BATCH_ASSET_ADD' | translate }} - </span>
+        <span>({{headingText}})</span>
+      </h6>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET'| translate}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div fxLayout="column" class="modal-dropdown">
+        <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+          <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+            <div fxFlex="34">
+
+              <div class="form-group">
+                <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField"
+                  (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" 
+                  [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                  loadingText="Loading..." (change)="selectedLocationData($event)" [(ngModel)]="assetModel.locationName"
+                  [ngModelOptions]="{standalone: true}" class="example-full-width"></ng-select>
+              </div>
+
+              <div class="form-group">
+                <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                <ng-select class=" example-full-width" [(ngModel)]="assetModel.manufacturerName"
+                  [ngModelOptions]="{standalone: true}" (search)="listOfManufacturer($event)"
+                  (click)="listOfManufacturer({})" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                   (change)="getManfacturerComboValue($event)" [items]="manufactuer"
+                   [loading]="scrollsyncManufacturer" loadingText="Loading..."
+                  bindLabel="manufacturerName" bindValue="manufacturerName">
+                </ng-select>
+              </div>
+
+              <div class="form-group">
+                <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} </span>
+                <ng-select class=" example-full-width" [(ngModel)]="assetModel.businessPartnerName"
+                  [ngModelOptions]="{standalone: true}" (search)="listOfSupplier($event)" (click)="listOfSupplier({})"
+                  [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSupplierNamesync"
+                   loadingText="Loading..." (change)="fetchIdOfSupplier($event)" [items]="supplierList"
+                  bindLabel="supplierName" bindValue="supplierName">
+                </ng-select>
+              </div>
+
+            </div>
+
+            <div fxFlex="33">
+
+              <div class="form-group" style="margin-top: 8px">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label">{{ 'ASSET_CODE' | translate }}</mat-label>
+                  <input matInput [(ngModel)]="assetModel.assetCode" [ngModelOptions]="{standalone: true}"
+                    oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group" style="margin-top: -2%">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label">{{ 'ASSET_SERIAL_NO' | translate }}</mat-label>
+                  <input matInput [(ngModel)]="assetModel.serialNo" [ngModelOptions]="{standalone: true}"
+                    oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group" style="margin-top: -5%">
+                <span class="input-label"> {{ 'ASSET_STATUS' | translate }} </span>
+                <ng-select (search)="loadAssetStatusComboData($event)" (click)="loadAssetStatusComboData({})" 
+                class="example-full-width" [virtualScroll]="true" (scrollToEnd)="loadAssetStatusComboData({})" (keyup.backspace)="loadAssetStatusComboData($event.target.value ? $event : 'back')"  (clear)="loadAssetStatusComboData('clear')"
+                    [loading]="scrollsyncAssetStatus" loadingText="Loading..."
+                    (change)="selectedAssetStatusList($event)" 
+                    [ngModel]="assetModel.assetStatus  | translate"  
+                      [ngModelOptions]="{standalone: true}">
+                    <ng-option *ngFor="let assetStatus of assetStatusCombo" [value]="assetStatus">
+                      {{ assetStatus.assetStatusName | translate}}
+                    </ng-option>
+                </ng-select> 
+              </div>
+
+            </div>
+
+            <div fxFlex="33">
+
+              <div class="form-group">
+                <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                <ng-select class=" example-full-width" [(ngModel)]="assetModel.assetGroupName"
+                  [ngModelOptions]="{standalone: true}" (click)="listOfAllAssetGroup({})" [virtualScroll]="true"
+                  (search)="listOfAllAssetGroup($event)"  (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')"
+                  (change)="getAssetGroupComboValue($event)" [items]="assetGroup" bindLabel="assetGroupName"
+                  bindValue="assetGroupName" [loading]="scrollsyncAssetGroup" loadingText="Loading...">
+                </ng-select>
+              </div>
+
+              <div class="form-group">
+                <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                <ng-select class=" example-full-width" [(ngModel)]="assetModel.modelName"
+                  [ngModelOptions]="{standalone: true}" (click)="listOfAllModel({})" [virtualScroll]="true"
+                  (search)="listOfAllModel($event)"  (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')"
+                  (change)="getModelComboValue($event)" [items]="modelCombo" bindLabel="modelName" bindValue="modelName"
+                  [loading]="scrollsyncModel" loadingText="Loading...">
+                </ng-select>
+              </div>
+
+            </div>
+          </div>
+          <div fxLayout="row" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100">
+            <div fxFlex="100" fxLayout="column" fxLayout.lt-md="row" fxFlex.lt-md="100">
+
+              <div class="form-group" fxFlex.lt-md="34">
+                <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                <ng-select [items]="assigneeDepartmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                  tabindex="9"  (search)="loadAssigneeDepartmentComboData($event)"
+                  (click)="loadAssigneeDepartmentComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadAssigneeDepartmentComboData({})" (keyup.backspace)="loadAssigneeDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadAssigneeDepartmentComboData('clear')" (change)="selectedDepartmentData($event)"
+                  [loading]="scrollsyncAssigneeDepartment" loadingText="Loading..."
+                  [(ngModel)]="assetModel.departmentName"  class="example-full-width">
+                </ng-select>
+              </div>
+
+              <div class="form-group " fxFlex.lt-md="33">
+                <span class="input-label"> {{ 'MENU_SUB_DEPARTMENT' | translate }} </span>
+                <ng-select class=" example-full-width" [(ngModel)]="assetModel.subDepartment"
+                  [ngModelOptions]="{standalone: true}" tabindex="2" (search)="listOfSubDepartment($event)"
+                  (click)="listOfSubDepartment({})" (change)="getSubDepartmentNameComboValue($event)"
+                  [items]="subDepartmentList" [virtualScroll]="true" (scrollToEnd)="listOfSubDepartment({})" (keyup.backspace)="listOfSubDepartment($event.target.value ? $event : 'back')" (clear)="listOfSubDepartment('clear')"
+                  [loading]="scrollsync"  loadingText="Loading..." bindLabel="subDepartmentName"
+                  bindValue="subDepartmentName">
+                </ng-select>
+              </div>
+
+              <div class="rightbutton" style="margin-top: 15px;" fxLayoutAlign="end end">
+                <button mat-raised-button class="space" color="primary" (click)="clearSearchCriteria()">
+                  {{ 'COMMON_CLEAR' | translate }}
+                </button>
+                <button mat-raised-button color="primary" (click)="search()">
+                  {{ 'COMMON_SEARCH' | translate }}
+                </button>
+              </div>
+</div>
+            
+          </div>
+        </div>
+      </div>
+
+    </mat-expansion-panel>
+  </div>
+
+
+  <div style="display: flex;" fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+      <div fxFlex="70">
+        <div class="example-container" style="padding-top:3%;max-height: 500px;
+        overflow-y: scroll;">
+
+          <table mat-table [dataSource]="dataSource" >
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell id="sno" *matHeaderCellDef > {{ 'COMMON_S_NO' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;">  {{(i+1)}} </td>
+            </ng-container>
+            <ng-container matColumnDef="assetCode">
+              <th mat-header-cell id="assetCode" *matHeaderCellDef >
+                {{'ASSET_CODE' | translate}} <br>
+                /{{'ASSET_DESCRIPTION' | translate}} <br>
+                /{{'ASSET_SERIAL_NO' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;" >
+                {{element?.assetCode}} <br />
+                {{element?.description}} <br />
+                {{element?.serialNo}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="category">
+              <th mat-header-cell id="category" *matHeaderCellDef >
+                {{ 'ASSET_CATEGORY' | translate }} <br>
+                /{{ 'ASSET_SUB_CATEGORY' | translate }} <br>
+                /{{ 'ASSET_GROUP' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;" >
+                {{ element?.assetCategoryName }} <br />
+                {{ element?.subCategoryName }} <br />
+                {{ element?.assetGroupName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="model">
+              <th mat-header-cell id="model" *matHeaderCellDef >
+                {{ 'MODEL_NAME' | translate }} <br>
+                /{{ 'MANUFACTURER' | translate }} <br>
+                /{{ 'SUPPLIER_NAME' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;" >
+                {{ element?.modelName }} <br />
+                {{ element?.manufacturerName }} <br />
+                {{ element?.supplierName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="department">
+              <th mat-header-cell id="department" *matHeaderCellDef >
+                {{'DEPARTMENT_NAME' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;" >
+                {{ element?.departmentName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell id="assetStatus" *matHeaderCellDef>
+                {{'ASSET_STATUS' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let element; let i=index;">
+                {{ element?.assetStatus | translate }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef id="action"> {{ 'COMMON_ACTION' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i = index;">
+
+                <button mat-button class="mat-icon-button" matTooltip="{{ 'COMMON_ADD' | translate }}"
+                  (click)="addAssetToList(element)" color="primary" *ngIf="validateAssetCd(element)">
+                  <!-- <mat-icon>add_circle</mat-icon> -->
+                  <div class="plus-icon add-circle-icon"></div>
+                </button>
+                <div *ngIf="!validateAssetCd(element)" style="color: #445c8f;">Added</div>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-card class="no_records_found" *ngIf="length === 0 && !subLoader">{{'COMMON_NO_RECORDS_FOUND' |
+            translate}}</mat-card>
+          <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </mat-card>
+
+        </div>
+      </div>
+   
+
+    <div fxFlex="30" style="border-left: 2px solid green;" fxLayout="column">
+
+      <div style="display: flex;padding: 5px;">
+        <div>
+          <div class="input-label">{{'ASSET_CODE' | translate }}</div>
+        </div>
+      </div>
+
+      <div style="height: 300px;overflow-y: scroll;overflow-x: hidden;" fxLayout="column">
+        <mat-card *ngFor="let assetAdded of assetAddedList; let i = index">
+          <div  fxLayout="column" fxFlex="100">
+
+          <div fxLayout="row" fxFlex="100">
+            <div style="font-size: 11px !important;">{{i+1}}. {{assetAdded.assetCode}}- {{assetAdded.modelName}} </div>
+          </div>
+          
+            <div fxLayout="row" fxFlex="100" style="margin-top:2%;" fxLayoutAlign="end end">
+              <mat-icon (click)="removeAssetFromList(assetAdded)" color="warn"
+                style="font-size: 17px !important;cursor: pointer;">remove_circle_outline</mat-icon>
+            </div>
+          
+        </div>
+        </mat-card>
+      </div>
+
+      <div style="display: flex;padding: 5px;" fxLayout="row" >
+        <div fxFlex="50">
+          <div class="input-label">{{'COMMON_SELECTED' | translate }} ({{assetAddedList.length}})</div>
+        </div>
+
+        <div fxFlex="50" fxLayoutAlign="end start">
+          <button mat-raised-button color="primary" (click)="addedAssetsToList()">{{ 'COMMON_ADD' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

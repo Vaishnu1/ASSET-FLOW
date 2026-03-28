@@ -1,0 +1,56 @@
+.example-full-width {
+width: 95%;
+}
+
+.space{
+margin-right: 10px;
+}
+
+.check-box{
+margin-top:1rem;
+font-size:16px;
+}
+
+.mat-card{
+padding: 16px !important;
+}
+
+.h-55-px{
+height: 55px;
+margin-top: -4px;
+}
+
+.mat-input-element:disabled{
+padding: 0px;
+}
+
+.mt-8{
+margin-top: -8.5px;
+}
+
+.mt-4{
+margin-top: 4.5px;
+}
+
+.full-width{
+width: 100%;
+}
+
+.mt-2{
+margin-top: -1.5%;
+}
+
+.item-container-inner-table{
+max-height: 31vh !important;
+overflow: auto;
+}
+
+.check-box-font{
+font-size:16px;
+}
+
+.card-style{
+border-radius: 0%;
+min-height: 265px;
+z-index:800;
+}

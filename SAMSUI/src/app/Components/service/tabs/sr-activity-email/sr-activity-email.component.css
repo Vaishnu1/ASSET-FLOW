@@ -1,0 +1,70 @@
+
+.form-group {
+    margin-bottom: 0.5rem !important;
+    font-size: 15px !important;
+    font-weight: 400;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.example-label {
+    font-size: 20px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    color: #000000;
+} 
+
+::ng-deep .ng-select .ng-select-container {
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+}
+
+
+
+.font-style {
+    font-size: 17px;
+    color: #000000;
+    text-align: center;
+}
+
+button {
+    float: right;
+    margin-top: 0.5%;
+    color: white;
+}
+
+.space {
+    margin-left: 10px;
+}
+
+input.mat-input-element {
+    margin-top: 0.70em !important;
+    font-size: 16px !important;
+}
+
+.font-style-combo {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 480;
+    color: rgba(54, 54, 54, 0.83);
+}
+
+.section_title{
+    margin: 0px 0px 10px;
+  }
+  
+  .submit-button {
+    display: grid;
+    justify-content: center;
+  }
+  mat-card{
+      padding:0% !important;
+  }

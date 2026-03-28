@@ -1,0 +1,212 @@
+<div fxLayout="column">
+
+  <div fxLayout="row" class="mb-12">
+    <div fxFlex="0">
+      <h4 class="dialogue-box-header">{{headingDisplay}}</h4>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" class="rightbutton" (click)="closeModal()">
+        {{'COMMON_BACK' | translate}}</button>
+      <button mat-raised-button color="primary" class="rightbutton" (click)="submit()"  *ngIf="mode != 'view'"
+      [disabled]="itemApprovedSupplierForm.invalid">
+        {{buttonDisplay}}</button>
+    </div>
+  </div>
+ 
+  <form  [formGroup]="itemApprovedSupplierForm" class="mb-12">    
+    <div fxLayout="column" fxFlex="100">
+      <div fxLayout="row" fxFlex="100">
+        <div fxLayout="column" fxFlex="25">
+          <div class="form-group">      
+              <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                <span class="input-label">{{'SUPPLIER_ITEM_CODE' | translate }}</span>
+                <input class="input-field" matInput formControlName="suppItemCd" [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                <mat-hint align="end">{{itemApprovedSupplierForm.controls.suppItemCd.value?.length || 0}}/100</mat-hint>
+              </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'" >
+              <span class="input-label">{{'MIN_ORDER_QTY' | translate }}</span>
+              <input matInput formControlName="moq" class="input-field">
+                <mat-error
+                *ngIf="itemApprovedSupplierForm.controls.moq.invalid && itemApprovedSupplierForm.controls.moq.touched">
+                <div *ngIf="itemApprovedSupplierForm.controls.moq.errors.customNumber">
+                  "{{'MIN_ORDER_QTY' | translate}}" Should Be Numbers Only. Ex:"000000.00"</div>
+                </mat-error>
+            </mat-form-field>
+          </div>            
+        </div>
+        <div fxLayout="column" fxFlex="25">
+          <div class="form-group">
+            <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+              <span class="input-label">{{'SUPPLIER_NAME' | translate }}</span>
+              <input matInput formControlName="supplierName" readonly class="input-field">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+              <span class="input-label">{{'ITEM_LEAD_TIME' | translate }} (In Days)</span>
+              <input class="input-field" matInput formControlName="leadTimeDays" [maxlength]="3">
+              <mat-error
+              *ngIf="itemApprovedSupplierForm.controls.leadTimeDays.invalid && itemApprovedSupplierForm.controls.leadTimeDays.touched">
+              <div *ngIf="itemApprovedSupplierForm.controls.leadTimeDays.errors.pattern">
+                "{{'ITEM_LEAD_TIME' | translate}}" Should Be Numbers Only </div>
+              </mat-error>
+            </mat-form-field>
+          </div>       
+        </div>    
+        <div fxLayout="column" fxFlex="25">
+          <div class="form-group">
+            <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+              <span class="input-label">{{'SUPPLIER_SITE_NAME' | translate }}</span>
+              <input class="input-field" matInput formControlName="supplierSiteName" readonly>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group check-box">
+            <div class="example-full-width">
+              <mat-checkbox color="primary" formControlName="active">
+                {{'ITEM_ACTIVE' | translate }}
+              </mat-checkbox>
+            </div>
+          </div>  
+        </div>
+        <div fxLayout="column" fxFlex="25">
+          <div class="form-group">
+            <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+              <span class="input-label">{{'SUPPLIER_SITE_CURR_CD' | translate }}</span>
+              <input class="input-field" matInput formControlName="suppSiteCurCd" readonly>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div fxLayout="row" fxFlex="100">
+    <mat-tab-group style="width: 100%;">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                {{'ITEM_PURCHASE_PRICE' | translate }}
+            </ng-template>
+            <mat-card>
+                <mat-card-content>
+                    <div>
+                        <form [formGroup]="itemPurchasePriceFormGroup" *ngIf="mode != 'view'">
+                            <div fxFlex="25">
+                                <div class="form-group h-60-px">
+                                  <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+                                    <span class="input-label">{{'PRICE_EFFECTIVE_FROM_DT' | translate }} <span class="mandatory-style">* </span></span>
+                                    <input matInput class="input-field" (click)="priceEffFromDt.open()" [matDatepicker]="priceEffFromDt"
+                                      formControlName="priceEffFromDtDisp" (dateChange)="dateValidation($event)" [min]="maxDate">
+                                    <mat-datepicker-toggle matSuffix [for]="priceEffFromDt"></mat-datepicker-toggle>
+                                    <mat-datepicker #priceEffFromDt></mat-datepicker>
+                                    <mat-error
+                                    *ngIf="itemPurchasePriceFormGroup.controls.priceEffFromDtDisp.invalid && itemPurchasePriceFormGroup.controls.priceEffFromDtDisp.touched">
+                                    <div class="err-field" *ngIf="itemPurchasePriceFormGroup.controls.priceEffFromDtDisp.errors.required">
+                                      Kindly Select The "{{'PRICE_EFFECTIVE_FROM_DT' | translate}}" </div>
+                                  </mat-error>
+                                  </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div fxFlex="25">
+                              <div class="form-group h-60-px">
+                                <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'">
+                                  <span class="input-label">{{'PRICE_EFFECTIVE_TO_DT' | translate }}</span>
+                                  <input matInput class="input-field" (click)="priceEffToDt.open()" [matDatepicker]="priceEffToDt"
+                                    [min]="toDate" formControlName="priceEffToDtDisp"
+                                    (dateChange)="toDateValidation($event)">
+                                  <mat-datepicker-toggle matSuffix [for]="priceEffToDt"></mat-datepicker-toggle>
+                                  <mat-datepicker #priceEffToDt></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div fxFlex="25">
+                              <div class="form-group mt-5">
+                                <mat-form-field class="example-full-width input-lable-font" [floatLabel]="'always'" >
+                                  <span class="input-label">{{'UNIT_PURCHASE_PRICE' | translate }} <span class="mandatory-style">*</span></span>
+                                  <input matInput formControlName="unitPurchasePrice">
+                                  <mat-error
+                                    *ngIf="itemPurchasePriceFormGroup.controls.unitPurchasePrice.invalid && itemPurchasePriceFormGroup.controls.unitPurchasePrice.touched">
+                                    <div class="err-field" *ngIf="itemPurchasePriceFormGroup.controls.unitPurchasePrice.errors.required">
+                                      "{{'UNIT_PURCHASE_PRICE' | translate}}" Is Required </div>
+                                    <div class="err-field" *ngIf="itemPurchasePriceFormGroup.controls.unitPurchasePrice.errors.numbersOnly">
+                                      "{{'UNIT_PURCHASE_PRICE' | translate}}" Should Be Numbers Only </div>
+                                    <div class="err-field" *ngIf="itemPurchasePriceFormGroup.controls.unitPurchasePrice.errors.greaterThanZero">
+                                      "{{'UNIT_PURCHASE_PRICE' | translate}}" Must Be Greater Than Zero </div>
+                                    <div *ngIf="itemPurchasePriceFormGroup.controls.unitPurchasePrice.errors.customNumber">
+                                       Ex:"000000000000000.00000"</div>
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div fxFlex="5"></div>
+                            <div fxFlex="20" fxLayoutAlign="end center">
+                              <button mat-raised-button color="primary" class="space" *ngIf="itemPPbuttonDisplay==='Add'"
+                              [disabled]="itemPurchasePriceFormGroup.invalid"
+                              (click)="addItemPurchasePriceToList('Add',itemPPIndex)"> {{itemPPbuttonDisplay}} </button>
+
+                              <button mat-raised-button color="primary" class="space" *ngIf="itemPPbuttonDisplay==='Update'"
+                              [disabled]="itemPurchasePriceFormGroup.invalid"
+                              (click)="addItemPurchasePriceToList('Update',itemPPIndex)"> {{itemPPbuttonDisplay}} </button>
+                            </div>
+                        </form>
+                        <div  fxLayout="column" class="item-purchase-inner-table">
+                            <table mat-table [dataSource]="itemPurchasePriceListDataSource">
+                                <ng-container matColumnDef="sno">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>
+                                      {{'COMMON_S_NO' | translate}}</th>
+                                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index">{{ i+1 }}</td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="priceEffFromDt">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'PRICE_EFFECTIVE_FROM_DT' | translate}}</th>
+                                    <td mat-cell class="table-cell-data" *matCellDef="let element ; let i=index">
+                                     {{element.priceEffFromDtDisp}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="priceEffToDt">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'PRICE_EFFECTIVE_TO_DT' | translate}}</th>
+                                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index">                                     {{element.priceEffToDtDisp}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="unitPurchasePrice">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'UNIT_PURCHASE_PRICE' | translate}}</th>
+                                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index"> {{element.unitPurchasePrice}}</td>
+                                  </ng-container>
+                                 
+                                  <ng-container matColumnDef="active">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ITEM_ACTIVE' | translate}}</th>
+                                    <td mat-cell class="table-cell-data" *matCellDef="let element ; let i=index">
+
+                                      <mat-icon class="activeicon" *ngIf="checkActiveOrNot(element)">check_circle</mat-icon>
+                                      <mat-icon class="inactiveicon" *ngIf="!checkActiveOrNot(element)">cancel</mat-icon>
+                                    </td>
+                                  </ng-container>
+                                  
+                                 
+                                  <ng-container matColumnDef="action">
+                                    <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'COMMON_ACTION' | translate}}</th>
+                                    <td mat-cell *matCellDef="let element; let i = index;">
+                                      <mat-icon *ngIf="mode != 'view' && element.active" mat-button class="mat-icon-button" color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="editItemPurchasePrice(element,i)">edit</mat-icon>
+                                    </td>
+                                  </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                                <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                            </table>
+                            <mat-card class="no_records_found"  fxLayoutAlign="center center" *ngIf="itemPurchasePriceListDataSource.data.length== 0 && !subLoaderItemSupplier">
+                                {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                              <mat-card *ngIf="subLoaderItemSupplier"  fxLayoutAlign="center center" class="no_records_found">
+                                <mat-spinner [diameter]="40"></mat-spinner>
+                              </mat-card>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>
+</div>

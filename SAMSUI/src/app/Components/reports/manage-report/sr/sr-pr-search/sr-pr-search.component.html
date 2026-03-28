@@ -1,0 +1,262 @@
+<div fxLayout="column" class="sr-pr-seach-component">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{this.data.screenName | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+    
+    <div fxLayout="row" class="form-row"> 
+      <form [formGroup]="srReportForm"  fxFlex="100">
+      <div fxLayout="column" fxFlex="34">
+        <div fxFlex="100">
+          <div fxLayout="row" class="form-row"> 
+            <div fxFlex="100">
+            <span class="input-label">{{'REPORT_LOCATION' | translate}}<span
+              class="mandatory-style">*</span></span>
+            <ng-select class="width-size" [items]="locationCombo" bindLabel="locDisplayField" (search)="loadLocationComboData($event)"
+              (click)="loadLocationComboData($event)" (change)="selectedLocationData($event)"
+              formControlName="locationName" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')"
+              [loading]="scrollLocationsync" [tabIndex]=1>
+            </ng-select>
+            </div>
+          </div>
+
+          <div fxLayout="row" class="form-row"> 
+            <div fxFlex="100">
+              <span class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style">
+                {{mandatoryString}}</span></span>
+              <ng-select class="width-size" (click)="selectReportType($event)" [items]="srReportsList" bindLabel="srReportsList" bindValue="srReportsList"  required 
+                formControlName="srReportType" [tabIndex]=2>
+              </ng-select>
+              <mat-error *ngIf="srReportForm.controls.srReportType.errors">
+                <div *ngIf="srReportForm.controls.srReportType.errors.required">{{'REPORT_CHOOSE_REPORT' | translate}} is
+                  Required </div>
+              </mat-error> 
+            </div>
+        </div> 
+          
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="50" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="40">
+              <span class="input-label">{{'REPORT_PERIOD' | translate}}<span
+                class="mandatory-style">*</span></span>
+              <ng-select class="width-size"  (change)="setDuration($event)" [items]="periodOption" bindLabel="period" bindValue="period"
+                formControlName="period" [tabIndex]=3>
+              </ng-select>
+            </div> 
+            
+            <div fxFlex="50" class="width-size" fxFlex.md="60" fxHide.lt-md *ngIf="disableNextAndPrevButton">
+                <button  mat-raised-button class="spaceLeft"  (click)="changeToPrevious($event)"
+              color="primary" [disabled]="!disableNextAndPrevButton"> {{'REPORT_PREV' | translate}}</button>
+
+              <button  mat-raised-button class="spaceLeft" (click)="changeToNext($event)" [disabled]="exceedsCurrentDate"
+                color="primary">{{'REPORT_NEXT' | translate}}</button>
+            </div>
+
+            <div fxFlex="50"  fxFlex.lt-md="60" fxHide.gt-md fxHide.md *ngIf="disableNextAndPrevButton">
+              <button class="spaceLeft" mat-button (click)="changeToPrevious($event)" matTooltip="{{'REPORT_PREV' | translate}}"
+              [matTooltipPosition]="'below'" 
+            color="primary" [disabled]="!disableNextAndPrevButton"> <mat-icon> arrow_back_ios</mat-icon></button>
+
+            <button  class="spaceLeft" mat-button (click)="changeToNext($event)" [disabled]="exceedsCurrentDate" matTooltip="{{'REPORT_NEXT' | translate}}"
+            [matTooltipPosition]="'below'" 
+              color="primary"><mat-icon> arrow_forward_ios</mat-icon></button>
+            </div>
+
+
+          </div>
+ 
+          <div fxLayout="row" class="form-row" style="margin-top: 6px;">
+            <div fxFlex="49">
+              <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{'REPORT_FROM_DATE' | translate}}<span
+                  class="mandatory-style">*</span></mat-label>
+                <input matInput formControlName="createdDtDisp" [max]="srReportForm.controls.updatedDtDisp.value"
+                  (click)="picker1.open()" (dateChange)="getFromDate($event)" [matDatepicker]="picker1"
+                  (keypress)="dateValidation1($event)" [tabIndex]=4>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="2"></div>  
+            <div fxFlex="49"  *ngIf="disableNextAndPrevButton">
+              <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{'REPORT_TO_DATE' | translate}}<span
+                  class="mandatory-style">*</span></mat-label>
+                <input matInput formControlName="updatedDtDisp" (click)="picker2.open()"
+                  [min]="srReportForm.controls.createdDtDisp.value" [max]="currentDate" [matDatepicker]="picker2"
+                  (keypress)="dateValidation2($event)" (dateChange)="getToDate($event)" [tabIndex]=5>
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div> 
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100"> 
+              <span class="input-label">{{'REPORT_GROUP_BY' | translate}}</span>
+                <ng-select class="width-size" (change)="selectedGroupByColumn($event)" [items]="groupByColumnList" bindLabel="label" bindValue="columnName"
+                  formControlName="groupByColumnName" [tabIndex]=6>
+                </ng-select> 
+            </div>
+        </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100"> 
+              <span class="input-label">{{'REPORT_ORDER_BY' | translate}}</span>
+              <ng-select class="width-size" (change)="selectedOrder($event)" [items]="orderByOptions" bindLabel="label" bindValue="orderBy"
+                formControlName="orderBy" [tabIndex]=7>
+              </ng-select> 
+            </div>
+          </div>
+          
+          <div fxLayout="row" class="form-row" *ngIf="showIncident">
+            <div fxFlex="100">
+              <div class="example-full-width">
+                <mat-checkbox class="example-margin" color="primary" formControlName="woWithIncident" >
+                  {{'REPORT_IS_INCIDENT' | translate }}
+                </mat-checkbox>
+              </div> 
+            </div>
+          </div>
+ 
+        </div> 
+        </div>
+ 
+      <div fxLayout="column" fxFlex="1">
+
+      </div>
+
+      <div fxLayout="column" fxFlex="32">
+        <div fxFlex="100"> 
+
+          <div fxLayout="row" class="form-row" *ngIf="!disableColumnsBasedOnReportType">
+            <div fxFlex="100">
+            <span class="input-label"> {{ 'REPORT_SR_TYPE' | translate }} <span class="mandatory-style">*</span>
+            </span>
+            <ng-select class="width-size" #FormFirstLoc autofocus #locationFocus [items]="srTypeCombo1" bindLabel="srTypeName" bindValue="srId"
+              (search)="loadSrTypeComboData1($event)" (click)="loadSrTypeComboData1($event)" [virtualScroll]="true"
+              (scrollToEnd)="loadSrTypeComboData1({})" (keyup.backspace)="loadSrTypeComboData1($event.target.value ? $event : 'back')" (clear)="loadSrTypeComboData1('clear')" [loading]="scrollsyncSrType1" loadingText="Loading..."
+              (change)="selectedSrTypeData($event)" 
+              formControlName="srType" [tabIndex]=8></ng-select> 
+            </div>
+          </div>
+          
+          <div fxLayout="row" class="form-row" *ngIf="disableColumnsBasedOnReportType && disableAllFieldsForBMMaintenanceReport">
+            <div fxFlex="100">
+              <span class="input-label">{{'REPORT_SR_TYPE' | translate}}</span>
+              <ng-select class="width-size" #FormFirstLoc autofocus #locationFocus [items]="srTypeCombo" bindLabel="srTypeName" (search)="loadSrTypeComboData($event)" bindValue="srId"
+                (click)="loadSrTypeComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadSrTypeComboData({})" (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')" (clear)="loadSrTypeComboData('clear')"
+                [loading]="scrollsyncSrType" loadingText="Loading..." formControlName="srType"
+                (change)="selectedSrTypeData($event)" [tabIndex]=8></ng-select>
+            </div> 
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+                <span class="input-label"> {{ 'REPORT_SR_STATUS' | translate }} </span>
+                <ng-select class="width-size" [items]="srStatusCombo" bindLabel="srStatusName" bindValue="srStatusName"
+                  (search)="loadSrStatusComboData($event)" (click)="loadSrStatusComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadSrStatusComboData({})" (keyup.backspace)="loadSrStatusComboData($event.target.value ? $event : 'back')" (clear)="loadSrStatusComboData('clear')" [loading]="scrollSrStatusSync" loadingText="Loading..."
+                  formControlName="srStatusName" (change)="selectedSrStatus($event)" [tabIndex]=9>
+                </ng-select>
+            </div> 
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+            <span class="input-label">{{'REPORT_SERVICE_ENGINEER' | translate}}</span>
+            <ng-select class="width-size" [items]="userCombo" bindLabel="employeeFirstName" bindValue="employeeFirstName"
+              (search)="loadPersonInchargeComboData($event)" (click)="loadPersonInchargeComboData($event)"
+              [virtualScroll]="true" (scrollToEnd)="loadPersonInchargeComboData({})"  (keyup.backspace)="loadPersonInchargeComboData({})"   (clear)="loadPersonInchargeComboData('clear')" [loading]="scrollUsersync"
+              loadingText="Loading..." (change)="selectedPersonInchargeData($event)" formControlName="assignedTo"
+              dropdownPosition=top [tabIndex]=10>
+            </ng-select> 
+          </div>
+          </div>
+
+        </div>
+      </div>
+ 
+      <div fxLayout="column" fxFlex="1">
+
+      </div> 
+      
+      <div fxLayout="column" fxFlex="32">
+        <div fxFlex="100"> 
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+            <span class="input-label"> {{ 'REPORT_ASSET_CODE' | translate }} </span>
+            <ng-select [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+              (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)" [virtualScroll]="true"
+              (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollAssetCodesync" loadingText="Loading..."
+              [tabIndex]=11 (change)="selectedAssetCodeData($event)" formControlName="assetCode" dropdownPosition=top>
+            </ng-select>
+            </div>
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+            <span class="input-label">{{'REPORT_MODEL' | translate}}</span>
+            <ng-select [items]="modelCombo" bindLabel="modelName" (search)="loadModelComboData($event)"
+              (click)="loadModelComboData($event)" (change)="selectedModelData($event)" formControlName="modelName"
+              [virtualScroll]="true" (scrollToEnd)="loadModelComboData({})" (keyup.backspace)="loadModelComboData($event.target.value ? $event : 'back')" (clear)="loadModelComboData('clear')" [loading]="scrollModelsync" [tabIndex]=12
+              dropdownPosition=top>
+            </ng-select>
+            </div>
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100" style="margin-top: 5px;">
+            <span class="input-label">{{'REPORT_ASSET_GROUP' | translate}}</span>
+            <ng-select [items]="assetGroupCombo" bindLabel="assetGroupName" (search)="loadGroupComboData($event)"
+              (click)="loadGroupComboData($event)" [virtualScroll]="true" (change)="selectedGroupData($event)"
+              formControlName="assetGroupName" (scrollToEnd)="loadGroupComboData({})" (keyup.backspace)="loadGroupComboData($event.target.value ? $event : 'back')" (clear)="loadGroupComboData('clear')" [loading]="scrollGroupsync"
+              loadingText="Loading..." [tabIndex]=13 dropdownPosition=top>
+            </ng-select>
+            </div>
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+            <span class="input-label">{{'REPORT_DEPARTMENT' | translate}}</span>
+            <ng-select class="SrPrSearchComponent-dialog-dropdown" [items]="departmentCombo" bindLabel="departmentName"
+              (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+              (change)="selectedDepartmentData($event)" formControlName="departmentName" [virtualScroll]="true"
+              (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')" [loading]="scrollDepartmentsync" [tabIndex]=14></ng-select>
+            </div>
+          </div>
+
+          <div fxLayout="row" class="form-row">
+            <div fxFlex="100">
+              <span class="input-label">{{'REPORT_FUNCTIONALITY' | translate}}</span>
+              <ng-select class="SrPrSearchComponent-dialog-dropdown" [items]="functionalityList" bindLabel="functionality"
+                formControlName="functionality" (change)="selectedFunctionalityData($event)" [tabIndex]=15>
+              </ng-select>
+            </div> 
+          </div>
+          
+        </div>
+      </div>
+   
+      
+    </form>
+  </div>
+ 
+  <div fxLayout="row" fxLayoutAlign="center cenetr"> 
+      <button *ngIf="disableColumnsBasedOnReportType" [disabled]="srReportForm.invalid" mat-raised-button class="space" color="primary"
+          (click)="submit()">{{'COMMON_SUBMIT' | translate}}</button>
+        <button mat-raised-button class="space" (click)="clear()"
+          color="primary">{{'COMMON_CLEAR' | translate}}</button>
+        <button *ngIf="!disableColumnsBasedOnReportType" [disabled]="srReportForm.invalid" mat-raised-button class="space" color="primary"
+          (click)="submitForQualityIndicator()">{{'COMMON_SUBMIT' | translate}}</button> 
+  </div> 
+ 
+  </div>
+</div>
+ 

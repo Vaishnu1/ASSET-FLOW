@@ -1,0 +1,187 @@
+.mt-20 {
+  margin-top: 20px;
+}
+/* General class need to be import in all components */
+.form-group{
+  margin-bottom: 0.5rem !important;
+  font-size: 15px !important;
+  margin-left:7%;
+  font-weight: 400;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 95%;
+}
+
+.example-label{
+    font-size: 20px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color:#000000;
+} 
+
+::ng-deep .ng-select .ng-select-container  {            
+  min-height: 0px;
+  border: none !important;
+  border-bottom: 1px solid #6a6d70 !important;
+  border-radius: 0;
+} 
+
+table{
+  width:100%;
+}
+
+.mat-table {
+  max-height: 500px;
+}
+
+.mat-tab-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+
+.Footer {
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  padding: 0px 15px;
+  background-color: rgba(62, 59, 59, 0.13);
+  height: 45px;
+  text-align: right
+}
+
+
+/* Specific design */
+
+.font-style{
+  font-size: 17px;
+  color: #000000; 
+  text-align: center;
+}
+
+.card-design{
+  /* margin-left: 20px; */
+  border-radius: 0%;
+  box-shadow:1px 1px 10px #d4d4d4;
+  padding: 10px; 
+  /* position: fixed; */
+  /* width: 22%; */
+}
+.page-title {
+    font-size: 18px;
+}
+.content-style{
+  padding-top: 10px;
+}
+
+.card-style{
+  /* box-shadow:1px 1px 10px #d4d4d4; */
+  border-radius: 0%;
+  margin-bottom: 20px;
+}
+::ng-deep .mat-card:not([class*=mat-elevation-z])
+{
+  box-shadow: none !important;
+}
+.breadcrumblink{
+  float: left;
+}
+.whitecolor {
+  color: #ffffff !important;
+}
+/* Default design for Table */
+tr.mat-header-row {
+  height: 56px;
+} 
+.mat-header-cell {
+  font-size: 14px;
+  font-weight: 500;
+}
+.icon-Style{
+  cursor: pointer;
+  float: right !important;
+}
+
+.margin-fix{
+  margin-top: 40px;
+}
+.top-content {
+  width: 100%;
+}
+.fl-right {
+  text-align: right;
+}
+.processbtn {
+  margin-right:30px;
+  width:100px;
+}
+.amount-details {
+  margin-top:20px;
+}
+
+.mb-30{
+margin-bottom: 15px;
+margin-left: 20px;
+}
+
+.info {
+padding:10px;
+}
+
+.space{
+margin-left: 10px;
+}
+
+.example-container {
+display: flex;
+flex-direction: column;
+min-width: 300px;
+}
+
+.example-header {
+min-height: 64px;
+padding: 8px 1px 0;
+}
+
+.mat-form-field {
+font-size: 11px;
+/* width: 100%; */
+}
+
+.mat-table {
+
+max-height: 500px;
+}
+
+.rightbutton
+{
+text-align: right;
+margin-top: 5px;
+}
+
+.mat-tab-body-content {
+height: 300px !important;  
+width:auto !important;  
+overflow: auto !important;
+overflow-x: hidden !important;
+}
+
+.table-header {
+  font-size: 12px;
+}
+
+th{
+  text-align: start;
+}
+.addiconColor {
+  color: #673ab7;
+  font-size: 20px;
+  cursor: pointer;
+}

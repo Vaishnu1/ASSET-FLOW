@@ -1,0 +1,64 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" class="pad-1-per" fxLayputAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'MENU_DEPARTMENT' | translate }}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeDeptModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="departmentForm" fxLayout="column">
+
+    <div class="pad-1-per">
+      <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}" class="example-full-width">
+        <mat-label class="example-label input-label"> {{ 'DEPARTMENT_NAME' | translate }} 
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input #departmentName matInput formControlName="departmentName" tabindex="1"
+          (blur)="checkForDepartmentNameExistence()" class="input-field" [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+        <mat-hint align="end">{{departmentForm.controls.departmentName.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="departmentForm.controls.departmentName.errors && departmentForm.controls.departmentName.touched">
+          <div class="err-field" *ngIf="departmentForm.controls.departmentName.errors.required"> "{{ 'DEPARTMENT_NAME' | translate }}" Is Required  </div>
+          <div class="err-field" *ngIf="departmentForm.controls.departmentName.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="pad-1-per">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_5 }}">
+        <mat-label class="example-label  input-label"> {{ 'DEPARTMENT_CODE' | translate }} 
+        </mat-label>
+        <input #departmentCode matInput formControlName="departmentCode" [maxlength]="5"
+          oninput="this.value = this.value.toUpperCase()" class="input-field" (blur)="checkForDepartmentCodeExistence()">
+        <mat-hint align="end">{{departmentForm.controls.departmentCode.value?.length || 0}}/5
+        </mat-hint>
+        <mat-error
+          *ngIf="departmentForm.controls.departmentCode.errors && departmentForm.controls.departmentCode.touched">
+          <div class="err-field" *ngIf="departmentForm.controls.departmentCode.errors.notUnique">{{ErrorMsgCode}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="pad-1-per">
+      <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}" class="example-full-width">
+        <mat-label class="example-label input-label"> {{ 'COMMON_DESC' | translate }} </mat-label>
+        <textarea matInput formControlName="departmentDesc" class="input-field" tabindex="2" [maxlength]="500"
+          oninput="this.value = this.value.toUpperCase()"></textarea>
+        <mat-hint align="end">{{departmentForm.controls.departmentDesc.value?.length || 0}}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="pad-1-per" fxLayoutAlign="center center" *ngIf="!isView">
+      <button mat-raised-button color="primary" tabindex="4" (click)="submitDept()"
+        [disabled]="departmentForm.invalid || !departmentForm.dirty || uploadDeptFlag">
+        <span *ngIf="!uploadDeptFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadDeptFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+
+  </form>
+
+
+</div>

@@ -1,0 +1,421 @@
+html, body {
+  font-family:  Roboto,"Helvetica Neue",sans-serif;
+  height: 100%;
+  background: #f3f6f9;   /* Asset page grey */
+}
+
+
+/* breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.crumb {
+  display: flex;
+  align-items: center;
+}
+.crumb.active {
+  font-weight: 600;
+}
+.home-icon {
+  font-size: 18px;
+}
+
+/* top buttons */
+.top-actions {
+  margin: 10px 0 15px 0;
+}
+
+.asset-header-tabs .tab {
+  cursor: pointer;
+}
+
+/* action buttons */
+.action-buttons {
+  margin: 15px 0;
+}
+
+
+
+/* spacing */
+.mt-20 { margin-top: 20px; }
+.mt-25 { margin-top: 25px; }
+.ml-10 { margin-left: 10px; }
+
+
+/* editor */
+.editor {
+  height: 240px;
+}
+
+/* header tabs layout */
+.asset-header-tabs {
+  background: #b2dfdb;   /* Asset teal */
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px 6px 0 0;
+ 
+  max-width: 1220px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+
+
+.tab-group {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+
+
+.settings-btn {
+  margin-right: 20px;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+}
+
+.full-field {
+  width: 100%;
+}
+
+.form-card {
+  background: #ffffff;   
+  padding: 30px 30px;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  /* padding: 24px; */
+  /* justify-content: center; */
+  /* padding: 16px 24px 24px 24px; */
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.breadcrumb-strip {
+  background: transparent;
+  margin-bottom: 14px;
+  margin-top: 14px;
+}
+
+.breadcrumb mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+
+/* .plain-input {
+  width: 90%;
+  max-width: 320px;
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  outline: none;
+  padding: 8px 0 4px 0;
+  height: 34px;         
+  line-height: 34px;    
+  
+
+  font-size: 14px;
+  background: transparent;
+  box-sizing: border-box;
+} */
+
+
+
+/* Control label spacing uniformly */
+/* .input-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 18px 0 6px 0;   
+} */
+
+.plain-input:focus {
+  border-bottom: 2px solid #1565c0;
+}
+/* Align ng-select underline with plain-input underline */
+/* ::ng-deep .ng-select .ng-select-container {
+  width: 100%;
+  max-width: 320px;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-bottom: 1px solid #9e9e9e !important;
+  align-items: center;
+} */
+
+/* ::ng-deep .ng-select .ng-select-container:after {
+  bottom: 0 !important;
+  
+} */
+.req {
+  color: #e53935;   
+  font-weight: 600;
+  
+}
+/* Fix angular-editor height (Angular 12) */
+::ng-deep angular-editor .angular-editor-wrapper {
+  min-height: 260px !important;
+  border: 1px solid #ccc;
+}
+
+::ng-deep angular-editor .angular-editor-textarea {
+  min-height: 220px !important;
+}
+
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.tab {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tab.active {
+  /* border-bottom: 3px solid #1565c0; */
+  font-weight: 800;
+}
+/* ===== View Mode Styling ===== */
+.view-mode {
+  pointer-events: none;   
+  opacity: 0.85;          
+}
+
+.view-mode .plain-input,
+.view-mode .ng-select,
+.view-mode angular-editor {
+  background: #f5f5f5 !important;
+}
+/* ===== Breadcrumb right buttons (like Asset screen) ===== */
+.breadcrumb-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* .char-count{
+  font-size: 11px;
+  color: #6c757d;
+  min-height: 18px;
+  margin-top: 2px;
+}
+.char-count1 {
+  font-size: 11px;
+  color: red;
+  height: 20px;
+} */
+.input-field{
+  width: 100%;
+  max-width: 320px;
+}
+/* ---------------------------------------------------------------------------  */
+
+/* ===== ng-select multi-value chips ===== */
+::ng-deep .ng-select.ng-select-multiple .ng-value-container {
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e3f2fd;          /* soft blue fill */
+  border: 1px solid #90caf9;
+  border-radius: 20px;           /* pill shape */
+  padding: 3px 8px 3px 4px;
+  font-size: 12px;
+  color: #1565c0;
+  font-weight: 500;
+  max-width: 200px;
+}
+
+/* Circle avatar on the left */
+::ng-deep .ng-select.ng-select-multiple .ng-value::before {
+  /* content: attr(data-label-initial, '✉');   */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1565c0;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  /* flex-shrink: 0; */
+}
+
+/* The label text — truncate long emails */
+::ng-deep .ng-select.ng-select-multiple .ng-value-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+/* The × remove button */
+::ng-deep .ng-select.ng-select-multiple .ng-value-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #90caf9;
+  color: #1565c0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  order: 1;          
+  /* transition: background .15s; */
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-value-icon:hover {
+  background: #1565c0;
+  color: #fff;
+}
+
+/* Make the select container taller to fit wrapped chips */
+::ng-deep .ng-select.ng-select-multiple .ng-select-container {
+  min-height: 42px !important;
+  height: auto !important;
+  align-items: flex-start !important;
+  padding-top: 4px !important;
+}
+
+
+/* ===== Multi-select: fixed single-row height, scroll on overflow ===== */
+::ng-deep .ng-select.ng-select-multiple .ng-select-container {
+  min-height: 42px !important;
+  max-height: 42px !important;
+  height: 42px !important;
+  overflow: hidden !important;
+  align-items: center !important;
+  padding: 0 6px !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-value-container {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 4px;
+  align-items: center;
+  scrollbar-width: none !important;   /* hide scrollbar Firefox */
+  -ms-overflow-style: none !important; /* hide scrollbar IE */
+  padding: 4px 0;
+}
+
+/* Hide scrollbar Chrome/Safari but keep scroll functional */
+::ng-deep .ng-select.ng-select-multiple .ng-value-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ========================================================  */
+
+/* ===== CORE FIX: lock every field block to a fixed height ===== */
+.field-block {
+  height: 68px;          /* label (18px) + input (38px) + hint (16px) + gaps */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Label — always exactly 18px tall */
+.input-label {
+  font-size: 13px;
+  font-weight: 500;
+  height: 18px; 
+  line-height: 18px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* All inputs — same fixed height, same underline position */
+.plain-input {
+  height: 38px !important;
+  line-height: 38px;
+  border: none;
+  border-bottom: 1.5px solid #bdbdbd;
+  padding: 0;
+  width: 100%;
+  max-width: 320px;
+  font-size: 14px;
+  /* font-weight: bold; */
+  background: transparent;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* ng-select — match exact same height as plain-input */
+::ng-deep .ng-select .ng-select-container {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  border: none !important;
+  border-bottom: 1.5px solid #bdbdbd !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  align-items: center !important;
+  width: 100%;
+  max-width: 320px;
+  font-size: 14px;
+}
+
+/* Multi-select — one row, no height jump */
+::ng-deep .ng-select.ng-select-multiple .ng-select-container {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-value-container {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  gap: 4px;
+  align-items: center;
+  padding: 0 !important;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-value-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hint/error row — always 16px, never causes layout shift */
+.char-count,
+.char-count1 {
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 16px;
+  overflow: hidden;
+}
+
+.char-count  { color: #9e9e9e; }
+.char-count1 { color: #e53935; font-weight: 500; }

@@ -1,0 +1,71 @@
+.btn-margin-5px {
+    margin: 5px;
+}
+
+.main-body {
+    padding: 0px 15px 0px 15px;
+}
+
+.top-content-resp{
+    margin-top: 0px !important;
+  }
+
+  .pad-1-per{
+    padding: 1%;
+  }
+
+  .left-margin-1-per{
+    margin-left: 1%;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+
+  .mandatory-style {
+    color: crimson;
+  }
+
+  .form-width {
+    width: 85%;
+  }
+  .mat-card{
+    border-radius: 0px !important;
+    /* margin-top: 10px !important; */
+    padding: 10px !important;
+  }
+
+  .department-list{
+    min-width: 181%;
+    overflow-x: scroll;
+  }
+
+  .department-container {
+    max-height: 62vh !important;
+    overflow: auto;
+    /* display: flex;
+    flex-direction: column; */
+    /* min-width: 300px; */
+  }
+
+  .f-h-50-px{
+    height: 50px;
+  }
+
+  .m-t-8-px{
+    margin-top:8px ;
+  }
+  
+  .form-width-pre-sef{
+    width: 60%;
+  }
+
+  .form-width-rem{
+    width: 95%;
+  }
+
+  /* ModuleTabAccessList Style */
+  .height-30 {
+    line-height: 30px;
+}
+

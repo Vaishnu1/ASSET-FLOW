@@ -1,0 +1,100 @@
+<div class="example-container">
+  <div class="row header_part">
+    <div class="col-md-4">
+      <input type="search" #searchFocus class="form-control frm-search" name="search" id="search"
+        placeholder="Search {{ 'MENU_ENTITY_GROUP' | translate }}" (input)="onSearchChange($event.target.value)">
+    </div>
+    <div class="col-md-6">
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5,10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+        [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    </div>
+    <div class="col-md-2 rightbutton">
+      <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay"
+      (click)="openentityGroupDialog(0)">{{ 'COMMON_CREATE' | translate }}</button>
+    </div>
+  </div>
+  <div>
+    <table mat-table [dataSource]="entityGroupdataSource" matSort (matSortChange)="customSort($event)"
+      matSortActive="name" matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef style="width:5%;">{{ 'COMMON_S_NO' | translate }}</th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;">{{getIndexValue(i+1)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="entityGroupName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;"> {{ 'ENTITY_GROUP' | translate }} </th>
+        <td mat-cell *matCellDef="let element" style="width:15%;" >
+          {{ (element?.entityGroupName.length>30) ? (element.entityGroupName | slice:0:30)+'...' : (element.entityGroupName) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="entityGroupDesc">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%;"> {{ 'ENTITY_DESC' | translate }} </th>
+        <td mat-cell *matCellDef="let element" >
+          {{ (element?.entityGroupDesc.length>30) ? (element.entityGroupDesc | slice:0:30)+'...' : (element.entityGroupDesc) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;"> {{ 'COMMON_CREATED_BY' | translate }}</th>
+        <td mat-cell *matCellDef="let element"> {{element.createdBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="createdDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;"> {{ 'COMMON_CREATED_DT' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.createdDtDisp}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;">{{ 'COMMON_UPDATED_BY' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.updatedBy}}</td>
+      </ng-container>
+      <ng-container matColumnDef="updatedDt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;"> {{ 'COMMON_UPDATED_DT' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.updatedDtDisp}}</td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'COMMON_ACTION' | translate }} </th>
+        <td mat-cell *matCellDef="let element">
+          <button *ngIf="modelAccessModule.readFlagDisplay" mat-button class="mat-icon-button" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+            (click)="openentityGroupDialog( element,'view')">
+            <mat-icon color="primary">visibility</mat-icon>
+          </button>
+          <button *ngIf="modelAccessModule.updateFlagDisplay"  mat-button class="mat-icon-button" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+            (click)="openentityGroupDialog( element,'edit')">
+            <mat-icon color="primary">edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="length=='0' && !subloader">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+    <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center"> 
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Entity Group View -->
+<ng-template #viewDialog>
+  <h2 matDialogTitle> View {{ 'MENU_ENTITY_GROUP' | translate }}</h2>
+<div >
+  <mat-dialog-content style="width: 681px; height:auto;" >
+    <table class="model-table">
+      
+        <tr>
+          <th >{{ 'ENTITY_GROUP' | translate }}</th>
+          <td>:</td>
+          <td>{{tempViewData?.entityGroupName}}</td>   
+        </tr>
+      
+        <tr>
+         <th>{{ 'ENTITY_DESC' | translate }}</th> 
+         <td>:</td>
+         <td>{{tempViewData?.entityGroupDesc}}</td>
+        </tr>
+    </table>
+  </mat-dialog-content>
+  </div>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close class="space col-md-2 rightbutton"
+      id = "backButton" color="primary">{{ 'COMMON_BACK' | translate }}</button>
+  </mat-dialog-actions>
+</ng-template>

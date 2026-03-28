@@ -1,0 +1,93 @@
+.table td, .table th {
+    padding: 0.1rem;
+}
+tbody {
+    font-size: 14px !important;
+}
+.card-design{
+    margin-left: 20px;
+    border-radius: 0%;
+    box-shadow:1px 1px 10px #d4d4d4; 
+    position: fixed;
+    width: 22%;
+}
+.ml-30 {
+    margin-left: 30px;
+}
+.ml-30 p {
+    cursor: pointer !important;
+}
+.ml-30 p span {
+    float: right;
+    width:92%;
+    margin-top: 5px;
+}
+::ng-deep .mat-tab-header {
+    border-bottom:  none !important;
+}
+::ng-deep .mat-tab-label {
+    padding:0px 15px !important;
+    min-width: 40px !important;
+}
+hr {
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.fr {
+    float: right;
+}
+.datesearch ul li {
+    float: left;
+}
+.whitebg {
+    background: #ffffff;
+    padding:3px;
+}
+.reporticons { 
+    padding:14px; 
+    margin-bottom: 5px !important;    
+}
+.ml-35 {
+    padding-left: 35px;
+    cursor: pointer;
+}
+.ml-18 {
+    padding-left: 18px;
+    width:30px;
+    cursor: pointer;
+}
+.tblview {
+    cursor: pointer;
+}
+.transparentbg {
+    background: transparent !important;
+}
+.tbl-chart {
+    margin-top:-20px;
+}
+.dtrange ul 
+{
+    float: left;
+    padding: 0px;
+}
+.dtrange ul li {
+    float: left;
+    list-style-type: none;
+    padding: 0px 23px;
+    cursor: pointer;
+}
+.dtrange ul li:hover {
+    color:#445C8F;
+}
+.dtrange ul li:last-child {
+    border-right: none !important;
+}
+.dtlbl {
+    float: left;
+}
+.ml-46 {
+    margin-left: 46%;
+}
+.parametericon {
+    padding:6px 20px;
+}

@@ -1,0 +1,17 @@
+<div fxLayout="column">
+    <div>  
+        <div class="form-group" style="padding-top: 10px !important;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="100" hintLabel="{{ commonhint }}">
+            <mat-label class="input-label"> {{title}}</mat-label>
+            <textarea matInput [(ngModel)]="infoText" rows="8" class="input-field" [maxlength]="length"></textarea>
+            <mat-hint align="end">{{infoText ?.length || 0}}/{{length}}
+            </mat-hint>
+          </mat-form-field>
+        </div>
+  
+        <div class="rightbutton" fxLayoutAlign="center center">
+            <button class="space" mat-raised-button color="primary" (click)="Cancel()"> {{'COMMON_CANCEL' | translate}} </button>
+            <button mat-raised-button color="primary" (click)="Proceed()"> {{'COMMON_UPDATE' | translate}} </button>
+        </div>
+      </div>
+</div>

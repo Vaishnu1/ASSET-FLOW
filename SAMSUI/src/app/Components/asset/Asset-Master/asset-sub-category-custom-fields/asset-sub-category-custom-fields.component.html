@@ -1,0 +1,306 @@
+<div fxLayout="column" fxFlexFill>
+    <mat-card>
+        <mat-card-content>
+            <form [formGroup]="custFieldsFormGroup" flex fxLayout="column">
+                <div #headerSection fxLayout="column" fxFlex="100" fxFlexFill style="padding: 5px;">
+                    <div fxLayout="row">
+                        <div fxLayout="row" fxFlex="50" fxFlex.lt-md="67">
+                            <div fxFlex="50">
+                                <div class="example-full-width h-55-px">
+                                    <span class="input-label"> {{ 'ASSET_SUB_CATEGORY' | translate }}<span
+                                            class="mandatory-style"> *</span> </span>
+                                    <ng-select #input1 class=" input-field" [items]="subCategoryCombo"
+                                        bindLabel="subCategoryName" (search)="listOfSubCategory($event)"
+                                        (click)="listOfSubCategory({})" (scrollToEnd)="listOfSubCategory({})"
+                                        (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')"
+                                        (clear)="listOfSubCategory('clear')" (change)="selectedSubCategory($event)"
+                                        [virtualScroll]="true" [loading]="subScrollsync" loadingText="Loading..."
+                                        bindValue="subCategoryName" formControlName="subCategoryName" [tabIndex]=1>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="custFieldsFormGroup.controls.subCategoryName.invalid && custFieldsFormGroup.controls.subCategoryName.touched">
+                                        <div class="err-field"
+                                            *ngIf="custFieldsFormGroup.controls.subCategoryName.errors.required">
+                                            Kindly Select The "{{'ASSET_SUB_CATEGORY' | translate}}"
+                                        </div>
+                                    </mat-error>
+                                </div>
+
+                                <div class="mt-10-px">
+                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                        hintLabel="{{ CommonhintMsg.MAX_50}}">
+                                        <mat-label class="input-label"> {{'CUSTOM_FIELDS_ATTRIBUTE_NAME' |
+                                            translate}}
+                                            <span class="mandatory-style">*</span>
+                                        </mat-label>
+                                        <input matInput class="input-field" (input)="uniqueValidation()"
+                                            formControlName="labelName" [maxlength]="50" [tabIndex]=5
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <mat-hint align="end">{{custFieldsFormGroup.controls.labelName.value?.length
+                                            ||0}}/50
+                                        </mat-hint>
+                                        <mat-error
+                                            *ngIf="custFieldsFormGroup.controls.labelName.invalid && custFieldsFormGroup.controls.labelName.touched">
+                                            <div class="err-field"
+                                                *ngIf="custFieldsFormGroup.controls.labelName.errors.required">
+                                                "{{'CUSTOM_FIELDS_ATTRIBUTE_NAME' | translate}}" Is Required
+                                            </div>
+                                            <div class="err-field"
+                                                *ngIf="custFieldsFormGroup.controls.labelName.errors.notUnique">
+                                                {{ErrorMsg}}</div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div fxFlex="50">
+                                <div class="example-full-width h-55-px">
+                                    <span class="input-label"> {{ 'CUSTOM_FIELDS_BASED_ON' | translate }} <span
+                                            class="mandatory-style">*</span> </span>
+                                    <ng-select class=" input-field" formControlName="basedOn" [items]="basedOnCombo"
+                                        bindLabel="name" bindValue="name" [tabIndex]=2>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="custFieldsFormGroup.controls.basedOn.invalid && custFieldsFormGroup.controls.basedOn.touched">
+                                        <div class="err-field"
+                                            *ngIf="custFieldsFormGroup.controls.basedOn.errors.required">
+                                            Kindly Select The "{{'CUSTOM_FIELDS_BASED_ON' | translate}}"
+                                        </div>
+                                    </mat-error>
+                                </div>
+
+                                <div class="mt-10-px">
+                                    <span class="input-label"> {{'CUSTOM_FIELDS_DISPLAY_GROUP' | translate}}
+                                    </span>
+                                    <ng-select class=" example-full-width input-field" formControlName="displayGroup"
+                                        (search)="listOfDisplayGroup($event)" (click)="listOfDisplayGroup({})"
+                                        (scrollToEnd)="listOfDisplayGroup({})"
+                                        (keyup.backspace)="listOfDisplayGroup($event.target.value ? $event : 'back')"
+                                        (clear)="listOfDisplayGroup('clear')"
+                                        (change)="getDisplayGroupComboValue($event)" [items]="displayGroupList"
+                                        [loading]="displayGroupSync" loadingText="Loading..." [tabIndex]=6
+                                        bindLabel="displayGroupName" bindValue="displayGroupName">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout="column" fxFlex="50" fxFlex.lt-md="33">
+                            <div fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxFlex.lt-md="100">
+                                <div fxFlex="50">
+                                    <div class="example-full-width">
+                                        <span class="input-label"> {{ 'CUSTOM_FIELDS_INPUT_TYPE' | translate }}
+                                            <span class="mandatory-style">*</span> </span>
+                                        <ng-select class=" input-field" formControlName="inputType"
+                                            [items]="inputTypeCombo" bindLabel="name" bindValue="name"
+                                            (change)="changeInputMaxLengthAsMandatory($event)" [tabIndex]=3>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="custFieldsFormGroup.controls.inputType.invalid && custFieldsFormGroup.controls.inputType.touched">
+                                            <div class="err-field"
+                                                *ngIf="custFieldsFormGroup.controls.inputType.errors.required">
+                                                Kindly Select The "{{'CUSTOM_FIELDS_INPUT_TYPE' | translate}}"
+                                            </div>
+                                        </mat-error>
+                                    </div>
+                                    <div class="form-group"
+                                        *ngIf="custFieldsFormGroup.controls.inputType.value =='DROP DOWN(TEXT LIST)'">
+                                        <button mat-raised-button color="primary"
+                                            [disabled]="custFieldsFormGroup.invalid"
+                                            matTooltip="{{'CUSTOM_FIELDS_ADD_VALUES' | translate}}"
+                                            [matTooltipPosition]="'below'" (click)="popUpComboCustom()">{{
+                                            'CUSTOM_FIELDS_ADD_VALUES' | translate }}</button>
+                                    </div>
+                                </div>
+                                <div fxFlex="50">
+                                    <div>
+                                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                            hintLabel="{{ CommonhintMsg.MAX_4}}">
+                                            <mat-label class="input-label"> {{'CUSTOM_FIELDS_MAX_LENGTH' | translate}}
+                                                <span class="mandatory-style">{{mandatoryString}}</span>
+                                            </mat-label>
+                                            <input matInput formControlName="inputMaxLength" type="number"
+                                                class="input-field" [tabIndex]=4 [maxlength]="4"
+                                                (input)="validateInputMaxLength()" />
+                                            <mat-hint align="end">{{
+                                                custFieldsFormGroup.controls.inputMaxLength.value?.length || 0 }}/4
+                                            </mat-hint>
+                                            <mat-error
+                                                *ngIf="custFieldsFormGroup.controls.inputMaxLength.invalid && custFieldsFormGroup.controls.inputMaxLength.touched">
+                                                <div class="err-field"
+                                                    *ngIf="custFieldsFormGroup.controls.inputMaxLength.errors.required">
+                                                    Kindly Enter The "{{'CUSTOM_FIELDS_MAX_LENGTH' | translate}}"
+                                                </div>
+                                                <div class="err-field"
+                                                    *ngIf="custFieldsFormGroup.controls.inputMaxLength.errors.pattern">
+                                                    "{{'CUSTOM_FIELDS_MAX_LENGTH' | translate}}" Contains Only Number
+                                                </div>
+                                                <div class="err-field"
+                                                    *ngIf="custFieldsFormGroup.controls.inputMaxLength.errors.lessThan">
+                                                    "{{'CUSTOM_FIELDS_MAX_LENGTH' | translate}}" Cannot Be Less Than
+                                                    Previous Length </div>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div fxFlex="100" fxLayout="row" fxHide.lt-md>
+                                <div class="example-section" fxFlex="50">
+                                    <mat-checkbox color="primary" formControlName="active" class="input-label mt-25-px"
+                                        [tabIndex]=7>
+                                        {{'COMMON_ACTIVE' | translate}}</mat-checkbox>
+                                </div>
+                                <div fxLayoutAlign="end center" fxFlex="50">
+                                    <button *ngIf="moduleAccessModel.createFlagDisplay && buttonDisp=='Submit'"
+                                        mat-raised-button class="space" color="primary"
+                                        matTooltip="{{'COMMON_SAVE' | translate}}" [matTooltipPosition]="'below'"
+                                        (click)="saveUpdate()"
+                                        [disabled]="custFieldsFormGroup.invalid">{{buttonDisp}}</button>
+
+                                    <button *ngIf="moduleAccessModel.updateFlagDisplay && buttonDisp=='Update'"
+                                        mat-raised-button class="space" color="primary"
+                                        matTooltip="{{'COMMON_SAVE' | translate}}" [matTooltipPosition]="'below'"
+                                        (click)="saveUpdate()"
+                                        [disabled]="custFieldsFormGroup.invalid">{{buttonDisp}}</button>
+                                    <button mat-raised-button class="space" color="primary"
+                                        matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'"
+                                        (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+                                    <button mat-raised-button color="primary" class="space"
+                                        (click)="generateReportOfCustomField()">Export</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex="100" fxLayout="row" fxHide.gt-md fxHide.md>
+                        <div class="example-section" fxFlex="50">
+                            <mat-checkbox color="primary" formControlName="active" color="primary" class="input-label">
+                                {{'COMMON_ACTIVE' | translate}}</mat-checkbox>
+                        </div>
+                        <div fxLayoutAlign="end center" fxFlex="50">
+                            <button *ngIf="moduleAccessModel.createFlagDisplay && buttonDisp=='Submit'"
+                                mat-raised-button class="space" color="primary"
+                                matTooltip="{{'COMMON_SAVE' | translate}}" [matTooltipPosition]="'below'"
+                                (click)="saveUpdate()" [disabled]="custFieldsFormGroup.invalid">{{buttonDisp}}</button>
+
+                            <button *ngIf="moduleAccessModel.updateFlagDisplay && buttonDisp=='Update'"
+                                mat-raised-button class="space" color="primary"
+                                matTooltip="{{'COMMON_SAVE' | translate}}" [matTooltipPosition]="'below'"
+                                (click)="saveUpdate()" [disabled]="custFieldsFormGroup.invalid">{{buttonDisp}}</button>
+                            <button mat-raised-button class="space" color="primary"
+                                matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'"
+                                (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+
+                            <button color="primary" mat-raised-button class="space sqr-btn btnpadding"
+                                matTooltip="{{ 'REPORT_EXPORT' | translate }}" (click)="generateReportOfCustomField()">
+                                {{ 'REPORT_EXPORT' | translate }}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <mat-toolbar>
+                    <span>Custom Fields List</span>
+                    <span class="example-spacer"></span>
+                    <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]"
+                        [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                        (page)="getServerData($event)"></mat-paginator>
+                    <span class="example-spacer"></span>
+                </mat-toolbar>
+
+                <div fxLayout="column" fxFlexFill class="custom-container-table">
+                    <table mat-table [dataSource]="cusFieldHdrList" matSort (matSortChange)="customSort($event)"
+                        matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> Select
+                            </th>
+                            <td mat-cell *matCellDef="let element;let i = index;" style="width:6%;">
+                                <mat-checkbox color="primary" class="example-margin" (change)="selectCusField(element)"
+                                    [checked]="selectedItem.customHdrId == element?.customHdrId"></mat-checkbox>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="labelName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CUSTOM_FIELDS_ATTRIBUTE_NAME' |
+                                translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.labelName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="inputType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CUSTOM_FIELDS_INPUT_TYPE' |
+                                translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.inputType}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="basedOn">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CUSTOM_FIELDS_BASED_ON' |
+                                translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.basedOn}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="inputMaxLength">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CUSTOM_FIELDS_MAX_LENGTH' |
+                                translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.inputMaxLength}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="displayGroup">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CUSTOM_FIELDS_DISPLAY_GROUP' |
+                                translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.displayGroup}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="active">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_ACTIVE' | translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                <mat-icon color="primary" *ngIf=element.active>check_circle_outline</mat-icon>
+                                <mat-icon color="warn" *ngIf=!element.active>highlight_off</mat-icon>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assetSubCategoryTO.subCategoryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ASSET_SUB_CATEGORY' | translate
+                                }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.subCategoryName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="updatedBy">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_BY' | translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.updatedBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="updatedDt">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_UPDATED_DT' | translate }}
+                            </th>
+                            <td mat-cell (click)="selectCusField(element)" *matCellDef="let element">
+                                {{element.updatedDtDisp}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true;"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="length==0 && !subloader">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+                    <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+</div>

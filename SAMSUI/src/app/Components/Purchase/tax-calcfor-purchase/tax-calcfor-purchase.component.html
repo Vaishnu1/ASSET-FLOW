@@ -1,0 +1,77 @@
+<mat-icon class="close-icon-large" (click)="closeTaxCalculationPopUp()">highlight_off</mat-icon>
+<form [formGroup]="taxCalculation">
+  <div class="col-md-12 row">
+    <div class="col-md-6">
+      <fieldset style="background-color: cornsilk; border-radius: 10px">
+        <div class="form-group">
+          <div class="col-md-12 row">
+            <div class="col-md-7"><span class="input-label">{{'BASIC_AMT' | translate}}</span> </div>
+            <div>-</div>
+            <div class="col-md-4"><span class="input-label"> {{taxCalculation.controls.basicAmount.value}}</span>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="col-md-6">
+      <fieldset style="background-color: cornsilk; border-radius: 10px">
+        <div class="form-group">
+          <div class="col-md-12 row">
+            <div class="col-md-7"><span class="input-label">{{'TOTAL_TAX_AMT' | translate}}</span> </div>
+            <div>-</div>
+            <div class="col-md-4"><span class="input-label">
+                {{taxCalculation.controls.totalTaxAmount.value}}</span></div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+
+  </div>
+  <div class="col-md-12 row">
+    <table mat-table [dataSource]="taxCD3List" matSort>
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef style="width:15%;">{{ 'COMMON_S_NO' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element; let i=index;" style="width:15%;"> {{i+1}} </td>
+      </ng-container>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef style="width:35%;">
+          {{ 'SELECT' | translate }}</th>
+        <td mat-cell *matCellDef="let element; let i = index;" style="width:35%;text-align:center;">
+          <mat-checkbox [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}" color="primary"
+            class="example-margin" (click)="calculateTaxAmountLineLevel(i,element.taxRate,element.active)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="taxCode">
+        <th mat-header-cell *matHeaderCellDef style="width:25%;">
+          {{ 'TAX_CODE' | translate }} </th>
+        <td mat-cell *matCellDef="let element" style="width:25%;"> {{element.taxCode}} </td>
+      </ng-container>
+      <ng-container matColumnDef="taxRate">
+        <th mat-header-cell *matHeaderCellDef style="width:25%;">
+          {{ 'TAX_RATE' | translate }} </th>
+        <td mat-cell *matCellDef="let element" style="width:25%;"> {{element.taxRate}} </td>
+      </ng-container>
+      <ng-container matColumnDef="taxAmount">
+        <th mat-header-cell *matHeaderCellDef style="width:35%;">
+          {{ 'TOTAL_TAX_AMT' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:center;">
+          <input matInput [(ngModel)]="element.taxAmount" [ngModelOptions]="{standalone: true}">
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedtaxColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedtaxColumns;">
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 rightbutton">
+      <button mat-raised-button class="space col-md-1" color="primary" (click)="submitTaxCalculation()">
+        Add
+      </button>
+    </div>
+  </div>
+</form>

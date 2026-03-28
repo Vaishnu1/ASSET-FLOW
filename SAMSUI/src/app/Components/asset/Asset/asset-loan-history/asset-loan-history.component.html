@@ -1,0 +1,72 @@
+<div fxLayout="column" fxFlexFill>
+  <form>
+  <mat-card class="card-style">
+        <mat-card-content>
+          <div class="content-style" style="padding-top: 0.5%;">
+            <div class="example-container"  fxFlex="100">
+              <table mat-table [dataSource]="assetLoanHistoryDataSource" style="width: 100%;">  
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                </ng-container>
+                <ng-container matColumnDef="requestedFrom">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'LOAN_REQUEST_FROM_BRANCH' | translate }} <br/>
+                    {{ 'DEPARTMENT_NAME' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">  
+                    {{element?.locationName}} <br />
+                    {{element?.fromDepartmentName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="requestedTo">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'LOAN_REQUEST_TO_BRANCH' | translate }}<br/>
+                    {{ 'DEPARTMENT_NAME' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">  
+                    {{element?.loanedToName}} <br />
+                    {{element?.toDepartmentName}} 
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loanNo">
+                  <th mat-header-cell *matHeaderCellDef> {{'LOAN_CODE_DT' | translate}}<br />
+                    {{'LOAN_REQUESTED_BY' | translate}}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.loanNo}} <br />  
+                    {{element?.createdDtDisp}} <br />
+                    {{element?.loanedPersonName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loanStatus">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'LOAN_STATUS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span>{{element?.loanStatus | translate}}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="startDate">
+                  <th mat-header-cell *matHeaderCellDef>{{'LOAN_START_DATE_END_DT' | translate}}<br />
+                    {{'LOAN_END_DATE' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">{{element?.fromDtDisp}} <br /> {{element?.toDtDisp}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>   
+                    <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button matTooltipPosition="below"  
+                      matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="createInternalLoan(element,'view')">
+                      <mat-icon color="primary"><a>visibility</a></mat-icon>  
+                    </button>
+                    </td>  
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+              </table>
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subloader" fxLayoutAlign="center center">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+                <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+                  <mat-spinner [diameter]="40" fxLayoutAlign="center center"></mat-spinner>
+              </mat-card>
+            </div>
+          </div>
+        </mat-card-content>
+  </mat-card>
+  </form>
+</div>

@@ -1,0 +1,24 @@
+
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="100" fxLayoutAlign="end end">
+            <mat-icon color="warn" class="close-icon" (click)="exit()">highlight_off</mat-icon>
+        </div>
+    </div>
+    <div>
+      <h4 *ngIf="((confirmHeading!= null && confirmHeading!= '') && confirmHeading!= undefined)"
+        class="dialogue-box-header"> {{confirmHeading}} Confirmation </h4>
+      <h4 *ngIf="(confirmHeading === null || confirmHeading === '' )" class="dialogue-box-header"> Update Confirmation
+      </h4>
+  
+    </div>
+    <div>
+      <p class="cancel-content">
+        Please select an action: Update or Update and Approve?</p>
+    </div>
+  
+    <div class=" rightbutton" fxLayoutAlign="center center" fxLayout="row" fxFlex="100">
+      <button class=" space" mat-raised-button color="primary" (click)="buttonValue('update')"> Update </button>
+      <button mat-raised-button color="primary" (click)="buttonValue('update and approve')" [disabled]="approvalButtonFlag"> Update and Approve </button>
+    </div>
+  </div>

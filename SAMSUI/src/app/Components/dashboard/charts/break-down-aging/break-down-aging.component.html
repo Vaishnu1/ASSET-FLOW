@@ -1,0 +1,11 @@
+<div class="hgt-175">
+    <div echarts [options]="option" class="chart" theme={{theme}}></div>
+
+    <!-- Excel download icon -->
+  <button mat-icon-button class="excel-download-btn" (click)="generateReport()"
+    matTooltip="Download Excel">
+    <!-- <img src="assets/images/xl_logo.png" class="logo-potition" height="18" width="18">  -->
+     <mat-icon>grid_on</mat-icon>
+  </button>
+  
+ </div>  

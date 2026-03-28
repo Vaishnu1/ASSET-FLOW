@@ -1,0 +1,221 @@
+<div fxLayout="column" fxFlexFill>
+  <div class="content_section_background" style="padding-top:0.5%">
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-header">
+            {{'MENU_ITEM_MASTER'| translate}}
+          </mat-panel-title>
+          <mat-panel-description fxLayoutAlign="end end">
+            <mat-icon style="color: red;">search</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div fxFlex="100">
+          <form fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxFlex.lt-md="100" >
+            <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+            <div fxFlex="34">
+              <div class="form-group">
+                <div class="example-full-width">
+                <span class="input-label"> {{ 'ITEM_TYPE' | translate }} </span>
+                  <ng-select class=" input-field" (search)="listofItemType($event)" (click)="listofItemType({})"
+                    (change)="selectedItemType($event)" [items]="itemTypeCombo" [virtualScroll]="true" appendTo="body"
+                    (scrollToEnd)="listofItemType({})" (keyup.backspace)="listofItemType($event.target.value ? $event : 'back')" (clear)="listofItemType('clear')" [loading]="scrollItemTypesync" bindLabel="itemTypeName"
+                    bindValue="itemTypeName" [(ngModel)]="itemMaster.itemTypeName" [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                </div>
+              </div>              
+
+              <div class="form-group">
+                <div class="example-full-width" style="margin-top: 5%;">
+                  <span class="input-label"> {{'ITEM_ACTIVE' | translate }} </span>
+                  <ng-select class="input-field"
+                    [(ngModel)]="itemMaster.activeDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="itemActiveList" bindLabel="name" bindValue="name"
+                    (change)="selectedItemActiveList($event)" appendTo="body">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div fxFlex="33">
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'ITEM_NAME' | translate }} </span>
+                  <ng-select class="input-field" [(ngModel)]="itemMaster.itemMasterName"
+                    [ngModelOptions]="{standalone: true}" (search)="listOfItemMaster($event)" (click)="listOfItemMaster({})"
+                    (change)="selectedItemMasterName($event)" [items]="itemMasterNameCombo" [virtualScroll]="true"
+                    (scrollToEnd)="listOfItemMaster({})" (keyup.backspace)="listOfItemMaster($event.target.value ? $event : 'back')" (clear)="listOfItemMaster('clear')" [loading]="scrollItemMasterNameSync" bindLabel="itemMasterName"
+                    bindValue="itemMasterName" appendTo="body">
+                  </ng-select>
+                </div>
+              </div>
+                            
+              <div class=" example-full-width">
+                <div class="form-group" style="margin-top: 5%;">
+                  <span class="input-label"> {{'ITEM_STOCKABLE' | translate }} </span>
+                  <ng-select class="input-field"
+                    [(ngModel)]="itemMaster.stockableDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="purchasableStockableItemList" bindLabel="name" bindValue="name"
+                    (change)="selectedStockableItemList($event)" appendTo="body">
+                  </ng-select>
+                </div>
+              </div>
+            </div> 
+
+            <div fxFlex="33">
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'ITEM_DESC' | translate }} </span>
+                  <ng-select class="input-field" [(ngModel)]="itemMaster.itemMasterDesc" 
+                    [ngModelOptions]="{standalone: true}" (search)="listOfItemMasterDescription($event)"
+                    (click)="listOfItemMasterDescription({})" (change)="selecetedItemMasterDesc($event)" [items]="itemMasterDescCombo"
+                    [virtualScroll]="true" (scrollToEnd)="listOfItemMasterDescription({})" (keyup.backspace)="listOfItemMasterDescription($event.target.value ? $event : 'back')" (clear)="listOfItemMasterDescription('clear')" [loading]="scrollItemMasterDescSync" 
+                    bindLabel="itemMasterDesc" bindValue="itemMasterDesc" appendTo="body">
+                  </ng-select>
+                </div>
+              </div> 
+
+              <div class="form-group">
+                <div class="example-full-width" style="margin-top: 5%;">
+                  <span class="input-label"> {{'ITEM_PURCHASABLE' | translate }} </span>
+                  <ng-select class="input-field"
+                    [(ngModel)]="itemMaster.purchasableDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="purchasableStockableItemList" bindLabel="name" bindValue="name"
+                    (change)="selectedPurchasableItemList($event)" appendTo="body">
+                  </ng-select>                  
+                </div>
+
+              </div>
+            </div>
+            </div>
+            <div fxLayout="column" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100">
+
+              <div fxFlex.lt-md="34" fxFlex="100">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'UOM_NAME' | translate }} </span>
+                  <ng-select class=" input-field" (search)="listOfUOM($event)" (click)="listOfUOM({})"
+                    (change)="selectedUOM($event)" [items]="UOMCombo" [virtualScroll]="true" appendTo="body"
+                    (scrollToEnd)="listOfUOM({})" (keyup.backspace)="listOfUOM($event.target.value ? $event : 'back')" (clear)="listOfUOM('clear')" [loading]="scrollUomSync" bindLabel="uomCode" bindValue="uomCode" [(ngModel)]="itemMaster.masterUOMName" [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div fxLayoutAlign="end end" fxFlex.lt-md="66" fxHide.lt-md style="margin-top: 5%;">
+                <button mat-raised-button class="space" color="primary" (click)="searchItemMaster()" 
+                    fxHide.sm fxHide.xs>{{'COMMON_SEARCH' | translate}}</button>
+                <button mat-raised-button class="space" color="primary" (click)="clear()"
+                    fxHide.sm fxHide.xs>{{'COMMON_CLEAR' | translate}}</button>
+                <button mat-raised-button color="primary" class="space" (click)="generateReportForItemMaster()"
+                    fxHide.sm fxHide.xs >{{ 'REPORT_EXPORT' | translate }}</button>
+              </div>
+    
+              <div fxLayoutAlign="end end" fxFlex.lt-md="66" fxHide.md fxHide.gt-md style="margin-top: 5%;">
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" fxHide.gt-sm (click)="searchItemMaster()" ><mat-icon>search</mat-icon>
+                </button>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                [matTooltipPosition]="'below'" (click)="clear()" fxHide.gt-sm><mat-icon>clear_all</mat-icon></button>
+                <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                [matTooltipPosition]="'below'" fxHide.gt-sm (click)="generateReportForItemMaster()"><mat-icon>file_download</mat-icon>
+                </button>                 
+              </div>
+            </div>
+          </form>
+        </div>
+        
+      </mat-expansion-panel>
+  
+    <hr>
+  
+    <mat-toolbar>
+      <!-- <span>{{'MENU_ITEM_MASTER'| translate}} List</span> -->
+      <span class="example-spacer"></span>
+  
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+      [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+      <span class="example-spacer"></span>
+  
+      <button mat-raised-button color="primary"  class="space sqr-btn"
+      [matTooltipPosition]="'below'" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+      (click)="createOrEditOrViewItemMaster(0, 'create')" *ngIf="modelAccessItemMaster.createFlagDisplay">
+      <mat-icon>add</mat-icon></button>
+  
+      <button [disabled]="enableActionBtn"  mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="createOrEditOrViewItemMaster(selectedItemList[0].itemMasterId, 'edit')" *ngIf="modelAccessItemMaster.updateFlagDisplay">
+      <mat-icon>edit</mat-icon>
+      </button>
+  
+      <button [disabled]="enableActionBtn"  mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="createOrEditOrViewItemMaster(selectedItemList[0].itemMasterId, 'view')" *ngIf="modelAccessItemMaster.readFlagDisplay">
+        <mat-icon>visibility</mat-icon>
+      </button>
+     
+      <button [disabled]="checkApprovalValid()"  mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'ITEM_BRANCH_MAPPING' | translate }}" (click)="itemBrachMapping()"  *ngIf="modelAccessItemMaster.updateFlagDisplay">
+          <mat-icon>filter_alt</mat-icon>
+        </button>
+      </mat-toolbar>
+    
+    <div fxLayout="column" class="item-container-table">   
+  
+      <table mat-table [dataSource]="itemMasterDataSourceList" matSort (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc" matSortDisableClear class="department-list" >
+          <ng-container matColumnDef="select">
+              <th mat-header-cell class="item-select-list-table" *matHeaderCellDef style="width:5%;" >
+                <mat-checkbox color="primary" [checked]="selectAllItem" class="example-margin" (change)="selectAllItems($event)"></mat-checkbox> </th>
+              <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> 
+                <mat-checkbox color="primary" class="example-margin" (change)="selectItemMaster(element)" [checked]="compareValue(element)"></mat-checkbox></td>
+          </ng-container>
+
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:5%;"> {{'COMMON_S_NO' | translate }} </th>
+            <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{getIndexValue(i+1)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="itemMasterName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:25%;"> {{ 'ITEM_NAME' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)" matTooltip="{{element.itemMasterName}}" style="width:25%;"> {{element.itemMasterName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="itemDesc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:40%;"> {{ 'ITEM_DESC' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)"  matTooltip="{{element.itemMasterDesc}}" style="width:40%;"> {{element.itemMasterDesc}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="itemTypeTO.itemTypeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%;"> {{ 'ITEM_TYPE' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)"  matTooltip="{{element.itemTypeName}}" style="width:20%;"> {{element.itemTypeName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="masterUOMName">
+            <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'UOM_NAME' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)"  matTooltip="{{element.masterUOMName}}" style="width:10%;"> {{element.masterUOMName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
+            <th mat-header-cell *matHeaderCellDef style="width:10%;" >{{'ITEM_ACTIVE' | translate}}</th>
+            <td mat-cell *matCellDef="let element ; let i=index" (click)="selectItemMaster(element)"  matTooltip="{{element.active}}" style="width:10%;">
+              <mat-icon class="activeicon" *ngIf="element.active">check_circle</mat-icon>
+              <mat-icon class="inactiveicon" *ngIf="!element.active">cancel</mat-icon></td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%;">{{ 'COMMON_UPDATED_BY' | translate }} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)" style="width:20%;"> {{element.updatedBy}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%;"> {{ 'COMMON_UPDATED_DT' | translate }} </th>
+              <td mat-cell *matCellDef="let element" (click)="selectItemMaster(element)" style="width:20%;"> {{element.updatedDtDisp}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+          </tr>
+      </table>
+      <mat-card class="no_records_found item-min-wd"  fxLayoutAlign="center center" *ngIf="length=='0' && !subLoaderItemMaster">
+        <span class="pd-lt-30">{{'COMMON_NO_RECORDS_FOUND' | translate}}</span></mat-card>
+  
+      <mat-card *ngIf="subLoaderItemMaster"  fxLayoutAlign="center center" class="no_records_found"> 
+          <mat-spinner [diameter]="40"></mat-spinner>
+      </mat-card> 
+  
+    </div>
+  </div>
+</div>

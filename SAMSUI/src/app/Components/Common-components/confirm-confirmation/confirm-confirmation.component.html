@@ -1,0 +1,16 @@
+<div fxLayout="column">
+  <div >
+      <h4 class="dialogue-box-header" > {{confirmHeading}} </h4>
+  </div>
+  <div>
+    <p class="confirmation-content"> {{confirmMsg}}<br>
+      <span style="font-size: 13px;color: red;">{{note}}</span></p>
+    
+
+    <div class=" rightbutton" fxLayoutAlign="center center">
+        <button class=" space button-color" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+        <button mat-raised-button [disabled]="isDisabled" color="primary" (click)="Proceed()" class=" space button-color"> Yes </button>
+
+    </div>
+  </div>
+</div>

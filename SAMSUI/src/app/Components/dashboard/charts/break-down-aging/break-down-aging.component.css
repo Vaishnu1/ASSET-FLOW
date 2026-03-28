@@ -1,0 +1,11 @@
+.demo-chart { 
+    height: 400px; 
+}
+.excel-download-btn {
+  position: absolute;
+  top: 30px;
+  right: 110px; 
+  z-index: 10;
+  background: white;
+  border-radius: 4px;
+}

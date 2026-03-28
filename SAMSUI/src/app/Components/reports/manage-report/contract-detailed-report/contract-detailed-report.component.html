@@ -1,0 +1,198 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{this.data.screenName | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+    <div fxLayout="row" class="form-row"> 
+      <form [formGroup]="contractFormGroup"  fxFlex="100">
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_LOCATION' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown" [items]="locationCombo" bindLabel="locDisplayField" (search)="loadLocationComboData($event)"
+                  (click)="loadLocationComboData($event)" (change)="selectedLocationData($event)"
+                  (clear)="selectedLocationData({'locationId':0,'locDisplayField':''})"
+                  [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="locationsync"
+                  formControlName="locationName"  [tabIndex] = 1>
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style">
+                    {{mandatoryString}}</span></span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  [items]="contractReportsList" bindLabel="contractReportsList"
+                  bindValue="contractReportsList" formControlName="reportType" required>
+                </ng-select>
+                <mat-error *ngIf="contractFormGroup.controls.reportType.errors">
+                  <div class="err-field" *ngIf="contractFormGroup.controls.reportType.errors.required">
+                    {{'REPORT_CHOOSE_REPORT' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="2"> 
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100">
+
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label"> {{ 'CONTRACT_TITLE' | translate }}</mat-label>
+                  <input matInput formControlName="contractName">
+                </mat-form-field>
+              </div>
+            </div>
+
+            
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label"> {{ 'CONTRACT_NO' | translate }}</mat-label>
+                  <input matInput formControlName="contractNo">  
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" style="margin-top: -8px;">
+                <span class="input-label">{{ 'CONTRACT_COVERAGE_TYPE' | translate }}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="coverageType"
+                  (search)="listOfCoverageType($event)" (click)="listOfCoverageType({})"
+                  (change)="setCoverageType($event);" [virtualScroll]="true"
+                  (scrollToEnd)="listOfCoverageType({})" (keyup.backspace)="listOfCoverageType($event.target.value ? $event : 'back')" (clear)="listOfCoverageType('clear')" [loading]="scrollCoverageTypeSync"
+                  [items]="coverageTypeList" bindLabel="coverageTypeName" bindValue="coverageTypeName">
+                </ng-select>
+              </div>
+            </div> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" style="margin-top: 12px;">
+                <span class="input-label">{{ 'CONTRACT_TYPE' | translate }}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="contractType" dropdownPosition =top
+                  (search)="listOfContractType($event)" (click)="listOfContractType({})"
+                  (change)="setContractType($event)" [virtualScroll]="true" 
+                  (scrollToEnd)="listOfContractType({})" (keyup.backspace)="listOfContractType($event.target.value ? $event : 'back')" (clear)="listOfContractType('clear')" [loading]="scrollContractTypeSync"
+                  [items]="contractTypeList" bindLabel="contractTypeName" bindValue="contractTypeName">  
+                </ng-select>
+              </div>
+            </div> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" style="margin-top: 22px;">
+                <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label"> {{ 'CONTRACT_EXPIRY_BEFORE_DAYS' | translate }}</mat-label>
+                  <input matInput formControlName="expiryPriorNotifyDays" type="number">
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <mat-checkbox class="example-margin" color="primary" formControlName="expiredContracts" (change)="hideOptions($event)">
+                  <span class="input-label">{{ 'COMMON_EXPIRED_CONTRACTS' | translate }}</span></mat-checkbox>
+              </div>
+            </div> 
+          </div>
+        </div>
+        
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label">{{'CONTRACT_PARTY' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="contractingPartyType"
+                [items]="contractingPartyType" bindLabel="name" bindValue="name" (change)="changePartyValidation()">
+                </ng-select>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" *ngIf="contractFormGroup.controls.contractingPartyType.value === 'SUPPLIER'">
+                <span class="input-label">{{'CONTRACT_PARTY_NAME' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="contractPartyName"
+                  (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                  [items]="supplierList" bindLabel="supplierName" bindValue="supplierName" tabindex="2">
+                </ng-select>
+              </div>
+            </div> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" *ngIf="contractFormGroup.controls.contractingPartyType.value === 'CUSTOMER'">
+                <span class="input-label">{{'CONTRACT_PARTY_NAME' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="contractPartyName"
+                  (search)="listOfCustomer($event)" (click)="listOfCustomer({})" (change)="setSupplierData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfCustomer({})" (keyup.backspace)="listOfCustomer($event.target.value ? $event : 'back')" (clear)="listOfCustomer('clear')" [loading]="scrollCustomersync"
+                  [items]="customerList" bindLabel="customerName" bindValue="customerName">
+                </ng-select>   
+              </div> 
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" *ngIf="contractFormGroup.controls.contractingPartyType.value === 'MANUFACTURER'">
+                <span class="input-label">{{'CONTRACT_PARTY_NAME' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="contractPartyName"
+                  (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})" (change)="setManufacturerData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [loading]="scrollManufacturersync"
+                  [items]="manufacturerList" bindLabel="manufacturerName" bindValue="manufacturerName">
+                </ng-select> 
+              </div> 
+            </div> 
+            
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'CONTRACT_START_DATE' | translate}}</mat-label>
+                  <input matInput (click)="contractStartDt.open()" [matDatepicker]="contractStartDt"
+                    formControlName="contractStartDtDisp" (keypress)="dateValidationinstall($event)" >
+                  <mat-datepicker-toggle matSuffix [for]="contractStartDt"></mat-datepicker-toggle>
+                  <mat-datepicker #contractStartDt></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <mat-form-field fxFlex="100" class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'CONTRACT_END_DATE' | translate}}</mat-label>
+                  <input matInput (click)="contractEndDt.open()" [matDatepicker]="contractEndDt"
+                    formControlName="contractEndDtDisp" (keypress)="dateValidationinstall($event)"
+                    [min]="contractFormGroup.controls.contractStartDtDisp.value">
+                  <mat-datepicker-toggle matSuffix [for]="contractEndDt"></mat-datepicker-toggle>
+                  <mat-datepicker #contractEndDt></mat-datepicker> 
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label">{{'CONTRACT_INTERVAL_BASED' | translate}}</span>
+                <ng-select class="ContractDetailedReportComponent-dialog-dropdown"  formControlName="intervalBasedContract" [items]="intervalBasedContract" bindLabel="name" bindValue="name">     
+                </ng-select>  
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+ 
+    <div fxLayout="row"  class="form-buttons top-spacing"> 
+      <button mat-raised-button class="space " color="primary" (click)="submit()"
+        [disabled]="getSubmitButtonStatus()">
+        {{'COMMON_SUBMIT' | translate}}</button>
+      <button mat-raised-button class="space " (click)="clear()"
+        color="primary">{{'COMMON_CLEAR' | translate}}</button>
+    </div> 
+  </div>
+</div>

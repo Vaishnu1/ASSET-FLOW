@@ -1,0 +1,64 @@
+<div fxLayout="column" class="m-5">
+
+  <div fxFlex="row">
+    <div fxFlex="95">
+        <p class="dialogue-box-header"> {{ header }} </p>
+    </div>
+    <div fxFlex="5" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" (click)="closeAssetModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <div fxFlex="100" fxLayout="row">
+    <div fxLayoutAlign="start center" fxFlex="20">
+      <!-- <mat-icon style="color: #c3c3c3; padding: 1px;" (click)="viewInTableMode()">menu</mat-icon>
+      <mat-icon style="color: #c3c3c3; padding: 1px;" (click)="viewInGraphMode()">cached</mat-icon> -->
+
+      <!-- <div fxLayoutAlign="center center" class="bold">
+      </div> -->
+    </div>
+    <div fxLayoutAlign="end end" class="bold" fxFlex="80">
+      <p>Total Asset count : {{this.assetTotalCount}}</p>
+    </div>
+  </div>
+
+  <div fxFlex="100" fxLayout="column" style="width: 99%; margin-left: 5px;" fxLayoutAlign="end end">
+
+      <div *ngIf="!displayTable" fxLayout="row" fxLayoutAlign="end end" class="bold" style="width: 100%;" (click)="openAssetRegScreen()">
+          Total Asset Value : {{this.assetTotalValue | currency:locCurrCd}}
+      </div>
+<!-- 
+      <div *ngIf="!displayTable"  echarts class="demo-chart"  (chartClick)="onChartClick($event)" [options]="options" theme={{theme}}>
+      </div> -->
+      <!--new asset status-->
+      <div *ngIf="!displayTable"  echarts class="demo-chart"  (chartClick)="navigateAssetScreen($event)" [options]="options" theme={{theme}}>
+      </div>
+
+    <table *ngIf="displayTable" mat-table [dataSource]="data1" style="width:95%; margin-left: 10px;">
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}</th>
+        <td mat-cell *matCellDef="let element; let i=index;">{{i+1}} </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> {{ 'DASHBOARD_STATUS' | translate }}</th>
+        <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+      </ng-container>
+      <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef> {{ 'DASHBOARD_COUNT' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.value}}</td>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef style="text-align:right;">{{ 'DASHBOARD_PURCHASE_VALUE' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element" style="text-align:right;"> {{element.totalValue}}</td>
+      </ng-container>
+      <ng-container matColumnDef="bookvalue">
+        <th mat-header-cell *matHeaderCellDef style="text-align:right;">{{ 'DASHBOARD_BOOK_VALUE' | translate }}</th>
+        <td mat-cell *matCellDef="let element" style="text-align:right;"> {{element.bookValue}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+      </tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,1325 @@
+<div fxLayout="column">
+  <div fxFlex="100" fxLayout="row">
+    <mat-toolbar-row fxFlex="70">
+      <mat-list aria-label="breadcrumb" class="breadcrumblink" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="breadcrumbicon small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item">{{'MENU_PURCHASE' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item active" aria-current="page"><a (click)="backTOScreen()"
+            style="cursor: pointer;">{{'PURCHASE_ORDER' |
+            translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+    <div fxFlex="30" fxLayoutAlign="end center">
+      <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+      <button mat-raised-button color="primary" class="space" (click)="clear()"
+        *ngIf="poMainForm.controls.poId.value == 0">{{ 'COMMON_CLEAR' | translate }}</button>
+      <button mat-raised-button class="space" color="primary" (click)="updateAndApprove(headingDisplay)"
+        [disabled]="((uploadPurchaseOrderFlag || !poMainForm.dirty || !poMainForm.invalid) && !enableUpdate) || disableUpdateBtn"
+        *ngIf="headingDisplay != 'View'">
+        <span *ngIf="!uploadPurchaseOrderFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadPurchaseOrderFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+      <button [disabled]="uploadPurchaseOrderFlag" color="primary" mat-raised-button class="space"
+        matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="poCancel()"
+        *ngIf="poMainForm.controls.poId.value != 0 && headingDisplay != 'View' && poMainForm.controls.poStatus.value == 'BOOKED'">
+        <span
+          *ngIf="poMainForm.controls.poId.value != 0 && poMainForm.controls.poStatus.value == 'BOOKED' ">{{'COMMON_CANCEL'
+          | translate}}</span>
+      </button>
+
+    </div>
+  </div>
+  <div>
+    <form fxLayout="column" [formGroup]="poMainForm" class="card-design">
+      <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+        <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+
+          <div fxFlex="35" fxFlex.sm="35" fxFlex.xs="35">
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label">{{'LOCATION_NAME' | translate}} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" formControlName="locationName" (search)="listofLocationName($event)"
+                  (click)="listofLocationName({})" (change)="setLocationNameComboValue($event)" [items]="locationCombo"
+                  [virtualScroll]="true" (scrollToEnd)="listofLocationName({})"
+                  (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                  (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                  bindValue="locDisplayField" tabindex="1" required>
+                </ng-select>
+                <mat-error *ngIf="poMainForm.controls.locationName.invalid && poMainForm.controls.locationName.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.locationName.errors.required">
+                    {{'LOCATION_NAME' | translate }} is
+                    Required </div>
+                </mat-error>
+              </div>
+            </div>
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} <span
+                    class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" autofocus #focusSupplierName [items]="supplierList"
+                  bindLabel="businessPartnerName" bindValue="businessPartnerName" tabindex="2"
+                  (search)="listOfSupplier($event)" (click)="listOfSupplier($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfSupplier({})"
+                  (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"
+                  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync" loadingText="Loading..."
+                  (change)="fetchIdOfSupplier($event)" formControlName="businessPartnerName"
+                  [ngModelOptions]="{standalone: true}" appendTo="body">
+                </ng-select>
+                <mat-error
+                  *ngIf="poMainForm.controls.businessPartnerName.invalid && poMainForm.controls.businessPartnerName.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.businessPartnerName.errors.required">
+                    {{'SUPPLIER_NAME' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{'SUPPLIER_SITE_NAME' | translate }} <span
+                    class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" (search)="listOfSupplierApproved($event)"
+                  (click)="listOfSupplierApproved({})" (change)="setSupplierSiteNameComboValue($event)"
+                  formControlName="businessPartnerSiteName" [virtualScroll]="true"
+                  (scrollToEnd)="listOfSupplierApproved({})"
+                  (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')"
+                  (clear)="listOfSupplierApproved('clear')" [loading]="scrollApprovedSuppliersync"
+                  [items]="supplierLocationList" bindLabel="comboDisp" bindValue="comboDisp">
+                </ng-select>
+                <mat-error
+                  *ngIf="poMainForm.controls.businessPartnerSiteName.invalid && poMainForm.controls.businessPartnerSiteName.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.businessPartnerSiteName.errors.required">
+                    {{'SUPPLIER_SITE_NAME' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div fxLayout="row">
+              <div class="form-group h-55" fxFlex="95">
+                <div class="example-full-width">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                    <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate }} </mat-label>
+                    <textarea formControlName="partnerSiteAddress" matInput class="input-field form-control"
+                      [maxlength]="500" style="height: 60px;" readonly></textarea>
+                    <mat-hint align="end">{{poMainForm.controls.partnerSiteAddress.value?.length || 0}}/500</mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div fxFlex="5" style="margin-left: -40px;">
+                <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                  (click)="viewContactPersonDetails()">
+                  <mat-icon>info</mat-icon>
+                </button>
+              </div>
+
+            </div>
+
+
+
+
+
+            <div class="form-group" *ngIf="poMainForm.controls.poStatus.value == 'CANCELLED' "
+              style="margin-top: 45px !important;">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <mat-label class="input-label">{{'COMMON_CANCEL_REASON' | translate}}</mat-label>
+                <textarea matInput class="input-field" formControlName="cancelReason"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" *ngIf="poMainForm.controls.poStatus.value == 'REJECTED' "
+              style="margin-top: 45px !important;">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <mat-label class="input-label">{{'COMMON_REJECT_REASON' | translate}}</mat-label>
+                <textarea matInput class="input-field" formControlName="rejectReason"
+                  style="padding-top: 5px;padding-bottom: -10px !important;"></textarea>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+          <div fxFlex="17" fxFlex.sm="17" fxFlex.xs="17">
+            <!-- <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PO_USAGE' | translate }} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" [items]="purchaseUsageCombo" bindLabel="purchasingUsageName" bindValue="purchasingUsageName"
+                  tabindex="2" (search)="listofPurchaseUsage($event)" (click)="listofPurchaseUsage($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listofPurchaseUsage({})" (keyup.backspace)="listofPurchaseUsage($event.target.value ? $event : 'back')"
+                  (clear)="listofPurchaseUsage('clear')" [loading]="scrollPurchaseUsagesync" loadingText="Loading..."
+                  (change)="setPurchaseUsage($event)" formControlName="poUsage" [ngModelOptions]="{standalone: true}" appendTo="body">
+                </ng-select>
+                <mat-error *ngIf="poMainForm.controls.poUsage.invalid && poMainForm.controls.poUsage.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.poUsage.errors.required"> {{'PO_USAGE' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div> -->
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_PO_NUMBER' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="poNO">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_REVISION_NO' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="poRevNo">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_PO_DATE' | translate}} <span
+                      class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="poDtDisp" tabindex="2" readonly
+                    (click)="picker1.open()" [matDatepicker]="picker1">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1 [readonly]="false"></mat-datepicker>
+                  <mat-error *ngIf="poMainForm.controls.poDtDisp.invalid && poMainForm.controls.poDtDisp.touched">
+                    <div style="font-size: 10px" *ngIf="poMainForm.controls.poDtDisp.errors.required">
+                      {{'PR_DT' | translate}} is Required </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <span class="input-label"> {{ 'PO_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" [items]="purchaseTypeCombo" bindLabel="purchasingTypeName"
+                  bindValue="purchasingTypeName" tabindex="2" (search)="listofPurchaseType($event)"
+                  (click)="listofPurchaseType($event)" [virtualScroll]="true" (scrollToEnd)="listofPurchaseType({})"
+                  (keyup.backspace)="listofPurchaseType($event.target.value ? $event : 'back')"
+                  (clear)="listofPurchaseType('clear')" [loading]="scrollPurchaseTypesync" loadingText="Loading..."
+                  (change)="setPurchaseType($event)" formControlName="poType" [ngModelOptions]="{standalone: true}"
+                  appendTo="body">
+                </ng-select>
+                <mat-error *ngIf="poMainForm.controls.poType.invalid && poMainForm.controls.poType.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.poType.errors.required"> {{'PO_TYPE' |
+                    translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'">
+              <div class="form-group h-55">
+                <span class="input-label"> {{ 'CONTRACT_TYPE' | translate }} <span
+                    class="mandatory-style">*</span></span>
+                <ng-select class=" input-field" [items]="contractTypeCombo" bindLabel="contractTypeName"
+                  bindValue="contractTypeName" tabindex="2" (search)="listofContractType($event)"
+                  (click)="listofContractType($event)" [virtualScroll]="true" (scrollToEnd)="listofContractType({})"
+                  (keyup.backspace)="listofContractType($event.target.value ? $event : 'back')"
+                  (clear)="listofContractType('clear')" [loading]="scrollContractTypesync" loadingText="Loading..."
+                  (change)="setContractType($event)" formControlName="contractType"
+                  [ngModelOptions]="{standalone: true}" appendTo="body">
+                </ng-select>
+                <mat-error *ngIf="poMainForm.controls.poType.invalid && poMainForm.controls.poType.touched">
+                  <div style="font-size: 10px " *ngIf="poMainForm.controls.poType.errors.required"> {{'CONTRACT_TYPE' |
+                    translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+            <!-- <div class="form-group">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_REQ_DATE' | translate}} <span class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="poReqDtDisp" tabindex="2" readonly (click)="picker2.open()" [matDatepicker]="picker2">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2 [readonly]="false"></mat-datepicker>
+                  <mat-error *ngIf="poMainForm.controls.poReqDtDisp.invalid && poMainForm.controls.poReqDtDisp.touched">
+                    <div style="font-size: 10px" *ngIf="poMainForm.controls.poReqDtDisp.errors.required">
+                      {{'PURCHASE_REQ_DATE' | translate}} is Required </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div> -->
+          </div>
+
+          <div fxFlex="17" fxFlex.sm="17" fxFlex.xs="17">
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_PO_STATUS' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="poStatus">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_RCV_STATUS' | translate}}</mat-label>
+                  <input matInput class="input-field" style="font-size:12px;color:red" formControlName="compFlgDisp">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'COMMON_REQUESTED_BY' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="createdBy">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'PURCHASE_TOTAL_ORDER_QTY' | translate}}</mat-label>
+                  <input matInput class="input-field" style="font-size:12px;color:red" formControlName="totalPOQty">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'PURCHASE_TOTAL_TAX_AMT' | translate}} </mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field" formControlName="netTaxAmt"
+                    readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'PURCHASE_CURRENCY_CD' | translate}}</mat-label>
+                  <input matInput class="input-field" formControlName="curCd" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'PURCHASE_GRAND_TOTAL' | translate}}</mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field" formControlName="grandTotal"
+                    readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group" style="width: 200%;margin-left: 20px;">
+              <div class="example-full-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'COMMON_REMARKS' | translate}}</mat-label>
+                  <textarea matInput class="input-field" formControlName="remarks" (keyup)="isChanged()"
+                    oninput="this.value = this.value.toUpperCase().trim()"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'CONTRACT_START_DATE' | translate}} <span
+                      class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="contractStartDtDisp" tabindex="2" readonly
+                    (click)="conStartDtPicker.open()" [matDatepicker]="conStartDtPicker">
+                  <mat-datepicker-toggle matSuffix [for]="conStartDtPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #conStartDtPicker [readonly]="false"></mat-datepicker>
+                  <mat-error
+                    *ngIf="poMainForm.controls.contractStartDtDisp.invalid && poMainForm.controls.contractStartDtDisp.touched">
+                    <div style="font-size: 10px" *ngIf="poMainForm.controls.contractStartDtDisp.errors.required">
+                      {{'CONTRACT_START_DT' | translate}} is Required </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'NO_OF_CONTRACT_DAYS' | translate}}</mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field"
+                    formControlName="noOfContractDays" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- <div class="form-group">
+              <div class="form-group h-55">
+                <span class="input-label"> {{ 'SR_NO' | translate }}</span>
+                <ng-select [items]="srNoCombo" bindLabel="srNo" bindValue="srNo" (search)="loadServiceRequestNumbers($event)"
+                  (click)="loadServiceRequestNumbers($event)" [virtualScroll]="true" (scrollToEnd)="loadServiceRequestNumbers({})"
+                  (keyup.backspace)="loadServiceRequestNumbers($event.target.value ? $event : 'back')"
+                  (clear)="loadServiceRequestNumbers('clear')" [loading]="scrollSRNosync" loadingText="Loading..."
+                  (change)="selectedSRNo($event)" formControlName="srNo" class="input-field"></ng-select>
+                <mat-error *ngIf="poMainForm.controls.srNo.invalid && poMainForm.controls.srNo.touched">
+                </mat-error>
+              </div>
+            </div>   -->
+          </div>
+
+          <div fxFlex="15" fxFlex.sm="15" fxFlex.xs="15">
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'PURCHASE_TOTAL_BASIC_AMT' | translate}}</mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field" formControlName="totalBasicAmt"
+                    readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'COMMON_EXC_RATE' | translate}}</mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field" formControlName="exchRate"
+                    (change)="calculateTotals()">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group h-55">
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'PURCHASE_LOCAL_TOTAL_AMT' | translate}}</mat-label>
+                  <input matInput style="font-size:12px;color:red" class="input-field" formControlName="localGrandTotal"
+                    readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+
+
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'" style="margin-top:80px">
+              <div class="form-group h-55">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'CONTRACT_END_DATE' | translate}} <span
+                      class="mandatory-style">*</span>
+                  </mat-label>
+                  <input matInput class="input-field" formControlName="contractEndDtDisp" tabindex="2" readonly
+                    (click)="conEndDtPicker.open()" [matDatepicker]="conEndDtPicker"
+                    [min]="poMainForm.controls.contractStartDtDisp.value" (dateChange)="onChangeValidation1()">
+                  <mat-datepicker-toggle matSuffix [for]="conEndDtPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #conEndDtPicker [readonly]="false"></mat-datepicker>
+                  <mat-error
+                    *ngIf="poMainForm.controls.contractEndDtDisp.invalid && poMainForm.controls.contractEndDtDisp.touched">
+                    <div style="font-size: 10px" *ngIf="poMainForm.controls.contractEndDtDisp.errors.required">
+                      {{'CONTRACT_END_DATE' | translate}} is Required </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'SERVICE/MATERIAL'"
+              style="margin-top:70px">
+              <div class="example-full-width">
+                <button mat-raised-button color="primary" class="space" style="margin-top: 5px;margin-bottom: 5px;"
+                  [disabled]="poMainForm.invalid"
+                  (click)="addPOItem(null,null,poMainForm.controls.poType.value)">{{'PURCHASE_ADD_ITEM' | translate }}
+                </button>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'" style="margin-top:10px">
+              <div class="example-full-width">
+                <button mat-raised-button color="primary" class="space" style="margin-top: 5px;margin-bottom: 5px;"
+                  [disabled]="poMainForm.invalid"
+                  (click)="addAssetAgainstPOContract(null,null,'add')">{{'PURCHASE_ADD_ASSET' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div>
+        <div style="margin-bottom:5%;">
+          <div [@.disabled]="true">
+            <mat-tab-group>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  {{'PURCHASE_INFO' | translate }}
+                </ng-template>
+                <mat-card>
+                  <mat-card-content>
+                    <!-- <div style="overflow: auto" *ngIf="poMainForm.controls.poType.value == 'MATERIAL' || poMainForm.controls.poType.value == 'SERVICE'"> -->
+                    <div style="overflow: auto" *ngIf="poMainForm.controls.poType.value == 'SERVICE/MATERIAL'">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th style="width:5%">{{'PURCHASE_PO_LINE_NO' | translate}}</th>
+                            <th style="width:10%">{{'SR_NO' | translate}} | {{'PR_NO' | translate}}</th>
+                            <th style="width:10%">{{'PO_TYPE' | translate}}</th>
+                            <th style="width:15%">{{'ITEM_NAME_MPN_DESC' | translate}} / {{'ITEM_TYPE' | translate}}
+                            </th>
+                            <th style="width:6%">{{'PURCHASE_UNIT_PRICE' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_PO_QTY' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_PO_BALANCE_QTY' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_RECEIVING_QTY' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_INVOICED_QTY' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_RTV_QTY' | translate}}</th>
+                            <th style="width:6%">{{'BASIC_AMT' | translate}}</th>
+                            <th style="width:6%">{{'TAX_CD_1' | translate}} / {{'TAX_CD_2' | translate}} / {{'TAX_CD_3'
+                              | translate}}</th>
+                            <th style="width:6%">{{'TAX_AMT_1' | translate}} / {{'TAX_AMT_2' | translate}}/
+                              {{'TAX_AMT_3' | translate}}</th>
+                            <th style="width:9%">{{'TOTAL_TAX_AMT' | translate}}</th>
+                            <th style="width:9%">{{'TOTAL_AMT' | translate}}</th>
+                            <th style="width:10%">{{'COMMON_ACTION' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container formArrayName="poDtlList"
+                            *ngFor="let element of poMainForm.get('poDtlList')['controls']; let i = index;">
+                            <tr [formGroupName]="i">
+                              <td class="Form_Input" class="input-label" style="width:2%">
+                                <input style="font-size:12px !important; color:brown" matInput
+                                  formControlName="poLineNo" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label" style="width:10%">
+                                <input style="font-size:12px !important; color:brown" matInput formControlName="srNo"
+                                  readonly>
+                                <input style="font-size:12px !important; color:black" matInput formControlName="prReqNo"
+                                  readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label" style="width:10%">
+                                <input style="font-size:12px !important; color:brown" matInput formControlName="poType"
+                                  readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="width:15%;border-bottom: none;text-overflow: ellipsis;">
+                                <input style="text-align: left; font-size:12px;color:brown" matInput
+                                  formControlName="itemName" readonly>
+                                <input style="text-align: left; font-size:12px;color:black" matInput
+                                  formControlName="manufacturerPartNo" readonly>
+                                <input style="text-align: left; font-size:12px;color:black" matInput
+                                  formControlName="itemDesc" readonly>
+                                <input style="text-align: left; font-size:12px;color:black" matInput
+                                  formControlName="itemTypeName" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="border-bottom: none;background-color:powderblue;">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="unitPrice" (change)="calculationForLineItem(i)">
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="border-bottom: none;background-color:powderblue;">
+                                <input style="font-size:12px !important; color:green; text-align: right;" matInput
+                                  formControlName="poQty" (change)="calculationForLineItem(i)">
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:green; text-align: right;" matInput
+                                  formControlName="poBalanceQty" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:green; text-align: right;" matInput
+                                  formControlName="receivedQty" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="invoicedQty" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="rtvQty" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="poBasicAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd1" readonly>
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd2" readonly>
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd3" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt1" readonly>
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt2" readonly>
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt3" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:red; text-align: right;" matInput
+                                  formControlName="itemTotalTaxAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:red; text-align: right;" matInput
+                                  formControlName="netAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label" style="width:10%;border-bottom: none;">
+                                <button *ngIf="!viewMode" mat-button class="mat-icon-button"
+                                  matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="addPOItem(i,'edit',element)">
+                                  <mat-icon color="primary">edit</mat-icon>
+                                </button>
+                                <button *ngIf="viewMode" mat-button class="mat-icon-button"
+                                  matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="addPOItem(i,'view',element)">
+                                  <mat-icon color="primary">visibility</mat-icon>
+                                </button>
+                                <mat-icon *ngIf="poMainForm.controls.poStatus.value == 'BOOKED' && !viewMode"
+                                  style="cursor: pointer; color: red;" (click)="deletePODtl(element,i)">
+                                  delete
+                                </mat-icon>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div style="overflow: auto" *ngIf="poMainForm.controls.poType.value == 'CONTRACT'">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th style="width:5%">{{'PURCHASE_PO_LINE_NO' | translate}}</th>
+                            <th style="width:10%">{{'SR_NO' | translate}} | {{'PR_NO' | translate}}</th>
+                            <th style="width:5%">{{'ASSET_CODE' | translate}} / <br /> {{'ASSET_SERIAL_NO' | translate}}
+                            </th>
+                            <th style="width:15%">{{'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate}}</th>
+                            <th style="width:15%">{{'ASSET_GROUP' | translate}}</th>
+                            <th style="width:5%">{{'PURCHASE_PO_QTY' | translate}}</th>
+                            <th style="width:6%">{{'PURCHASE_UNIT_PRICE' | translate}}</th>
+                            <th style="width:6%">{{'BASIC_AMT' | translate}}</th>
+                            <th style="width:6%">{{'TAX_CD_1' | translate}} / {{'TAX_CD_2' | translate}} / {{'TAX_CD_3'
+                              | translate}}</th>
+                            <th style="width:6%">{{'TAX_AMT_1' | translate}} / {{'TAX_AMT_2' | translate}}/
+                              {{'TAX_AMT_3' | translate}}</th>
+                            <th style="width:9%">{{'TOTAL_TAX_AMT' | translate}}</th>
+                            <th style="width:9%">{{'TOTAL_AMT' | translate}}</th>
+                            <th style="width:10%">{{'COMMON_ACTION' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container formArrayName="poDtlList"
+                            *ngFor="let element of poMainForm.get('poDtlList')['controls']; let i = index;">
+                            <tr [formGroupName]="i">
+                              <td class="Form_Input" class="input-label" style="width:2%">
+                                <input style="font-size:12px !important; color:brown" matInput
+                                  formControlName="poLineNo" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label" style="width:10%">
+                                <input style="font-size:12px !important; color:brown" matInput formControlName="srNo"
+                                  readonly>
+                                <input style="font-size:12px !important; color:black" matInput formControlName="prReqNo"
+                                  readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="width:5%;border-bottom: none;text-overflow: ellipsis;">
+                                <input style="text-align: left; font-size:12px;color:brown" matInput
+                                  formControlName="assetCode" readonly>
+                                <input style="font-size:12px !important; color:brown;" matInput
+                                  formControlName="serialNo" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="width:15%;border-bottom: none;text-overflow: ellipsis;">
+                                <input style="font-size:12px !important; color:brown;" matInput
+                                  formControlName="modelName" readonly>
+                                <input style="font-size:12px !important; color:brown;" matInput
+                                  formControlName="manufacturerName" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="width:15%;border-bottom: none;text-overflow: ellipsis;">
+                                <input style="font-size:12px !important; color:brown;" matInput
+                                  formControlName="assetGroupName" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="border-bottom: none;background-color:powderblue;">
+                                <input style="font-size:12px !important; color:green; text-align: right;" matInput
+                                  formControlName="poQty" (change)="calculationForLineItem(i)">
+                              </td>
+                              <td class="Form_Input" class="input-label"
+                                style="border-bottom: none;background-color:powderblue;">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="unitPrice" (change)="calculationForLineItem(i)">
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="poBasicAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd1" readonly>
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd2" readonly>
+                                <input style="font-size:12px !important; color:brown; " matInput
+                                  formControlName="taxCd3" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt1" readonly>
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt2" readonly>
+                                <input style="font-size:12px !important; color:brown; text-align: right;" matInput
+                                  formControlName="taxAmt3" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:red; text-align: right;" matInput
+                                  formControlName="itemTotalTaxAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label">
+                                <input style="font-size:12px !important; color:red; text-align: right;" matInput
+                                  formControlName="netAmt" readonly>
+                              </td>
+                              <td class="Form_Input" class="input-label" style="width:10%;border-bottom: none;">
+                                <button *ngIf="!viewMode" mat-button class="mat-icon-button"
+                                  matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="addPOItem(i,'edit',element)">
+                                  <mat-icon color="primary">edit</mat-icon>
+                                </button>
+                                <button *ngIf="viewMode" mat-button class="mat-icon-button"
+                                  matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="addPOItem(i,'view',element)">
+                                  <mat-icon color="primary">visibility</mat-icon>
+                                </button>
+                                <mat-icon *ngIf="poMainForm.controls.poStatus.value == 'BOOKED' && !viewMode"
+                                  style="cursor: pointer; color: red;" (click)="deletePODtl(element,i)">
+                                  delete
+                                </mat-icon>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  {{'PURCHASE_BILL_SHIP' | translate }}
+                </ng-template>
+                <mat-card class="card-style">
+                  <mat-card-content>
+                    <div class="content-style">
+                      <div fxLayout="row">
+                        <div fxFlex="50">
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <span class="input-label">{{'PURCHASE_BILL_TO' | translate}} </span>
+                              <ng-select class=" input-field" formControlName="billInfoName"
+                                (search)="listofBillToName($event)" (click)="listofBillToName({})"
+                                (change)="setBillToComboValue($event)" [items]="billToCombo" [virtualScroll]="true"
+                                (scrollToEnd)="listofBillToName({})"
+                                (keyup.backspace)="listofBillToName($event.target.value ? $event : 'back')"
+                                (clear)="listofBillToName('clear')" [loading]="scrollBillToNamesync"
+                                bindLabel="locDisplayField" bindValue="locationName" tabindex="1">
+                              </ng-select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_ADDRESS' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billAddress1"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_CITY' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billCity"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_STATE' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billState"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_COUNTRY' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billCountry"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_ZIP_CODE' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billZipCode" [maxlength]="10"
+                                  oninput="this.value = this.value.toUpperCase()">
+                                <mat-hint align="end">{{poMainForm.controls.billZipCode.value?.length || 0}}/10
+                                </mat-hint>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_TO_CONTACT_PERSON' |
+                                  translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billToContactPerson"
+                                  oninput="this.value = this.value.toUpperCase()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_TO_CONTACT_PERSON_NO' |
+                                  translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="billToContactPersonNo"
+                                  oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10"
+                                  autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                        <div fxFlex="50">
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <span class="input-label">{{'PURCHASE_SHIP_TO' | translate}} </span>
+                              <ng-select class=" input-field" formControlName="shipInfoName"
+                                (search)="listofShipToName($event)" (click)="listofShipToName({})"
+                                (change)="setShipToComboValue($event)" [items]="shipToCombo" [virtualScroll]="true"
+                                (scrollToEnd)="listofShipToName({})"
+                                (keyup.backspace)="listofShipToName($event.target.value ? $event : 'back')"
+                                (clear)="listofShipToName('clear')" [loading]="scrollShipToNamesync"
+                                bindLabel="locDisplayField" bindValue="locationName" tabindex="1">
+                              </ng-select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_ADDRESS' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipAddress1"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_CITY' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipCity"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_STATE' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipState"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_COUNTRY' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipCountry"
+                                  oninput="this.value = this.value.toUpperCase().trim()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                                <mat-label class="input-label">{{'PURCHASE_BILL_ZIP_CODE' | translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipZipCode" [maxlength]="10"
+                                  oninput="this.value = this.value.toUpperCase()">
+                                <mat-hint align="end">{{poMainForm.controls.shipZipCode.value?.length || 0}}/10
+                                </mat-hint>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_SHIP_TO_CONTACT_PERSON' |
+                                  translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipToContactPerson"
+                                  oninput="this.value = this.value.toUpperCase()">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="example-full-width">
+                              <mat-form-field [floatLabel]="'always'">
+                                <mat-label class="input-label">{{'PURCHASE_SHIP_TO_CONTACT_PERSON_NO' |
+                                  translate}}</mat-label>
+                                <input matInput class="input-field" formControlName="shipToContactPersonNo"
+                                  oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10"
+                                  autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </mat-tab>
+              <!-- <mat-tab>
+                <ng-template mat-tab-label>
+                  {{'PURCHASE_T&C' | translate }}
+                </ng-template>
+
+                <mat-card class="card-style">
+                  <mat-card-content fxFlex="60"> 
+      
+                    <div fxFlex="5">
+                    </div>
+
+                    <div fxFlex="75">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                        hintLabel="{{ CommonhintMsg.MAX_500}}">
+                        <mat-label class="input-label"> {{ 'PURCHASE_T&C' | translate }} </mat-label>
+                        <textarea matInput formControlName="termsCondition" [maxlength]="500" class="input-field mt-10-px"></textarea>
+                        <mat-hint align="end">{{poMainForm.controls.termsCondition.value?.length || 0}}/500
+                        </mat-hint>
+                      </mat-form-field>
+                    </div>
+      
+                  </mat-card-content>
+                </mat-card>
+
+              </mat-tab> -->
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  {{'PURCHASE_T&C' | translate }}
+                </ng-template>
+                <mat-card class="card-style">
+                  <mat-card-content>
+
+                    <div fxLayout="column" class="content-style">
+                      <div fxLayout="row" fxFlex="100">
+                        <div fxLayout="row" fxFlex="100">
+                          <div fxFlex="80"></div>
+                          <div fxFlex="40" fxLayoutAlign="end center">
+                            <button mat-raised-button color="primary" class="space"
+                              style="margin-top: 5px;margin-bottom: 5px;" (click)="addPOTCTemplateInfo()"
+                              *ngIf="headingDisplay != 'View'">{{'PO_ATTACH_TEMPLATE' | translate }}
+                            </button>
+                            <button mat-raised-button color="primary" class="space"
+                              style="margin-top: 5px;margin-bottom: 5px;" (click)="addPOTCParameterInfo('parameter')"
+                              *ngIf="headingDisplay != 'View'">{{'PO_ATTACH_PARAMETERS' | translate }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="content-style">
+
+                      <div fxLayout="column" *ngFor="let cusFieldslist of cusFieldHdrList| slice:0:50; let i = index;">
+                        <div fxLayout="row" class="params-row">
+                          <div fxFlex="3"></div>
+                          <div fxFlex="30">
+                            <div class="sno">{{ i + 1 }}.</div>
+
+                            <div class="example-full-width custom-field-form-group number-fields"
+                              *ngIf="cusFieldslist.tcParameterInputType =='NUMBER'"
+                              [style.background]="cusFieldslist.color">
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="{{ cusFieldslist.tcParameterRemarks }}">
+                                <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                                <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                  [(ngModel)]="cusFieldslist.value" [ngModelOptions]="{standalone: true}"
+                                  title="{{ cusFieldslist.tcParameterName }} should only contain numbers"
+                                  (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                              </mat-form-field>
+
+                            </div>
+
+
+
+                            <div *ngIf="cusFieldslist.tcParameterInputType =='DROP DOWN'"
+                              class="example-full-width select-fields">
+                              <div class="custom-field-form-group">
+                                <span class="input-label spacing">{{ cusFieldslist.tcParameterName }} </span>
+                                <ng-select [(ngModel)]="cusFieldslist.value" appendTo="body"
+                                  (change)="isChanged();isXNos(cusFieldslist)" [items]="cusFieldslist.comboValues"
+                                  [ngModelOptions]="{standalone: true}" bindLabel="comboValue" bindValue="comboValue">
+                                </ng-select>
+                              </div>
+
+                              <div class="dropDownRemarks">
+                                {{ cusFieldslist.tcParameterRemarks }}
+                              </div>
+
+                            </div>
+
+                            <div *ngIf="cusFieldslist.tcParameterInputType =='TEXT AREA'" class="example-full-width">
+                              <div class="custom-field-form-group text-area-field"
+                                [style.background]="cusFieldslist.color">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                                  <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                                  <textarea matInput name="textValue" 
+                                    [ngModelOptions]="{standalone: true}" type="text" (input)="isChanged()"
+                                    [maxlength]="cusFieldslist.inputMaxLength"
+                                    oninput="this.value = this.value.toUpperCase()" style="height: 30px;"
+                                    [ngModel]="cusFieldslist.value || cusFieldslist.tcParameterInputValues"
+                                      (ngModelChange)="cusFieldslist.value = $event || cusFieldslist.value || cusFieldslist.tcParameterInputValues"
+
+                                    [disabled]="!cusFieldslist.tcParameterEditable"> </textarea>
+                                  <mat-hint align="end">{{cusFieldslist.value?.length || 0}}/{{
+                                    cusFieldslist.inputMaxLength
+                                    }}</mat-hint>
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                          </div>
+                          <div fxFlex="30">
+
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildId != null && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width">
+                              <div *ngIf="cusFieldslist.tcParameterChildInputType =='DROP DOWN'"
+                                class="example-full-width child-select-fields">
+                                <div class="custom-field-form-group">
+                                  <span class="input-label spacing">{{ cusFieldslist.tcParameterChildName }} </span>
+                                  <ng-select [(ngModel)]="cusFieldslist.valueChild" appendTo="body"
+                                    (change)="isChanged();" [items]="cusFieldslist.comboValuesChild"
+                                    [ngModelOptions]="{standalone: true}" bindLabel="comboValueChild"
+                                    bindValue="comboValueChild">
+                                  </ng-select>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div *ngIf="cusFieldslist.value == 'X NOS'" class="example-full-width">
+                              <div class="example-full-width child-number-fields">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                  <mat-label class="input-label"> X NOS </mat-label>
+                                  <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                    [(ngModel)]="cusFieldslist.valueChild2" [ngModelOptions]="{standalone: true}"
+                                    title="{{ cusFieldslist.tcParameterName2 }} should only contain numbers"
+                                    (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <div *ngIf="cusFieldslist.value == 'APPLICABLE'" class="example-full-width">
+                              <div class="example-full-width child-number-fields">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                  <mat-label class="input-label"> APPLICABLE PERCENTAGE </mat-label>
+                                  <textarea matInput type="text" name="textValue"
+                                    [(ngModel)]="cusFieldslist.valueChild2" [ngModelOptions]="{standalone: true}"
+                                    (change)="isChanged();" style="height: 30px;"
+                                    oninput="this.value = this.value.toUpperCase()"></textarea>
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildId != null && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width">
+                              <div *ngIf="cusFieldslist.tcParameterChildInputType =='NUMBER'"
+                                class="example-full-width child-number-fields">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                  <mat-label class="input-label"> {{ cusFieldslist.tcParameterChildName }} </mat-label>
+                                  <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                    [(ngModel)]="cusFieldslist.valueChild" [ngModelOptions]="{standalone: true}"
+                                    title="{{ cusFieldslist.tcParameterName }} should only contain numbers"
+                                    (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildInputType =='TEXT AREA' && cusFieldslist.tcParameterChildId > 0  && cusFieldslist.tcParameterChildInputType != 'NUMBER' "
+                              class="example-full-width">
+                              <div class="custom-field-form-group child-text-area-field"
+                                [style.background]="cusFieldslist.color">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                                  <mat-label class="input-label"> {{ cusFieldslist.tcParameterChildName }} </mat-label>
+                                  <textarea matInput name="textValue" 
+                                  [ngModel]="cusFieldslist.valueChild || cusFieldslist.tcParameterChildInputValues"
+                                    [ngModelOptions]="{standalone: true}" type="text" (input)="isChanged()"
+                                    [maxlength]="cusFieldslist.inputMaxLength"
+                                  (ngModelChange)="cusFieldslist.valueChild = $event || cusFieldslist.valueChild || cusFieldslist.tcParameterChildInputValues"
+                                    oninput="this.value = this.value.toUpperCase()" style="height: 30px;" [disabled]="!cusFieldslist.tcParameterChildEditable"> </textarea>
+                                  <mat-hint align="end">{{cusFieldslist.valueChild?.length || 0}}/{{
+                                    cusFieldslist.inputMaxLength
+                                    }}</mat-hint>
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                          </div>
+                          <div fxFlex="40"></div>
+
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="content-style">
+                      <mat-grid-list cols="2" *ngFor="let cusFieldslist of cusFieldHdrList1; let i = index;">
+
+
+                        <div fxLayout="row" class="params-row">
+                          <div fxFlex="3"></div>
+                          <div fxFlex="30">
+                            <div class="sno">{{ i + 1 }}.</div>
+
+                            <div class="example-full-width custom-field-form-group number-fields parameter-with-buttons"
+                              *ngIf="cusFieldslist.tcParameterInputType =='NUMBER'"
+                              [style.background]="cusFieldslist.color">
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="{{ cusFieldslist.tcParameterRemarks }}">
+                                <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                                <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                  [(ngModel)]="cusFieldslist.value" [ngModelOptions]="{standalone: true}"
+                                  title="{{ cusFieldslist.tcParameterName }} should only contain numbers"
+                                  (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                              </mat-form-field>
+
+                              <mat-icon class="close-icon bread-crumb-link"
+                                matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                (click)="deleteParameter(cusFieldslist,i)">
+                                remove_circle_outline
+                              </mat-icon>
+
+                              <mat-icon class="close-icon bread-crumb-link"
+                                matTooltip="{{ 'ADD_PARAMETER' | translate }}"
+                                *ngIf="!viewMode && cusFieldslist.tcParameterChildId <= 0"
+                                (click)="addPOTCParameterInfo('childParameter',i)" style="color: blue !important;">
+                                add_circle
+                              </mat-icon>
+
+                            </div>
+
+
+
+                            <div *ngIf="cusFieldslist.tcParameterInputType =='DROP DOWN'"
+                              class="example-full-width select-fields">
+                              <span class="input-label spacing">{{ cusFieldslist.tcParameterName }} </span>
+                              <div class="custom-field-form-group parameter-with-buttons">
+
+                                <ng-select [(ngModel)]="cusFieldslist.value" appendTo="body"
+                                  (change)="isChanged();isXNos(cusFieldslist);pushToDeleteList(cusFieldslist,i)"
+                                  [items]="cusFieldslist.comboValues" [ngModelOptions]="{standalone: true}"
+                                  bindLabel="comboValue" bindValue="comboValue" style="flex: 1; margin-right: 8px;">
+                                </ng-select>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                  (click)="deleteParameter(cusFieldslist,i)">
+                                  remove_circle_outline
+                                </mat-icon>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'ADD_PARAMETER' | translate }}"
+                                  *ngIf="!viewMode && cusFieldslist.tcParameterChildId <= 0"
+                                  (click)="addPOTCParameterInfo('childParameter',i)" style="color: blue !important;">
+                                  add_circle
+                                </mat-icon>
+
+                              </div>
+                              <!-- 
+                              <div class="dropDownRemarks">
+                                {{ cusFieldslist.tcParameterRemarks }}
+                              </div> -->
+
+                            </div>
+
+                            <div *ngIf="cusFieldslist.tcParameterInputType =='TEXT AREA'" class="example-full-width">
+                              <div class="custom-field-form-group text-area-field parameter-with-buttons"
+                                [style.background]="cusFieldslist.color">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                                  <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                                  <textarea matInput name="textValue" 
+                                    [ngModelOptions]="{standalone: true}" type="text" (input)="isChanged()"
+                                    [maxlength]="cusFieldslist.inputMaxLength"
+                                    [ngModel]="cusFieldslist.value || cusFieldslist.tcParameterInputValues"
+                                    (ngModelChange)="cusFieldslist.value = $event || cusFieldslist.value || cusFieldslist.tcParameterInputValues"
+                                    oninput="this.value = this.value.toUpperCase()" style="height: 30px;"
+                                    [disabled]="!cusFieldslist.tcParameterEditable"> </textarea>
+                                  <mat-hint align="end">{{cusFieldslist.value?.length || 0}}/{{
+                                    cusFieldslist.inputMaxLength
+                                    }}</mat-hint>
+                                </mat-form-field>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                  (click)="deleteParameter(cusFieldslist,i)">
+                                  remove_circle_outline
+                                </mat-icon>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'ADD_PARAMETER' | translate }}"
+                                  *ngIf="!viewMode && cusFieldslist.tcParameterChildId <= 0"
+                                  (click)="addPOTCParameterInfo('childParameter',i)" style="color: blue !important;">
+                                  add_circle
+                                </mat-icon>
+
+                              </div>
+                            </div>
+
+                          </div>
+                          <div fxFlex="30">
+
+                            <div *ngIf="cusFieldslist.value == 'X NOS'" class="example-full-width">
+                              <div class="example-full-width child-number-fields">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                  <mat-label class="input-label"> X NOS </mat-label>
+                                  <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                    [(ngModel)]="cusFieldslist.valueChild2" [ngModelOptions]="{standalone: true}"
+                                    title="{{ cusFieldslist.tcParameterName2 }} should only contain numbers"
+                                    (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                                </mat-form-field>
+
+                                Delete Icon 
+                                 <mat-icon class="close-icon bread-crumb-link" matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                          (click)="deleteParameter(cusFieldslist,i,true)">
+                                           remove_circle_outline
+                                        </mat-icon>
+
+                              </div>
+                            </div> 
+
+                             <div *ngIf="cusFieldslist.value == 'APPLICABLE'" class="example-full-width">
+                              <div class="example-full-width child-number-fields">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                  <mat-label class="input-label"> APPLICABLE PERCENTAGE </mat-label>
+                                  <textarea matInput type="text" name="textValue"
+                                    [(ngModel)]="cusFieldslist.valueChild2" [ngModelOptions]="{standalone: true}"
+                                    (change)="isChanged();" style="height: 30px;"
+                                    oninput="this.value = this.value.toUpperCase()"></textarea>
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <!-- <div
+                              *ngIf="cusFieldslist.tcParameterChildId != null && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width">-->
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildInputType =='DROP DOWN' && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width child-select-fields">
+                              <span class="input-label spacing">{{ cusFieldslist.tcParameterChildName }} </span>
+                              <div class="custom-field-form-group parameter-with-buttons">
+
+                                <ng-select [(ngModel)]="cusFieldslist.valueChild" appendTo="body"
+                                  (change)="isChanged();" [items]="cusFieldslist.comboValuesChild"
+                                  [ngModelOptions]="{standalone: true}" bindLabel="comboValueChild"
+                                  bindValue="comboValueChild" style="flex: 1; margin-right: 8px;">
+                                </ng-select>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                  (click)="deleteParameter(cusFieldslist,i,true)">
+                                  remove_circle_outline
+                                </mat-icon>
+
+                              </div>
+                            </div>
+                            <!-- </div> -->
+
+
+
+
+                            <!-- <div
+                              *ngIf="cusFieldslist.tcParameterChildId != null && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width"> -->
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildInputType =='NUMBER' && cusFieldslist.tcParameterChildId > 0"
+                              class="example-full-width child-number-fields">
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="{{ cusFieldslist.tcParameterChildRemarks }}">
+                                <mat-label class="input-label"> {{ cusFieldslist.tcParameterChildName }} </mat-label>
+                                <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                                  [(ngModel)]="cusFieldslist.valueChild" [ngModelOptions]="{standalone: true}"
+                                  title="{{ cusFieldslist.tcParameterName }} should only contain numbers"
+                                  (change)="isChanged();" oninput="this.value = this.value.toUpperCase()">
+                              </mat-form-field>
+
+                              <mat-icon class="close-icon bread-crumb-link"
+                                matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                (click)="deleteParameter(cusFieldslist,i,true)">
+                                remove_circle_outline
+                              </mat-icon>
+
+                            </div>
+                            <!-- </div> -->
+
+                            <div
+                              *ngIf="cusFieldslist.tcParameterChildInputType =='TEXT AREA' && cusFieldslist.tcParameterChildId > 0  && cusFieldslist.tcParameterChildInputType != 'NUMBER' "
+                              class="example-full-width">
+                              <div class="custom-field-form-group child-text-area-field"
+                                [style.background]="cusFieldslist.color">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                  hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                                  <mat-label class="input-label"> {{ cusFieldslist.tcParameterChildName }} </mat-label>
+                                  <textarea matInput name="textValue" 
+                                    [ngModelOptions]="{standalone: true}" type="text" (input)="isChanged()"
+                                    [maxlength]="cusFieldslist.inputMaxLength"
+                                     [ngModel]="cusFieldslist.valueChild || cusFieldslist.tcParameterChildInputValues"
+                                  (ngModelChange)="cusFieldslist.valueChild = $event || cusFieldslist.valueChild || cusFieldslist.tcParameterChildInputValues"
+                                    oninput="this.value = this.value.toUpperCase()" style="height: 30px;" [disabled]="!cusFieldslist.tcParameterChildEditable"> </textarea>
+                                  <mat-hint align="end">{{cusFieldslist.valueChild?.length || 0}}/{{
+                                    cusFieldslist.inputMaxLength
+                                    }}</mat-hint>
+                                </mat-form-field>
+
+                                <mat-icon class="close-icon bread-crumb-link"
+                                  matTooltip="{{ 'REMOVE_PARAMETER' | translate }}" *ngIf="!viewMode"
+                                  (click)="deleteParameter(cusFieldslist,i,true)">
+                                  remove_circle_outline
+                                </mat-icon>
+
+                              </div>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                      </mat-grid-list>
+                    </div>
+
+                    <!-- <angular-editor class="angular-editor" formControlName="termsCondition" [config]="editorConfig"
+                      (input)="isChanged()"></angular-editor> -->
+                  </mat-card-content>
+                </mat-card>
+              </mat-tab>
+
+              <mat-tab *ngIf="poMainForm.controls.poId.value > 0" label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+                <mat-card class="card-style">
+                  <mat-card-content>
+                    <app-common-workflow-approval-tab [transactionId]=porderId [transactionSource]=transactionSource
+                      [POEmployeeId]=employeeId [poStatusId]=poMainForm.controls.poStatusId.value
+                      [POApproveButtonEnable]=approvebuttonEnable (poconfirm)=validateAndApprovePO()
+                      (poReject)=poWorkflowApproval(false)>
+                    </app-common-workflow-approval-tab>
+                  </mat-card-content>
+                </mat-card>
+              </mat-tab>
+
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

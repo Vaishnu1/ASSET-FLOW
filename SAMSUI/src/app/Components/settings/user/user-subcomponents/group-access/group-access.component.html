@@ -1,0 +1,119 @@
+<div fxLayout="column" class="card-style">
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+    <div fxFlex="80" fxFlex.xs="60" fxFlex.sm="60" fxLayoutAlign="start center">
+      <h4 class="section_title">{{'MENU_GROUP_ACCESS' | translate}}</h4>
+    </div>
+    <div fxFlex="20" fxFlex.xs="40" fxFlex.sm="40" fxLayout="row" fxLayoutAlign="end end">
+      <button mat-raised-button color="primary" (click)="clear()" class="space" [disabled]="disableAccess"> {{'COMMON_CLEAR' | translate}}
+      </button>
+      <button mat-raised-button color="primary" (click)="submit()"
+        [disabled]="(groupComboFormGroup.invalid || uploadFlagUser || disableAccess)">
+        <span *ngIf="!uploadFlagUser"> {{'COMMON_SUBMIT' | translate}} </span>
+        <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+  </div>
+  <div>
+    <form [formGroup]="groupComboFormGroup">
+      <div fxLayout="column" fxFlex="30">
+        <div>
+          <p class="input-label">{{'GROUPACCESS_NAME' | translate}} <span class="mandatory-style">*</span> </p>
+        </div>
+        <div>
+            <ng-select class=" input-field" #groupNameComboField [items]="groupListData" bindLabel="groupName"
+            (search)="getgroupList($event)" (click)="getgroupList($event)" [virtualScroll]="true"
+            (scrollToEnd)="getgroupList({})" (keyup.backspace)="getgroupList($event.target.value ? $event : 'back')" 
+            (clear)="getgroupList('clear')" [loading]="scrollsync" loadingText="Loading..." tabindex="1"
+            (change)="selectedGroupName($event)"
+            formControlName="groupNameComboField">
+          </ng-select>
+            <mat-error
+              *ngIf="groupComboFormGroup.controls.groupNameComboField.invalid && groupComboFormGroup.controls.groupNameComboField.touched">
+              <div class="err-field" *ngIf="groupComboFormGroup.controls.groupNameComboField.errors.required">
+              "{{'GROUPACCESS_NAME' | translate}}" Is Required</div>
+            </mat-error>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <table *ngIf="groupId>0">
+    <!-- <div fxFlex="10"></div> -->
+    <table>
+      <thead fxLayout="row">
+        <tr fxFlex="100">
+          <th fxFlex="39" fxLayoutAlign="start center" class="input-label">
+            {{'GROUPACCESS_MODULE_NAME' | translate}}
+          </th>
+          <th fxFlex="15" fxLayoutAlign="start center" class="input-label">
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="createBtn" [ngModelOptions]="{standalone: true}"
+              (change)="setCreateValue($event)" [disabled]="!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay">
+            </mat-checkbox>&nbsp;
+            {{'GROUPACCESS_CREATE' | translate}}
+          </th>
+          <th fxFlex="15" fxLayoutAlign="start center" class="input-label">
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="updateBtn" [ngModelOptions]="{standalone: true}"
+              (change)="setUpdateValue($event)" [disabled]="!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay">
+            </mat-checkbox>&nbsp;
+            {{'GROUPACCESS_EDIT' | translate}}
+          </th>
+          <th fxFlex="15" fxLayoutAlign="start center" class="input-label">
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="readBtn" [ngModelOptions]="{standalone: true}"
+              (change)="setReadValue($event)" [disabled]="!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay">
+            </mat-checkbox>&nbsp;
+            {{'GROUPACCESS_VIEW' | translate}}
+          </th>
+          <th fxFlex="15" fxLayoutAlign="start center" class="input-label">
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="deleteBtn" [ngModelOptions]="{standalone: true}"
+              (change)="setDeleteValue($event)" [disabled]="!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay">
+            </mat-checkbox>&nbsp;
+            {{'GROUPACCESS_DELETE' | translate}}
+          </th>
+        </tr>
+      </thead>
+    </table>
+    <!-- <div fxFlex="10"></div> -->
+  </table>
+
+  <div class="user-container-table">
+  <table>
+    <tbody *ngFor="let menu of menus" fxLayout="column">
+      <tr style="font-weight: bold;background: lightblue; flex-direction: row; justify-content: space-evenly end;">
+        <td class="input-label">{{menu | translate}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr *ngFor="let group of menuGroupList; let i = index" fxLayout="row" fxLayoutAlign="start center">
+        <td *ngIf="group.menuName==menu" class="tableColumnMover input-field row-height" fxFlex="40" fxLayoutAlign="start center">
+          {{group.moduleNameView | translate}}</td>
+        <td *ngIf="group.menuName==menu" fxFlex="15" fxLayoutAlign="start center">
+          <label>
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="group.createFlagDisplay"  [disabled]="(!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay)" *ngIf="group.menuName!=='Dashboard'" (change)="setIndividualvalueForCreate(group)"></mat-checkbox>
+          </label>
+        </td>
+        <td *ngIf="group.menuName==menu" fxFlex="15" fxLayoutAlign="start center">
+          <label>
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="group.updateFlagDisplay" [disabled]="(!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay)"
+            *ngIf="group.menuName!=='Dashboard'" (change)="setIndividualvalueForUpdate(group)"></mat-checkbox>
+          </label>
+        </td>
+        <td *ngIf="group.menuName==menu" fxFlex="15" fxLayoutAlign="start center">
+          <label>
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="group.readFlagDisplay" [disabled]="!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay"
+              (change)="setIndividualvalueForView(group)"></mat-checkbox>
+          </label>
+        </td>
+        <td *ngIf="group.menuName==menu" fxFlex="15" fxLayoutAlign="start center">
+          <label>
+            <mat-checkbox color="primary" type="checkbox" [(ngModel)]="group.deleteFlagDisplay" [disabled]="(!modelAccess.createFlagDisplay && !modelAccess.updateFlagDisplay && !modelAccess.deleteFlagDisplay && modelAccess.readFlagDisplay)"
+            *ngIf="group.menuName!=='Dashboard'"  (change)="setIndividualvalueForDelete(group)"></mat-checkbox>
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+</div>

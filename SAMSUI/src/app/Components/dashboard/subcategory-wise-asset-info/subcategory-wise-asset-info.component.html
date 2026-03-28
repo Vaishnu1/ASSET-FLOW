@@ -1,0 +1,20 @@
+<!-- <mat-icon class="close-icon-large" (click)="closeSubCategoryModal()">highlight_off</mat-icon>
+<div class="hgt-175">
+  <div echarts [options]="option" class="chart" 
+    theme="roma"></div>
+</div>   -->
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="95">
+      <p class="dialogue-box-header"> {{ header }} </p>
+    </div>
+    <div fxFlex="5" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeSubCategoryModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <div>
+    <div echarts [options]="option" class="chart" (chartClick)="openAssetViewPage($event)"
+      theme="roma"></div>
+  </div>
+</div>

@@ -1,0 +1,616 @@
+<div fxLayout="column" fxFlex="100" style="margin-top: 10px;">
+
+    <!-- COLLAPSABLE SEARCH -->
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title class="panel-header">
+                {{ 'COMMON_SEARCH' | translate }}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end end">
+                <mat-icon>search</mat-icon>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px"
+            style="padding-left: 20px; margin-bottom: 10px;">
+
+            <!-- BRANCH FILTER -->
+            <div style="width: 250px;">
+                <span class="input-label" style="margin-bottom: 4px; display: block;">Branch</span>
+                <ng-select class="input-field" style="width: 100%; min-height: 38px;" formControlName="locationName"
+                    [items]="locationCombo" bindLabel="locationName" bindValue="locationName" [virtualScroll]="true"
+                    [loading]="scrollLocationNamesync" (search)="listofLocationName($event)"
+                    (click)="listofLocationName({})" (scrollToEnd)="listofLocationName({})" [clearable]="false"
+                    (change)="setLocationNameComboValue($event)" appendTo="body">
+                </ng-select>
+            </div>
+
+            <!-- START DATE FILTER -->
+            <div style="width: 200px;" *ngIf=false>
+                <span class="input-label" style="margin-bottom: 4px; display: block;">{{ 'COMMON_START_DATE' |
+                    translate }}</span>
+                <mat-form-field style="width: 100%; min-height: 1px;" appearance="legacy">
+                    <input matInput (click)="picker1.open()" [matDatepicker]="picker1" class="input-field"
+                        (keypress)="dateValidation($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- END DATE FILTER -->
+            <div style="width: 200px;" *ngIf=false>
+                <span class="input-label" style="margin-bottom: 4px; display: block;">{{ 'COMMON_END_DATE' | translate
+                    }}</span>
+                <mat-form-field style="width: 100%; min-height: 1px;" appearance="legacy">
+                    <input matInput (click)="picker2.open()" [matDatepicker]="picker2" class="input-field"
+                        (keypress)="dateValidation($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </mat-expansion-panel>
+
+    <!-- HEADER TABS -->
+    <div fxLayout="row" fxLayoutAlign="start center" style="gap: 8px; overflow: hidden; margin-top: 10px;">
+        <div style="flex: 1 1 auto; min-width: 0;">
+            <nav mat-tab-nav-bar>
+                <a mat-tab-link *ngIf="isTabEnabled('inventory')" [active]="activetab === 'inventory'"
+                    (click)="getChartData('inventory')">
+                    Asset Inventory
+                </a>
+
+                <a mat-tab-link *ngIf="isTabEnabled('maintenance')" [active]="activetab === 'maintenance'"
+                    (click)="getChartData('maintenance')">
+                    Maintenance
+                </a>
+
+                <a mat-tab-link *ngIf="isTabEnabled('contracts')" [active]="activetab === 'contracts'"
+                    (click)="getChartData('contracts')">
+                    Contract - Warranty
+                </a>
+
+                <a mat-tab-link *ngIf="isTabEnabled('financial')" [active]="activetab === 'financial'"
+                    (click)="getChartData('financial')">
+                    Financial
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- INVENTORY TAB -->
+    <div *ngIf="activetab  == 'inventory'" style="margin-top: 5px; max-height: 70vh; min-height: 70vh;">
+
+        <!-- OUTER CARD -->
+        <mat-card style="padding-bottom: 10px;">
+            <mat-card-content>
+
+                <!-- SUMMARY CARDS -->
+                <div fxLayout="row wrap" fxLayoutGap="16px" style="margin-bottom: 16px;"
+                    fxLayoutAlign="space-evenly center">
+                    <div fxFlex="14" fxFlex.xs="100" *ngFor="let card of summaryCardsDataAssetInventory">
+                        <mat-card class="summary-card summary-card-box hover-card" 
+                         (click)="onCardClick(card)">
+                            <mat-card-content>
+                                <div fxLayout="row wrap" fxLayoutAlign="center center" style="text-align: center;">
+
+                                    <!-- SUMMARY CARD ICON -->
+                                    <mat-icon style="font-size: 22px; color: #007bff; padding-right: 5px;">{{
+                                        getCardIcon(card.title)
+                                        }}
+                                    </mat-icon>
+
+                                    <!-- SUMMARY CARD TITLE -->
+                                    <div style="font-size: 14px; color: #555; text-align: center;">{{ card.title }}
+                                    </div>
+                                </div>
+
+                                <!-- SUMMARY CARD VALUE -->
+                                <div style="font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                                    <ng-container
+                                        *ngIf="card.title === 'Total Purchase Cost' || card.title === 'Current Value'; else normalValue">
+                                        ₹{{ card.value | number:'1.2-2':'en-IN' }}
+                                    </ng-container>
+                                    <ng-template #normalValue>
+                                        {{ card.value }}
+                                    </ng-template>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <!-- FIRST ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <!-- CATEGORY PIE CHART -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="assetCategoryOption" class="chart"
+                                style="width: 100%; height: 100%;"  (chartClick)="onCategoryChartClick($event)">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <div fxLayout="column">
+
+                        <!-- OWNERSHIP BAR CHART -->
+                        <mat-card class="inventory-category-card"
+                            style="height: 24vh; width: 50vh; margin-top: 10px; margin-bottom: 4px; margin-left: 5px; margin-right: 5px;">
+                            <mat-card-content>
+                                <div echarts [options]="assetOwnershipOption" class="chart" style="padding: 10px;" (chartClick)="onOwnershipChartClick($event)">
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <!-- LOANED ASSET CHART -->
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                            <ng-container *ngFor="let card of loanedCardsDataAssetInventory">
+                                <mat-card class="inventory-category-card"
+                                    style="height: 23.8vh; width: 24vh; margin: 4px;cursor: pointer;" (click)="onLoanedCardClick(card)">
+                                    <mat-card-content
+                                        style="height: 100%; display: flex; justify-content: center; align-items: center;">
+                                        <div
+                                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+
+                                            <!-- TITLE -->
+                                            <span style="font-size: 18px; font-weight: 600; color: #424242;">
+                                                <span style="font-size: 26px;">
+                                                    {{ card.title.includes('External') ? '🚚' : '🏢' }}
+                                                </span>
+                                                Loaned-out
+                                            </span>
+
+                                            <!-- SUB-TITLE -->
+                                            <span
+                                                style="font-size: 16px; font-weight: 500; color: #5b5858; margin-top: 4px;">
+                                                {{ card.title.includes('External') ? 'External' : 'Internal' }}
+                                            </span>
+
+                                            <!-- VALUE -->
+                                            <span
+                                                [ngStyle]="{ color: card.title.includes('External') ? '#e53935' : '#1e88e5' }"
+                                                style="font-size: 36px; font-weight: bold; margin-top: 16px;">
+                                                {{ card.value }}
+                                            </span>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- STATUS BAR CHART -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 75vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="assetStatusConditionOption" class="chart"
+                                style="width: 100%; height: 100%;" (chartClick)="onStatusChartClick($event)">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <!-- SECOND ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <!-- ASSETS BY CURRENT AND REMAINING AGE TABLE CHART -->
+                    <mat-card class="inventory-category-card" style="width: 65vh; margin: 10px; display: none;">
+                        <mat-card-content>
+
+                            <!-- AGE TOGGLE BUTTONS -->
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 7px;">
+                                <span style="font-weight: bold; font-size: 18px;">Assets By
+                                    {{ ageMode === 'current' ? 'Current Age' : 'Remaining Age' }}
+                                </span>
+                                <div
+                                    style="display: flex; justify-content: end; padding-right: 10px; border-radius: 10;">
+                                    <button (click)="setAgeMode('current')"
+                                        [ngClass]="{ 'active-toggle': ageMode === 'current' }">
+                                        Current Age
+                                    </button>
+                                    <button (click)="setAgeMode('remaining')"
+                                        [ngClass]="{ 'active-toggle': ageMode === 'remaining' }">
+                                        Remaining Age
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- TABLE DATA -->
+                            <table mat-table [dataSource]="ageTableRows" class="mat-elevation-z8"
+                                style="width: 95%; justify-self: center; text-align: center; margin-bottom: 10px;">
+
+                                <ng-container matColumnDef="leftRange">
+                                    <th mat-header-cell *matHeaderCellDef>Age Range</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.leftRange }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="leftCount">
+                                    <th mat-header-cell *matHeaderCellDef>Count</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.leftCount }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="rightRange">
+                                    <th mat-header-cell *matHeaderCellDef>Age Range</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.rightRange }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="rightCount">
+                                    <th mat-header-cell *matHeaderCellDef>Count</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.rightCount }}</td>
+                                </ng-container>
+
+                                <tr mat-header-row
+                                    *matHeaderRowDef="['leftRange', 'leftCount', 'rightRange', 'rightCount']"></tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: ['leftRange', 'leftCount', 'rightRange', 'rightCount'];">
+                                </tr>
+                            </table>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card" style="width: 65vh; margin: 10px;">
+                        <mat-card-content>
+
+                            <!-- AGE TOGGLE BUTTONS -->
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 7px;">
+                                <span style="font-weight: bold; font-size: 18px;">Assets By
+                                    {{ ageMode === 'current' ? 'Current Age' : 'Remaining Age' }}
+                                </span>
+                                <div
+                                    style="display: flex; justify-content: end; padding-right: 10px; border-radius: 10;">
+                                    <button (click)="setAgeMode('current')"
+                                        [ngClass]="{ 'active-toggle': ageMode === 'current' }">
+                                        Current Age
+                                    </button>
+                                    <button (click)="setAgeMode('remaining')"
+                                        [ngClass]="{ 'active-toggle': ageMode === 'remaining' }">
+                                        Remaining Age
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- TABLE OR NO DATA MESSAGE -->
+                            <ng-container *ngIf="hasAgeData; else noData">
+                                <table mat-table [dataSource]="ageTableRows" class="mat-elevation-z8"
+                                    style="width: 95%; justify-self: center; text-align: center; margin-bottom: 10px;">
+
+                                    <ng-container matColumnDef="leftRange">
+                                        <th mat-header-cell *matHeaderCellDef>Age Range</th>
+                                        <td mat-cell *matCellDef="let row">{{ row.leftRange }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="leftCount">
+                                        <th mat-header-cell *matHeaderCellDef>Count</th>
+                                        <td mat-cell *matCellDef="let row">{{ row.leftCount }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="rightRange">
+                                        <th mat-header-cell *matHeaderCellDef>Age Range</th>
+                                        <td mat-cell *matCellDef="let row">{{ row.rightRange }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="rightCount">
+                                        <th mat-header-cell *matHeaderCellDef>Count</th>
+                                        <td mat-cell *matCellDef="let row">{{ row.rightCount }}</td>
+                                    </ng-container>
+
+                                    <tr mat-header-row
+                                        *matHeaderRowDef="['leftRange', 'leftCount', 'rightRange', 'rightCount']"></tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: ['leftRange', 'leftCount', 'rightRange', 'rightCount'];">
+                                    </tr>
+                                </table>
+                            </ng-container>
+
+                            <ng-template #noData>
+                                <div style="text-align: center; font-size: 16px; color: #888; padding: 40px 0;">
+                                    No data to display
+                                </div>
+                            </ng-template>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+    <!-- MAINTENANCE TAB -->
+    <div *ngIf="activetab  == 'maintenance'" style="margin-top: 5px;">
+
+        <!-- OUTER CARD -->
+        <mat-card style="padding-bottom: 10px;">
+            <mat-card-content>
+
+                <!-- SUMMARY CARDS -->
+                <div fxLayout="row wrap" fxLayoutGap="16px" style="margin-bottom: 16px;"
+                    fxLayoutAlign="space-evenly center">
+                    <div fxFlex="14" fxFlex.xs="100" *ngFor="let card of summaryCardsDataAssetMaintenance">
+                        <mat-card class="summary-card summary-card-box hover-card"  (click)="onCardClickMaintenance(card)" >
+                            <mat-card-content>
+
+                                <!-- SUMMARY CARD ICON -->
+                                <div fxLayout="row wrap" fxLayoutAlign="center center" style="text-align: center;">
+                                    <mat-icon style="font-size: 22px; color: #007bff; padding-right: 5px;">{{
+                                        getCardIcon(card.title)
+                                        }}
+                                    </mat-icon>
+
+                                    <!-- SUMMARY CARD TITLE -->
+                                    <div style="font-size: 14px; color: #555; text-align: center;">{{ card.title }}
+                                    </div>
+                                </div>
+
+                                <!-- SUMMARY CARD VALUE -->
+                                <div style="font-size: 15px; font-weight: bold; text-align: center; margin-top: 10px;">
+                                    {{ card.value }}</div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <!-- FIRST ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <!-- BM AGEING BAR CHART -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="bmAgingOption" class="chart" style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- RECURRING BM LINE CHART -->
+                    <mat-card class="inventory-category-card"
+                        style="height: 50vh; width: 60vh; margin: 10px; flex: none">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="recurringBreakdownsOption" class="chart"
+                                style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- MAINTENANCE COST HORIZONTAL BAR CHART -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="maintenanceCostBreakdownOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+                <!-- SECOND ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto; flex: none" fxLayoutWrap>
+
+                    <!-- EXCEEDING SLA'S FOR BREAKDOWN PIE CHART -->
+                    <!-- MAKE DISPLAY VISIBLE ONCE MODULE IS AVAILABLE IN PRODUCTION -->
+                    <mat-card class="inventory-category-card"
+                        style="height: 50vh; width: 65vh; margin: 10px; display: none;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="exceedingSlaForBreakdownOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- MTTR BAR CHART --> <!-- CHANGE WIDTH TO width: 60vh ONCE SLA CHART IS AVAILABLE -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="mttrBreakdownOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- MTBF BAR CHART --> <!-- CHANGE WIDTH TO width: 65vh ONCE SLA CHART IS AVAILABLE -->
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 60vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="mtbfBreakdownOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+    <!-- CONTRACT/WARRANTY TAB -->
+    <div *ngIf="activetab  == 'contracts'" style="margin-top: 5px; max-height: 100vh;">
+
+        <!-- OUTER CARD -->
+        <mat-card style="padding-bottom: 10px;">
+            <mat-card-content>
+
+                <!-- SUMMARY CARDS -->
+                <!-- <div fxLayout="row wrap" fxLayoutGap="16px" style="margin-bottom: 16px;"
+                    fxLayoutAlign="space-evenly center">
+                    <div fxFlex="14" fxFlex.xs="100" *ngFor="let card of summaryCardsDataContractWarranty">
+                        <mat-card class="summary-card summary-card-box hover-card" (click)="onCardClickContract(card)">
+                            <mat-card-content>
+                                <div fxLayout="row">
+                                    <mat-icon
+                                        style="font-size: 22px; color: #007bff; padding-right: 5px; padding-left: 15px;">
+                                        {{ getCardIcon(card.title) }}
+                                    </mat-icon>
+                                    <div style="font-size: 14px; color: #555; text-align: center;">{{ card.title }}
+                                    </div>
+                                </div>
+                                <div style="font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                                    <ng-container *ngIf="card.title === 'Total Contract Value'; else normalValue">
+                                        ₹{{ card.value | number:'1.2-2':'en-IN' }}
+                                    </ng-container>
+                                    <ng-template #normalValue>
+                                        {{ card.value }}
+                                    </ng-template>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div> -->
+
+                <!-- SUMMARY CARDS -->
+                <div fxLayout="row wrap" fxLayoutGap="16px" style="margin-bottom: 16px;"
+                    fxLayoutAlign="space-evenly center">
+                    <div fxFlex="14" fxFlex.xs="100" *ngFor="let card of summaryCardsDataContractWarranty">
+                        <mat-card class="summary-card summary-card-box hover-card" (click)="onCardClickContract(card)">
+                            <mat-card-content>
+                                <div fxLayout="row">
+                                    <mat-icon
+                                        style="font-size: 22px; color: #007bff; padding-right: 5px; padding-left: 15px;">
+                                        {{ getCardIcon(card.title) }}
+                                    </mat-icon>
+                                    <div style="font-size: 14px; color: #555; text-align: center;">{{ card.title }}
+                                    </div>
+                                </div>
+                                <div style="font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                                    <ng-container *ngIf="card.title === 'Total Contract Value'; else normalValue">
+                                        {{ card.value | number:'1.2-2':'en-IN' }}
+                                    </ng-container>
+                                    <ng-template #normalValue>
+                                        {{ card.value }}
+                                    </ng-template>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <!-- FIRST ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="expiryTimelineOption" class="chart"
+                                style="width: 100%; height: 100%;" (chartClick)="onContractWarrantyExpiringChartClick($event)">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card"
+                        style="height: 50vh; width: 60vh; margin: 10px; flex: none">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="expiredTimelineOption" class="chart"
+                                style="width: 100%; height: 100%;" (chartClick)="onContractWarrantyExpiredChartClick($event)">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="typeDistributionOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+
+                <!-- SECOND ROW -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="warrantyCoverageOption" class="chart"
+                                style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card"
+                        style="height: 50vh; width: 129vh; margin: 10px; flex: none">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="topVendorsOption" class="chart" style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <!-- <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="valueByTypeOption" class="chart" style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card> -->
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+    <!-- FINANCIAL TAB -->
+    <div *ngIf="activetab  == 'financial'" style="margin-top: 5px;">
+
+        <!-- OUTER CARD -->
+        <mat-card style="padding-bottom: 10px;">
+            <mat-card-content>
+
+                <!-- SUMMARY CARDS -->
+                <div fxLayout="row wrap" fxLayoutGap="16px" style="margin-bottom: 16px;"
+                    fxLayoutAlign="space-evenly center">
+                    <div fxFlex="14" fxFlex.xs="100" *ngFor="let card of summaryCardsDataFinancial">
+                        <mat-card class="summary-card summary-card-box hover-card" (click)="onCardClickFinancial(card)">
+                            <mat-card-content>
+                                <div fxLayout="row">
+
+                                    <!-- SUMMARY CARD ICON -->
+                                    <mat-icon
+                                        style="font-size: 22px; color: #007bff; padding-right: 5px; padding-left: 15px;">{{
+                                        getCardIcon(card.title)
+                                        }}
+                                    </mat-icon>
+
+                                    <!-- SUMMARY CARD TITLE -->
+                                    <div style="font-size: 14px; color: #555; text-align: center;">{{ card.title }}
+                                    </div>
+                                </div>
+
+                                <!-- SUMMARY CARD VALUE -->
+                                <div style="font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                                    {{ card.value }}</div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <!-- FIRST ROW: Status Pie & Type Distribution -->
+                <div fxLayout="row" style="margin-left: 15px; width: 100%; height: auto;" fxLayoutWrap>
+
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="poTrendOption" class="chart"
+                                style="width: 100%; height: 100%;">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card"
+                        style="height: 50vh; width: 60vh; margin: 10px; flex: none">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="assetsRetiringByCategoryReasonOption" class="chart"
+                                style="width: 100%; height: 100%;" (chartClick)="onFinancialCategoryChartClick($event)">
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="inventory-category-card" style="height: 50vh; width: 65vh; margin: 10px;">
+                        <mat-card-content style="height: 100%; width: 100%;">
+                            <div echarts [options]="assetRetirementsTimelineOption" class="chart"
+                                style="width: 100%; height: 100%;"></div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+</div>

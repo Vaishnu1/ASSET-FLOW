@@ -1,0 +1,50 @@
+.pad-1-per{
+  padding: 1%;
+}
+
+.pad-2-per{
+  padding: 2%;
+}
+
+.card-style{
+  border-radius: 0%;
+  margin-bottom: 20px;
+  box-shadow:1px 1px 10px #d4d4d4;
+  z-index:800;
+}
+
+.minimum-card-height{
+  min-height: 400px;
+}
+
+.left-margin-1-per{
+  margin-left: 1%;
+}
+
+.btn-margin-5px{
+  margin: 5px;
+}
+
+.main-body{
+  padding: 0px 15px 0px 15px ;
+}
+
+.top-content-resp{
+  margin-top: 0px !important;
+}
+
+.example-label {
+  width: 100%;
+}
+
+.mandatory-style {
+  color: crimson;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.f-h-50-px{
+  height: 50px;
+}

@@ -1,0 +1,362 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+
+  .example-full-width_calender{
+    width: 100%;
+  }
+  
+  .logo-style {
+    width: 50%;
+    height: 50%;
+    padding-top: 5px;
+  }
+  
+  .logoedit {
+    margin-top: 15px;
+  }
+  
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .mb-0 {
+    margin-bottom: 0px;
+  } 
+  
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label,
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked .ng-option-label {
+    font-weight: 100 !important;
+    font-size: 12px !important;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .mat-table {
+    max-height: 500px;
+  }
+  
+  
+  .Footer {
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
+    padding: 0px 15px;
+    background-color: rgba(62, 59, 59, 0.13);
+    height: 45px;
+    text-align: right
+  }
+  
+  .action_icon {
+    cursor: pointer;
+  }
+  
+  /* Specific design */
+  
+  .font-style {
+    font-size: 17px;
+    color: #000000;
+    text-align: center;
+  }
+  
+  .card-design {
+    margin-left: 1%;
+    border-radius: 0%;
+    box-shadow: 1px 1px 10px #d4d4d4;
+    width: 100%;
+    margin-right: 1%;
+  }
+  
+  .content-style {
+    padding-top: 10px;
+  }
+  
+  .card-style {
+    border-radius: 0%;
+    min-height: 400px;
+    margin-bottom: 20px;
+    z-index: 800;
+  }
+  
+  ::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none !important;
+  }
+  
+  .breadcrumblink {
+    float: left;
+  }
+  
+  .whitecolor {
+    color: #ffffff !important;
+  }
+  
+  /* Default design for Table */
+  tr.mat-header-row {
+    height: 35px;
+  }
+  
+  .mat-header-cell {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .icon-Style {
+    cursor: pointer;
+    float: right !important;
+  }
+  
+  .margin-fix {
+    margin-top: 3%;
+  }
+  
+
+
+  .content_section_loan {
+    margin: 0px 7px 0px 7px;
+    background: #ffffff;
+    padding: 1px;
+    min-height: 500px
+  }
+  
+  /* .top-content {
+    width: 100%;
+    position: fixed !important;
+  } */
+  
+  .btmfooter {
+    padding-right: 1px;
+    position: fixed;
+    bottom: 0px;
+    background-color: #4a27271f;
+    width: 100%;
+    height: 45px;
+    z-index: 1000;
+  }
+  
+  .footer p {
+    font-size: 14px;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 30px;
+  }
+  
+  button {
+    /* float: right; */
+    margin-top: 0.5%;
+  }
+  
+  .btnfooter {
+    position: absolute;
+    bottom: 0;
+    overflow: hidden;
+  }
+  
+  @media screen and (min-width: 768px) and (max-width:1024px) {
+    .card-design {
+      position: relative;
+      width: 100%;
+      width: 22%;
+    }
+  }
+  
+  .rightbutton {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  .mat-card-content {
+    padding: 2px !important;
+  }
+  
+  .rightbuttonFooter {
+    text-align: right;
+    padding-bottom: 10px;
+  }
+  
+  ::ng-deep .mat-tab-body-content {
+    overflow: unset !important;
+  }
+  
+  .font-style-combo {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 480;
+    color: rgba(54, 54, 54, 0.83);
+  }
+  
+  ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: -16px !important;
+  }
+  
+  
+  .form-group {
+    margin-bottom: 0.5rem !important;
+    font-size: 15px !important;
+    margin-top: 2%;
+    font-weight: 400;
+  }
+  
+  p {
+    margin-top: 0;
+    margin-bottom: 0rem;
+  }
+  
+  .panel-form {
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-right: 0px;
+    margin-bottom: 5px;
+    background-color: #fafafa;
+  }
+  
+  .panel-form-po {
+    border-radius: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 5px;
+    background-color: #fafafa;
+  }
+  
+  h6 {
+    font-size: 14px;
+    color: #31a7c7;
+    margin-top: 6px;
+  }
+  
+  ::ng-deep.mat-grid-tile .mat-figure {
+    top: 30px !important;
+    left: 15px !important;
+    right: 15px !important;
+    bottom: 10px !important;
+    position: absolute !important;
+    display: block !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  hr {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    border-radius: 10px;
+    background-color: #768f7d;
+  }
+  
+  input[type="text"][readonly] {
+    color: rgb(22, 47, 94);
+    border-bottom: 1px solid grey !important;
+    background: -moz-linear-gradient(270deg, rgba(255, 255, 255, 0.8) 84%, rgba(168, 168, 168, 0.8) 98%, rgba(156, 156, 156, 1) 100%) !important;
+    /* ff3.6+ */
+  }
+  
+  
+  .pd-2 {
+    padding: 2%;
+    padding-bottom: 3%;
+  }
+
+  .space{
+    margin-right: 10px;
+  }
+  
+  
+.header-font {
+  font-size: 14px;
+  color: #31a7c7;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 480;
+}
+
+@media screen and (max-width : 1280px) { 
+  .breadcrumb-list {
+    position: sticky !important; 
+    margin: 10px 0px -7px 0px;
+  }
+  }
+
+  .no_records_found {
+    text-align: center;
+    width: 100%;
+  }
+
+  .return-date-field {
+    margin-top: 12px;
+  }
+  .return-condition-field {
+    margin-top: -14px;
+  }
+
+  .return-contact-no {
+    margin-top: 15px;
+  }
+
+  .Asset-model-gap {
+    margin-top: 16px;
+  }
+
+  .requested-person-details {
+    margin-top: -13px;
+  }
+
+  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 10px;
+  }
+
+  th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    padding-right: 10px;
+  }
+  
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 5px;
+    word-break: break-word; 
+    max-width: 98px;
+  }
+
+  .content_section{
+    background-color: #ffffff;
+    height: auto;
+    padding: 15px;
+  }
+
+  .status-style {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.h-60-px{
+  height: 60px;
+}
+
+.h-65-px{
+  height: 65px;
+}
+
+.mt-1-px{
+  margin-top: 1px;
+}
+
+.ASSET_CODE_CHANGE_REQUESTED {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  
+}
+.ASSET_CODE_CHANGE_REQUESTED:hover {
+  border-bottom: 1px solid gray;
+}

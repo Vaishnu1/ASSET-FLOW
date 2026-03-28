@@ -1,0 +1,631 @@
+<div fxLayout="column">
+  <div>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxLayout="column">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+            <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField" appendTo="body"
+              (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" [virtualScroll]="true"
+              (scrollToEnd)="loadLocationComboData({})"
+              (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')"
+              (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+              (change)="selectedBranch($event)" [(ngModel)]="blockModel.locationName"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'BLOCK_NAME' | translate }} </span>
+            <ng-select [items]="blockComboList" bindLabel="blockName" (search)="getBlockNameComboData($event)" appendTo="body"
+              (click)="getBlockNameComboData({})" (scrollToEnd)="getBlockNameComboData({})"
+              (keyup.backspace)="getBlockNameComboData($event.target.value ? $event : 'back')"
+              (clear)="getBlockNameComboData('clear')" (change)="selectedBlockForSearch($event)" [virtualScroll]="true"
+              [loading]="blockScrollSync" bindValue="blockName" [(ngModel)]="blockModel.blockName"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'FLOOR_NAME' | translate }} </span>
+            <ng-select [items]="floorComboList" bindLabel="floorName" (search)="getFloorNameComboData($event)"
+              (click)="getFloorNameComboData({})" (scrollToEnd)="getFloorNameComboData({})"
+              (keyup.backspace)="getFloorNameComboData($event.target.value ? $event : 'back')"
+              (clear)="getFloorNameComboData('clear')" (change)="selectedFloorName($event)" [virtualScroll]="true"
+              [loading]="floorSrcollSync" appendTo="body" bindValue="floorName" [(ngModel)]="floorModel.floorName"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+        </div>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'SEGMENT_NAME' | translate }} </span>
+            <ng-select [items]="segmentComboList" bindLabel="segmentName" (search)="getSegmentNameComboData($event)"
+              (click)="getSegmentNameComboData({})" appendTo="body" (scrollToEnd)="getSegmentNameComboData({})"
+              (keyup.backspace)="getSegmentNameComboData($event.target.value ? $event : 'back')"
+              (clear)="getSegmentNameComboData('clear')" (change)="selectedSegmentName($event)" [virtualScroll]="true"
+              [loading]="segmentSrcollSync" bindValue="segmentName" [(ngModel)]="segmentModel.segmentName"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'ROOM_NAME' | translate }} </span>
+            <ng-select [items]="roomComboList" bindLabel="roomName" (search)="getRoomComboData($event)" appendTo="body"
+              (click)="getRoomComboData({})" (scrollToEnd)="getRoomComboData({})"
+              (keyup.backspace)="getRoomComboData($event.target.value ? $event : 'back')"
+              (clear)="getRoomComboData('clear')" (change)="selectedRoomName($event)" [virtualScroll]="true"
+              [loading]="roomSrcollSync" bindValue="roomName" [(ngModel)]="roomModel.roomName"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+
+          <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxLayoutAlign="end center" fxFlexFill>
+          <button mat-raised-button fxHide.sm fxHide.xs color="primary" class="space"
+            (click)="onSearchChange($event)">{{
+            'COMMON_SEARCH' | translate }}</button>
+          <button mat-raised-button fxHide.gt-sm matTooltip="Search" color="primary" class="space"
+            (click)="onSearchChange($event)">
+            <mat-icon>search</mat-icon>
+          </button>
+
+          <button class="space" mat-raised-button fxHide.sm fxHide.xs color="primary" class="space"
+            (click)="clearSearch()">{{ 'COMMON_CLEAR' | translate }}</button>
+          <button class="space" mat-raised-button fxHide.gt-sm matTooltip="Clear" color="primary" class="space"
+            (click)="clearSearch()">
+            <mat-icon>clear_all</mat-icon>
+          </button>
+
+          <button mat-raised-button fxHide.sm fxHide.xs color="primary" class="space" [disabled]="disableExportButton"
+            (click)="generateBuildingreport()">{{ 'REPORT_EXPORT_ALL' | translate }}
+          </button>
+          <button mat-raised-button fxHide.gt-sm matTooltip="{{ 'REPORT_EXPORT_ALL' | translate }}" color="primary"
+            class="space" [disabled]="disableExportButton" (click)="generateBuildingreport()">
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </div>
+
+          <!-- <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" class="pad-1-per" fxFlexFill>
+            <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+            <ng-select [(ngModel)]="activeDisplay" [ngModelOptions]="{standalone: true}" [items]="status"
+              bindLabel="name" bindValue="name" (change)="changeActiveFlag($event)">
+            </ng-select>
+          </div> -->
+        </div>
+
+        
+
+      </div>
+
+
+    </mat-expansion-panel>
+  </div>
+
+  <hr>
+
+  <div [@.disabled]="true">
+
+    <mat-tab-group [selectedIndex]="selectedIndex" (selectedTabChange)="activeTab($event)">
+
+      <mat-tab>
+        <ng-template mat-tab-label class="panel-header">
+          {{'BUILDING_BLOCK' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-toolbar>
+            <span>{{'BUILDING_BLOCK'| translate}}</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorLegalEntity [pageSizeOptions]="[5, 10, 25, 50, 100]"
+              [length]="displayedLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
+              (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+              *ngIf="modelAccessModule.createFlagDisplay"
+              (click)="createBuildingBlock(0,'add')"><mat-icon>add</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingBlock == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+              (click)="createBuildingBlock(selectedBuildingBlock,'edit')">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingBlock == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+              (click)="createBuildingBlock(selectedBuildingBlock,'view')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </mat-toolbar>
+          <mat-card-content>
+            <div fxLayout="column">
+              <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+                  <ng-select [(ngModel)]="blockModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="status" bindLabel="name" bindValue="name" (change)="changeBlockStatus($event)">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxLayout="row">
+                  <button mat-raised-button class="space" color="primary"
+                    (click)="searchBlock($event)">{{'COMMON_SEARCH' | translate}}</button>
+                  <button mat-raised-button class="space" color="primary" (click)="clearBlockData()">{{'COMMON_CLEAR' |
+                    translate}}</button>
+                </div>
+
+              </div> -->
+
+              <div class="pad-1-per org-building-container-table">
+
+                <table mat-table [dataSource]="buildingBlockDataSource" matSort
+                  (matSortChange)="customBlockSort($event)" matSortActive="name" matSortDirection="asc"
+                  matSortDisableClear fxFlexFill>
+
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width: 6%;"> Select </th>
+                    <td mat-cell *matCellDef="let element;let i = index;" style="width: 6%;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectBuildingBlock(element)"
+                        [checked]="selectedBuildingBlock.buildingBlockId == element.buildingBlockId"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' |
+                      translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 23%;"> {{ 'LOCATION_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingBlock(element)" *matCellDef="let element" style="width: 23%;"
+                      matTooltip="{{element.locationName}}"> {{element.locationName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="blockName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 23%;"> {{ 'BLOCK_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingBlock(element)" *matCellDef="let element" style="width: 23%;"
+                      matTooltip="{{element.blockName}}"> {{element.blockName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;">{{ 'COMMON_UPDATED_BY' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingBlock(element)" *matCellDef="let element" style="width:15%;">
+                      {{element.updatedBy}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedDt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:15%;">{{ 'COMMON_UPDATED_DT' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingBlock(element)" *matCellDef="let element" style="width:15%;">
+                      {{element.updatedDtDisp}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedBlockColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedBlockColumns;">
+                </table>
+                <mat-card class="no_records_found" *ngIf="blockDataLength == '0' && !blockSubLoader"
+                  fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card *ngIf="blockSubLoader" fxLayoutAlign="center center" class="no_records_found">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'BUILDING_FLOOR' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-toolbar>
+            <span>{{'BUILDING_FLOOR'| translate}}</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorLegalEntity [pageSizeOptions]="[5, 10, 25, 50, 100]"
+              [length]="displayedLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
+              (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+              *ngIf="modelAccessModule.createFlagDisplay"
+              (click)="createBuildingFloor(0,'add')"><mat-icon>add</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingFloor == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+              (click)="createBuildingFloor(selectedBuildingFloor,'edit')">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingFloor == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+              (click)="createBuildingFloor(selectedBuildingFloor,'view')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </mat-toolbar>
+          <mat-card-content>
+            <div fxLayout="column">
+              <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'FLOOR_NAME' | translate }} </span>
+                  <ng-select [items]="floorComboList" bindLabel="floorName" (search)="getFloorNameComboData($event)"
+                    (click)="getFloorNameComboData({})" (scrollToEnd)="getFloorNameComboData({})"
+                    (keyup.backspace)="getFloorNameComboData($event.target.value ? $event : 'back')"
+                    (clear)="getFloorNameComboData('clear')" (change)="selectedFloorName($event)" [virtualScroll]="true"
+                    [loading]="floorSrcollSync" appendTo="body" bindValue="floorName" [(ngModel)]="floorModel.floorName"
+                    [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+                  <ng-select [(ngModel)]="floorModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="status" bindLabel="name" bindValue="name" (change)="changeFloorStatus($event)">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="40" fxLayout="row" fxLayoutAlign="end center" fxFlexFill>
+                  <button mat-raised-button class="space" color="primary"
+                    (click)="searchFloor($event)">{{'COMMON_SEARCH' | translate}}</button>
+                  <button mat-raised-button class="space" color="primary" (click)="clearFloorData()">{{'COMMON_CLEAR' |
+                    translate}}</button>
+                </div>
+
+              </div> -->
+
+              <div class="pad-1-per org-building-container-table">
+                <table mat-table [dataSource]="buildingFloorDataSource" matSort
+                  (matSortChange)="customFloorSort($event)" matSortActive="name" matSortDirection="asc"
+                  matSortDisableClear fxFlexFill>
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width: 6%;"> Select </th>
+                    <td mat-cell *matCellDef="let element;let i = index;" style="width: 6%;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectBuildingFloor(element)"
+                        [checked]="selectedBuildingFloor.buildingFloorId == element.buildingFloorId"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' |
+                      translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{ 'LOCATION_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingFloor(element)" *matCellDef="let element" style="width: 20%;"
+                      matTooltip="{{element.locationName}}"> {{element.locationName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="blockId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> {{ 'BLOCK_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingFloor(element)" *matCellDef="let element" style="width: 16%;"
+                      matTooltip="{{element.blockName}}"> {{element.blockName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="floorName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{ 'FLOOR_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingFloor(element)" *matCellDef="let element" style="width: 20%;"
+                      matTooltip="{{element.floorName}}"> {{element.floorName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;">{{ 'COMMON_UPDATED_BY' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingFloor(element)" *matCellDef="let element" style="width:10%;">
+                      {{element.updatedBy}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedDt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;">{{ 'COMMON_UPDATED_DT' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingFloor(element)" *matCellDef="let element" style="width:10%;">
+                      {{element.updatedDtDisp}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedFloorColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedFloorColumns;">
+                </table>
+                <mat-card class="no_records_found" *ngIf="floorDataLength=='0' && !floorSubLoader">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card *ngIf="floorSubLoader" fxLayoutAlign="center center" class="no_records_found">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'BUILDING_SEGMENT' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-toolbar>
+            <span>{{'BUILDING_SEGMENT'| translate}}</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorLegalEntity [pageSizeOptions]="[5, 10, 25, 50, 100]"
+              [length]="displayedLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
+              (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+              *ngIf="modelAccessModule.createFlagDisplay"
+              (click)="createBuildingSegment(0,'add')"><mat-icon>add</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingSegment == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+              (click)="createBuildingSegment(selectedBuildingSegment,'edit')">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingSegment == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+              (click)="createBuildingSegment(selectedBuildingSegment,'view')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </mat-toolbar>
+          <mat-card-content>
+            <div fxLayout="column">
+              <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'SEGMENT_NAME' | translate }} </span>
+                  <ng-select [items]="segmentComboList" bindLabel="segmentName"
+                    (search)="getSegmentNameComboData($event)" (click)="getSegmentNameComboData({})" appendTo="body"
+                    (scrollToEnd)="getSegmentNameComboData({})"
+                    (keyup.backspace)="getSegmentNameComboData($event.target.value ? $event : 'back')"
+                    (clear)="getSegmentNameComboData('clear')" (change)="selectedSegmentName($event)"
+                    [virtualScroll]="true" [loading]="segmentSrcollSync" bindValue="segmentName"
+                    [(ngModel)]="segmentModel.segmentName" [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+                  <ng-select [(ngModel)]="segmentModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="status" bindLabel="name" bindValue="name" (change)="changeSegmentStatus($event)">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="40" fxLayout="row" fxLayoutAlign="end center"
+                  fxLayoutAlign.lt-md="center center" fxFlexFill>
+                  <button mat-raised-button class="space" color="primary"
+                    (click)="searchSegment($event)">{{'COMMON_SEARCH' | translate}}</button>
+                  <button mat-raised-button class="space" color="primary" (click)="clearSegmentData()">{{'COMMON_CLEAR'
+                    | translate}}</button>
+                </div>
+
+              </div> -->
+
+              <div class="pad-1-per org-building-container-table">
+                <table mat-table [dataSource]="buildingSegmentDataSource" matSort
+                  (matSortChange)="customSegmentSort($event)" matSortActive="name" matSortDirection="asc"
+                  matSortDisableClear fxFlexFill>
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width: 5%;"> Select </th>
+                    <td mat-cell *matCellDef="let element;let i = index;" style="width: 5%;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectBuildingSegment(element)"
+                        [checked]="selectedBuildingSegment.buildingSegmentId == element.buildingSegmentId"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' |
+                      translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{ 'LOCATION_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingSegment(element)" *matCellDef="let element" style="width: 20%;"
+                      matTooltip="{{element.locationName}}"> {{element.locationName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="segmentName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> {{ 'SEGMENT_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingSegment(element)" *matCellDef="let element" style="width: 15%;"
+                      matTooltip="{{element.segmentName}}"> {{element.segmentName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;">{{ 'COMMON_UPDATED_BY' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingSegment(element)" *matCellDef="let element" style="width:10%;">
+                      {{element.updatedBy}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedDt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10%;">{{ 'COMMON_UPDATED_DT' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingSegment(element)" *matCellDef="let element" style="width:10%;">
+                      {{element.updatedDtDisp}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedSegmentColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedSegmentColumns;">
+                </table>
+                <mat-card class="no_records_found" *ngIf="segmentDataLength=='0' && !segmentSubLoader"
+                  fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card *ngIf="segmentSubLoader" fxLayoutAlign="center center" class="no_records_founds">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'BUILDING_ROOM' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-toolbar>
+            <span>{{'BUILDING_ROOM'| translate}}</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorLegalEntity [pageSizeOptions]="[5, 10, 25, 50, 100]"
+              [length]="displayedLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
+              (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+              *ngIf="modelAccessModule.createFlagDisplay" (click)="createBuildingRoom(0,'add')"><mat-icon>add</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingRoom == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+              (click)="createBuildingRoom(selectedBuildingRoom,'edit')">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="selectedBuildingRoom == 0" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+              (click)="createBuildingRoom(selectedBuildingRoom,'view')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <button mat-raised-button class="space sqr-btn" color="primary"
+              matTooltip="{{'COMMON_BULK_PRINT' | translate}}" [matTooltipPosition]="'below'"
+              (click)="bulkRoomPrint()"><mat-icon>print</mat-icon>
+            </button>
+            
+          </mat-toolbar>
+          <mat-card-content>
+            <div fxLayout="column">
+              <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'ROOM_NAME' | translate }} </span>
+                  <ng-select [items]="roomComboList" bindLabel="roomName" (search)="getRoomComboData($event)"
+                    appendTo="body" (click)="getRoomComboData({})" (scrollToEnd)="getRoomComboData({})"
+                    (keyup.backspace)="getRoomComboData($event.target.value ? $event : 'back')"
+                    (clear)="getRoomComboData('clear')" (change)="selectedRoomName($event)" [virtualScroll]="true"
+                    [loading]="roomSrcollSync" bindValue="roomName" [(ngModel)]="roomModel.roomName"
+                    [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="30" fxFlexFill>
+                  <span class="input-label"> {{ 'COMMON_ACTIVE' | translate }} </span>
+                  <ng-select [(ngModel)]="roomModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                    [items]="status" bindLabel="name" bindValue="name" (change)="changeRoomStatus($event)">
+                  </ng-select>
+                </div>
+
+                <div class="pad-1-per" fxFlex="40" fxLayout="row" fxLayoutAlign="end center" fxFlexFill>
+                  <button mat-raised-button class="space" color="primary" (click)="searchRoom($event)">{{'COMMON_SEARCH'
+                    | translate}}</button>
+                  <button mat-raised-button class="space" color="primary" (click)="clearRoomDate()">{{'COMMON_CLEAR' |
+                    translate}}</button>
+                </div>
+
+              </div> -->
+
+              <div class="pad-1-per org-building-container-table">
+                <table mat-table [dataSource]="buildingRoomDataSource" matSort (matSortChange)="customRoomSort($event)"
+                  matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlexFill>
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:5%;"> Select </th>
+                    <td mat-cell *matCellDef="let element;let i = index;" style="width:5%;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectBuildingRoom(element)"
+                        [checked]="selectedBuildingRoom.buildingRoomId == element.buildingRoomId"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:6%;"> {{'COMMON_S_NO' |
+                      translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:6%;"> {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:14%;">{{ 'LOCATION_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:14%;"
+                      matTooltip="{{element.locationName}}"> {{element.locationName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="buildingBlockTO.blockName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:9%;">{{ 'BLOCK_NAME' | translate
+                      }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:9%;"
+                      matTooltip="{{element.blockName}}"> {{element.blockName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="buildingFloorTO.floorName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:9%;">{{ 'FLOOR_NAME' | translate
+                      }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:9%;"
+                      matTooltip="{{element.floorName}}">{{element.floorName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="buildingSegmentTO.segmentName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:9%;">{{ 'SEGMENT_NAME' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:9%;"
+                      matTooltip="{{element.segmentName}}">{{element.segmentName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="roomName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:9%;">{{ 'ROOM_NAME' | translate
+                      }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:9%;"
+                      matTooltip="{{element.roomName}}">{{element.roomName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:8%;">{{ 'COMMON_UPDATED_BY' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:8%;">
+                      {{element.updatedBy}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedDt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:8%;">{{ 'COMMON_UPDATED_DT' |
+                      translate }}</th>
+                    <td mat-cell (click)="selectBuildingRoom(element)" *matCellDef="let element" style="width:8%;">
+                      {{element.updatedDtDisp}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedRoomColums;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedRoomColums;">
+                </table>
+                <mat-card class="no_records_found" *ngIf="roomDataLength=='0' && !roomSubLoader"
+                  fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card *ngIf="roomSubLoader" fxLayoutAlign="center center" class="no_records_found">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div>
+
+</div>

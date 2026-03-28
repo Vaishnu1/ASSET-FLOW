@@ -1,0 +1,70 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'DEVICE_CODE' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="deviceCodeForm">
+
+    <div fxLayout="column" fxFlex="100">
+
+      <div class="form-group mt-20px">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Character">
+          <mat-label class="example-label input-label"> {{'DEVICE_CODE' | translate}}
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <input matInput class="" formControlName="deviceCode" (keypress)="lengthMaximumCharacterForDeviceCode()"
+            oninput="this.value = this.value.toUpperCase()" class="input-field" [maxlength]="100" (input)="checkForDeviceCodeExistence()">
+          <mat-hint align="end">{{deviceCodeForm.controls.deviceCode.value?.length || 0}}/100</mat-hint>
+          <mat-error *ngIf="deviceCodeForm.controls.deviceCode.errors && deviceCodeForm.controls.deviceCode.touched">
+            <div *ngIf="deviceCodeForm.controls.deviceCode.errors.required">"{{'DEVICE_CODE' | translate}}" is
+              Required </div>
+            <div *ngIf="deviceCodeForm.controls.deviceCode.errors.maxlength">"{{ 'DEVICE_CODE' | translate }}"
+              Maximum Length is 100 </div>
+              <div class="err-field" *ngIf="deviceCodeForm.controls.deviceCode.errors.notUnique">{{ErrorMsgDeviceCode}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group mt-20px">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 10000 Character">
+          <mat-label class="example-label input-label"> {{ 'DEVICE_CONCEPT' | translate }}
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <textarea class="input-field" matInput cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="15"
+            formControlName="deviceConcept" tabindex="2" maxlength="10000"
+            (keypress)="lengthMaximumCharacterForDeviceConcept()"
+            oninput="this.value = this.value.toUpperCase()"></textarea>
+          <mat-hint align="end">{{deviceCodeForm.controls.deviceConcept.value?.length || 0}}/10000</mat-hint>
+          <mat-error
+            *ngIf="deviceCodeForm.controls.deviceConcept.errors && deviceCodeForm.controls.deviceConcept.touched">
+            <div *ngIf="deviceCodeForm.controls.deviceConcept.errors.required">"{{ 'DEVICE_CONCEPT' | translate }}" is
+              Required </div>
+            <div *ngIf="deviceCodeForm.controls.deviceConcept.errors.maxlength">"{{ 'DEVICE_CONCEPT' | translate }}"
+              Maximum Length is 10000 </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="mt-20px">
+        <mat-checkbox color="primary" formControlName="active">
+          {{'COMMON_ACTIVE' | translate}}
+        </mat-checkbox>
+      </div>
+
+
+      <div fxLayout="column mt-20px" fxLayoutAlign="center center">
+        <button mat-raised-button class="space " color="primary"
+          [style.visibility]="(headingDisplay=='View') ? 'hidden': 'visible'" (click)="submit()"
+          [disabled]="getSubmitOrCreateButtonStatus() || uploadFlag">
+          <span *ngIf="!uploadFlag">{{displayButton}}</span>
+          <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

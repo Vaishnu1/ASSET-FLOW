@@ -1,0 +1,98 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title">{{this.data.screenName}}</h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+ 
+    <div fxLayout="row" class="form-row"> 
+        <form [formGroup]="qualityIndicatorFormGroup" fxFlex="100"> 
+
+          <div fxLayout="row">
+            <div fxFlex="30">
+              <div fxLayout="row">
+                <div fxFlex="48">
+                  <div class="form-group row">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{'REPORT_FROM_DATE' | translate}}</mat-label>
+                      <input matInput formControlName="createdDtDisp" [max]="qualityIndicatorFormGroup.controls.updatedDtDisp.value"
+                        (click)="picker1.open()" (dateChange)="getFromDate($event)" [matDatepicker]="picker1"
+                        (keypress)="dateValidation1($event)">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="4"></div> 
+                <div fxFlex="48">
+                  <div class="form-group row">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{'REPORT_TO_DATE' | translate}}</mat-label>
+                      <input matInput formControlName="updatedDtDisp" (click)="picker2.open()"
+                        [min]="qualityIndicatorFormGroup.controls.createdDtDisp.value" [matDatepicker]="picker2"
+                        (keypress)="dateValidation2($event)" (dateChange)="getToDate($event)">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>  
+              
+              <div fxLayout="row">
+                <div class="form-group row">
+                  <span  class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style">*</span></span>
+                      <ng-select  [items]="qualityIndicatorReportsList" bindLabel="name"
+                        bindValue="name" formControlName="reportType" required>
+                      </ng-select>
+                      <mat-error *ngIf="qualityIndicatorFormGroup.controls.reportType.errors">
+                        <div *ngIf="qualityIndicatorFormGroup.controls.reportType.errors.required">
+                          {{'REPORT_CHOOSE_REPORT' | translate}} is Required </div>
+                      </mat-error> 
+                </div>
+              </div>
+            </div>
+            
+            <div fxFlex="5"></div>
+            
+            <div fxFlex="30">
+              <div class="form-group">
+                <span class="input-label">{{'REPORT_LOCATION' | translate}}</span><span class="mandatory-style">*</span>
+                <ng-select [items]="locationCombo" bindLabel="locDisplayField" (search)="loadLocationComboData($event)"
+                  (click)="loadLocationComboData($event)" (change)="selectedLocationData($event)"
+                  (clear)="selectedLocationData({'locationId':0,'locDisplayField':''})"
+                  [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="locationsync"
+                  formControlName="locationName"  [tabIndex] = 1>
+                </ng-select>
+              </div>
+            </div>
+            <div fxFlex="5"></div>
+            
+            <div fxFlex="30">
+              <div class="form-group">
+                <span class="input-label"> {{ 'SR_TYPE' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select [items]="srTypeCombo" required bindLabel="srTypeName" bindValue="srId"
+                  (search)="loadSrTypeComboData($event)" (click)="loadSrTypeComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadSrTypeComboData({})" (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')" (clear)="loadSrTypeComboData('clear')" [loading]="scrollsyncSrType" loadingText="Loading..."
+                  formControlName="srType"></ng-select>
+              </div>
+            </div>
+          </div>
+   
+          <div fxLayout="row" class="indicator-submit-btn"> 
+            <button mat-raised-button class="space col-md-1" color="primary" (click)="submit()"
+              [disabled]="qualityIndicatorFormGroup.invalid">
+              {{'COMMON_SUBMIT' | translate}}</button>
+            <button mat-raised-button class="space col-md-1" (click)="clear()"
+              color="primary">{{'COMMON_CLEAR' | translate}}</button> 
+          </div>
+
+        </form>
+    </div>
+  </div>
+</div>

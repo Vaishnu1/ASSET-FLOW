@@ -1,0 +1,123 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h5 class="dialogue-box-header">{{headingDisplay}} {{ 'TECHNICAL_SPECELIST' | translate }}</h5>
+    </div>
+   
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeSpecialistModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+  
+  <form [formGroup]="specialistFormGroup">
+  
+    <div fxLayout="column">
+        <div class="example-full-width" style="margin: 5px 0px;">
+          <span class="input-label">{{ 'ORG_TYPE' | translate }}<span class="mandatory-style">*</span> </span>
+          <ng-select formControlName="specialistOrgType" required (change)="setOrgType($event)" bindLabel="name"
+            bindValue="name"  [items]="orgTypes" tabindex="1"></ng-select>
+          <mat-error
+            *ngIf="specialistFormGroup.controls.specialistOrgType.invalid && specialistFormGroup.controls.specialistOrgType.touched">
+            <div class="err-field" *ngIf="specialistFormGroup.controls.specialistOrgType.errors.required">
+              Kindly Select the "{{ 'ORG_TYPE' | translate }}"</div>
+          </mat-error>
+        </div>
+
+      <div *ngIf="isOrgTypeSelecetd">
+        <div *ngIf="!isExternal" style="margin: 5px 0px;">
+          <div class="example-full-width">
+            <span class="input-label"> {{ 'SPECIALIST_NAME' | translate }}<span class="mandatory-style">*</span>
+            </span>
+            <ng-select  (click)="listOfSpecialistName({})" [virtualScroll]="true"
+              (search)="listOfSpecialistName($event)" (scrollToEnd)="listOfSpecialistName({})" (keyup.backspace)="listOfSpecialistName($event.target.value ? $event : 'back')" (clear)="listOfSpecialistName('clear')" tabindex="2"
+              (change)="setSpecialistNameCombo($event)" [items]="specialistNameList" bindLabel="employeeFirstName"
+              bindValue="employeeFirstName" [loading]="scrollSyncSpecName" loadingText="Loading..." required
+              formControlName="specialistName">
+            </ng-select>
+            <mat-error
+              *ngIf="specialistFormGroup.controls.specialistName.invalid && specialistFormGroup.controls.specialistName.touched">
+              <div class="err-field" *ngIf="specialistFormGroup.controls.specialistName.errors.required">
+                Kindly Select the "{{ 'SPECIALIST_NAME' | translate }}"</div>
+            </mat-error>
+          </div>
+        </div>
+
+        <div *ngIf="isExternal" style="margin: 5px 0px;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="input-label"> {{'SPECIALIST_NAME' | translate}} <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput formControlName="specialistName" tabindex="3" [maxlength]="100"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{specialistFormGroup.controls.specialistName.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="specialistFormGroup.controls.specialistName.invalid && specialistFormGroup.controls.specialistName.touched">
+              <div class="err-field" *ngIf="specialistFormGroup.controls.specialistName.errors.required">
+                "{{ 'SPECIALIST_NAME' | translate }}" Is Required</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="isExternal" style="margin: 5px 0px;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="input-label"> {{'ORG_NAME' | translate}} <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput formControlName="extEngineerOrgName" tabindex="3" [maxlength]="100"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{specialistFormGroup.controls.extEngineerOrgName.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="specialistFormGroup.controls.extEngineerOrgName.invalid && specialistFormGroup.controls.extEngineerOrgName.touched">
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerOrgName.errors.required">
+                "{{ 'ORG_NAME' | translate }}" Is Required </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div style="margin: 5px 0px;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+            <mat-label class="input-label"> {{'COMMON_EMAIL_ID' | translate}} <span
+                class="mandatory-style">{{emailIdMandatory}}</span> </mat-label>
+            <input matInput formControlName="extEngineerEmailId" tabindex="3" [maxlength]="50"
+              oninput="this.value = this.value.toLowerCase()">
+            <mat-hint align="end">{{specialistFormGroup.controls.extEngineerEmailId.value?.length || 0}}/50</mat-hint>
+            <mat-error
+              *ngIf="specialistFormGroup.controls.extEngineerEmailId.invalid && specialistFormGroup.controls.extEngineerEmailId.touched">
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerEmailId.errors.required">
+                "{{ 'COMMON_EMAIL_ID' | translate }}" Is Required </div>
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerEmailId.errors.pattern">
+                {{'COMMON_EMAIL_ID' | translate }} Format Should Be "xxx@yyy.zzz"</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div style="margin: 5px 0px;">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15 }}">
+            <mat-label class="input-label"> {{'COMMON_PHONE_NO' | translate}} <span
+                class="mandatory-style">{{phoneNoMandatory}}</span> </mat-label>
+            <input matInput formControlName="extEngineerContactNo" tabindex="3" [maxlength]="15"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{specialistFormGroup.controls.extEngineerContactNo.value?.length || 0}}/15</mat-hint>
+            <mat-error
+              *ngIf="specialistFormGroup.controls.extEngineerContactNo.invalid && specialistFormGroup.controls.extEngineerContactNo.touched">
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerContactNo.errors.required">
+                "{{'COMMON_PHONE_NO' | translate }}" Is Required </div>
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerContactNo.errors.pattern">
+                Kindly Enter Valid "{{'COMMON_PHONE_NO' | translate }}"</div>
+              <div class="err-field" *ngIf="specialistFormGroup.controls.extEngineerContactNo.errors.pattern?false:specialistFormGroup.controls.extEngineerContactNo.errors.minlength">
+                "{{'COMMON_PHONE_NO' | translate }}" Should Be Of Minimum 10 Digits</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayoutAlign="center center" *ngIf="!hideButtons" style="margin-top: 20px;">
+      <button mat-raised-button class="space" color="primary" tabindex="4" (click)="submitspecialistDetails()"
+        [disabled]="specialistFormGroup.invalid  || !specialistFormGroup.dirty">
+        <span>{{buttonDisplay}}</span>
+      </button>
+      <button mat-raised-button class="space" color="primary" (click)="clear()" [disabled]="disableClearButton">
+        {{'COMMON_CLEAR' | translate }} </button>
+    </div>
+
+  </form>
+</div>

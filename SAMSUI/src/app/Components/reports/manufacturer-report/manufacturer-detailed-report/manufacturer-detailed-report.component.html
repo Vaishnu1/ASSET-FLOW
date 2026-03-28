@@ -1,0 +1,103 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{this.data.screenName | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+    <div fxLayout="row" class="form-row"> 
+      <form [formGroup]="manufacturerFormGroup"  fxFlex="100">
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style">
+                    {{mandatoryString}}</span></span>
+                <ng-select class="ManufacturerDetailedReportComponent-dialog-dropdown" [items]="manufacturerReportsList" bindLabel="manufacturerReportsList"
+                  bindValue="manufacturerReportsList" formControlName="reportType" required>
+                </ng-select>
+                <mat-error *ngIf="manufacturerFormGroup.controls.reportType.errors">
+                  <div class="err-field" *ngIf="manufacturerFormGroup.controls.reportType.errors.required">
+                    {{'REPORT_CHOOSE_REPORT' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'MANUFACTURER' | translate }} </span>
+                <ng-select class="ManufacturerDetailedReportComponent-dialog-dropdown" (search)="listOfManufacturerName($event)"
+                  (click)="listOfManufacturerName({})" (change)="getManufacturerNameComboValue($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfManufacturerName({})" (keyup.backspace)="listOfManufacturerName($event.target.value ? $event : 'back')" (clear)="listOfManufacturerName('clear')" [loading]="manufacturerNameScrollSync"
+                  loadingText="Loading..." [items]="manufacturerNameList" bindLabel="manufacturerName"
+                  bindValue="manufacturerName" formControlName="manufacturerName">
+                </ng-select> 
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'COMMON_COUNTRY' | translate }} </span>
+                <ng-select class="ManufacturerDetailedReportComponent-dialog-dropdown" (search)="getCountryList($event)" (click)="getCountryList({})"
+                  (change)="getCountryData($event)" [virtualScroll]="true" (scrollToEnd)="getCountryList({})" (keyup.backspace)="getCountryList($event.target.value ? $event : 'back')" (clear)="getCountryList('clear')"
+                  [loading]="countryScrollsync" loadingText="Loading..." [items]="countries" bindLabel="countryName"
+                  bindValue="countryName" formControlName="locCountry">
+                </ng-select>
+              </div>
+            </div> 
+          </div>
+        </div>
+        
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'MANUFACTURER_CODE' | translate }} </span>
+                <ng-select class="ManufacturerDetailedReportComponent-dialog-dropdown" (search)="listOfManufacturerCode($event)"
+                  (click)="listOfManufacturerCode({})" [virtualScroll]="true" (scrollToEnd)="listOfManufacturerCode({})" (keyup.backspace)="listOfManufacturerCode($event.target.value ? $event : 'back')" (clear)="listOfManufacturerCode('clear')"
+                  [loading]="manufacturerCodeScrollSync" loadingText="Loading..."
+                  (change)="getManufacturerCodeComboValue($event)" [items]="manufacturerCodeList"
+                  bindLabel="manufacturerCode" bindValue="manufacturerCode" formControlName="manufacturerCode">
+                </ng-select>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'COMMON_STATE' | translate }} </span>
+                <ng-select class="ManufacturerDetailedReportComponent-dialog-dropdown" (search)="getStateData($event)" (click)="getStateData({})"
+                  (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [virtualScroll]="true" [loading]="stateScrollsync"
+                  loadingText="Loading..." (change)="selectedManufacturerStateComboValue($event)" [items]="statesList"
+                  bindLabel="stateName" bindValue="stateName" formControlName="locState" >
+                </ng-select>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </form>
+    </div>
+ 
+    <div fxLayout="row"  class="form-buttons"> 
+      <button mat-raised-button class="space" color="primary" (click)="submit()"
+        [disabled]="getSubmitButtonStatus()">
+        {{'COMMON_SUBMIT' | translate}}</button>
+      <button mat-raised-button class="space" (click)="clear()"
+        color="primary">{{'COMMON_CLEAR' | translate}}</button>
+    </div> 
+  </div>
+</div>
+  

@@ -1,0 +1,19 @@
+tr {
+    line-height: 30px !important;
+}
+
+.mat-card-content {
+     padding: 10px;
+}
+.card-designform {
+    min-height: 500px;
+}
+.mt-20 {
+    margin-top: 20px;
+}
+.mat-table {
+    background: transparent;
+  }
+.innerth {
+    width:14% !important;
+}

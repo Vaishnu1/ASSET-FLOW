@@ -1,0 +1,1414 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxFlex="100" fxLayout="row">
+
+    <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb" fxLayoutAlign="start center"
+      fxFlex="30">
+      <mat-list fxLayoutAlign="start center" fxLayout="row">
+        <mat-list-item class="bread-crumb-content">
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item fxLayoutAlign="start center" class="bread-crumb-content">{{'MENU_ASSET'| translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active bread-crumb-link bread-crumb-content " aria-current="page"><a
+            (click)="navigateToContract()">{{'MENU_CONTRACT' | translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active bread-crumb-content" aria-current="page">{{headingDisplay}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+    <div fxLayoutAlign="center center" fxFlex="40">
+      <div *ngIf="contractCreateFormGroup.controls.contractHdrId.value > 0" class="status-style mandatory-style">
+        {{ 'CONTRACT_STATUS' | translate }}: {{contractCreateFormGroup.controls.contractStatus.value | translate}}
+      </div>
+    </div>
+
+    <div fxLayoutAlign="end center" fxFlex="30">
+      <button mat-raised-button class="space" color="primary" tabindex="48"
+        (click)="navigateToContract()">{{'COMMON_BACK' | translate}}</button>
+        <button *ngIf="!isViewMode" mat-raised-button color="primary" class="space" [disabled]="disableClear"
+        tabindex="47" (click)='clearContract()'>{{ 'COMMON_CLEAR' | translate }}</button>
+      <button mat-raised-button class="space" color="primary"
+        *ngIf="contractCreateFormGroup.controls.contractStatus.value =='APPROVAL PENDING' && contractCreateFormGroup.controls.woApprovalStatus.value=='-'"
+        (click)="contractUpdateStatus('APPROVED')">{{'COMMON_APPROVE' | translate}}</button>
+
+      <button *ngIf="!isViewMode" mat-raised-button color="primary" class="space"
+        [disabled]="contractCreateFormGroup.invalid || assetDataSource.data.length == 0 || uploadContractFlag" tabindex="47" (click)='updateAndApprove(headingDisplay)'>
+        <span *ngIf="!uploadContractFlag">{{displayButton}}</span>
+        <span *ngIf="uploadContractFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+
+      <button [disabled]="" color="primary" mat-raised-button class="space"
+      matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="cancelContract()" *ngIf="this.contractCreateFormGroup.controls.contractHdrId.value != 0 && headingDisplay != 'View'">
+        <span *ngIf="this.contractCreateFormGroup.controls.contractHdrId.value != 0 ">{{'COMMON_CANCEL' | translate}}</span>
+      </button>
+
+
+    </div>
+
+  </div>
+
+  <form [formGroup]="contractCreateFormGroup">
+    <div fxLayout="column">
+      <mat-card>
+        <mat-card-content class="h-350-px">
+          <div fxLayout="column" fxFlex="100" fxLayout.lt-md="row" fxFlex.lt-md="100">
+            <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="50" class="h-65-px">
+
+              <div fxFlex="25">
+                <div class="example-full-width">
+                  <span class="input-label">{{'CONTRACT_LOCATION_NAME' | translate}} <span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" required formControlName="locationName"
+                    (search)="listOfLocationName($event)" (click)="listOfLocationName({})"
+                    (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                    (scrollToEnd)="listOfLocationName({})" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')" (clear)="listOfLocationName('clear')" [loading]="scrollLocationNameSync" tabindex="1"
+                    bindLabel="locDisplayField" bindValue="locDisplayField">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.locationName.invalid && contractCreateFormGroup.controls.locationName.touched">
+                    <div class="err-field" *ngIf="contractCreateFormGroup.controls.locationName.errors.required">
+                      Kindly Select The "{{'CONTRACT_LOCATION_NAME' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25">
+                <div class="example-full-width">
+                  <span class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' "> {{'CONTRACT_PARTY' | translate}} <span
+                      class="mandatory-style">*</span></span>
+                      <span class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' "> {{'INSURANCE_PARTY' | translate}} <span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" formControlName="contractingPartyType" tabindex="2"
+                    [items]="contractingPartyType" bindLabel="name" bindValue="name"
+                    (change)="changePartyValidation($event)" required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractingPartyType.invalid && contractCreateFormGroup.controls.contractingPartyType.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractingPartyType.errors.required">
+                      Kindly Select The "{{'CONTRACT_PARTY' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'SUPPLIER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SUPPLIER_NAME' | translate}} </span>
+                  <ng-select class=" input-field" formControlName="contractPartyName"
+                    (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                    [items]="supplierList" bindLabel="businessPartnerName" bindValue="businessPartnerName" tabindex="2">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyName.invalid && contractCreateFormGroup.controls.contractPartyName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_NAME' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'CUSTOMER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'CONTRACT_PARTY_NAME' | translate}}</span>
+                  <ng-select class=" input-field" formControlName="contractPartyName"
+                    (search)="listOfCustomer($event)" (click)="listOfCustomer({})" (change)="setCustomerData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfCustomer({})" (keyup.backspace)="listOfCustomer($event.target.value ? $event : 'back')" (clear)="listOfCustomer('clear')" [loading]="scrollCustomersync"
+                    [items]="customerList" bindLabel="businessPartnerName" bindValue="businessPartnerName" tabindex="2">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyName.invalid && contractCreateFormGroup.controls.contractPartyName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyName.errors.required">
+                      Kindly Select The "{{'CONTRACT_PARTY_NAME' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'MANUFACTURER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'CONTRACT_PARTY_NAME' | translate}} </span>
+                  <ng-select class=" input-field" formControlName="contractPartyName"
+                    (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                    (change)="setManufacturerData($event)" [virtualScroll]="true" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')"
+                    [loading]="scrollManufacturersync" [items]="manufacturerList" bindLabel="businessPartnerName"
+                    bindValue="businessPartnerName" tabindex="2">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyName.invalid && contractCreateFormGroup.controls.contractPartyName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyName.errors.required">
+                      Kindly Select The "{{'CONTRACT_PARTY_NAME' | translate}}"  </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'SERVICE PROVIDER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SERVICE_PROVIDER' | translate}} </span>
+                  <ng-select class=" input-field" formControlName="contractPartyName"
+                    (search)="listOfSupplier($event)" (click)="listOfSupplier({})" (change)="setSupplierData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync"
+                    [items]="supplierList" bindLabel="businessPartnerName" bindValue="businessPartnerName" tabindex="2">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyName.invalid && contractCreateFormGroup.controls.contractPartyName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyName.errors.required">
+                      Kindly Select The "{{'SERVICE_PROVIDER' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'SUPPLIER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SUPPLIER_SITE_NAME' | translate}}
+                    <span class="mandatory-style">{{partyLocationMandatory}}</span></span>
+                  <ng-select class=" input-field" formControlName="contractPartyLocationName"
+                    (search)="listOfSupplierLocation($event)" (click)="listOfSupplierLocation({})"
+                    (change)="selectedSupplierLocationData($event)" [virtualScroll]="true" 
+                    (scrollToEnd)="listOfSupplierLocation({})" (keyup.backspace)="listOfSupplierLocation($event.target.value ? $event : 'back')" (clear)="listOfSupplierLocation('clear')" [loading]="scrollSupplierLocationSync"
+                    [items]="supplierLocationCombo" bindLabel="partnerSiteName" bindValue="partnerSiteName" tabindex="3">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.invalid && contractCreateFormGroup.controls.contractPartyLocationName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_SITE_NAME' | translate}}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'SERVICE PROVIDER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SERVICE_PROVIDER_SITE_NAME' | translate}}
+                    <span class="mandatory-style">{{partyLocationMandatory}}</span></span>
+                  <ng-select class=" input-field" formControlName="contractPartyLocationName"
+                    (search)="listOfSupplierLocation($event)" (click)="listOfSupplierLocation({})"
+                    (change)="selectedSupplierLocationData($event)" [virtualScroll]="true" 
+                    (scrollToEnd)="listOfSupplierLocation({})" (keyup.backspace)="listOfSupplierLocation($event.target.value ? $event : 'back')" (clear)="listOfSupplierLocation('clear')" [loading]="scrollSupplierLocationSync"
+                    [items]="supplierLocationCombo" bindLabel="partnerSiteName" bindValue="partnerSiteName" tabindex="3">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.invalid && contractCreateFormGroup.controls.contractPartyLocationName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.errors.required">
+                      Kindly Select The "{{'SERVICE_PROVIDER_SITE_NAME' | translate}}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'CUSTOMER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'CONTRACT_PARTY_LOCATION' | translate}}
+                    <span class="mandatory-style">{{partyLocationMandatory}}</span></span>
+                  <ng-select class=" input-field" formControlName="contractPartyLocationName"
+                    (search)="listOfCustomerLocation($event)" (click)="listOfCustomerLocation({})"
+                    (change)="selectedCustomerLocationData($event)" [virtualScroll]="true" 
+                    (scrollToEnd)="listOfCustomerLocation({})" (keyup.backspace)="listOfCustomerLocation($event.target.value ? $event : 'back')" (clear)="listOfCustomerLocation('clear')" [loading]="scrollCustomerLocationSync"
+                    [items]="customerLocationCombo" bindLabel="partnerSiteName" bindValue="partnerSiteName" tabindex="3">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.invalid && contractCreateFormGroup.controls.contractPartyLocationName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.errors.required">
+                      Kindly Select The "{{'CONTRACT_PARTY_LOCATION' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractingPartyType.value === 'MANUFACTURER'">
+                <div class="example-full-width">
+                  <span class="input-label">{{'CONTRACT_PARTY_LOCATION' | translate}}
+                    <span class="mandatory-style">{{partyLocationMandatory}}</span></span>
+                  <ng-select class=" input-field" formControlName="contractPartyLocationName"
+                    (search)="listOfManufacturerLocation($event)" (click)="listOfManufacturerLocation({})"
+                    (change)="selectedManufacturerLocationData($event)" [virtualScroll]="true" 
+                    (scrollToEnd)="listOfManufacturerLocation({})" (keyup.backspace)="listOfManufacturerLocation($event.target.value ? $event : 'back')" (clear)="listOfManufacturerLocation('clear')" [loading]="scrollManufacturerLocationSync"
+                    [items]="manufacturerLocationCombo" bindLabel="partnerSiteName" bindValue="partnerSiteName" tabindex="3">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.invalid && contractCreateFormGroup.controls.contractPartyLocationName.touched">
+                    <div class="err-field"
+                      *ngIf="contractCreateFormGroup.controls.contractPartyLocationName.errors.required">
+                      Kindly Select The "{{'SUPPLIER_SITE_NAME' | translate}}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+            </div>
+
+
+            <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="50" >
+
+              <div fxFlex="25">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_100}}">
+                    <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' "> {{ 'CONTRACT_NO' | translate }}</mat-label>
+                    <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' "> {{ 'INSURANCE_NO' | translate }}</mat-label>
+                    <input matInput formControlName="contractNo" [maxlength]="100" tabindex="4" class="input-field" oninput="this.value = this.value.toUpperCase()">
+                    <mat-hint align="end">{{contractCreateFormGroup.controls.contractNo.value?.length || 0}}/100
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div fxFlex="25">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100}}">
+                    <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' "> {{ 'CONTRACT_TITLE' | translate }} </mat-label>
+                    <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' "> {{ 'INSURANCE_TITLE' | translate }} </mat-label>
+                    <input matInput formControlName="contractName" tabindex="5" [maxlength]="100" class="input-field"
+                      oninput="this.value = this.value.toUpperCase()">
+                    <mat-hint align="end">{{contractCreateFormGroup.controls.contractName.value?.length || 0}}/100</mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div fxFlex="25" style="margin-top: 4px;">
+                <div class="example-full-width">
+                  <span class="input-label">{{ 'CONTRACT_COVERAGE_TYPE' | translate }} <span
+                      class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" required formControlName="coverageType"
+                    (search)="listOfCoverageType($event)" (click)="listOfCoverageType({})"
+                    (change)="setCoverageType($event);changeContractTypeValidation($event);changeContractValueValidation($event);onChangeValidation($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listOfCoverageType({})" (keyup.backspace)="listOfCoverageType($event.target.value ? $event : 'back')" (clear)="listOfCoverageType('clear')" [loading]="scrollCoverageTypeSync"
+                    [items]="coverageTypeList" bindLabel="coverageTypeName" bindValue="coverageTypeName" tabindex="7"  #value oninput="this.value = this.value.toUpperCase()">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.coverageType.invalid && contractCreateFormGroup.controls.coverageType.touched">
+                    <div class="err-field" *ngIf="contractCreateFormGroup.controls.coverageType.errors.required">
+                      Kindly Select The "{{'CONTRACT_COVERAGE_TYPE' | translate}}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+
+              <div fxFlex="15" style="margin-top: 4px;" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">
+                <div class="example-full-width" >
+                  <span class="input-label">{{ 'INSURANCE_TYPE' | translate }} </span>
+                  <ng-select class=" input-field"  formControlName="insuranceType"
+                    (search)="listOfInsuranceType($event)" (click)="listOfInsuranceType({})"
+                    (change)="setInsuranceType($event);"
+                    [virtualScroll]="true" (scrollToEnd)="listOfInsuranceType({})" (keyup.backspace)="listOfInsuranceType($event.target.value ? $event : 'back')" (clear)="listOfInsuranceType('clear')" [loading]="scrollInsuranceTypeSync"
+                    [items]="insuranceTypeList" bindLabel="insuranceTypeName" bindValue="insuranceTypeName" tabindex="7"  #value oninput="this.value = this.value.toUpperCase()">
+                  </ng-select>
+                  <!-- <mat-error
+                    *ngIf="contractCreateFormGroup.controls.insuranceType.invalid && contractCreateFormGroup.controls.insuranceType.touched">
+                    <div class="err-field" *ngIf="contractCreateFormGroup.controls.insuranceType.errors.required">
+                      Kindly Select The "{{'INSURANCE_TYPE' | translate}}"</div>
+                  </mat-error> -->
+                </div>
+              </div>
+
+              <div fxFlex="15" style="margin-top: 4px;" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'CONTRACT'">
+                <div class="example-full-width">
+                  <span class="input-label">{{ 'CONTRACT_TYPE' | translate }} <span
+                    class="mandatory-style">{{contractTypeMandatory}}</span></span>
+                  <ng-select class=" input-field" required formControlName="contractType"
+                    (search)="listOfContractType($event)" (click)="listOfContractType({})"
+                    (change)="setContractType($event)" [virtualScroll]="true"
+                    (scrollToEnd)="listOfContractType({})" (keyup.backspace)="listOfContractType($event.target.value ? $event : 'back')" (clear)="listOfContractType('clear')" [loading]="scrollContractTypeSync" [items]="contractTypeList"
+                    bindLabel="contractTypeName" bindValue="contractTypeName" tabindex="8">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="contractCreateFormGroup.controls.contractType.invalid && contractCreateFormGroup.controls.contractType.touched">
+                    <div class="err-field" *ngIf="contractCreateFormGroup.controls.contractType.errors.required">
+                      Kindly Select The "{{'CONTRACT_TYPE' | translate}}"</div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <!-- <div fxFlex="5">
+                <section class="example-section">
+                  <mat-checkbox [checked]="true" class="example-margin" color="primary" formControlName="active"
+                    tabindex="7">
+                    <label class="input-label">{{ 'COMMON_ACTIVE' | translate }}</label>
+                  </mat-checkbox>
+                </section>
+              </div> -->
+              <div fxFlex="10" fxLayoutAlign="end center" style="margin-top: 10px;">
+                <button mat-raised-button color="primary" class="sqr-btn" matTooltip="{{'CONTRACT_EXPIRY_NOTIFY' | translate}}"
+                  [matTooltipPosition]="'below'"
+                  (click)="emailReminderAddEdit()"><mat-icon>email</mat-icon></button>
+              </div>
+
+            </div>
+
+            <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="50">
+
+              <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractStatus.value == 'CONTRACT_REJECTED' ">
+              <div class="form-group" *ngIf="contractCreateFormGroup.controls.contractStatus.value == 'CONTRACT_REJECTED' "> 
+                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                  <mat-label class="input-label">{{'COMMON_REJECT_REASON' | translate}}</mat-label>
+                  <textarea matInput class="input-field" formControlName="rejectReason" readonly></textarea>
+                </mat-form-field> 
+              </div>
+            </div>
+
+            <div fxFlex="25" *ngIf="isContractActive || isContractExpired">
+
+              <div class="form-group"> 
+                <div class="example-full-width">
+                  <span class="input-label">{{ 'CONTRACT_STATUS' | translate }}</span>
+                  <ng-select class="input-field" formControlName="contractStatus"
+                    (change)="changeContractStatus($event)" 
+                    [items]="isContractActive ? contractStatusForActive : contractStatusForExpired" bindLabel="name" bindValue="name">
+                    <ng-template ng-label-tmp let-item="item">
+                      {{ item.name | translate }}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                      {{ item.name | translate }}
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+
+            </div>
+            <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractStatus.value == 'CONTRACT_TERMINATED'">
+
+              <div class="form-group">
+         
+
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="input-label"> {{'COMMON_TERMINATE_REASON' | translate }} </mat-label>
+                  <textarea formControlName="terminateReason" matInput class="input-field form-control" 
+                  [maxlength]="500" oninput="this.value = this.value.toUpperCase()" style="height: 23px;"></textarea>
+                  <mat-hint align="end">{{contractCreateFormGroup.controls.terminateReason.value?.length || 0}}/500
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+
+            </div>
+
+            <div fxFlex="25" *ngIf="contractCreateFormGroup.controls.contractStatus.value == 'CONTRACT_CANCELLED'">
+
+              <div class="form-group">
+                
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="input-label"> {{'COMMON_CANCEL_REASON' | translate }} </mat-label>
+                  <textarea formControlName="cancelReason" matInput  class="input-field form-control" 
+                  [maxlength]="500" oninput="this.value = this.value.toUpperCase()" style="height: 23px;"></textarea>
+                  <mat-hint align="end">{{contractCreateFormGroup.controls.cancelReason.value?.length || 0}}/500
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+
+            </div>
+            
+            </div>
+            
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+    <div fxLayout="column" [@.disabled]="true">
+
+      <mat-tab-group [selectedIndex]="selectedIndex">
+
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' ">{{'CONTRACT_DETAILS' | translate }}</span>
+            <span *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' ">{{'INSURANCE_DETAILS' | translate }}</span>
+            <div *ngIf="!isViewMode">
+              <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+            </div>
+          </ng-template>
+
+          <mat-card class="card-style">
+            <mat-card-content>
+              <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+                <div fxLayout="row" fxFlex="70" fxLayout.lt-md="row" fxFlex="100">
+                  <div fxLayout="column" fxFlex="50" fxLayout.lt-md="column" fxFlex.lt-md="50">
+                    <div>
+                      <h6 *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' ">{{ 'CONTRACT_PARTY_INFO' | translate}}</h6>
+                      <h6 *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' ">{{ 'INSURANCE_PARTY_INFO' | translate}}</h6>
+                    </div>
+
+                    <div>
+
+                      <div class="form-group">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                          <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate }} </mat-label>
+                          <textarea
+      formControlName="addressInfo"
+      matInput
+      tabindex="22"
+      class="input-field form-control"
+      [maxlength]="500"
+      style="height: 60px; text-transform: uppercase;"
+      oninput="this.value = this.value.toUpperCase().trim()"
+    ></textarea>
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.addressInfo.value?.length || 0}}/500
+                          </mat-hint>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-group">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100}}" class="example-full-width">
+                          <mat-label class="input-label"> {{'CONTRACT_CONTACT_PERSON' | translate}}
+                            <span class="mandatory-style">{{contactPersonMandatory}}</span>
+                          </mat-label>
+                          <input formControlName="contactPerson" matInput [maxlength]="100" tabindex="8" class="input-field"
+                          style="text-transform: uppercase;"  oninput="this.value = this.value.toUpperCase().trim()"
+                            (change)="onChangeValidation($event)">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.contactPerson.value?.length ||
+                            0}}/100</mat-hint>
+                        </mat-form-field>
+                        <mat-error
+                          *ngIf="contractCreateFormGroup.controls.contactPerson.invalid && contractCreateFormGroup.controls.contactPerson.touched">
+                          <div class="err-field" *ngIf="contractCreateFormGroup.controls.contactPerson.errors.required">
+                            "{{'CONTRACT_CONTACT_PERSON' | translate}}" Is Required</div>
+                        </mat-error>
+                      </div>
+
+                      <div class="form-group">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15}}" class="example-full-width">
+                          <mat-label class="input-label"> {{'CONTRACT_PHONE_NUMBER' | translate}}
+                            <span class="mandatory-style">{{phoneNumberMandatory}}</span>
+                          </mat-label>
+                          <input formControlName="phoneNumber" [maxlength]="15" matInput tabindex="9" class="input-field"
+                          style="text-transform: uppercase;"  oninput="this.value = this.value.toUpperCase().trim()"
+                            (change)="onChangeValidation($event)">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.phoneNumber.value?.length || 0}}/15
+                          </mat-hint>
+                        </mat-form-field>
+                        <mat-error
+                          *ngIf="contractCreateFormGroup.controls.phoneNumber.invalid && contractCreateFormGroup.controls.phoneNumber.touched">
+                          <div class="err-field" *ngIf="contractCreateFormGroup.controls.phoneNumber.errors.required">
+                            "{{'CONTRACT_PHONE_NUMBER' | translate}}" Is Required</div>
+                          <div class="err-field"
+                            *ngIf="contractCreateFormGroup.controls.phoneNumber.errors.pattern?false:contractCreateFormGroup.controls.phoneNumber.errors.minlength">
+                            "{{'CONTRACT_PHONE_NUMBER' | translate}}" Should Be Of Minimum 10 digits</div>
+                          <div class="err-field" *ngIf="contractCreateFormGroup.controls.phoneNumber.errors.pattern">
+                            Kindly Enter Valid "{{'CONTRACT_PHONE_NUMBER' | translate}}"</div>
+                        </mat-error>
+                      </div>
+
+                      <div class="form-group">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15}}" class="example-full-width">
+                          <mat-label class="input-label"> {{'COMMON_EMAIL_ID' | translate}}</mat-label>
+                          <input formControlName="emailId" [maxlength]="50" matInput tabindex="9" class="input-field"style="text-transform: LowerCase;"  oninput="this.value = this.value.toLowerCase().trim()">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.emailId.value?.length || 0}}/50
+                          </mat-hint>
+                        </mat-form-field>
+                        <mat-error
+                          *ngIf="contractCreateFormGroup.controls.emailId.invalid && contractCreateFormGroup.controls.emailId.touched">
+                          <div class="err-field" *ngIf="contractCreateFormGroup.controls.emailId.errors.required">
+                            "{{'COMMON_EMAIL_ID' | translate}}" Is Required</div>
+                          <div class="err-field"
+                            *ngIf="contractCreateFormGroup.controls.emailId.errors.pattern?false:contractCreateFormGroup.controls.emailId.errors.minlength">
+                            "{{'COMMON_EMAIL_ID' | translate}}" Should Be Of Minimum 50 digits</div>
+                          <div class="err-field" *ngIf="contractCreateFormGroup.controls.emailId.errors.pattern">
+                            Kindly Enter Valid "{{'COMMON_EMAIL_ID' | translate}}"</div>
+                        </mat-error>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div fxLayout="column" fxFlex="50" fxLayout.lt-md="column" fxFlex.lt-md="50" >
+
+                    <div>
+                      <h6>{{ 'CONTRACT_DURATION' | translate}}</h6>
+                    </div>
+
+                    <div fxLayout="row">
+
+                      <div fxFlex="48">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' ">{{'CONTRACT_START_DATE' | translate}}
+                            <span class="mandatory-style">*</span>
+                          </mat-label>
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' ">{{'INSURANCE_START_DATE' | translate}}
+                            <span class="mandatory-style">*</span>
+                          </mat-label>
+                          <input matInput (click)="contractStartDt.open()" [matDatepicker]="contractStartDt"
+                            formControlName="contractStartDtDisp" (keypress)="dateValidationinstall($event)"
+                            tabindex="10" class="input-field"  (dateChange)="onChangeValidation($event);onChangeValidation1()">
+                          <mat-datepicker-toggle matSuffix [for]="contractStartDt"></mat-datepicker-toggle>
+                          <mat-datepicker #contractStartDt></mat-datepicker>
+                          <mat-error class="err-field" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' ">
+                            Kindly Select The "{{ 'CONTRACT_START_DATE' | translate }}"
+                          </mat-error>
+                          <mat-error class="err-field" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' ">
+                            Kindly Select The "{{ 'INSURANCE_START_DATE' | translate }}"
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div fxFlex="48">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE' ">{{'CONTRACT_END_DATE' | translate}}
+                            <span class="mandatory-style">*</span>
+                          </mat-label>
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE' ">{{'INSURANCE_END_DATE' | translate}}
+                            <span class="mandatory-style">*</span>
+                          </mat-label>
+                          <input matInput (click)="contractEndDt.open()" [matDatepicker]="contractEndDt"
+                            formControlName="contractEndDtDisp" (keypress)="dateValidationinstall($event)"
+                            (dateChange)="onChangeValidation($event); onChangeValidation1()"
+                            [min]="contractCreateFormGroup.controls.contractStartDtDisp.value" tabindex="11" class="input-field">
+                          <mat-datepicker-toggle matSuffix [for]="contractEndDt"></mat-datepicker-toggle>
+                          <mat-datepicker #contractEndDt></mat-datepicker>
+                          <mat-error class="err-field" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'">
+                            Kindly Select The "{{ 'CONTRACT_END_DATE' | translate }}"
+                          </mat-error>
+                          <mat-error class="err-field" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">
+                            Kindly Select The "{{ 'INSURANCE_END_DATE' | translate }}"
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+                    <div fxLayout="row">
+                      <span class="mandatory-style" *ngIf="daysElapsed > 0">{{ daysElapsed }} Days Left To Expire From {{ fromDate }}</span>
+                      <span class="mandatory-style" *ngIf="daysElapsed < 0">Contract Expired Aleady.</span>
+                    </div>
+
+                    <div fxLayout="row" style="margin-top: 10px;">
+                      <div fxFlex="48">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}"
+                          class="example-full-width">
+                          <mat-label class="input-label"> {{'CONTRACT_PO_NO' | translate}} </mat-label>
+                          <input matInput formControlName="contractPONo" [maxlength]="100" class="input-field">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.contractPONo.value?.length || 0}}/100
+                          </mat-hint>
+                        </mat-form-field>
+                      </div>
+
+                      <div fxFlex="48">
+                        <mat-form-field class="example-width" [floatLabel]="'always'" class="example-full-width">
+                          <mat-label class="input-label">{{'CONTRACT_PO_DATE' | translate}}</mat-label>
+                          <input matInput (click)="contractPODt.open()" [matDatepicker]="contractPODt"
+                            [min]="contractCreateFormGroup.controls.contractStartDtDisp.value"
+                            formControlName="contractPODtDisp" (keypress)="dateValidationinstall($event)" class="input-field">
+                          <mat-datepicker-toggle matSuffix [for]="contractPODt"></mat-datepicker-toggle>
+                          <mat-datepicker #contractPODt></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+
+                    <div *ngIf="contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' || contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">
+                      <div>
+                        <h6>{{ 'CONTRACT_RENEWAL' | translate}}</h6>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="example-full-width">
+                          <span class="input-label">{{'CONTRACT_AUTO_RENEWAL' | translate}} <span
+                              class="mandatory-style">{{contractTypeMandatory}}</span></span>
+                          <ng-select class=" input-field" formControlName="autoRenewal" tabindex="24"
+                            [items]="autoRenewal" bindLabel="name" bindValue="name" required (change)="onChangeValidation($event)">
+                          </ng-select>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.autoRenewal.invalid && contractCreateFormGroup.controls.autoRenewal.touched">
+                            <div class="err-field"
+                              *ngIf="contractCreateFormGroup.controls.autoRenewal.errors.required">
+                              Kindly Select The "{{'CONTRACT_AUTO_RENEWAL' | translate}}" Type</div>
+                          </mat-error>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="{{ CommonhintMsg.MAX_4_DIG }}" style="margin-top: 15px;">
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'"> {{'CONTRACT_RENEWAL_DAYS' | translate}}
+                          </mat-label>
+                          <mat-label class="input-label" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'"> {{'INSURANCE_RENEWAL_DAYS' | translate}}
+                          </mat-label>
+                          <input matInput formControlName="expiryPriorNotifyDays" tabindex="24" [maxlength]="4" class="input-field">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.expiryPriorNotifyDays.value?.length ||
+                            0}}/4</mat-hint>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.expiryPriorNotifyDays.invalid && contractCreateFormGroup.controls.expiryPriorNotifyDays.touched">
+                            <div class="err-field" *ngIf="contractCreateFormGroup.controls.expiryPriorNotifyDays.errors.pattern">
+                              <span *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'">"{{'CONTRACT_RENEWAL_DAYS' | translate}}" Should Be Numbers Only</span>
+                             <span *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">"{{'INSURANCE_RENEWAL_DAYS' | translate}}" Should Be Numbers Only</span></div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-group" *ngIf="contractCreateFormGroup.controls.coverageType.value == 'CONTRACT'">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="{{ CommonhintMsg.MAX_4_DIG }}" style="margin-top: 15px;">
+                          <mat-label class="input-label"> {{'CONTRACT_ESCALATION_PERCENTAGE' | translate}}
+                          </mat-label>
+                          <input matInput formControlName="excalationPercent" tabindex="24" [maxlength]="4" class="input-field">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.excalationPercent.value?.length ||
+                            0}}/4</mat-hint>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.excalationPercent.invalid && contractCreateFormGroup.controls.excalationPercent.touched">
+                            <div class="err-field" *ngIf="contractCreateFormGroup.controls.excalationPercent.errors.pattern">
+                              "{{'CONTRACT_ESCALATION_PERCENTAGE' | translate}}" Should Be Numbers Only</div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <div fxLayout="row" fxFlex="30" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                  <div fxLayout="column" fxFlex="100"
+                    *ngIf="contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' 
+                    || contractCreateFormGroup.controls.coverageType.value == 'EXTENDED WARRANTY'
+                    || contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">
+
+                    <div>
+                      <h6>{{ 'CONTRACT_VALUE' | translate}}</h6>
+                    </div>
+
+                    <div fxLayout="row">
+
+                      <div fxFlex="48">
+                        <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                          <mat-label class="input-label"> {{'CONTRACT_PERIOD_BASIC_VALUE' | translate}} <span
+                              class="mandatory-style">{{contractValueMandatory}}</span> </mat-label>
+                          <input matInput tabindex="13" formControlName="contractBasicValue" (input)="onChangeValidation($event)"
+                            (keyup)="contractValChange()" (ngModelChange)="contractValChange()" class="input-field">
+                        
+                        <mat-error
+                          *ngIf="contractCreateFormGroup.controls.contractBasicValue.invalid && contractCreateFormGroup.controls.contractBasicValue.touched">
+                          <div class="err-field"
+                            *ngIf="contractCreateFormGroup.controls.contractBasicValue.errors.required">
+                            "{{'CONTRACT_PERIOD_BASIC_VALUE' | translate}}" Is Required </div>
+                          <div class="err-field"
+                            *ngIf="contractCreateFormGroup.controls.contractBasicValue.errors.pattern">
+                            "{{'CONTRACT_PERIOD_BASIC_VALUE' | translate}}" Should Be Numbers Only </div>
+                        </mat-error>
+                      </mat-form-field>
+                      </div>
+
+                      <div fxFlex="48">
+                        <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                          <mat-label class="input-label"> {{'COMMON_CURRENCY_CODE' | translate}} </mat-label>
+                          <input matInput tabindex="13" formControlName="curCd" class="input-field">
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+
+                    <div fxLayout="row">
+
+                      <div fxFlex="48">
+
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="{{ CommonhintMsg.MAX_4_DIG }}">
+                          <mat-label class="example-label input-label"> {{'CONTRACT_DISCOUNT_RATE' | translate}} </mat-label>
+                          <input matInput formControlName="discountRate" tabindex="14" [maxlength]="4"
+                            (keyup)="calcualteDisRate(contractCreateFormGroup.controls.discountRate.value,contractCreateFormGroup.controls.contractBasicValue.value)"
+                            (ngModelChange)="calcualteDisRate(contractCreateFormGroup.controls.discountRate.value,contractCreateFormGroup.controls.contractBasicValue.value)">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.discountRate.value?.length || 0}}/4
+                          </mat-hint>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.discountRate.invalid && contractCreateFormGroup.controls.discountRate.touched">
+                            <div class="err-field" *ngIf="contractCreateFormGroup.controls.discountRate.errors.pattern">
+                              "{{'CONTRACT_DISCOUNT_RATE' | translate}}" Should Be Numbers Only</div>
+                          </mat-error>
+                        </mat-form-field>
+
+                      </div>
+
+                      <div fxFlex="48">
+
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="example-label input-label"> {{'CONTRACT_DISCOUNT_AMT' | translate}} </mat-label>
+                          <input matInput formControlName="discountAmt" tabindex="15">
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.discountAmt.invalid && contractCreateFormGroup.controls.discountAmt.touched">
+                            <div *ngIf="contractCreateFormGroup.controls.discountAmt.errors.pattern">
+                              {{'CONTRACT_DISCOUNT_AMT' | translate}}
+                              contains only Numbers </div>
+                          </mat-error>
+                        </mat-form-field>
+
+                      </div>
+
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                        <mat-label class="input-label"> {{'CONTRACT_GROSS_VALUE' | translate}}</mat-label>
+                        <input matInput tabindex="16" formControlName="contractGrossValue" readonly class="input-field">
+                      </mat-form-field>
+                    </div>
+
+                    <div fxLayout="row">
+
+                      <div fxFlex="48">
+                        <span class="input-label">{{'CONTRACT_TAX_CODE1' | translate}}</span>
+                        <ng-select formControlName="taxCode1" (search)="listOfTaxCode1($event)"
+                          (click)="listOfTaxCode1({})" (change)="setTaxCode1Id($event)" [virtualScroll]="true"
+                          (scrollToEnd)="listOfTaxCode1({})"  (keyup.backspace)="listOfTaxCode1($event.target.value ? $event : 'back')"   
+                          (clear)="listOfTaxCode1('clear')" [loading]="scrollTaxCode1Sync" [items]="taxCode1List"
+                          bindLabel="taxCode" bindValue="taxCode" tabindex="17" class="example-full-width input-field cont-tax">
+                        </ng-select>
+                      </div>
+
+                      <div fxFlex="48">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_4_DIG }}"
+                          class="example-full-width" style="margin-top: 10px;">
+                          <mat-label class="input-label"> {{'CONTRACT_RATE' | translate}}(%)</mat-label>
+                          <input matInput formControlName="taxRate1" tabindex="18" [maxlength]="4"
+                            (ngModelChange)="contractValChange()" class="input-field">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.taxRate1.value?.length || 0}}/4
+                          </mat-hint>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.taxRate1.invalid && contractCreateFormGroup.controls.taxRate1.touched">
+                            <div class="err-field" *ngIf="contractCreateFormGroup.controls.taxRate1.errors.pattern">
+                              "{{'CONTRACT_RATE' | translate}}(%)" Should Be Numbers Only"</div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+
+                    <div fxLayout="row">
+
+                      <div fxFlex="48">
+                        <span class="input-label">{{'CONTRACT_TAX_CODE2' | translate}}</span>
+                        <ng-select formControlName="taxCode2" (search)="listOfTaxCode2($event)"
+                          (click)="listOfTaxCode2({})" (change)="setTaxCode2Id($event)" [virtualScroll]="true"
+                          (scrollToEnd)="listOfTaxCode2({})" (keyup.backspace)="listOfTaxCode2($event.target.value ? $event : 'back')"
+                          (clear)="listOfTaxCode2('clear')" [loading]="scrollTaxCode2Sync" [items]="taxCode2List"
+                          bindLabel="taxCode" bindValue="taxCode" dropdownPosition=top tabindex="19"
+                          class="example-full-width input-field cont-tax">
+                        </ng-select>
+                      </div>
+
+                      <div fxFlex="48">
+                        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_4_DIG }}"
+                          class="example-full-width" style="margin-top: 10px;">
+                          <mat-label class="input-label"> {{'CONTRACT_RATE' | translate}}(%) </mat-label>
+                          <input matInput formControlName="taxRate2" tabindex="20" [maxlength]="4"
+                            (ngModelChange)="contractValChange()" class="input-field">
+                          <mat-hint align="end">{{contractCreateFormGroup.controls.taxRate2.value?.length || 0}}/4
+                          </mat-hint>
+                          <mat-error
+                            *ngIf="contractCreateFormGroup.controls.taxRate2.invalid && contractCreateFormGroup.controls.taxRate2.touched">
+                            <div class="err-field" *ngIf="contractCreateFormGroup.controls.taxRate2.errors.pattern">
+                              "{{'CONTRACT_RATE' | translate}}(%)" Should Be Numbers Only"</div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+
+                    <div fxLayout="row">
+
+                    <div class="form-group" fxFlex="48">
+                      <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                        <mat-label class="input-label"> {{'CONTRACT_PERIOD_NET_VALUE' | translate}}</mat-label>
+                        <input matInput tabindex="21" formControlName="netContractValue" readonly class="input-field">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group" fxFlex="48">
+                      <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                        <mat-label class="input-label"> {{'COMMON_EXC_RATE' | translate}}</mat-label>
+                        <input matInput tabindex="22" formControlName="exchRate" (input)="onChangeValidation($event)"
+                        (keyup)="contractValChange()" (ngModelChange)="contractValChange()" class="input-field" >
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group">
+                    <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                      <mat-label class="input-label"> {{'LOCAL_NET_VALUE' | translate}}</mat-label>
+                      <input matInput tabindex="23" formControlName="localNetContractValue" readonly class="input-field">
+                    </mat-form-field>
+                  </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </mat-tab>
+
+        <!-- <mat-tab label="{{ 'CONTRACT_PERIOD_INFO' | translate }}">
+            <mat-card class="card-style">
+              <mat-card-content>
+
+                <div class="content-style" [formGroup]="contractCreateFormGroup">
+                  <div class="col-md-12 rightbutton">
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="col-md-12">
+                      <button *ngIf="!isViewMode" mat-raised-button class="rightbutton" color="primary"
+                        (click)="contractPeriodAddEdit(0,'add')"> {{ 'COMMON_ADD' | translate }}</button>
+                    </div>
+                  </div>
+                  <div class="example-container">
+                    <table #matContractPeriod mat-table [dataSource]="contractPeriodDataSource">
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="periodStartDtDisp">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PERIOD_START_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.periodStartDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="periodEndDtDisp">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PERIOD_END_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.periodEndDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="periodBasicValue">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PERIOD_BASIC_VALUE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.periodBasicValue}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="periodNetValue">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PERIOD_NET_VALUE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.periodNetValue}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon *ngIf="element.contractPeriodId > 0 && !isViewMode" class="action_icon" color="primary"
+                            matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="contractPeriodAddEdit(element,'edit',i)">
+                            edit</mat-icon>
+                          <mat-icon class="action_icon" color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="contractPeriodAddEdit(element,'view',i)">visibility</mat-icon>
+                          <mat-icon *ngIf="element.contractPeriodId == 0" class="action_icon" color="primary"
+                            matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                            (click)="DeleteContractPeriod(element.contractPeriodId,i)">delete</mat-icon>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="contractPeriodDisCol"></tr>
+                      <tr mat-row *matRowDef="let element; columns: contractPeriodDisCol;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab> -->
+
+        <mat-tab>
+          <ng-template mat-tab-label>
+            {{'CONTRACT_ASSET' | translate }}
+            <div *ngIf="!isViewMode">
+              <mat-icon *ngIf="assetDataSource.data.length == 0" class="close-icon" aria-hidden="true">error</mat-icon>
+            </div>
+          </ng-template>
+          <mat-card class="card-style">
+            <mat-card-content>
+
+              <div fxLayout="column">
+              <div fxLayout="row" fxFlex="100">
+                <div fxFlex="28">
+                  <div  *ngIf="isEditMode || isViewMode || assetTabViaContract">
+                    <div ><span *ngIf="(contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' 
+                      || contractCreateFormGroup.controls.coverageType.value == 'EXTENDED WARRANTY' || 
+                      contractCreateFormGroup.controls.coverageType.value == 'INSURANCE')" class="input-label">{{'CONTRACT_GROSS_VALUE'|translate}} =
+                        {{contractCreateFormGroup.controls.contractGrossValue.value.toLocaleString()}}</span> </div>
+                  </div>
+                </div>
+                <div fxFlex="28">
+                  <div  *ngIf="isEditMode || isViewMode || assetTabViaContract">
+                    <div ><span *ngIf="(contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' 
+                      || contractCreateFormGroup.controls.coverageType.value == 'EXTENDED WARRANTY' ||
+                      contractCreateFormGroup.controls.coverageType.value == 'INSURANCE')" class="input-label"><span *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'">{{'CONTRACT_SUM_OF_ASSET'|translate}}
+                        {{'CONTRACT_AMOUNT' | translate}} = {{totalAssetAmount.toLocaleString()}}</span>
+                        <span *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">{{'CONTRACT_SUM_OF_ASSET'|translate}}
+                        {{'INSURANCE_AMOUNT' | translate}} = {{totalAssetAmount.toLocaleString()}}</span>
+                      </span><br>
+                        <span *ngIf="assetDataSource.data.length == 0" class="mandatory-style">{{error_msg}}</span>
+                      </div>
+                  </div>
+                </div>
+                <div fxFlex="28">
+                  <div  *ngIf="isEditMode || isViewMode || assetTabViaContract">
+                    <div ><span *ngIf="(contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' 
+                      || contractCreateFormGroup.controls.coverageType.value == 'EXTENDED WARRANTY' ||
+                      contractCreateFormGroup.controls.coverageType.value == 'INSURANCE')" class="input-label">{{'CONTRACT_REMAINING_VALUE'|translate}} =
+                        {{remainingAmount.toLocaleString()}}</span> </div>
+                  </div>
+                </div>
+                <div fxFlex="16" fxLayoutAlign="end center">
+                  <div>
+                    <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" [disabled]="assetDataSource.data.length == 0" (click)="searchContractAsset();">{{'COMMON_SEARCH' | translate}}</button>
+                  </div>
+                  <div>
+                    <button mat-raised-button color="primary" class="space" [disabled]="disableClear"
+                    (click)='resetAssetList()' [disabled]="assetDataSource.data.length == assetDataSourceTemp.data.length" matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'">{{ 'COMMON_CLEAR' | translate }}</button>
+                  </div>
+                  <div *ngIf="assetTabViaContract">
+                    <button *ngIf="!isViewMode" mat-raised-button color="primary" class="rightbutton" matTooltip="{{'COMMON_ADD' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="addAssetAgainstContract()" [disabled]="contractCreateFormGroup.invalid">{{'COMMON_ADD' | translate}}</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div fxLayout="column" fxFlex="100" class="contract-container" *ngIf="isEditMode || isViewMode || assetTabViaContract || assetTabViaAsset">
+                <table #matAsset mat-table [dataSource]="assetDataSourceTemp" style="width: 100%;">
+
+                  <ng-container matColumnDef="slNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;">{{ 'COMMON_S_NO' |
+                      translate }}</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="width:5%;" class="table-cell-data">
+                      {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="assetCode">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{'CONTRACT_ASSET_CODE' | translate}} <br /> {{'ASSET_SERIAL_NO' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;" class="table-cell-data">
+                      {{ element?.assetCode }} <br />  {{ element?.serialNo == ''?'-':element?.serialNo}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="modelName">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{'MENU_MODEL' | translate}} <br /> {{'MENU_MANUFACTURER' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;" class="table-cell-data">
+                      {{element?.modelName}} <br /> {{(element?.manufacturerName)}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="assetGroupName">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{ 'ASSET_GROUP' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;" class="table-cell-data">
+                      {{element.assetGroupName}}
+                    </td>
+                  </ng-container>
+                  
+
+                  <ng-container matColumnDef="departmentName">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{'MENU_DEPARTMENT' | translate}} <br /> {{'MENU_SUB_DEPARTMENT' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;" class="table-cell-data">
+                      {{element?.departmentName}} <br /> <br /> {{(element?.subDepartmentName)}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="assetInfo">
+                    <th mat-header-cell *matHeaderCellDef style="width:6%;" class="table-head-data">
+                      {{'ASSET_INFO_GRID' | translate}}</th>
+                    <td mat-cell *matCellDef="let element" class="table-cell-data" style="width:6%;">
+                      <mat-icon (click)="viewAssetInfo(element)" style="color: #3f51b5">info</mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contractAmnt">
+                    <th mat-header-cell *matHeaderCellDef style="width:6%;" class="table-head-data" > 
+                      <span *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'">{{'CONTRACT_AMOUNT' | translate}}</span>
+                    <span *ngIf="contractCreateFormGroup.controls.coverageType.value == 'INSURANCE'">{{'INSURANCE_AMOUNT' | translate}}</span></th>
+                    <td mat-cell *matCellDef="let element" style="text-align:center;width:6%;" class="table-cell-data">
+                      <mat-form-field class="example-full-width"  [floatLabel]="'always'" style="margin-top: 27px;">
+                        <input matInput [(ngModel)]="element.contractAmnt" [ngModelOptions]="{standalone: true}"
+                        (input)="calcRemainingAmount()" name="contractAmnt" type="number" style="text-align:right;"
+                        id="contractAmnt" class="form-control" [disabled]="isViewMode">
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="includedServices">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{'CONTRACT_INCLUDED_SERVICES' | translate }}</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="width:15%;" class="table-cell-data">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                        <textarea matInput  (click)="insertOrEditInfo(element,'includedServices','Included Services',element.includedServices)"
+                        [(ngModel)]="element.includedServices" [ngModelOptions]="{standalone: true}"
+                        name="includedServices" id="includedServices" class="form-control table-text-area-height" [disabled]="isViewMode" [maxlength]="500"(input)="element.includedServices = $event.target.value.toUpperCase()"></textarea>
+                        <mat-hint align="end">{{element.includedServices?.length || 0}}/500
+                        </mat-hint>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="excludedServices">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;" class="table-head-data">
+                      {{'CONTRACT_EXCLUDED_SERVICES' | translate }}</th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;" class="table-cell-data">
+                      <mat-form-field class="example-full-width"  [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                        <textarea matInput [(ngModel)]="element.excludedServices" [ngModelOptions]="{standalone: true}"
+                        name="excludedServices" id="excludedServices" class="form-control table-text-area-height" 
+                        (click)="insertOrEditInfo(element,'excludedServices','Excluded Services',element.excludedServices)" [disabled]="isViewMode" [maxlength]="500"(input)="element.includedServices = $event.target.value.toUpperCase()"></textarea>
+                        <mat-hint align="end">{{element.excludedServices?.length || 0}}/500
+                        </mat-hint>
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;" class="table-head-data"> </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%;" class="table-cell-data">
+                      <mat-icon class="action_icon" color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                        (click)="editAsset(element.assetHdrId,'view')">visibility
+                      </mat-icon>
+                      <mat-icon class="action_icon" *ngIf="!isViewMode" color="warn" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                        (click)="deleteAssetFromContractAssets(element.assetHdrId)">delete
+                      </mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="assetDispCol;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: assetDispCol;"></tr>
+                </table>
+                <mat-card class="no-record-found" *ngIf="assetDataSourceTemp.data.length == 0">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+              </div>
+            </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="{{ 'CONTRACT_TENURE_PAYMENT' | translate }}"
+          *ngIf="contractCreateFormGroup.controls.coverageType.value == 'CONTRACT' 
+          || contractCreateFormGroup.controls.coverageType.value == 'EXTENDED WARRANTY'">
+          <mat-card class="card-style">
+            <mat-card-content>
+              <div fxLayout="column">
+              <div fxLayout="row" fxFlex="100">
+
+                <div fxFlex="25">
+                  <div class="example-full-width">
+                    <span class="input-label">{{'CONTRACT_PAYEMENT_FREQUENCY' | translate}}</span>
+                    <ng-select  (change)="getvalidoccuarance()" [items]="paymentFrequency" bindLabel="name" bindValue="name"
+                      formControlName="paymentTenureFrequency">
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div fxFlex="25">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel='Kindly Mention The "Occurrence"' style="margin-top: 5px;">
+                    <mat-label class="input-label"> {{'CONTRACT_PAYEMENT_OCCURANCES' | translate}} </mat-label>
+                    <input matInput type="number"(change)="getvalidoccuarance()" (keyup)="getvalidoccuarance()" formControlName="paymentTenureOccurances" [maxlength]="2" class="input-field">
+                  </mat-form-field>
+                  <span *ngIf="occaranceRange > 0" class="occurance-error">{{frequencyErrorMsg}}</span>
+                </div>
+                <div fxFlex="5"></div>
+                <div fxFlex="45" fxLayoutAlign="start center">
+                  <button *ngIf="!isViewMode" [disabled]="contractCreateFormGroup.invalid" mat-raised-button 
+                    matTooltip="{{'COMMON_ADD' | translate}}" [matTooltipPosition]="'below'" class="space" 
+                    color="primary" (click)="addPaymentDetails()">{{'COMMON_ADD' | translate}}
+                  </button>
+                  <button *ngIf="!isViewMode" [disabled]="!tenurePaymentDataSource.length > 0" mat-raised-button 
+                    matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" class="space" 
+                    color="primary" (click)="clearPaymentDetails()">{{'COMMON_CLEAR' | translate}}
+                  </button>
+                </div>
+
+              </div>
+              </div>
+              <div fxLayout="column">
+              <div class="payment-container">
+                <table #matPayment mat-table fxFlex="100" [dataSource]="tenurePaymentDataSource">
+
+                  <ng-container matColumnDef="sNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;">{{ 'COMMON_S_NO' | translate }}</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="width:5%;"> {{(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tenureAmount">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                      {{'CONTRACT_TENURE_AMT' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <input matInput [(ngModel)]="element.tenureAmount" [ngModelOptions]="{standalone: true}"
+                        name="tenureAmount" type="number" id="tenureAmount" class="form-control" [disabled]="isViewMode">
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tenureDateDisp">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                      {{'CONTRACT_TENURE_DATE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;">
+                      <mat-form-field class="example-full-width"[floatLabel]="'always'">
+                        <input matInput (click)="tenureDateDisp.open()" [matDatepicker]="tenureDateDisp" class="form-control"
+                        [(ngModel)]="element.tenureDateDisp" [ngModelOptions]="{standalone: true}" [disabled]="isViewMode">
+                        <mat-datepicker-toggle [for]="tenureDateDisp" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #tenureDateDisp></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="paymentMode">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;">{{'CONTRACT_PAYMENT_MODE' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;">
+                      <ng-select  [items]="paymentType" bindLabel="name" bindValue="name"  appendTo="body"
+                        [(ngModel)]="element.paymentMode" [ngModelOptions]="{standalone: true}" name="paymentMode"
+                        class="form-control example-full-width cont-tax" type="text" id="paymentMode" [disabled]="isViewMode">
+                      </ng-select>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="instrumentNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:20%;">
+                      {{'CONTRACT_INSTRUMENT_NO' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:20%;">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <input matInput [(ngModel)]="element.instrumentNo" [ngModelOptions]="{standalone: true}"
+                        name="instrumentNo" type="text" id="instrumentNo" class="form-control" [disabled]="isViewMode">
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="instrumentDtDisp">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                      {{'CONTRACT_INSTRUMENT_DATE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;">
+                      <mat-form-field class="example-full-width"[floatLabel]="'always'">
+                        <input matInput (click)="instrumentDtDisp.open()" [matDatepicker]="instrumentDtDisp" class="form-control"
+                        [(ngModel)]="element.instrumentDtDisp" [ngModelOptions]="{standalone: true}" [disabled]="isViewMode">
+                        <mat-datepicker-toggle [for]="instrumentDtDisp" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #instrumentDtDisp></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bankName">
+                    <th mat-header-cell *matHeaderCellDef style="width:20%;"> {{'CONTRACT_BANK_NAME' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:20%;">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <input matInput [(ngModel)]="element.bankName" [ngModelOptions]="{standalone: true}" name="bankName"
+                        type="text" id="bankName" class="form-control" [disabled]="isViewMode">
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="instrumentAmnt">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                      {{'CONTRACT_INSTRUMENT_AMNT' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <input matInput [(ngModel)]="element.instrumentAmnt" [ngModelOptions]="{standalone: true}"
+                        name="instrumentAmnt" type="number" id="instrumentAmnt" class="form-control" [disabled]="isViewMode"s>
+                    </mat-form-field>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="tenurePaymentDispCol;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: tenurePaymentDispCol;"></tr>
+                </table>
+              </div>
+            </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="{{'CONTRACT_DOC' | translate }}">
+          <mat-card class="card-style">
+            <mat-card-content>
+
+              <div fxLayoutAlign="end center">
+                <button mat-raised-button color="primary" class="rightbutton" *ngIf="!isViewMode"
+                  (click)="documentAddEdit()">{{'COMMON_ADD' | translate}}</button>
+              </div>
+
+              <div class="content-style">
+                <div class="example-container">
+                  <table #matAddContract mat-table [dataSource]="contractDocDataSource" matSort style="width: 100%;">
+
+                    <ng-container matColumnDef="s.no">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;">{{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="docName">
+                      <th mat-header-cell *matHeaderCellDef> {{'CONTRACT_DOCUMENT_NAME' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">{{ element?.docName }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="docType">
+                      <th mat-header-cell *matHeaderCellDef> {{'CONTRACT_DOCUMENT_TYPE' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">{{ element?.docType }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdBy">
+                      <th mat-header-cell *matHeaderCellDef> {{'MODEL_UPLOADED_BY' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">{{ element?.createdBy }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdDtDisp">
+                      <th mat-header-cell *matHeaderCellDef> {{'MODEL_UPLOADED_DATE' | translate}} </th>
+                      <td mat-cell *matCellDef="let element">{{ element?.createdDtDisp }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;">{{ element?.action }}
+                        <button mat-icon-button [disabled]="element.contractDocId == 0" [color]="element.contractDocId == 0 ? 'auto' : 'primary'" (click)="downloadDocument(element?.filePath,element?.contentType)">
+                        <mat-icon
+                          matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" class="actionicon">cloud_download
+                        </mat-icon>
+                      </button>
+                      <button mat-icon-button>
+                        <mat-icon class="action_icon" *ngIf="!isViewMode" color="primary"
+                          matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                          (click)="deleteDocument(element.contractDocId,element.docName,i)">delete
+                        </mat-icon>
+                      </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="contractDispColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: contractDispColumns;"></tr>
+
+                  </table>
+
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+
+        <mat-tab  label="{{'CONTRACT_TC' | translate }}" 
+         *ngIf="contractCreateFormGroup.controls.coverageType.value != 'INSURANCE'" >
+
+          <mat-card class="card-style">
+            <mat-card-content>
+              <div fxLayout="column" class="content-style">
+
+                <div>
+                  <!-- <div>
+                    <h6>{{ 'CONTRACT_SERVICES' | translate}}</h6>
+                  </div> -->
+
+                  <div fxLayout="row" fxFlex="100">
+                    <div fxFlex="40">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                        <mat-label class="input-label"> {{ 'CONTRACT_INCLUDE_SR' | translate }} </mat-label>
+                        <textarea formControlName="includedService" matInput tabindex="22" class="input-field form-control"
+                          [maxlength]="500" style="height: 60px;"></textarea>
+                        <mat-hint align="end">{{contractCreateFormGroup.controls.includedService.value?.length || 0}}/500
+                        </mat-hint>
+                      </mat-form-field>
+                    </div>
+                    
+                    <div fxFlex="40">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                        <mat-label class="input-label"> {{ 'CONTRACT_EXCLUDE_SR' | translate }} </mat-label>
+                        <textarea class="input-field form-control" formControlName="excludedService" matInput tabindex="23"
+                          [maxlength]="500" style="height: 60px;"></textarea>
+                        <mat-hint align="end">{{contractCreateFormGroup.controls.excludedService.value?.length || 0}}/500
+                        </mat-hint>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div fxLayout="row" fxFlex="100">
+                  <div fxLayout="row" fxFlex="100">
+                    <div fxFlex="80"></div>
+                    <div fxFlex="20" fxLayoutAlign="end center">
+                      <button mat-raised-button color="primary" class="space" style="margin-top: 5px;margin-bottom: 5px;"
+                        (click)="addPOTCTemplateInfo()">{{'PO_ATTACH_TEMPLATE' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="content-style">
+                <mat-grid-list cols="1" rowHeight="70px">
+                  <mat-grid-tile *ngFor="let cusFieldslist of cusFieldHdrList| slice:0:50; let i = index;">
+                    
+                    <div class="sno">{{ i + 1 }}.</div>
+
+                    <div class="example-full-width custom-field-form-group number-fields" *ngIf="cusFieldslist.tcParameterInputType =='NUMBER'" [style.background]="cusFieldslist.color">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ cusFieldslist.tcParameterRemarks }}">
+                        <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                        <input matInput type="number" name="numberValue" pattern="^([0-9]*$)"
+                          [(ngModel)]="cusFieldslist.value" [ngModelOptions]="{standalone: true}"
+                          title="{{ cusFieldslist.tcParameterName }} should only contain numbers"
+                          oninput="this.value = this.value.toUpperCase()">
+                      </mat-form-field>
+                    </div>
+
+                    <div *ngIf="cusFieldslist.tcParameterInputType =='DROP DOWN'" class="example-full-width select-fields">
+                      <div class="custom-field-form-group">
+                        <span class="input-label">{{ cusFieldslist.tcParameterName }} </span>
+                        <ng-select  [(ngModel)]="cusFieldslist.value" appendTo="body" 
+                          [items]="cusFieldslist.comboValues" [ngModelOptions]="{standalone: true}"
+                          bindLabel="comboValue" bindValue="comboValue">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div *ngIf="cusFieldslist.tcParameterInputType =='TEXT AREA'" class="example-full-width">
+                      <div class="custom-field-form-group text-area-field" [style.background]="cusFieldslist.color">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                          <mat-label class="input-label"> {{ cusFieldslist.tcParameterName }} </mat-label>
+                          <textarea matInput name="textValue" [(ngModel)]="cusFieldslist.value"
+                            [ngModelOptions]="{standalone: true}" type="text" 
+                            [maxlength]="cusFieldslist.inputMaxLength"
+                            oninput="this.value = this.value.toUpperCase()" style="height: 40px;"> </textarea>
+                          <mat-hint align="end">{{cusFieldslist.value?.length || 0}}/{{ cusFieldslist.inputMaxLength
+                            }}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div *ngIf="cusFieldslist.tcParameterChildId != null && cusFieldslist.tcParameterChildId > 0" class="example-full-width">
+                      <div *ngIf="cusFieldslist.tcParameterChildInputType =='DROP DOWN'" class="example-full-width child-select-fields">
+                        <div class="custom-field-form-group">
+                          <span class="input-label spacing">{{ cusFieldslist.tcParameterChildName }} </span>
+                          <ng-select  [(ngModel)]="cusFieldslist.valueChild" appendTo="body" (change)="isChanged();"
+                            [items]="cusFieldslist.comboValuesChild" [ngModelOptions]="{standalone: true}"
+                            bindLabel="comboValueChild" bindValue="comboValueChild">
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- To fix UI alignent issue add a empty div in the screen -->
+                    <div *ngIf="cusFieldslist.tcParameterChildId == null || cusFieldslist.tcParameterChildId <= 0 && cusFieldslist.tcParameterInputType =='NUMBER'" class="example-full-width">
+                      <div class="example-full-width child-select-fields"></div>
+                    </div>
+                    
+
+                  </mat-grid-tile>
+                </mat-grid-list>    
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </mat-tab>
+
+        <mat-tab *ngIf="contractCreateFormGroup.controls.contractHdrId.value > 0"
+          label="{{ 'MENU_WORKFLOW_APPROVAL' | translate }}">
+          <mat-card class="card-style">
+            <mat-card-content>
+              <app-common-workflow-approval-tab [transactionId]=contractId [transactionSource]=transactionSource
+                [contractApproveButton]=approvebuttonEnable [contractEmployeeId]=employeeId
+                (confirmContract)=contractApprove(false) (ContractReject) = rejectContractApprove()>
+              </app-common-workflow-approval-tab>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+      </mat-tab-group>
+
+    </div>
+  </form>
+</div>

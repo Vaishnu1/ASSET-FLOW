@@ -1,0 +1,258 @@
+<div fxLayout="column" fxFlex="100%">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_SERVICE' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{'MENU_ASSET_ASSIGNMENT' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+
+<div class="content_section_background">
+  <div fxLayout="column" >
+    <div class="table_section ">
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-header">
+            {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET_ASSIGNMENT' | translate}}
+          </mat-panel-title>
+          <mat-panel-description fxLayoutAlign="end end">
+            <mat-icon>search</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+  <div fxLayout="column" fxFlex="100%">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+        <div class="form-group">
+          <div class="example-full-width">
+            <span class="input-label"> {{ 'ASSET_CODE' | translate }}</span>
+            <ng-select [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+              (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+              [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+              loadingText="Loading..." (change)="selectedAssetCodeData($event)" appendTo="body"
+              [(ngModel)]="assetAssignee.assetCode" [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+        <div class="form-group">
+          <div class="example-full-width">
+            <span class="input-label"> {{ 'ASSET_ASSIGNED_BY' | translate }} </span>
+            <ng-select [items]="userCombo" bindLabel="userName" bindValue="userName"
+              (search)="loadServiceEngineerData($event)" (click)="loadServiceEngineerData($event)"
+              [virtualScroll]="true" (scrollToEnd)="loadServiceEngineerData({})" (keyup.backspace)="loadServiceEngineerData($event.target.value ? $event : 'back')" (clear)="loadServiceEngineerData('clear')" appendTo="body"
+              [loading]="scrollUsersync" loadingText="Loading..." [(ngModel)]="assetAssignee.createdBy"
+              [ngModelOptions]="{standalone: true}" (change)="selectedAssignedToData($event)">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="30" fxFlex.sm="30" fxFlex.xs="30">
+        <div class="form-group">
+          <div class="example-full-width">
+            <span class="input-label"> {{ 'ASSIGNED_TO' | translate }}</span>
+          <ng-select [items]="assignToPersonCombo" class="input-field" bindLabel="displayName" appendTo="body"
+            bindValue="employeeFirstName" (search)="loadAssignToComboData($event)"
+            (click)="loadAssignToComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadAssignToComboData({})" 
+            (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')" 
+            (clear)="loadAssignToComboData('clear')" [loading]="scrollsyncAssignToPerson"
+            loadingText="Loading..." (change)="selectedAssignToPerson($event)"
+            [(ngModel)]="assetAssignee.assignToEmpName" [ngModelOptions]="{standalone: true}" class="input-fiel"> </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="assignment-form-block" fxFlex="30" fxFlex.sm="30" fxFlex.xs="30" fxLayoutAlign="end end">
+
+      <button mat-raised-button class="space" fxHide.lt-md color="primary"
+       (click)="fetchList()">{{'COMMON_SEARCH' | translate}}</button>
+
+      <button mat-raised-button class="space" fxHide.gt-sm color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+      [matTooltipPosition]="'below'" (click)="fetchList()"  fxHide.gt-sm><mat-icon>search</mat-icon></button>
+
+      <button mat-raised-button class="space" fxHide.lt-md color="primary"
+       (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+      <button mat-raised-button class="space" fxHide.gt-sm color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+        [matTooltipPosition]="'below'" (click)="clear()"><mat-icon>clear_all</mat-icon></button>
+
+      </div>
+    </div>
+  </div>
+      </mat-expansion-panel>
+   <hr>
+      <mat-toolbar class="switch-table-format" style="height: 20px !important;">
+        <div fxFlex></div>
+        <span class="example-spacer"></span>
+        <mat-icon (click)="SwithTab(true)"><a>toc</a></mat-icon>  &nbsp; <mat-icon (click)="SwithTab(false)"><a>view_agenda</a></mat-icon>
+      </mat-toolbar>
+
+      <mat-toolbar>
+        <span>{{'MENU_ASSET_ASSIGNMENT'| translate}} List</span>
+        <span class="example-spacer"></span>
+
+        <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length"
+        [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+        <span class="example-spacer"></span>
+
+        <button [disabled]=" selectedAssigneeList == 0" mat-raised-button color="primary" class="space sqr-btn" matTooltip="{{ 'COMMON_APPROVE' | translate }}" *ngIf="modelAccessModule.createFlagDisplay"  id="approve" (click)="confirmAssigneeApprove()">
+        <mat-icon>spellcheck</mat-icon>
+        </button>
+
+        <button [disabled]=" selectedAssigneeList == 0" mat-raised-button color="primary" class="space sqr-btn" id="rejectIcon" *ngIf="modelAccessModule.deleteFlagDisplay" matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rejectAssigneeApprove()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+
+
+      </mat-toolbar>
+
+      <div class="example-container"  *ngIf="!modeDisplay" style="padding-top: 10px;">
+        <div fxLayout="column" fxFlex="100%">
+          <ng-container *ngFor="let element of assetAssigneeDataSource; let i = index;" >
+          <div fxLayout="row" class="{{element.createdBy != '' ? 'block-table-assigned' : 'block-table-notassigned'}}" fxLayoutAlign="start center" >
+             <div class="assignment-list" fxFlex="1" fxFlex.sm="1" fxFlex.xs="1">
+                <mat-checkbox color="primary" class="example-margin" (change)="selectAssetAssignee(element)"
+                 [checked]="compareValue(element)"></mat-checkbox>
+             </div>
+             <div  class="assignment-list assignment-desc" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20" (click)="selectAssetAssignee(element)">
+              {{element?.description}}
+            </div>
+             <div  class="assignment-list" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20" (click)="selectAssetAssignee(element)">
+              Asset Code : {{element?.assetCode}} <br />
+              Equipment Code : {{element?.equipmentCode}} <br />
+              Assignee Type : {{element?.assigneeTypeName}} <br />
+            </div>
+            <div  class="assignment-list" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20" (click)="selectAssetAssignee(element)">
+              Department : {{element?.assetDepartment}} <br />
+              Sub Department : {{'SUB_DEPARTMENT_NAME' | translate }}
+            </div>
+            <div  class="assignment-list" fxFlex="19" fxFlex.sm="19" fxFlex.xs="19" (click)="selectAssetAssignee(element)">
+              Assigned to : {{element?.assignToEmpName}} <br />
+              Assigned Date : {{element?.startDtDisp}} <br />
+              Assigned End Date : {{element?.endDtDisp}}
+            </div>
+            <div  class="assignment-list" fxFlex="20" fxFlex.sm="20" fxFlex.xs="20" (click)="selectAssetAssignee(element)">
+              Assigned By : {{element?.createdBy}} <br />
+              Phone No : {{element?.assignedPersonContactNumber}}
+            </div>
+          </div>
+        </ng-container>
+        </div>
+      </div>
+
+      <div class="example-container" *ngIf="modeDisplay"  >
+
+        <table #matAssignee class="asset-assignee-list" mat-table [dataSource]="assetAssigneeDataSource">
+
+          <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" class="example-margin" [checked]="selectAllAssignee" (change)="selectAllAssetAssignee($event)">
+              </mat-checkbox></th>
+              <td mat-cell *matCellDef="let element" >
+                <mat-checkbox color="primary" class="example-margin" (change)="selectAssetAssignee(element)"
+                 [checked]="compareValue(element)">
+                </mat-checkbox>
+              </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetCode">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'SR_ASSET_CODE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.assetCode}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetDescription">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'SR_ASSET_DESC_GRID' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetEquipmentCode">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'EQUIPMENT_CODE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.equipmentCode}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="departmentName">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'DEPARTMENT_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.assetDepartment}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="subDepartmentName">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'SUB_DEPARTMENT_NAME' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.assetSubDepartment}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assignToEmpName">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'ASSIGNED_TO' | translate }} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.assignToEmpName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assigneeType">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'ASSET_ASSIGNEE_TYPE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.assigneeTypeName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="startDt">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'ASSIGNED_START_DATE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.startDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="endtDt">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'ASSINED_END_DATE' | translate}}</th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)">
+              {{element?.endDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assignedBy">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'ASSET_ASSIGNED_BY' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)"> {{element?.createdBy}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="emailId">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'COMMON_EMAIL_ID' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)"> {{ element?.assignedPersonEmail }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="phoneNo">
+            <th mat-header-cell *matHeaderCellDef>
+              {{'COMMON_PHONE_NO' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectAssetAssignee(element)"> {{element?.assignedPersonContactNumber}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="assigneeDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: assigneeDisplayedColumns;"></tr>
+        </table>
+        <div fxLayoutAlign="center center">
+        <mat-card class="no_records_found" *ngIf="length=='0'">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+        </mat-card>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

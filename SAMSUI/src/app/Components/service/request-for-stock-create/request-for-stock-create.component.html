@@ -1,0 +1,361 @@
+<div class="top-content row">
+
+  <div class="col-md-9">
+    <mat-toolbar-row>
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a></li>
+          <li class="breadcrumb-item">{{ 'MENU_SERVICE' | translate }}</li>
+          <li class="breadcrumb-item"><a href="#"
+              [routerLink]="['home/serviceRequest']">{{ 'SR_SERVICE_REQUEST' | translate }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ 'COMMON_CREATE' | translate }}</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+
+  <div class="col-md-3">
+    <button *ngIf="createDisplay" mat-raised-button class="space" color="primary" (click)="saveSrAndPurchase()" [disabled]="rfsForm.invalid" >
+      <span *ngIf="!uploadFlag"> {{'COMMON_SUBMIT' | translate}} </span>
+      <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span>
+    </button>
+    <button *ngIf="createDisplay" mat-raised-button color="primary" class="space" (click)="clear()">{{ 'COMMON_CLEAR' | translate }}</button>
+    <button mat-raised-button color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button> 
+  </div>
+
+</div>
+
+<div class="content_section">
+  
+
+    <div class="row">
+      <div class="col-md-12">
+        <form [formGroup]="rfsForm">
+
+        <div class="col-md-12 row">
+
+          <div class="col-md-3">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select [items]="locationCombo" autofocus required #srLocFocus bindLabel="locDisplayField"
+                  bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                  (click)="loadLocationComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                  (change)="selectedLocationData($event)" formControlName="locationName"></ng-select>
+                <mat-error *ngIf="rfsForm.controls.locationName.invalid && rfsForm.controls.locationName.touched">
+                  <div class="err-field" *ngIf="rfsForm.controls.locationName.errors.required">
+                    {{'LOCATION_NAME' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="col-md-12 row">
+              <div class="pd-1"><span class="input-label">{{'SR_TYPE' | translate}}</span> </div>
+              <div class="pd-1">-</div>
+              <div class="pd-1"><span class="input-label">{{'REQUEST FOR STOCK'}}</span></div>  
+            </div>
+
+          </div>
+
+          <div class="col-md-3">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'ASSET_GROUP' | translate }} <span class="mandatory-style">*</span> </span>
+                <ng-select  formControlName="assetGroupName" (click)="listOfAllAssetGroup({})"
+                  [virtualScroll]="true" (search)="listOfAllAssetGroup($event)" (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')"
+                  (change)="getAssetGroupComboValue($event)" [items]="assetGroup" bindLabel="assetGroupName"
+                  bindValue="assetGroupName" [loading]="scrollsyncAssetGroup" loadingText="Loading..." required>
+                </ng-select>
+                <mat-error *ngIf="rfsForm.controls.assetGroupName.invalid && rfsForm.controls.assetGroupName.touched">
+                  <div class="err-field" *ngIf="rfsForm.controls.assetGroupName.errors.required">
+                    {{ 'ASSET_GROUP' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+                                      
+          </div>
+
+          <div class="col-md-3">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'MODEL_NAME' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select  formControlName="modelName" (click)="listOfAllModel({})"
+                  [virtualScroll]="true" (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')"
+                  (change)="getModelComboValue($event)" [items]="modelCombo" bindLabel="modelName" bindValue="modelName"
+                  [loading]="scrollsyncModel" loadingText="Loading..." required>
+                </ng-select>
+                <mat-error *ngIf="rfsForm.controls.modelName.invalid && rfsForm.controls.modelName.touched">
+                  <div class="err-field" *ngIf="rfsForm.controls.modelName.errors.required">
+                    {{ 'MODEL_NAME' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="col-md-12 row">
+              <div class="pd-1"><span class="input-label">{{'MANUFACTURER' | translate}}</span> </div>
+              <div class="pd-1">-</div>
+              <div class="pd-1"><span class="input-label">{{rfsForm.controls.manufacturerName.value}}</span></div>
+            </div>
+
+          </div>
+
+          <div class="col-md-3">  
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} <span class="mandatory-style">*</span> </span>
+                <ng-select [items]="departmentCombo" required bindLabel="departmentName" bindValue="departmentName"
+                  (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')" [loading]="scrollsyncDepartment"
+                  loadingText="Loading..." (change)="selectedDepartmentData($event)" formControlName="departmentName">
+                </ng-select>
+                <mat-error *ngIf="rfsForm.controls.departmentName.invalid && rfsForm.controls.departmentName.touched">
+                  <div class="err-field" *ngIf="rfsForm.controls.departmentName.errors.required">
+                    {{'DEPARTMENT_NAME' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+       </form>
+      </div>
+    </div>
+
+    <hr size="10">
+
+    <div class="panel-body" *ngIf="createDisplay">
+      <form [formGroup]="prCreateForm">
+       <div class="row">
+
+        <div class="col-md-3">
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{'ITEM_TYPE' | translate}}<span class="mandatory-style"> *</span></span>
+              <ng-select  formControlName="itemTypeName" tabindex="10" [items]="itemCatList"
+                bindLabel="lable" bindValue="lable"></ng-select>
+              <mat-error *ngIf="prCreateForm.controls.itemTypeName.invalid && prCreateForm.controls.itemTypeName.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.itemTypeName.errors.required">
+                  {{'ITEM_TYPE' | translate}} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{'ITEM_NAME' | translate}}<span class="mandatory-style"> *</span></span>
+              <ng-select [items]="itemCombo" bindLabel="itemName" bindValue="itemName" (search)="listOfItem($event)"
+                (click)="listOfItem($event)" [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')"
+                [loading]="scrollsyncItemName" loadingText="Loading..." (change)="getAccessoriesComboValue($event)"
+                formControlName="itemName">
+              </ng-select>
+              <mat-error *ngIf="prCreateForm.controls.itemName.invalid && prCreateForm.controls.itemName.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.itemName.errors.required">
+                  {{'ITEM_NAME' | translate}} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+        </div>                   
+
+        <div class="col-md-3">
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} <span class="mandatory-style">*</span>
+              </span>
+              <ng-select [items]="supplierCombo" required bindLabel="supplierName" bindValue="supplierName"
+                (search)="loadSupplierComboData($event)" (click)="loadSupplierComboData($event)" [virtualScroll]="true"
+                (scrollToEnd)="loadSupplierComboData({})"  (keyup.backspace)="loadSupplierComboData($event.target.value ? $event : 'back')"   (clear)="loadSupplierComboData('clear')" [loading]="scrollsyncSupplier" loadingText="Loading..."
+                (change)="selectedSupplierList($event)" formControlName="supplierName"></ng-select>
+              <mat-error *ngIf="prCreateForm.controls.supplierName.invalid && prCreateForm.controls.supplierName.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.supplierName.errors.required">  
+                  {{'SUPPLIER_NAME' | translate}} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{'PURCHASE_ORDER_TYPE' | translate}}<span class="mandatory-style">*</span></span>
+              <ng-select [items]="orderReasonList" bindLabel="orderReasonName" bindValue="orderReasonName"
+                (search)="loadOrderReasonComboData($event)" (click)="loadOrderReasonComboData($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadOrderReasonComboData({})" (keyup.backspace)="loadOrderReasonComboData($event.target.value ? $event : 'back')" (clear)="loadOrderReasonComboData('clear')" [loading]="scrollorderReasonsync"
+                loadingText="Loading..." (change)="selectedOrderReasonData($event)" formControlName="orderReason">
+              </ng-select>
+              <mat-error *ngIf="prCreateForm.controls.orderReason.invalid && prCreateForm.controls.orderReason.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.orderReason.errors.required"> 
+                  {{'PURCHASE_ORDER_TYPE' | translate}} is Required </div>  
+              </mat-error>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{'PURCHASE_ORDER_PAY_TYPE' | translate}}<span class="mandatory-style">
+                  *</span></span>
+              <ng-select  formControlName="payType" [items]="payTypeList" bindLabel="name"
+                bindValue="name"></ng-select>
+              <mat-error *ngIf="prCreateForm.controls.payType.invalid && prCreateForm.controls.payType.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.payType.errors.required">
+                  {{'PURCHASE_ORDER_PAY_TYPE' | translate}} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="example-full-width">
+              <span class="input-label">{{'PURCHASE_TYPE_FOR_SR' | translate}}<span class="mandatory-style">
+                  *</span></span>
+              <ng-select  formControlName="prType" [items]="prTypeList" bindLabel="name"
+                bindValue="name">
+              </ng-select>
+              <mat-error *ngIf="prCreateForm.controls.prType.invalid && prCreateForm.controls.prType.touched">
+                <div class="err-field" *ngIf="prCreateForm.controls.prType.errors.required">
+                  {{'PURCHASE_TYPE_FOR_SR' | translate}} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+          
+        </div>
+
+       <div class="col-md-3">  
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="example-label input-label"> {{'REQ_QTY' | translate}}
+              </mat-label>
+              <input matInput formControlName="poReqQty" required>
+              <mat-error *ngIf="prCreateForm.controls.poReqQty.invalid && prCreateForm.controls.poReqQty.touched">
+                <div *ngIf="prCreateForm.controls.poReqQty.errors.required">{{'REQ_QTY' | translate}} is Required </div>
+                <div *ngIf="prCreateForm.controls.poReqQty.errors.pattern">{{'REQ_QTY' | translate}} contains only Numbers </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-12 row">
+            <div class="pd-1"><span class="input-label">{{'ITEM_DESC' | translate}}</span> </div>
+            <div class="pd-1">-</div>
+            <div class="pd-1"><span class="input-label">{{prCreateForm.controls.description.value}}</span></div>
+          </div>    
+
+          <div class="col-md-12 row">
+            <div class="pd-1"><span class="input-label">{{'ITEM_OEM_CODE' | translate}}</span> </div>
+            <div class="pd-1">-</div>
+            <div class="pd-1"><span class="input-label">{{prCreateForm.controls.makerPartCode.value}}</span></div>
+          </div>                  
+
+       </div>
+
+       </div>
+
+       <div class="col-md-12 rightbutton">
+        <button mat-raised-button class="space" color="primary" (click)="raisePurchaseRequest()"
+          [disabled]="prCreateForm.invalid">
+          {{ 'COMMON_ADD' | translate }}</button>
+       </div>
+
+       <div class="pmsTable">
+        <table class="table table-bordered">
+          <thead class="table_header">
+            <tr>
+              <th class="input-label">{{ 'COMMON_S_NO' | translate }}</th>
+              <th class="input-label">{{ 'ITEM_TYPE' | translate }}</th>
+              <th class="input-label">{{ 'ITEM_NAME' | translate }}</th>
+              <th class="input-label">{{ 'ITEM_DESC' | translate }}</th>
+              <th class="input-label">{{ 'PURCHASE_TYPE_FOR_SR' | translate }}</th>
+              <th class="input-label">{{ 'REQ_QTY' | translate }}</th>
+              <th class="input-label">{{ 'COMMON_DELETE' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prlist of prReqHdrList; let i = index;">
+              <td style="font-size: 10px;font-weight: bold;">{{i+1}}</td>
+              <td style="font-size: 10px;font-weight: bold;">{{prlist.poReqDtl.itemTypeName}}</td>
+              <td style="font-size: 10px;font-weight: bold;">{{prlist.poReqDtl.itemName}}</td>
+              <td style="font-size: 10px;font-weight: bold;">{{prlist.poReqDtl.description}}</td>
+              <td style="font-size: 10px;font-weight: bold;">{{prlist.prType}}</td>
+              <td style="font-size: 10px;font-weight: bold;">{{prlist.poReqDtl.poReqQty}}</td> 
+              <td>
+                <mat-icon class="close-icon-large-remove" (click)="delete(i)">remove_circle_outline</mat-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+       </div>
+
+      </form>
+    </div>
+    
+    <div class="row"  *ngIf="editDisplay || viewDisplay">
+  
+      <div class="col-md-12">
+        <table mat-table [dataSource]="purchaseDtlList">   
+
+          <ng-container matColumnDef="sNo">
+            <th mat-header-cell *matHeaderCellDef>{{'COMMON_S_NO' | translate }}</th>
+            <td mat-cell *matCellDef="let element;let i = index;"> {{i+1}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poReqNo">
+            <th mat-header-cell *matHeaderCellDef>{{'PR_NO' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.poReqNo}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poReqDtDisp">     
+            <th mat-header-cell *matHeaderCellDef>{{'PR_DT' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.poReqDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="itemName">
+            <th mat-header-cell *matHeaderCellDef>{{'ITEM_NAME' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.itemName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">  
+            <th mat-header-cell *matHeaderCellDef>{{'ITEM_DESC' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+          </ng-container>  
+
+          <ng-container matColumnDef="itemTypeName">
+            <th mat-header-cell *matHeaderCellDef>{{'ITEM_TYPE' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.itemTypeName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef>{{'SUPPLIER_NAME' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.supplierName}} </td>  
+          </ng-container>
+
+          <ng-container matColumnDef="poReqQty">
+            <th mat-header-cell *matHeaderCellDef>{{'REQ_QTY' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{element.poReqQty}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsPurchaseDtl; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsPurchaseDtl;let i = index"></tr>
+  
+        </table>
+      </div>
+
+    </div>
+
+  
+</div>

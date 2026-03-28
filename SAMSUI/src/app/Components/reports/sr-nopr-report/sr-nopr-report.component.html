@@ -1,0 +1,128 @@
+<div class="top-content row">
+  <div class="col-md-8">
+    <mat-toolbar-row>
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a>
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a></li>
+          <li class="breadcrumb-item">Reports</li>
+          <li class="breadcrumb-item active" aria-current="page"><a href="#" [routerLink]="['/manageReports']">Manage
+              reports</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{a.screenName}}</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+</div>
+<div class="content_section">
+  <div class="row">
+    <div class="table_section col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="example-header">
+            <form [formGroup]="srReportForm">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <span matLabel>Location</span>
+                      <ng-select tabindex=1 [items]="locationCombo" autofocus #FormFirstLoc bindLabel="locDisplayField"
+                        (search)="loadLocationComboData($event)" (change)="selectedLocationData($event)"
+                        formControlName="locationName"></ng-select>
+                    </div>
+
+                    <div class="form-group">
+                      <span matLabel>Department</span>
+                      <ng-select tabindex=5 [items]="departmentCombo" autofocus bindLabel="departmentName"
+                        (search)="loadDepartmentComboData($event)" (change)="selectedDepartmentData($event)"
+                        formControlName="departmentName"></ng-select>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="example-label input-label">From</mat-label>
+                          <input matInput tabindex=2 formControlName="createdDtDisp"
+                            [max]="srReportForm.controls.updatedDtDisp.value" (click)="picker1.open()"
+                            (dateChange)="setToFocus()" [matDatepicker]="picker1" (keypress)="dateValidation1($event)">
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="example-label input-label">To</mat-label>
+                          <input matInput tabindex=3 formControlName="updatedDtDisp" (click)="picker2.open()"
+                            [min]="srReportForm.controls.createdDtDisp.value" [matDatepicker]="picker2"
+                            (keypress)="dateValidation2($event)">
+                          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                          <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <span matLabel>Model</span>
+                      <ng-select tabindex=4 [items]="modelCombo" autofocus bindLabel="modelName"
+                        (search)="loadModelComboData($event)" (change)="selectedModelData($event)"
+                        formControlName="modelName"></ng-select>
+                    </div>
+
+                    <div class="form-group">
+                      <span matLabel>Asset group</span>
+                      <ng-select tabindex=5 [items]="assetGroupCombo" autofocus bindLabel="assetGroupName"
+                        (search)="loadGroupComboData($event)" (change)="selectedGroupData($event)"
+                        formControlName="assetGroupName"></ng-select>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3">
+
+                    <div class="form-group">
+                      <span matLabel>WO status</span>
+                      <ng-select tabindex=8 [items]="woStatusCombo" bindLabel="displayValue"
+                        (search)="loadWoStatusComboData($event)" (change)="selectedWoStatusData($event)"
+                        formControlName="srStatus"></ng-select>
+                    </div>
+                    
+                    <div class="form-group">
+                      <div>
+                        <span>WO Type</span>
+                        <ng-select  [items]="srTypeList" bindLabel="srType"
+                          formControlName="srType" (change)="selectedSrTypeData($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                      <span matLabel>Service engineer</span>
+                      <ng-select tabindex=7 [items]="userCombo" autofocus bindLabel="loginId"
+                        (search)="loadUserComboData($event)" (change)="selectedUserData($event)"
+                        formControlName="assignedTo"></ng-select>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3 rightbutton">
+                    <button mat-raised-button color="primary" (click)="clearData()">Clear</button> &nbsp;&nbsp;
+                    <button mat-raised-button color="primary" [disabled]="srReportForm.invalid"
+                      (click)="search()">Search</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

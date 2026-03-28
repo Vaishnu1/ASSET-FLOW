@@ -1,0 +1,47 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeUOMModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="uomForm">
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_20 }}">
+        <mat-label class="example-label input-label">{{ 'UOM_CODE' | translate }}
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input #uomCode matInput formControlName="uomCode" tabindex="1" (blur)="checkForUOMtNameExistence()"
+          [maxlength]="20" oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{uomForm.controls.uomCode.value?.length || 0}}/20</mat-hint>
+        <mat-error *ngIf="uomForm.controls.uomCode.errors && uomForm.controls.uomCode.touched">
+          <div class="err-field" *ngIf="uomForm.controls.uomCode.errors.required"> "{{ 'UOM_CODE' | translate }}" Is Required
+          </div>
+          <div class="err-field" *ngIf="uomForm.controls.uomCode.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group" style="margin-top: 10px;">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="example-label input-label"> {{ 'COMMON_DESC' | translate }} </mat-label>
+        <textarea matInput formControlName="uomDesc" tabindex="2" [maxlength]="100"
+          oninput="this.value = this.value.toUpperCase()" class="input-field"></textarea>
+        <mat-hint align="end">{{uomForm.controls.uomDesc.value?.length || 0}}/100</mat-hint>
+        <mat-error *ngIf="uomForm.controls.uomDesc.errors && uomForm.controls.uomDesc.touched">
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutAlign="center center"  *ngIf="headingDisplay != 'View UOM'">
+      <!-- <button mat-raised-button class="space col-md-4" (click)="closeUOMModal()" tabindex="4" color="primary">{{ 'COMMON_BACK' | translate }}</button> -->
+      <button mat-raised-button color="primary" tabindex="3" (click)="submitUOM()"
+        [disabled]="uomForm.invalid || !uomForm.dirty || uploadUOMFlag">
+        <span *ngIf="!uploadUOMFlag">{{buttonHeading}}</span>
+        <span *ngIf="uploadUOMFlag">{{'COMMON_LOADING'| translate}}</span>
+      </button>
+    </div>
+  </form>
+</div>

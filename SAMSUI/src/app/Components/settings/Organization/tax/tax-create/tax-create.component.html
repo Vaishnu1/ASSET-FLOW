@@ -1,0 +1,69 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="taxForm" class="modalForm" fxLayout="column">
+
+    <div>
+      <div class="form-group">
+        <mat-form-field hintLabel="{{ CommonhintMsg.MAX_50 }}" class="example-full-width">
+          <span class="input-label">{{ 'TAX_NAME' | translate }} <span class="mandatory-style">*</span></span>
+          <input matInput #taxCode formControlName="taxCode" required (blur)="checkForTaxNameExistence()" [maxlength]="50"
+            oninput="this.value = this.value.toUpperCase()" class="input-field">
+          <mat-hint align="end">{{taxForm.controls.taxCode.value?.length || 0}}/50</mat-hint>
+          <mat-error *ngIf="taxForm.controls.taxCode.errors && taxForm.controls.taxCode.touched">
+            <div class="err-field" *ngIf="taxForm.controls.taxCode.errors.required">"{{ 'TAX_NAME' | translate }}" Is Required</div>
+            <div class="err-field" *ngIf="taxForm.controls.taxCode.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <span class="input-label">{{ 'TAX_COMPUTATION' | translate }} <span class="mandatory-style">*</span>
+        </span>
+        <ng-select class=" input-field" formControlName="taxComputation" [items]="taxcomputation" bindLabel="name"
+          bindValue="name"></ng-select>
+        <mat-error *ngIf="taxForm.controls.taxComputation.invalid && taxForm.controls.taxComputation.touched">
+          <div class="err-field" *ngIf="taxForm.controls.taxComputation.errors.required"> Kindly Select The "{{
+            'TAX_COMPUTATION'
+            | translate }}"</div>
+        </mat-error>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_4_DIG }}">
+          <span class="input-label">{{ 'TAX_AMOUNT' | translate }} <span class="mandatory-style">*</span></span>
+          <input matInput formControlName="taxRate" required [maxlength]="4" class="input-field">
+          <mat-hint align="end">{{taxForm.controls.taxRate.value?.length || 0}}/4</mat-hint>
+          <mat-error *ngIf="taxForm.controls.taxRate.invalid && taxForm.controls.taxRate.touched">
+            <div class="err-field" *ngIf="taxForm.controls.taxRate.errors.required">"{{ 'TAX_AMOUNT' |
+              translate }}" Is Required</div>
+            <div class="err-field" *ngIf="taxForm.controls.taxRate.errors.pattern">"{{ 'TAX_RATE_NAME' |
+              translate
+              }}" Is Invalid</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field hintLabel="{{ CommonhintMsg.MAX_100 }}" class="example-full-width">
+          <span class="input-label"> {{ 'COMMON_DESC' | translate }}</span>
+          <input matInput formControlName="taxDesc" [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+          <mat-hint align="end">{{taxForm.controls.taxDesc.value?.length || 0}}/100</mat-hint>
+          <mat-error *ngIf="taxForm.controls.taxDesc.errors && taxForm.controls.taxDesc.touched">
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayoutAlign="center center"  *ngIf="headingDisplay != 'View Tax'">
+        <button mat-raised-button class="space col-md-3" color="primary" (click)="SubmitTax()"
+          [disabled]="taxForm.invalid || !taxForm.dirty || uploadTaxFlag">
+          <span *ngIf="!uploadTaxFlag">{{buttonDisplay}}</span>
+          <span *ngIf="uploadTaxFlag">{{'COMMON_LOADING'| translate}}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,42 @@
+
+ <div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header"> {{'MENU_PRIORITY' | translate}} </h4>
+      </div>
+      
+    <div fxFlex="5" class="first-title"> 
+      <mat-icon class="close-icon" (click)="closePriorityModal()">highlight_off</mat-icon>
+    </div>
+    </div>
+     
+  <div fxLayout="row" style="padding-top: 20px;"> 
+  <form class="modalform"  fxFlex="100"  [formGroup]="priorityForm"> 
+    <div fxFlex="100"> 
+      <div fxLayout="row"> 
+      <mat-form-field class="example-full-width"  fxFlex="100" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="input-label"> {{ 'SR_PRIORITY' | translate }} 
+          <span class="mandatory-style">*</span>
+        </mat-label>
+          <input matInput formControlName="priorityName" #priorityFocus (input)="checkUniqueConstrainForPriority()"
+          [maxlength]="100" oninput="this.value = this.value.toUpperCase()" class="input-field">
+          <mat-hint align="end">{{priorityForm.controls.priorityName.value?.length || 0}}/100</mat-hint>
+          <mat-error *ngIf="priorityForm.controls.priorityName.errors && priorityForm.controls.priorityName.touched">
+              <div *ngIf="priorityForm.controls.priorityName.errors.required"> {{ 'SR_PRIORITY' | translate }} is Required </div>
+              <div *ngIf="priorityForm.controls.priorityName.errors.notUnique">{{ErrorMsgPriority}}</div>
+            </mat-error>
+        </mat-form-field>
+        </div> 
+ 
+      <div fxLayout="row" class="create-priority-button" style="padding-top: 5px;">    
+            <button  mat-raised-button color="primary" (click)="submitPriority()" [disabled]="priorityForm.invalid || !priorityForm.dirty || uploadPriorityFlag" >
+              <span *ngIf="!uploadPriorityFlag">{{displayButton}}</span>
+              <span *ngIf="uploadPriorityFlag">{{'COMMON_LOADING' | translate}}</span>
+              </button>
+          </div>
+        </div>
+    </form>
+  </div>
+  </div>
+</div>

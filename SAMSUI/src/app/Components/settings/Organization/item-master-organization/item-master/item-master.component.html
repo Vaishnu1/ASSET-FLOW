@@ -1,0 +1,39 @@
+<div fxLayout="column">
+
+    <div style="margin-bottom:5%;" [@.disabled]="true" >
+      <mat-tab-group dynamicHeight [selectedIndex]="selectedTabIndex">
+
+        <mat-tab *ngIf="itemCategoryModuleAccess.readFlagDisplay || itemCategoryModuleAccess.createFlagDisplay || itemCategoryModuleAccess.deleteFlagDisplay || itemCategoryModuleAccess.updateFlagDisplay"> 
+          <ng-template mat-tab-label>
+            {{ 'MENU_ITEM_CATEGORY' | translate }}
+          </ng-template>
+          <div style="margin-top: 0.5%;"></div>
+          <app-items-category></app-items-category>
+        </mat-tab>
+
+        <mat-tab *ngIf="itemTypeModuleAccess.readFlagDisplay || itemTypeModuleAccess.createFlagDisplay || itemTypeModuleAccess.deleteFlagDisplay || itemTypeModuleAccess.updateFlagDisplay"> 
+          <ng-template mat-tab-label>
+            {{ 'ITEM_TYPE' | translate }}
+          </ng-template>
+          <div style="margin-top: 0.5%;"></div>
+          <app-item-type></app-item-type>
+        </mat-tab>
+
+        <mat-tab *ngIf="itemModuleAccess.readFlagDisplay || itemModuleAccess.createFlagDisplay || itemModuleAccess.deleteFlagDisplay || itemModuleAccess.updateFlagDisplay"> 
+            <ng-template mat-tab-label>
+            {{ 'MENU_ITEM_MASTER' | translate }}
+            </ng-template>
+            <div style="margin-top: 0.5%;"></div>
+            <app-item-master-list></app-item-master-list>
+        </mat-tab>
+
+        <mat-tab *ngIf="itemModulesModuleAccess.readFlagDisplay || itemModulesModuleAccess.createFlagDisplay || itemModulesModuleAccess.deleteFlagDisplay || itemModulesModuleAccess.updateFlagDisplay"> 
+            <ng-template mat-tab-label>
+            {{ 'MENU_INVENTORY_MODULE' | translate }}
+            </ng-template>
+            <div style="margin-top: 0.5%;"></div>
+            <app-module-list></app-module-list>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>

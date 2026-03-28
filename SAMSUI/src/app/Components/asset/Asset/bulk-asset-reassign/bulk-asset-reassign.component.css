@@ -1,0 +1,13 @@
+.card-space{
+    margin-bottom: 15px;
+}
+
+th.mat-header-cell {
+    padding: 3px;   
+    min-width: 100px;
+}
+td.mat-cell, td.mat-footer-cell{
+    min-width: 100px;
+}
+
+  

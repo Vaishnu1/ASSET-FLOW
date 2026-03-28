@@ -1,0 +1,83 @@
+<!-- <mat-drawer mode="center" opened class="login-form-container">  -->
+    <div class="login">
+      <mat-tab-group class="header-less-tabs" [selectedIndex]="selectedIndex">
+        <mat-tab label="Login"> 
+          <div class="center" *ngIf="onStart() | async">
+            <img src="assets/images/ao_new_logo.png" class="logo-potition" > 
+            <form class="login100-form" [formGroup]="loginForm" autocomplete="off">
+              <input autocomplete="false" name="hidden" type="text" style="display:none;">
+              <input autocomplete="false" name="hidden" type="password" style="display:none;">
+              <div>
+                <p>
+                  <mat-form-field appearance="outline" class="responsive-field">
+                    <mat-label>User Name</mat-label>
+                    <input matInput type="text" formControlName="userName" autocomplete="username">
+                    <mat-icon matSuffix>perm_identity</mat-icon>
+                  </mat-form-field>
+                  </p>
+                  <p>
+                    <mat-form-field  appearance="outline" class="responsive-field">
+                      <mat-label>Password</mat-label>
+                      <input matInput type="{{ (showPwd) ? 'text' : 'password' }}" formControlName="password" autocomplete="new-password">
+                      <mat-icon matSuffix (click)="viewPwd()" class="viewicon">{{ (hide) ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </mat-form-field>
+                  </p>
+                 
+                  <div class="reponsive-button-form">
+                    <button type="submit" class="login100-form-btn" (click)="authenticateUser()">
+                    Login
+                    </button> 
+                  </div>
+                  <div class="forgot-btn">
+                  <a class="login-frgt" (click)="nextStep()">Forgot Password?</a>
+                </div>
+
+              </div>
+            </form> 
+            <div class="footerLogin">
+              <p>{{this.samsConstants.version}} All Rights Reserved.</p>
+            </div>
+          </div>
+        </mat-tab> 
+        <mat-tab label="Forgot Password">
+          <div class="col-md-12 center">
+            <img src="assets/images/ao_new_logo.png" class="logo-potition">
+            <form class="login100-form" [formGroup]="forgotpwdForm" autocomplete="off">
+              <input autocomplete="false" name="hidden" type="text" style="display:none;">
+              <input autocomplete="false" name="hidden" type="password" style="display:none;">
+              <div>
+                <p>
+                    <mat-form-field appearance="outline" class="responsive-field">
+                      <mat-label>UserName</mat-label>
+                      <input matInput type="text" formControlName="pwdName">
+                      <mat-icon matSuffix>perm_identity</mat-icon>
+                    </mat-form-field>
+                  </p>
+                <p>
+                  <mat-form-field appearance="outline" class="responsive-field">
+                    <mat-label>Email Id</mat-label>
+                    <input matInput type="text" formControlName="pwdEmail">
+                    <mat-icon matSuffix>email</mat-icon>
+                  </mat-form-field>
+                </p>
+                <div class="reponsive-button-form">
+                  <button type="submit" class="login100-form-btn" (click)="emailSend()">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="footerLogin">
+                <p> {{this.samsConstants.version}} All Rights Reserved. </p>
+              </div>
+          </div>
+        </mat-tab> 
+      </mat-tab-group> 
+
+      </div>
+      
+  <!-- </mat-drawer> -->
+  <!-- <mat-drawer-content class="side-image-content right-block"> -->
+    <!-- <div class="login-bg"></div> -->
+  <!-- </mat-drawer-content> -->
+

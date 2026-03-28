@@ -1,0 +1,76 @@
+package com.sams.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+public class AssetInfoAuditOldDTO {
+    private Long assetId;
+    private String mode;
+    private String assetCode;
+    private Long orgId;
+    private String locationName;
+    private Long locationId;
+    private Long modelId;
+    private String modelName;
+    private Long assetGroupId;
+    private String assetGroupName;
+    private Long assetSubCategoryId;
+    private Long assetCategoryId;
+    private Long assetTypeId;
+    private String assetSubCategoryName;
+    private String assetCategoryName;
+    private String assetTypeName;
+    private String description;
+    private String serialNo;
+    private Long assetStatusId;
+    private Long statusTypeId;
+    private Long assetConditionId;
+    private Long departmentId;
+    private String departmentName;
+    private String subDepartment;
+    private Long subDepartmentId;
+    private String buildingBlock;
+    private String buildingFloor;
+    private String buildingRoomName;
+    private String buildingSegment;
+    private String ownershipType;
+    private String functionalStatus;
+    private Long businessPartnerId;
+    private String purchaseOrderNo;
+    private String locationCurrencyCode;
+    private String purchaseCurrencyCode;
+    private Double originalPurchaseAmount;
+    private Double exchangeRate;
+    private Double localPurchaseAmount;
+    private Double localTaxRate;
+    private Double localTaxAmount;
+    private Double totalPurchaseAmount;
+    private LocalDateTime installationDt;
+    private String depreciationMethod;
+    private Double bookValue;
+    private Double noOfYears;
+    private Long scrapValue;
+    private LocalDateTime disposedDt;
+    private String disposedBy;
+    private LocalDateTime retiredDt;
+    private String retiredBy;
+    private Long ageCriteria;
+    private Long ageOfTheAsset;
+    private String transactionSrc;
+    private String remarks;
+    private Boolean active;
+    private String createdBy;
+    private LocalDateTime createdDt;
+    private String updatedBy;
+    private LocalDateTime updatedDt;
+    private String equipmentCode;
+    private String maintenanceStrategy;
+    private String pmMaintenanceStrategy;
+    private String paMaintenanceStrategy;
+    private String qaMaintenanceStrategy;
+    private LocalDateTime purchaseOrderDt;
+    private Long businessPartnerSiteId;
+}

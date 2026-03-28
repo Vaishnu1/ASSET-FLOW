@@ -1,0 +1,158 @@
+[
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\app.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\app.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\asset-label-print-v1\\asset-label-print-v1.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\asset-label-print-v1\\asset-label-print-v1.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\asset-loan-history\\asset-loan-history.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\asset-loan-history\\asset-loan-history.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\purchase-request-history\\purchase-request-history.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\purchase-request-history\\purchase-request-history.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\view-childasset-in-preinward\\view-childasset-in-preinward.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset\\view-childasset-in-preinward\\view-childasset-in-preinward.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\Model\\subTabs\\checkpoints-create\\checkpoints-create.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\Model\\subTabs\\checkpoints-create\\checkpoints-create.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\parameter-group-list\\parameter-group-list.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\parameter-group-list\\parameter-group-list.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\parameter-type-list\\parameter-type-list.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\parameter-type-list\\parameter-type-list.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\service-parameter\\service-parameter.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Asset-Master\\service-parameter\\service-parameter.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\document-list\\document-list.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\document-list\\document-list.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Maintenance\\maintenance-create\\maintenance-create.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\asset\\Maintenance\\maintenance-create\\maintenance-create.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\category-wise-asset-info\\category-wise-asset-info.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\category-wise-asset-info\\category-wise-asset-info.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\asset-by-sub-category-v2\\asset-by-sub-category-v2.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\asset-by-sub-category-v2\\asset-by-sub-category-v2.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\comparison-bm3months\\comparison-bm3months.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\comparison-bm3months\\comparison-bm3months.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\monthwise-retired-disposed\\monthwise-retired-disposed.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\monthwise-retired-disposed\\monthwise-retired-disposed.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\open-srchart\\open-srchart.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\open-srchart\\open-srchart.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\rental-lease-details\\rental-lease-details.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\rental-lease-details\\rental-lease-details.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\warranty-details\\warranty-details.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\charts\\warranty-details\\warranty-details.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\dashboard-main-v1\\dashboard-main-v1.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\dashboard-main-v1\\dashboard-main-v1.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\retire-disposal-category-wise-count\\retire-disposal-category-wise-count.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\retire-disposal-category-wise-count\\retire-disposal-category-wise-count.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\retire-disposal-sub-category-wise-count\\retire-disposal-sub-category-wise-count.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\retire-disposal-sub-category-wise-count\\retire-disposal-sub-category-wise-count.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\select-retired-disposed-option\\select-retired-disposed-option.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\select-retired-disposed-option\\select-retired-disposed-option.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\subcategory-wise-asset-info\\subcategory-wise-asset-info.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\dashboard\\subcategory-wise-asset-info\\subcategory-wise-asset-info.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Employee\\employee-group-list\\employee-group-list.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Employee\\employee-group-list\\employee-group-list.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Inventory\\grn\\grn-store-info\\grn-store-info.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Inventory\\grn\\grn-store-info\\grn-store-info.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Inventory\\item\\items-history\\items-history.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Inventory\\item\\items-history\\items-history.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Master\\item\\item-view\\item-view.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Master\\item\\item-view\\item-view.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\models-supplied-pop-up\\models-supplied-pop-up.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\models-supplied-pop-up\\models-supplied-pop-up.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pr-new-item-add\\pr-new-item-msg\\pr-new-item-msg.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pr-new-item-add\\pr-new-item-msg\\pr-new-item-msg.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist\\pricelist.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist\\pricelist.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist-create\\pricelist-create.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist-create\\pricelist-create.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist-view\\pricelist-view.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\pricelist-view\\pricelist-view.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-order-history-audit\\purchase-order-history-audit.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-order-history-audit\\purchase-order-history-audit.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-order-view\\purchase-order-view.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-order-view\\purchase-order-view.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-quote-view\\purchase-quote-view.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\purchase-quote-view\\purchase-quote-view.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\tax-calcfor-purchase\\tax-calcfor-purchase.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\Purchase\\tax-calcfor-purchase\\tax-calcfor-purchase.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\settings\\Organization\\item-master-organization\\item-master\\item-master.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\settings\\Organization\\item-master-organization\\item-master\\item-master.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\settings\\Organization\\purchase-terms\\purhcase-terms-main\\purhcase-terms-main.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\settings\\Organization\\purchase-terms\\purhcase-terms-main\\purhcase-terms-main.component.css"
+    },
+    {
+        "TSFile":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\workflow\\workflowApproval\\common-workflow-approval-dialog\\common-workflow-approval-dialog.component.ts",
+        "CssPath":  "C:\\Users\\Lakshitha\\Downloads\\SAMSUI\\SAMSUI\\src\\app\\Components\\workflow\\workflowApproval\\common-workflow-approval-dialog\\common-workflow-approval-dialog.component.css"
+    }
+]

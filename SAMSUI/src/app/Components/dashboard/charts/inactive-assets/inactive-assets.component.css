@@ -1,0 +1,19 @@
+.font-style-combo-dashboard{  
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    font-weight: 400;
+    color: rgba(54, 54, 54, 0.83);
+    margin-bottom: 0rem;
+  }
+.view-financialyear{
+    z-index: 500;
+}
+.position-style{
+  padding-right: 1px;
+  position: fixed;
+}
+
+.no_records_found {
+  font-size: 15px;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  font-weight: 500;
+}

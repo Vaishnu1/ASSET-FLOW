@@ -1,0 +1,161 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="50" class="dialogue-box-header">
+        {{'SR_STATUS_UPDATE' | translate}}
+      </div>
+
+      <div fxFlex="30" class="mb-5" class="btn"> 
+        <button mat-raised-button  class="space" color="primary" [disabled]="srStatusUpdateForm.invalid" (click)="updatePSStatus()">
+          <span > {{buttonDisplay}} </span>
+        </button> 
+
+        <button mat-raised-button  color="primary" (click)="close()" class="space">
+          <span > {{ 'COMMON_CLOSE' | translate }} </span>
+        </button>
+      </div>
+    </div>
+     
+    <div fxLayout="row">
+       
+      <form [formGroup]="srStatusUpdateForm" fxFlex="100">
+        
+        <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+          <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+            <div style="padding: 10px;" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+
+              <div class="form-group" *ngIf="assetCodeUpdated">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'ASSET_CODE' | translate }} <span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select autofocus #srLocFocus [items]="assetCodeCombo" required bindLabel="assetCode" bindValue="assetCode"
+                    (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                    [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                    loadingText="Loading..." (change)="selectedAssetCodeData($event,true)" formControlName="assetCode">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="srStatusUpdateForm.controls.assetCode.invalid && srStatusUpdateForm.controls.assetCode.touched">
+                    <div class="err-field" *ngIf="srStatusUpdateForm.controls.assetCode.errors.required">
+                      {{'ASSET_CODE' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <span class="input-label"> {{ 'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select formControlName="physicalDamageDisp" [items]="physicalDamageList" bindLabel="name" bindValue="name"
+                    dropdownPosition=top (change)="changeActionPhysicalDamage($event)">
+                </ng-select>
+                <mat-error *ngIf="srStatusUpdateForm.controls.physicalDamageDisp.invalid && srStatusUpdateForm.controls.physicalDamageDisp.touched">
+                    <div class="err-field" *ngIf="srStatusUpdateForm.controls.physicalDamageDisp.errors.required">
+                        {{'SR_ACTIVITY_PHYSICAL_DAMAGE' | translate}} is Required </div>
+                </mat-error>
+              </div>
+
+              <div class="form-group" *ngIf="srStatusUpdateForm.controls.physicalDamageDisp.value == 'YES'">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{ 'SR_ACTIVITY_PHYSICAL_DAMAGE_DESC' | translate }} <span class="mandatory-style">*</span></mat-label>
+                      <textarea rows="7" matInput formControlName="physicalDamageDescription" tabindex="2" [maxlength]="500"
+                          style="height: 50px;"></textarea>
+                      <mat-hint align="end">{{srStatusUpdateForm.controls.physicalDamageDescription.value?.length || 0}}/500</mat-hint>
+                  </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                  <span class="input-label"> {{ 'SR_ACTIVITY_PATIENT_SAFETY' | translate }} <span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select formControlName="patientIncidentDisp" [items]="patientIncidentList" bindLabel="name" bindValue="name"
+                      dropdownPosition=top (change)="changeActionPatientIncident($event)">
+                  </ng-select>
+                  <mat-error *ngIf="srStatusUpdateForm.controls.patientIncidentDisp.invalid && srStatusUpdateForm.controls.patientIncidentDisp.touched">
+                      <div class="err-field" *ngIf="srStatusUpdateForm.controls.patientIncidentDisp.errors.required">
+                          {{'SR_ACTIVITY_PATIENT_SAFETY' | translate}} is Required </div>
+                  </mat-error>
+              </div>
+
+              <div class="form-group" *ngIf="srStatusUpdateForm.controls.patientIncidentDisp.value == 'YES'">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{ 'SR_ACTIVITY_PATIENT_SAFETY_DESC' | translate }} <span class="mandatory-style">*</span></mat-label>
+                      <textarea rows="7" matInput formControlName="incidentDescription" tabindex="2" [maxlength]="500"
+                          style="height: 50px;"></textarea>
+                      <mat-hint align="end">{{srStatusUpdateForm.controls.incidentDescription.value?.length || 0}}/500</mat-hint>
+                  </mat-form-field>
+              </div>
+            </div>
+            <div style="padding: 10px;" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'SR_PRIORITY' | translate }} </span>
+                  <ng-select [items]="priorityCombo" bindLabel="priorityName" bindValue="priorityName"
+                    (search)="loadPriorityComboData($event)" (click)="loadPriorityComboData($event)" [virtualScroll]="true"
+                    (scrollToEnd)="loadPriorityComboData({})" (keyup.backspace)="loadPriorityComboData($event.target.value ? $event : 'back')" (clear)="loadPriorityComboData('clear')" [loading]="scrollsyncPriority" loadingText="Loading..."
+                    (change)="selectedPriorityData($event)" formControlName="srPriority">
+                  </ng-select>
+                </div>
+              </div> 
+          
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'SR_SEVERITY' | translate }} </span>
+                  <ng-select [items]="severityCombo" bindLabel="severityName" bindValue="severityName"
+                    (search)="loadSeverityComboData($event)" (click)="loadSeverityComboData($event)" [virtualScroll]="true"
+                    (scrollToEnd)="loadSeverityComboData({})" (keyup.backspace)="loadSeverityComboData($event.target.value ? $event : 'back')" (clear)="loadSeverityComboData('clear')" [loading]="scrollsyncSeverity" loadingText="Loading..."
+                    (change)="selectedSeverityData($event)" formControlName="srSeverity">
+                  </ng-select>
+                </div>
+              </div> 
+          
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'SR_STATUS' | translate }} </span>
+                  <ng-select [items]="srStatusInProgressCombo" required bindLabel="srStatusName" bindValue="srStatusName"
+                    (search)="loadSrStatusInProgressComboData($event)" (click)="loadSrStatusInProgressComboData($event)" [virtualScroll]="true"
+                    (scrollToEnd)="loadSrStatusInProgressComboData({})" (keyup.backspace)="loadSrStatusInProgressComboData($event.target.value ? $event : 'back')" (clear)="loadSrStatusInProgressComboData('clear')" [loading]="scrollSyncSrStatus" loadingText="Loading..."
+                    (change)="changeSRStatusAfterInProgress($event)" formControlName="srStatusName">
+                  </ng-select>
+                </div>
+              </div> 
+      
+              <div  class="form-group"> 
+                  <mat-checkbox formControlName="isPartiallyWork" color="primary"> {{ 'IS_EQUIPMENT_WORKING_PARTIALLY'| translate }}</mat-checkbox>
+              </div>
+      
+              <br/>
+          
+              <div class="form-group">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class=" input-label"> {{'PARTIALLY_WORKING_REMARKS' | translate}} </mat-label>
+                  <textarea matInput formControlName="partiallyWorkingReason" [maxlength]="500" class="input-field"></textarea>
+                  <mat-hint align="end">{{srStatusUpdateForm.controls.partiallyWorkingReason.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'SR_ACTIVITY_EFS' | translate }} <span class="mandatory-style">*</span></span>
+                  <ng-select class=" input-field" [items]="efsCombo" bindLabel="srActivityEFSName" bindValue="srActivityEFSName"
+                    tabindex="2" (search)="listOfEFSCombo($event)" (click)="listOfEFSCombo($event)" [virtualScroll]="true"
+                    (scrollToEnd)="listOfEFSCombo({})" [disabled]="srStatusUpdateForm.controls.srStatusId.value === 6 || srStatusUpdateForm.controls.srStatusId.value === 7"
+                    (keyup.backspace)="listOfEFSCombo($event.target.value ? $event : 'back')"
+                    (clear)="listOfEFSCombo('clear')" [loading]="scrollSyncEFS" loadingText="Loading..."
+                    (change)="setEFSDataCombo($event)" formControlName="srEFSValue" [ngModelOptions]="{standalone: true}">
+                  </ng-select>
+                  <mat-error *ngIf="srStatusUpdateForm.controls.srEFSValue.invalid && srStatusUpdateForm.controls.srEFSValue.touched">
+                    <div *ngIf="srStatusUpdateForm.controls.srEFSValue.errors.required">{{ 'SR_ACTIVITY_EFS' | translate}} is required </div>
+                  </mat-error>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>    
+            
+
+        
+
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,302 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxFlex="100">
+    <mat-toolbar-row>
+      <mat-list aria-label="breadcrumb" fxLayout="row">
+        <mat-list-item class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="breadcrumbicon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content">{{ 'MENU_SETTING' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content active" aria-current="page">{{ 'PRINTER' | translate }}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div class="content_section_inner bg-grey">
+    <div fxLayout="column">
+
+      <div class="Page_Content organization_settings">
+        <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+
+          <div fxFlex="14" fxFlex.sm="2" fxFlex.xs="2">
+
+            <div fxLayoutAlign="center start">
+              <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+                <mat-icon>menu</mat-icon>
+              </button>
+            </div>
+
+            <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+              <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer'}"
+                (click)="Active_Tab_Change('printer')" fxLayoutAlign="start center">
+                {{ 'PRINTER' | translate }}
+              </mat-list-item>
+              <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer_label_size'}"
+                (click)="Active_Tab_Change('printer_label_size')" fxLayoutAlign="start center">
+                {{ 'PRINTER_LABEL' | translate }}
+              </mat-list-item>
+              <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer_template'}"
+                (click)="Active_Tab_Change('printer_template')" fxLayoutAlign="start center">
+                {{ 'PRINTER_TEMPLATE' | translate }}
+              </mat-list-item>
+            </mat-nav-list>
+
+            <mat-sidenav-container fxHide.gt-sm>
+              <mat-sidenav #sidenav>
+                <mat-nav-list style="padding-top: 0%; margin-top: 63px;" fxLayout="column" fxShow="true">
+                  <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer'}"
+                    (click)="Active_Tab_Change('printer')" fxLayoutAlign="start center">
+                    {{ 'PRINTER' | translate }}
+                  </mat-list-item>
+                  <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer_label_size'}"
+                    (click)="Active_Tab_Change('printer_label_size')" fxLayoutAlign="start center">
+                    {{ 'PRINTER_LABEL' | translate }}
+                  </mat-list-item>
+                  <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'printer_template'}"
+                    (click)="Active_Tab_Change('printer_template')" fxLayoutAlign="start center">
+                    {{ 'PRINTER_TEMPLATE' | translate }}
+                  </mat-list-item>
+                </mat-nav-list>
+              </mat-sidenav>
+            </mat-sidenav-container>
+          </div>
+
+          <div fxFlex="83" fxFlex.sm="93" fxFlex.sm="93">
+            <div *ngIf="Active_Tab === 'printer'">
+
+              <div fxLayout="column">
+
+                <div style="padding-top: 0.5%;">
+                  <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title class="panel-header">
+                        {{'COMMON_SEARCH'| translate}} {{'PRINTER'| translate}}
+                      </mat-panel-title>
+                      <mat-panel-description fxLayoutAlign="end end">
+                        <mat-icon>search</mat-icon>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxFlex="100">
+                      <form fxLayout="column">
+                        <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-bottom: 10px;">
+
+                          <div class="form-group" fxFlex="33">
+                            <div class="example-full-width">
+                                <span class="input-label">{{'LOCATION_NAME' | translate}}</span>
+                                <ng-select class=" input-field" required  appendTo="body"
+                                  (search)="listOfLocationName($event)" (click)="listOfLocationName({})" [ngModelOptions]="{standalone: true}"
+                                  (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                                  (scrollToEnd)="listOfLocationName({})" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')" (clear)="listOfLocationName('clear')" [loading]="scrollLocationNameSync" bindLabel="locDisplayField"
+                                  bindValue="locDisplayField" tabindex="1"  [(ngModel)]="printerModel.locationName">
+                                </ng-select> 
+                            </div>
+                          </div>
+
+                          <div class="form-group" fxFlex="33">
+                            <div class="example-full-width">
+                              <span class="input-label">{{ 'PRINTER_NAME' | translate }}</span>
+                              <ng-select class=" input-field" tabindex="1" appendTo="body"
+                                [(ngModel)]="printerModel.printerName" [ngModelOptions]="{standalone: true}"
+                                (search)="listOfPrinter($event)" [virtualScroll]="true" (click)="listOfPrinter({})"
+                                (scrollToEnd)="listOfPrinter({})" (keyup.backspace)="listOfPrinter($event.target.value ? $event : 'back')" (clear)="listOfPrinter('clear')" [loading]="scrollPrinterSync" loadingText="Loading..."
+                                (change)="setPrinter($event)" [items]="printerCombo" bindLabel="printerName"
+                                bindValue="printerName">
+                              </ng-select>
+                            </div>
+                          </div>
+
+                          
+                          <div class="form-group" fxFlex="33">
+                            <div class="example-full-width">
+                              <span class="input-label">{{'PRINTER_MANUFACTURER' | translate}}</span>
+                              <ng-select class=" input-field"
+                                [(ngModel)]="printerModel.printerManufacturer" [ngModelOptions]="{standalone: true}"
+                                (search)="listOfPrinterManufacturer($event)" (click)="listOfPrinterManufacturer({})"
+                                (change)="setPrinterManufacturer($event)" [items]="printerManufacturerCombo"
+                                [virtualScroll]="true" (scrollToEnd)="listOfPrinterManufacturer({})" (keyup.backspace)="listOfPrinterManufacturer($event.target.value ? $event : 'back')" (clear)="listOfPrinterManufacturer('clear')" appendTo="body"
+                                [loading]="scrollPrinterManufacturerSync" bindLabel="printerManufacturer"
+                                bindValue="printerManufacturer" tabindex="3">
+                              </ng-select>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign>
+ 
+                          <div class="form-group" fxFlex="33">
+                            <div class="example-full-width">
+                              <span class="input-label">{{'PRINTER_MODEL' | translate}}</span>
+                              <ng-select class=" input-field" [(ngModel)]="printerModel.printerModel"
+                                [ngModelOptions]="{standalone: true}" (search)="listOfPrinterModel($event)"
+                                (click)="listOfPrinterModel({})" (change)="setPrinterModel($event)" appendTo="body"
+                                [items]="printerModelCombo" [virtualScroll]="true"
+                                (scrollToEnd)="listOfPrinterModel({})" (keyup.backspace)="listOfPrinterModel($event.target.value ? $event : 'back')" (clear)="listOfPrinterModel('clear')" [loading]="scrollPrinterModelSync"
+                                bindLabel="printerModel" bindValue="printerModel" tabindex="4">
+                              </ng-select>
+                            </div>
+                          </div> 
+                           
+                          <div class="form-group" fxFlex="33">
+                            <div class="example-full-width">
+                              <span class="input-label">{{ 'PRINTER_COMMUNICATION_TYPE' | translate }}</span>
+                              <ng-select class=" input-field"
+                                [(ngModel)]="printerModel.communicationType" [ngModelOptions]="{standalone: true}"
+                                [items]="communicationTypeCombo" bindLabel="name" bindValue="name" appendTo="body"
+                                tabindex="4">
+                              </ng-select>
+                            </div>
+                          </div> 
+
+                          <div fxFlex="33" fxLayoutAlign="end center" fxHide.sm fxHide.xs>
+                            <button mat-raised-button class="space" color="primary"
+                              (click)="searchPrinter()">{{'COMMON_SEARCH' | translate}}</button>
+                            <button mat-raised-button class="space" color="primary" (click)="clear()">{{'COMMON_CLEAR' |
+                              translate}}</button>
+                          </div>
+                          <div fxFlex="33" fxLayoutAlign="end center" fxHide.gt-sm>
+                            <button mat-raised-button class="space" color="primary" (click)="searchPrinter()"
+                              matTooltip="Search">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                            <button mat-raised-button class="space" color="primary" (click)="clear()"
+                              matTooltip="Clear">
+                              <mat-icon>clear_all</mat-icon>
+                            </button>
+                          </div>
+
+                        </div>
+                      </form>
+                    </div>
+                  </mat-expansion-panel>
+                </div>
+                
+                <mat-toolbar>
+                  <span>{{'PRINTER' | translate}} List</span>
+                  <span class="example-spacer"></span>
+
+                  <mat-paginator class="example-spacer" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+                  <span class="example-spacer"></span>
+                  
+                  <button mat-raised-button class="space sqr-btn" color="primary" 
+                    *ngIf="modelAccessModule.createFlagDisplay" (click)="printerAddEdit(0,'add')">
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                  <button mat-raised-button class="space sqr-btn" [disabled]="selectedItem == 0" color="primary" 
+                    matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="modelAccessModule.updateFlagDisplay" 
+                    (click)="printerAddEdit(selectedItem,'edit')">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  
+                  <button mat-raised-button class="space sqr-btn" [disabled]="selectedItem == 0" color="primary" 
+                    matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="modelAccessModule.readFlagDisplay" 
+                    (click)="printerAddEdit(selectedItem,'view')">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </mat-toolbar>
+
+              <div class="printer-container-table">
+                <table mat-table [dataSource]="printerdataSource" matSort (matSortChange)="customSort($event)"
+                  matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data"><span>Select</span></th>
+                    <td mat-cell *matCellDef="let element" >
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectPrinter(element)"
+                       [checked]="selectedItem == element?.printerId">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationTO.locationName">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> 
+                      {{'LOCATION_NAME' | translate}} </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)">
+                      {{ element?.locationName }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="printerName">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> 
+                      {{ 'PRINTER_NAME' | translate }} </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)"> 
+                      {{element.printerName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="printerManufacturer">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header style="width:15%;">
+                      {{ 'PRINTER_MANUFACTURER' | translate }}</th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)"> 
+                      {{element.printerManufacturer}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="printerModel">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>
+                      {{ 'PRINTER_MODEL' | translate }} </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)"> 
+                      {{element.printerModel}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="communicationType">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> 
+                      {{'PRINTER_COMMUNICATION_TYPE' | translate}} </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)"> 
+                      {{element.communicationType}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="defaultPrinter">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="text-align:center;">{{
+                      'PRINTER_DEFAULT' | translate }}
+                    </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" style="text-align:center;" 
+                    (click)="selectPrinter(element)">
+                      <mat-icon *ngIf=element.defaultPrinter style="color: #3f51b5">check_circle_outline
+                      </mat-icon>
+                      <mat-icon *ngIf=!element.defaultPrinter style="color: #3f51b5">highlight_off</mat-icon>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{
+                      'COMMON_CREATED_BY' | translate }}
+                    </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)"> 
+                      {{element.createdBy}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="createdDt">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header style="width:10%;">
+                      {{ 'COMMON_CREATED_DT' | translate }} </th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectPrinter(element)">
+                       {{element.createdDtDisp}}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                  </tr>
+                </table>
+                <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderPrinter"
+                  fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card class="no_records_found" *ngIf="subLoaderPrinter" fxLayoutAlign="center center">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+
+            </div>
+
+            <div *ngIf="Active_Tab === 'printer_label_size'">
+              <app-printer-label-size-list></app-printer-label-size-list>
+            </div>
+
+            <div *ngIf="Active_Tab === 'printer_template'">
+              <app-printer-template-list></app-printer-template-list>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

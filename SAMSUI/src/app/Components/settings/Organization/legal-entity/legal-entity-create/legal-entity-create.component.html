@@ -1,0 +1,275 @@
+<div fxLayout="column" class="main-body">
+
+  <div [ngClass.lt-md]="'top-content-resp'" [ngClass.gt-sm]="'top-content'" fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column">
+
+    <mat-toolbar-row aria-label="breadcrumb" fxLayoutAlign="start center">
+      <mat-list fxLayoutAlign="start center">
+        <mat-list-item><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item>{{ 'MENU_SETTING' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item (click)="backToLegalEntity()" class="bread-crumb-link">{{ 'MENU_ORGANIZATION' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item>{{ 'MENU_LEGAL_ENTITY' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+    <div fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" class="btn-margin-5px" (click)="exit()"> Back</button>
+      <button *ngIf="!modeDisplay" mat-raised-button color="primary" class="btn-margin-5px" (click)="clear()"
+        [disabled]="disableClear">Clear</button>
+      <button *ngIf="!modeDisplay" class="btn-margin-5px"
+        [disabled]="(legalEntityFormGroup.invalid || uploadLegalEntityFlag || !legalEntityFormGroup.dirty) && !uploadLegalEntity"
+        mat-raised-button color="primary" (click)="save()">
+        <span *ngIf="!uploadLegalEntityFlag">{{displayButton}}</span>
+        <span *ngIf="uploadLegalEntityFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+
+  </div>
+
+  <div>
+
+    <form [formGroup]="legalEntityFormGroup" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlex="100">
+      <div fxFlex="25" fxFlex.sm="100" fxFlex.xs="100">
+        <mat-card class="card-style">
+          <mat-card-content>
+
+            <div fxLayout="column" fxLayout.sm="row" fxLayout.xs="row" class="pad-1-per">
+              <div class="pad-1-per" fxFlex.sm="50" fxFlex.xs="50">
+                <mat-form-field fxFlex="100" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                  <mat-label class="example-label  input-label"> {{ 'LEGAL_ENTITY' | translate }} <span class="mandatory-style">*</span>
+                  </mat-label>
+                  <input #legalEntityName matInput formControlName="legalEntityName"
+                    (blur)="checkForLegalEntityExistence()" [maxlength]="100"
+                    oninput="this.value = this.value.toUpperCase()" class="input-field" [tabIndex]="1">
+                  <mat-hint align="end">{{legalEntityFormGroup.controls.legalEntityName.value?.length || 0}}/100
+                  </mat-hint>
+                  <mat-error
+                    *ngIf="legalEntityFormGroup.controls.legalEntityName.errors && legalEntityFormGroup.controls.legalEntityName.touched">
+                    <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityName.errors.required">
+                      "{{ 'LEGAL_ENTITY' | translate }}" Is Required</div>
+                    <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityName.errors.minLength">
+                      {{ 'LEGAL_ENTITY' | translate }} Already Exist </div>
+                    <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityName.errors.notUnique">{{ErrorMsg}}</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="pad-1-per" fxFlex.sm="50" fxFlex.xs="50">
+                <mat-form-field fxFlex="100" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_5 }}">
+                  <mat-label class="example-label  input-label"> {{ 'LEGAL_ENTITY_CODE' | translate }} 
+                  </mat-label>
+                  <input #legalEntityCode matInput formControlName="legalEntityCode"
+                    [maxlength]="5" [tabIndex]="2" (blur)="checkForLegalEntityCodeExistence()"
+                    oninput="this.value = this.value.toUpperCase()" class="input-field">
+                  <mat-hint align="end">{{legalEntityFormGroup.controls.legalEntityCode.value?.length || 0}}/5
+                  </mat-hint>
+                  <mat-error *ngIf="legalEntityFormGroup.controls.legalEntityCode.errors && legalEntityFormGroup.controls.legalEntityCode.touched">
+                    <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityCode.errors.notUnique">{{ErrorMsgCode}}</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="pad-1-per" fxFlex.sm="50" fxFlex.xs="50">
+                <mat-form-field fxFlex="100" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300 }}">
+                  <mat-label class="example-label input-label">{{ 'COMMON_DESC' | translate }}</mat-label>
+                  <textarea matInput formControlName="legalEntityDesc" [maxlength]="300" [tabIndex]="3"
+                    oninput="this.value = this.value.toUpperCase()"  class="input-field" style="height: 29px;"></textarea>
+                  <mat-hint align="end">{{legalEntityFormGroup.controls.legalEntityDesc.value?.length || 0}}/300</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex="75" fxFlex.sm="100" fxFlex.xs="100" class="left-margin-1-per" [@.disabled]="true">
+
+        <mat-tab-group [selectedIndex]="selectedIndex" (click)="changeTab1('tab1')">
+          <mat-tab>
+
+            <ng-template mat-tab-label>
+              {{'COMMON_ADDRESS' | translate }}
+              <div *ngIf="!modeDisplay">
+                <div>
+                  <mat-icon *ngIf="!formOneValid" class="mandatory-style" aria-hidden="true">error</mat-icon>
+                </div>
+              </div>
+            </ng-template>
+
+            <mat-card>
+              <mat-card-content fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlex="100" fxLayoutAlign="space-evenly start">
+
+                <div fxLayout="column" fxFlex="33" fxFlexFill class="pad-2-per">
+                  <div class="pad-1-per">
+                    <mat-form-field  class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                      <mat-label class=" example-label input-label"> {{ 'COMMON_ADDRESS_1' | translate }} <span class="mandatory-style">*</span></mat-label>
+                      <input matInput formControlName="legalEntityAddress1" (input)="formOneValidation()"
+                        [maxlength]="100" oninput="this.value = this.value.toUpperCase()"  class="input-field" [tabIndex]="4">
+                      <mat-hint align="end">
+                        {{legalEntityFormGroup.controls.legalEntityAddress1.value?.length || 0}}/100
+                      </mat-hint>
+                      <mat-error
+                        *ngIf="legalEntityFormGroup.controls.legalEntityAddress1.invalid && legalEntityFormGroup.controls.legalEntityAddress1.touched">
+                        <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityAddress1.errors.required">
+                          "{{ 'COMMON_ADDRESS_1' | translate }}" Is
+                          Required </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="pad-1-per">
+                    <mat-form-field  class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                      <mat-label class=" example-label input-label"> {{ 'COMMON_ADDRESS_2' | translate }} <span class="mandatory-style">*</span></mat-label>
+                      <input matInput formControlName="legalEntityAddress2" (input)="formOneValidation()" [tabIndex]="5"
+                        [maxlength]="100" oninput="this.value = this.value.toUpperCase()"  class="input-field">
+                      <mat-hint align="end">
+                        {{legalEntityFormGroup.controls.legalEntityAddress2.value?.length || 0}}/100
+                      </mat-hint>
+                      <mat-error
+                        *ngIf="legalEntityFormGroup.controls.legalEntityAddress2.invalid && legalEntityFormGroup.controls.legalEntityAddress2.touched">
+                        <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityAddress2.errors.required">
+                          "{{ 'COMMON_ADDRESS_2' | translate }}" Is Required
+                        </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="33" fxFlexFill class="pad-2-per">
+                  <div class="pad-1-per f-h-50-px">
+                    <span class="input-label">{{ 'COMMON_COUNTRY' | translate }} <span
+                        class="mandatory-style">*</span> </span>
+                    <ng-select  formControlName="legalEntityCountry" [items]="countries"
+                      (search)="getCountryData($event)" (click)="getCountryData({})" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                      (change)="formOneValidation(); getCountryList($event)" bindLabel="countryName" [loading]="countryScroll"
+                      bindValue="countryName" appendTo="body" loadingText="Loading..." required [tabIndex]="6">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="legalEntityFormGroup.controls.legalEntityCountry.invalid && legalEntityFormGroup.controls.legalEntityCountry.touched">
+                      <div class="err-field"
+                        *ngIf="legalEntityFormGroup.controls.legalEntityCountry.errors.required">
+                        Kindly Select The "{{ 'COMMON_COUNTRY' | translate }}" </div>
+                    </mat-error>
+                  </div>
+                 
+
+                  <div class="pad-1-per">
+                    <span class="input-label">{{ 'COMMON_STATE' | translate }} 
+                      <span class="mandatory-style">*</span></span>
+                    <ng-select  formControlName="legalEntityState" [items]="states"
+                      bindLabel="stateName" (search)="getStateData($event)" (click)="getStateData({})" [tabIndex]="7"
+                      (change)="getStateList($event); formOneValidation()" [virtualScroll]="true"
+                      (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="stateScrollsync" bindValue="stateName" 
+                      loadingText="Loading..." appendTo="body" required>
+                    </ng-select>
+                    <mat-error
+                      *ngIf="legalEntityFormGroup.controls.legalEntityState.invalid && legalEntityFormGroup.controls.legalEntityState.touched">
+                      <div class="err-field"
+                        *ngIf="legalEntityFormGroup.controls.legalEntityState.errors.required">
+                        Kindly Select The "{{ 'COMMON_STATE' | translate }}" 
+                      </div>
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="33" fxFlexFill class="pad-2-per">
+                  
+                  <div class="pad-1-per f-h-50-px" >
+                    <span class="input-label">{{ 'COMMON_CITY' | translate }} 
+                    <span class="mandatory-style">*</span></span>
+                    <ng-select  formControlName="legalEntityCity" [items]="cities"
+                      bindLabel="cityName" (search)="legalEntityCityMethod($event)" dropdownPosition=bottom [tabIndex]="8"
+                      (click)="legalEntityCityMethod({})" (change)="getCityListData($event); formOneValidation()"
+                      [virtualScroll]="true" (scrollToEnd)="legalEntityCityMethod({})" (keyup.backspace)="legalEntityCityMethod($event.target.value ? $event : 'back')" (clear)="legalEntityCityMethod('clear')" [loading]="cityScrollsync" 
+                      loadingText="Loading..."
+                      bindValue="cityName" appendTo="body">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="legalEntityFormGroup.controls.legalEntityCity.invalid && legalEntityFormGroup.controls.legalEntityCity.touched">
+                      <div class="err-field"
+                        *ngIf="legalEntityFormGroup.controls.legalEntityCity.errors.required">
+                        Kindly Select The "{{ 'COMMON_CITY' | translate }}"
+                      </div>
+                    </mat-error>
+                  </div>
+
+                  <div class="pad-1-per">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                      <mat-label class="example-label input-label">{{ 'COMMON_ZIP_CODE' | translate }} <span class="mandatory-style">*</span></mat-label>
+                      <input matInput formControlName="legalEntityPostalCode" (input)="formOneValidation()"
+                        [maxlength]=10  class="input-field" oninput="this.value = this.value.toUpperCase()" [tabIndex]="9">
+                      <mat-hint align="end">
+                        {{legalEntityFormGroup.controls.legalEntityPostalCode.value?.toString().length || 0}}/10
+                      </mat-hint>
+                      <mat-error
+                        *ngIf="legalEntityFormGroup.controls.legalEntityPostalCode.invalid && legalEntityFormGroup.controls.legalEntityPostalCode.touched">
+                        <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityPostalCode.errors.required">
+                          "{{ 'COMMON_ZIP_CODE' | translate }}" Is Required </div>
+                        <div class="err-field" *ngIf="legalEntityFormGroup.controls.legalEntityPostalCode.errors.pattern">
+                          "{{ 'COMMON_ZIP_CODE' | translate }}" Is Invalid </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </mat-tab>
+
+          <mat-tab label="Registration Info">
+            <mat-card>
+              <mat-card-content fxLayout="column">
+                <div fxFlex="100" fxLayoutAlign="end center">
+                  <button *ngIf="!modeDisplay" mat-raised-button color="primary" (click)="addRegistrationInfo()" style="margin: 10px;">
+                    Add</button>
+                </div>
+
+                <div fxFlex="100" class="pad-2-per">
+                  <table mat-table [dataSource]="legalRegistrationList" fxFlex="100" >
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef >{{ 'COMMON_S_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element; let i=index;" > {{i+1}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef >{{ 'REGISTRATION_NAME' | translate }}</th>
+                      <td mat-cell *matCellDef="let element" > {{element.registrationName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="info">
+                      <th mat-header-cell *matHeaderCellDef >{{ 'REGISTRATION_NO' | translate }}</th>
+                      <td mat-cell *matCellDef="let element" > {{element.registrationNo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i = index;">
+                        <button color="warn" mat-icon-button [disabled]="modeDisplay" (click)="deleteRegistration(element.locRegistrationId, i)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                  </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                  </table>
+                </div>
+
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+        </mat-tab-group>
+
+      </div>
+    </form>
+
+  </div>
+
+</div>

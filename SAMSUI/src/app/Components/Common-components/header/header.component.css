@@ -1,0 +1,621 @@
+
+.header-top
+{
+    background: #ffffff;
+    height: 60px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    float: left;
+    z-index: 1000;
+}
+.left-item {
+    width:60%;
+    float: left;
+    height: 60px;
+}
+.logoheader {
+    width:100%;
+    height: 50px; 
+    top: 0px;
+    background: #fff;
+    z-index: 999; 
+    position: fixed;
+}
+
+/* sticky menu */
+.logoheader.sticky {
+    position: fixed;
+    top: 0;
+    animation: smoothScroll 2s forwards;
+    left: 0;
+    width: 100%;
+    z-index: 1005;
+    /* -webkit-animation: sticky 2s;
+    animation: sticky 2s; */
+    transition:all 0.5s;
+    
+}
+@keyframes smoothScroll {
+	0% {
+		transform: translateY(-120px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.mat-sidenav-container{
+    background-color: transparent;
+    min-height: 1vh !important;
+}
+button{
+    font-size: 100%;
+    min-width: min-content;
+}
+.example-icon {
+    padding: 0 14px;
+}
+
+.example-spacer {
+    flex: 0 auto;
+}
+
+.mat-sidenav-content{
+    font-size: 200%;
+    text-align: center;
+}
+.logo{
+    background: #ffffff;
+    float: left;
+    margin-left: 15px;
+} 
+
+/* Navigation Menu */
+.navigation {
+    background: #445C8F !important;
+    width: 100%;
+    margin-top: 58px;
+    padding: 0;
+    position: fixed;
+    z-index: 999;
+    height: 45px;
+}
+.Header_Page .Header_Two{
+    width: 100%;
+    height: 45px;   
+  }
+.Header_Page .Header_Two .Menus{
+    list-style: none;
+    padding: 0px;
+    height: 45px;
+}
+.Header_Page .Header_Two .Menus li:active{
+    background: #ffffff;
+}
+.Header_Page .Header_Two .Menus .Menu_List{
+    height: 45px;
+    line-height: 45px;
+    float: left;
+    min-width: 100px; 
+}
+.Header_Page .Header_Two .Menus .Menu_List:first-child{
+    min-width: 45px;
+    display: none;
+}
+  .Header_Page .Header_Two .Menus .Menu_List.active{
+    background: #ffffff;
+    
+  }
+  .Header_Page .Header_Two .Menus .Menu_List .Menu{
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: normal;
+    padding: 0px 10px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px; 
+    height: 45px;
+    line-height: 40px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    text-align: center;
+    width:100%;
+  }
+  .Header_Page .Menu_Tree .Menu_Tree_View.Menu_Tree_List.active{
+    color: #fff;
+  }
+  .Header_Page .Header_Two .Menus .Menu_List .Menu:hover,
+  .Header_Page .Header_Two .Menus .Menu_List.active > .Menu{
+    color: #445c8f;
+    line-height: 45px;   
+    width: 100%;
+    background: #ffffff;
+    text-decoration: none !important;
+  }
+.togglemenu {
+    color: #ffffff !important;
+    font-size: 27px !important;
+    line-height: 40px;
+    padding-left: 10px;
+}
+  .Header_Page .Menu_Tree{
+    position: relative;
+    display: inline-block;
+}
+.Header_Page .Menu_Tree .Menu_Tree_View{
+    position: absolute;
+    display: none;
+    list-style: none;
+    min-width: 220px;
+    left: 0px;
+    padding-left: 0px;
+    padding-top: 2px;
+    z-index: 5;
+    top: 44px;
+}
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List{
+    width: 100%;
+    display: block;
+    height: 45px;
+    float: left;
+    background:#ffffff;
+    /* border-bottom:1px solid #788cbd; */
+  
+}
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List a{
+    display: block;
+    color: #445C8F;
+    text-decoration: none;
+    font-weight: 600;
+    line-height: 45px;
+    text-align: left;
+    width: 100%;
+    padding: 0px 10px;
+    cursor: pointer;
+    font-size: 15px;
+    
+    transition: all 0.4s linear;
+    -webkit-transition: all 0.4s linear;
+    -moz-transition: all 0.4s linear;
+    -ms-transition: all 0.4s linear;
+    -o-transition: all 0.4s linear;
+  }
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List a:hover,
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List.active>a{
+    background: #445C8F;
+    padding-left: 20px;
+    animation-delay: 2s;
+    color:#ffffff;
+}
+
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List a:hover .iconimg {
+    display: none;
+}
+.Header_Page .Menu_Tree:hover > .Menu_Tree_View {
+    display: block;
+}
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List > .Menu_Tree{
+    padding-top: 0px;
+}
+.Header_Page .Menu_Tree .Menu_Tree_View .Menu_Tree_List > .Menu_Tree > .Menu_Tree_View{
+    left: 102%;
+    top: 0px;
+}
+.material-icons
+{
+    font-size:12px !important;
+    line-height: 0;
+}
+.grey-icon
+{
+    color:#7d7e7e !important;
+    float: left;
+    padding: 1px 4px;
+    font-size: 22px !important;
+}
+.search
+{
+    float: left;
+}
+.top-create
+{ 
+    padding-top: 0px;
+    justify-content: center;
+    display: flex;
+}
+.searchform-field
+{
+    width: 90% !important;
+}
+.right-item
+{
+    float: right;
+    width:40%;
+    padding-right:8px;
+}
+.topcreate{
+    position: absolute;
+    top: -9px;
+    left: 40px;
+    font-size: 18px;
+}
+.locdetail{
+    font-size: 17px;
+    color:#5d626c;
+    font-weight:normal;
+}
+.notify-content
+{
+    margin-bottom: 40px;
+}
+.location
+{
+    color:#5d626c !important; 
+    padding-top: 13px !important;
+    float: left;
+}
+.locationicon
+{
+    color:#5d626c !important; 
+    font-size: 20px !important;
+    padding-top: 10px !important;
+    float: left;
+}
+.notify
+{
+    color:#5d626c !important; 
+    font-size: 30px !important;
+    padding-top: 15px !important;
+    float: left;
+    margin: 0px 5px;
+}
+.plus
+{
+    color:#5d626c !important; 
+    font-size: 20px !important;
+    padding-top: 10px !important;
+    float: left;
+}
+.profile
+{
+    float: left;
+    padding-top:12px;
+    color:#5d626c !important; 
+    font-size: 30px !important;
+    margin-top: 6px;
+}
+.reminder
+{
+    float: left;
+    padding-top:22px;
+}
+.mat-form-field-infix
+{
+    margin-left: 15px !important;
+}
+::ng-deep .mat-button, .mat-raised-button
+{
+    background: #ffffff !important;
+    right:10px;
+}
+::ng-deep .mat-menu-panel
+{
+    overflow: hidden !important;
+    min-width: 180px !important;
+}
+.mat-menu-content:not(:empty)
+{
+    min-width: 180px !important;
+}
+.message p
+{
+    padding: 0px 10px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 5px;
+}
+.msg-details
+{
+    padding:0px;
+}
+.msg-author
+{
+    font-size: 13px;
+    float: left;
+}
+.msg-time
+{
+    font-size: 13px;
+    color:#7d7e7e;
+    text-align: right;
+    float: left;
+}
+::ng-deep .mat-button, .mat-raised-button:hover
+{
+    outline: none !important;
+    background: transparent !important
+}
+.frm-search
+{
+    margin-top:12px;
+    width:100% !important;
+    border-radius: 30px;
+}
+.searchicon
+{
+    position: absolute;
+    top: 18% !important;
+    /* left: 630px; */
+    left:41%;
+}
+.frm-search ::placeholder
+{
+    padding-left: 50px !important;
+}
+::ng-deep .mat-button.mat-primary .mat-button-focus-overlay {
+    background-color: transparent !important;
+  }
+
+.header-create-buttton {
+    font-size: 17px;
+    font-weight: normal;
+    background: transparent !important;
+    color:black;
+    /* margin-top: 19px; */
+}
+.searchlist li 
+{
+  list-style-type: none !important;
+  line-height: 25px !important;
+}
+.searchlist li a{
+  color:#5d5e61 !important;
+  font-size: 13px;
+}
+.searchlist{
+  padding: 0 !important;
+}
+.search-ref 
+{
+    margin-top: 6px;
+    margin-left: 16%;
+    width: 29%;
+    z-index: 5;
+}
+.locicon {
+    font-size: 17px !important;
+}
+::ng-deep .mat-card{
+    padding: 5px !important;
+}
+.iconimg {
+    height: 20px;
+    width:19px;
+    margin-right: 5px;
+}
+.img-top {
+    height: 20px;
+    width: 19px;
+    margin-right: 5px;
+}
+@media screen and (max-width: 600px) {
+.topnav a:not(:first-child) {display: none;}
+.topnav a.icon {
+    float: right;
+    display: block;
+}
+.right-item {
+    display: none;
+}
+.search {
+    display: none;
+}
+.top-create{
+    display: none;
+}
+.searchicon
+{
+    position: absolute;
+    top: 12px !important;
+    left: 43px;
+}
+.left-item {
+    width:100%;
+}
+.right-item {
+    width:100%;
+}
+.Header_Page .Header_Two .Menus .Menu_List {
+    width:100%;
+    background: #445C8F;
+}
+.Header_Page .Header_Two .Menus .Menu_List:first-child {
+    display: block;
+}
+.topnav.responsive {position: relative;}
+.menu-navbar.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.menu-navbar.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+}
+  } 
+/* Static Drop Down */
+.ng-select.custom-dropdown{
+    border:0px;
+    min-height: 0px;
+    border-bottom: 1px solid #d8dbdf;
+    margin-bottom: 1rem !important;
+}
+  
+::ng-deep .ng-select .ng-select-container  {            
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+}
+  
+::ng-deep .ng-select.ng-select-single .ng-select-container {
+    height: 20px !important;
+    padding-bottom: 0px;
+}
+
+  /* General class need to be import in all components */
+.form-group{
+    margin-bottom: 0.5rem !important;
+    font-size: 15px !important;
+    margin-left:7%;
+    font-weight: 400;
+}
+  
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+  
+  .example-full-width {
+    width: 95%;
+ }
+  
+.example-label{
+      font-size: 20px;
+      font-family: Roboto,"Helvetica Neue",sans-serif;
+      color:#000000;
+  }
+.dashboard .img-top {
+    display: none;
+}
+.active .img-top {
+    display: inline-block;
+}
+.active .iconimg {
+    display: none;
+}
+.Header_Page .Header_Two .Menus .Menu_List .Menu:hover .img-top{
+    display: block;
+}
+.Header_Page .Header_Two .Menus .Menu_List .Menu:hover .iconimg {
+    display: none;
+}
+.active .Menu {
+    color:#445C8F !important;
+}
+@media screen and (max-width: 1200px) {
+    .Menus .Menu_List:first-child {display: block;}
+    .Header_Page .Header_Two .Menus.responsive {display: block;}
+    .Header_Page .Header_Two .Menus .Menu_List:not(:first-child) {
+       display: none; 
+    }
+    
+    .Header_Page .Header_Two .Menus .Menu_List.show:not(:first-child) {
+       display: block;
+    }
+ }
+
+ @media only screen and (min-width : 768px) and (max-width : 1024px) {
+    .Header_Page .Header_Two .Menus .Menu_List:first-child {
+        display: block;
+    }
+    .Header_Page .Header_Two .Menus .Menu_List{
+        width:100% !important;
+        background: #445c8f !important;
+    }
+    .active .Menu {
+        color:#fff !important;
+    }
+ }
+
+ .mailVerifyMessage {
+    background: #f0d5da;
+    padding: 10px 20px;
+    width: 50%;
+    margin-left: 26%;
+    /* margin-top: 1%; */
+    margin-top: 95px;
+    position: fixed;
+    z-index: 1;
+ }
+ .mailVerifyMessage p 
+ {
+     color:#8a6d3b;
+     font-size: 16px;
+     line-height: 20px;
+     margin: 0px;
+ }
+ .verifyMail {
+     cursor: pointer;
+     font-size: 16px;
+     line-height: 25px;
+     color:#004eff !important;
+     padding-left: 20px;
+ }
+ .rgt {
+     float: right;
+     text-align: right;
+     line-height: 20px;
+ }
+ .mat-icon:hover {
+     cursor: pointer !important;
+ }
+ .image:hover {
+     cursor: pointer;
+ }
+
+ .username {
+     margin-left: 40px; 
+     color: #445C8F;
+ }
+
+ .header-right-items {
+     justify-content: flex-end;
+     display: flex; 
+     padding-right: 10px;
+ }
+ 
+
+ .mat-card.no_records_found {
+    padding: 10px 0px !important;
+  }
+
+  .userimage {
+    width: 37px;
+    height: 37px; 
+    float: left; 
+    border-radius: 20px;
+  } 
+  
+  ::ng-deep .mat-tooltip {
+    margin-top: -60px  !important;
+    color: #000 !important;
+    background: #fff;
+    border:1px solid #ccc;
+    padding:7px;
+    font-size: 12px;
+   }
+ 
+   ::ng-deep .input-lable-font .mat-form-field-infix{
+    border-top: 0 !important;
+  }
+  
+  ::ng-deep .input-lable-font svg{
+    margin-bottom: -35px;
+  }
+  
+  ::ng-deep .input-lable-font input.mat-input-element {
+    margin-top: 0px !important;
+  }
+
+  .help
+  {
+      color:#696868 !important; 
+      font-size: 30px !important;
+      padding-top: 15px !important;
+      float: left;
+      margin: 0px 5px;
+  }

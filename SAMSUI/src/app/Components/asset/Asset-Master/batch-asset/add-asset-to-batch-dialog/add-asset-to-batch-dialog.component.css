@@ -1,0 +1,19 @@
+.asset-table {
+    height: 500px !important;
+    width: 100%;
+    overflow: auto;
+}
+
+.space{
+    margin-right: 5px;
+}
+
+.rightbutton{
+    text-align: right;
+    padding-bottom: 10px;
+    padding-left: 10px !important;
+}
+
+.example-full-width{
+    width: 95% !important;
+}

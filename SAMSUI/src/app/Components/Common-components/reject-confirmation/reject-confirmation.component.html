@@ -1,0 +1,46 @@
+<div fxLayout="column">
+  <form fxLayout="column" [formGroup]="rejectForm">
+    <div>
+      <h4 class="dialogue-box-header"> {{confirmHeading}} </h4>
+    </div>
+    <div>
+      <p class="cancel-content"> {{confirmMsg}}<br>
+        <span style="font-size: 13px;color: red;">{{note}}</span></p>
+    </div>
+
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+        <mat-label class="input-label"> {{'COMMON_REJECT_REASON' | translate }} <span class="mandatory-style">*</span>
+        </mat-label>
+        <textarea matInput class="input-field" formControlName="rejectReason" [tabIndex]=1 [maxlength]="500"
+          oninput="this.value = this.value.toUpperCase()"></textarea>
+        <mat-hint align="end">{{rejectForm.controls.rejectReason.value?.length || 0}}/500
+        </mat-hint>
+        <mat-error *ngIf="rejectForm.controls.rejectReason.invalid && rejectForm.controls.rejectReason.touched">
+          <div class="err-field" *ngIf="rejectForm.controls.rejectReason.errors.required">
+            "{{ 'COMMON_REJECT_REASON' | translate}}" Is Required </div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- <div class="form-group" style="padding-top: 10px !important;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="100" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+          <mat-label class="input-label"> {{'COMMON_REJECT_REASON' | translate }} <span class="mandatory-style">*</span></mat-label>
+          <textarea matInput formControlName="rejectReason" [maxlength]="500" oninput="this.value = this.value.toUpperCase()" rows="3"
+            class="input-field"></textarea>
+          <mat-hint align="end">{{rejectForm.controls.cancelReason.value?.length || 0}}/500
+          </mat-hint>
+          <mat-error *ngIf="rejectForm.controls.rejectReason.invalid && rejectForm.controls.rejectReason.touched">
+            <div class="err-field" *ngIf="rejectForm.controls.rejectReason.errors.required">
+              "{{ 'COMMON_CANCEL_REASON' | translate}}" Is Required </div>
+          </mat-error>
+        </mat-form-field>
+      </div> -->
+
+    <div class="rightbutton" fxLayoutAlign="center center">
+      <button class=" space" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+      <button mat-raised-button color="primary" [disabled]="rejectForm.invalid || isDisabled" (click)="Proceed()"> Yes </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,640 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="75">
+      <h4 class="dialogue-box-header"> {{ 'SR_PRE_INWARD_INVENTORY' | translate }} </h4>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end center" class="m-bottom">
+      <button mat-raised-button color="primary" class="rightbutton" *ngIf="!isViewMode" (click)="addInwardInventory()"
+        [disabled]="modelFormToBeAdded.invalid">{{'COMMON_SUBMIT' | translate}}</button>
+
+      <button mat-raised-button color="primary" class="rightbutton" (click)="exit()">
+        {{'COMMON_BACK' | translate}}</button>
+    </div>
+    <!-- <div fxFlex="5" fxLayoutAlign="end start">
+      <mat-icon (click)="exit()" class="close-icon">highlight_off</mat-icon>
+    </div> -->
+  </div>
+
+
+  <form [formGroup]="modelFormToBeAdded">
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'ASSET_INFO' | translate }}
+          <div *ngIf="!isViewMode">
+            <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+          </div>
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content fxLayout="column">
+            <div fxLayout="row" fxFlex="100">
+              <div fxFlex="30" fxFlex.xs="40" fxFlex.sm="40" fxFlex.md="40">
+
+                <div fxLayout="row">
+                  <div class="form-group" fxFlex="75" class="mt-10">
+                    <span class="input-label">{{'MANUFACTURER' | translate}} <span
+                        class="mandatory-style">*</span></span>
+                    <ng-select class=" input-field" formControlName="businessPartnerName"
+                      (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                      (scrollToEnd)="listOfManufacturer({})"
+                      (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')"
+                      (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                      (change)="getManfacturerComboValue($event)" [items]="manufactuer" bindLabel="businessPartnerName"
+                      bindValue="businessPartnerName" loadingText="Loading..." [loading]="scrollsyncManufacturer"
+                      required>
+                    </ng-select>
+                    <mat-error
+                      *ngIf="modelFormToBeAdded.controls.businessPartnerName.errors && modelFormToBeAdded.controls.businessPartnerName.touched">
+                      <div class="err-field" *ngIf="modelFormToBeAdded.controls.businessPartnerName.errors.required">
+                        Kindly Select The "{{'MANUFACTURER' | translate}}" </div>
+                    </mat-error>
+                  </div>
+
+                  <div class="button-align" fxFlex="25" fxLayoutAlign="center center">
+                    <button mat-icon-button color="primary" [disabled]="isViewMode" matTooltip="{{ 'COMMON_ADD' | translate }}
+                      {{ 'COMMON_NEW' | translate }} {{ 'MANUFACTURER' | translate }}"
+                      (click)="openManufactureCreateScreen()">
+                      <!-- <mat-icon>add_circle</mat-icon> -->
+                      <div class="plus-icon add-circle-icon"></div>
+                    </button>
+                  </div>
+                </div>
+
+                <div fxLayout="row">
+                  <div class="example-full-width" fxFlex="75">
+                    <span class="input-label"> {{ 'MODEL_NAME' | translate }} <span
+                        class="mandatory-style">*</span></span>
+                    <ng-select class=" input-field" (click)="listOfAllModel({})" [virtualScroll]="true"
+                      (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})"
+                      (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"
+                      (clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)" [items]="modelCombo"
+                      bindLabel="modelName" bindValue="modelName" [loading]="scrollsyncModel" loadingText="Loading..."
+                      formControlName="modelName" required>
+                    </ng-select>
+                    <mat-error
+                      *ngIf="modelFormToBeAdded.controls.modelName.errors && modelFormToBeAdded.controls.modelName.touched">
+                      <div class="err-field" *ngIf="modelFormToBeAdded.controls.modelName.errors.required">
+                        Kindly Select The "{{'MODEL_NAME' | translate}}" </div>
+                    </mat-error>
+                  </div>
+
+                  <div class=" button-align" *ngIf="modelAccessModuleForAssetMaster.createFlagDisplay" fxFlex="25"
+                    fxLayoutAlign="center center">
+                    <button  mat-icon-button color="primary"
+                      [disabled]="isViewMode "
+                      matTooltip="{{ 'COMMON_ADD' | translate }}
+                    {{ 'COMMON_NEW' | translate }} {{ 'MODEL_NAME' | translate }}" (click)="openModelCreateScreen()">
+                      <!-- <mat-icon>add_circle</mat-icon> -->
+                      <div class="plus-icon add-circle-icon"></div>
+                    </button>
+                  </div>
+                </div>
+
+                <div fxLayout="row">
+                  <div class="example-full-width" fxFlex="75">
+                    <span class="input-label"> {{ 'COMMON_DESC' | translate }}<span class="mandatory-style">*</span>
+                    </span>
+                    <ng-select class="input-field" formControlName="assetGroupName" (click)="listOfAllAssetGroup({})" [virtualScroll]="true"
+                      (search)="listOfAllAssetGroup($event)" (scrollToEnd)="listOfAllAssetGroup({})"
+                      (change)="getAssetGroupComboValue($event)"
+                      [title]="(modelFormToBeAdded.controls.assetGroupName.value === null || modelFormToBeAdded.controls.assetGroupName.value === undefined) ? '': modelFormToBeAdded.controls.assetGroupName.value"
+                      [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName"
+                      [loading]="assetGroupScrollsync" loadingText="Loading...">
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item.assetGroupName}}">{{item.assetGroupName}}</div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <div fxFlex="25"></div>
+                </div>
+
+                <div fxLayout="row" style="margin-top: 22px;">
+                  <div class="example-full-width " fxFlex="75">
+                    <span class="input-label"> {{ 'ASSET_OWNERSHIP_TYPE' | translate }} <span
+                        class="mandatory-style">*</span> </span>
+                    <ng-select class="input-field" formControlName="ownershipType"
+                      [items]="ownership" bindLabel="name" bindValue="name" required (change)="formValidation()">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="modelFormToBeAdded.controls.ownershipType.errors && modelFormToBeAdded.controls.ownershipType.touched">
+                      <div class="err-field" *ngIf="modelFormToBeAdded.controls.ownershipType.errors.required">
+                        Kindly Select The "{{'ASSET_OWNERSHIP_TYPE' | translate}}"</div>
+                    </mat-error>
+                  </div>
+                  <div fxFlex="25"></div>
+                </div>
+
+                <div fxLayout="row" style="margin-top: 20px;">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'PURCHASE_STATUS' | translate }}</span>
+                      <ng-select  formControlName="purchaseStatus" loadingText="Loading..." [items]="purchaseStatusList" bindLabel="purchaseStatus" bindValue="purchaseStatus" [title]="(modelFormToBeAdded.controls.purchaseStatus.value === null || modelFormToBeAdded.controls.purchaseStatus.value === undefined) ? '': modelFormToBeAdded.controls.purchaseStatus.value">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div fxFlex="25"></div>
+                </div>
+
+                <div fxLayout="row" fxShow.xs fxShow.sm fxShow.md fxHide.gt-md>
+                  <mat-form-field [floatLabel]="'always'" style="width: 70%; margin-top: 30px;">
+                    <mat-label class="input-label"> {{'TOTAL_AMOUNT_IN_LOCAL_CURRENCY' | translate}} <span
+                        class="mandatory-style">*</span>
+                    </mat-label>
+                    <input type="number" matInput formControlName="prTotalAmount" (keyup)="totCallAmnt()" readonly>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+              <div fxFlex="40" fxFlex.xs="60" fxFlex.sm="60" fxFlex.md="60">
+                <div fxLayout="row" class="mt-10">
+                  <div fxFlex="45">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{'ASSET_ORIGINAL_CUR_CODE' | translate}} <span
+                          class="mandatory-style">*</span></span>
+                      <ng-select class=" input-field" formControlName="purchaseCurrencyCode"
+                        (search)="listOfCurrencyCd($event)" (click)="listOfCurrencyCd({})"
+                        (scrollToEnd)="listOfCurrencyCd({})"
+                        (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')"
+                        (clear)="listOfCurrencyCd('clear')" (change)="checkLocAndPurCd($event)" [items]="currencyCdList"
+                        bindLabel="curCd" bindValue="curCd">
+                      </ng-select>
+
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.purchaseCurrencyCode.errors && modelFormToBeAdded.controls.purchaseCurrencyCode.touched">
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.purchaseCurrencyCode.errors.required">
+                          Kindly Select The "{{'ASSET_ORIGINAL_CUR_CODE' | translate}}"</div>
+                      </mat-error>
+                    </div>
+                  </div>
+                  <div fxFlex="10"></div>
+                  <div fxFlex="45" class="mt-10">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{ 'ASSET_LOC_CUR_CODE' | translate }} </mat-label>
+                      <input matInput formControlName="locationCurrencyCode" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxLayout="row">
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{'ASSET_EXC_RATE' | translate}}
+                        <span class="mandatory-style">*</span>
+                      </mat-label>
+                      <input matInput formControlName="exchangeRate" (keyup)="totCallAmnt()"
+                        (ngModelChange)="totCallAmnt()" type="number"
+                        onKeyPress="if(this.value.length==11) return false;">
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.exchangeRate.errors && modelFormToBeAdded.controls.exchangeRate.touched">
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.exchangeRate.errors.required">
+                          "{{'ASSET_EXC_RATE' | translate}}" Is Required </div>
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.exchangeRate.errors.pattern">
+                          {{'ASSET_EXC_RATE' | translate}} After decimal Maximum length is 5 </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="10"></div>
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'PI_PR_QUANTITY' | translate}} <span
+                          class="mandatory-style">*</span>
+                      </mat-label>
+                      <input type="number" matInput formControlName="prQuantity" (keyup)="totCallAmnt()">
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.prQuantity.errors && modelFormToBeAdded.controls.prQuantity.touched">
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.prQuantity.errors.required">
+                          "{{'PI_PR_QUANTITY' | translate}}" Is Required </div>
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.prQuantity.errors.pattern">
+                          {{'PI_PR_QUANTITY' | translate}} contains only Numbers </div>
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.prQuantity.errors.min">
+                          {{'PI_PR_QUANTITY' | translate}} must be greater than zero </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row">
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'SINGLE_UNIT_PRICE_IN_ORIGINAL_CURRENCY' | translate }} <span
+                          class="mandatory-style"> *</span> </mat-label>
+                      <input type="number" matInput formControlName="originalPurchaseAmount" (keyup)="totCallAmnt()">
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.originalPurchaseAmount.invalid && modelFormToBeAdded.controls.originalPurchaseAmount.touched">
+                        <div class="err-field"
+                          *ngIf="modelFormToBeAdded.controls.originalPurchaseAmount.errors.required">
+                          "{{'SINGLE_UNIT_PRICE_IN_ORIGINAL_CURRENCY' | translate }}" Is Required </div>
+                        <div class="err-field"
+                          *ngIf="modelFormToBeAdded.controls.originalPurchaseAmount.errors.numbersOnly && !modelFormToBeAdded.controls.originalPurchaseAmount.errors.min">
+                          "{{'SINGLE_UNIT_PRICE_IN_ORIGINAL_CURRENCY' | translate}}" Should Be Numbers Only </div>
+                        <div *ngIf="modelFormToBeAdded.controls.originalPurchaseAmount.errors.min">
+                          "{{'SINGLE_UNIT_PRICE_IN_ORIGINAL_CURRENCY' | translate}}" Cannot Be Negative </div>
+                        <div *ngIf="modelFormToBeAdded.controls.originalPurchaseAmount.errors.customNumber">
+                          Ex:"0000000000.00000"</div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="10"></div>
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'SINGLE_UNIT_PRICE_IN_LOCAL_CURRENCY' | translate }}
+                      </mat-label>
+                      <input matInput formControlName="localPurchaseAmount" (keyup)="totCallAmnt()">
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.localPurchaseAmount.errors && modelFormToBeAdded.controls.localPurchaseAmount.touched">
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.localPurchaseAmount.errors.pattern">
+                          {{'SINGLE_UNIT_PRICE_IN_LOCAL_CURRENCY' | translate }} contains only Numbers </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row">
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'SINGLE_UNIT_TAX' | translate}} (%)<span
+                          class="mandatory-style"> *</span></mat-label>
+                      <input matInput appPercentageDirective formControlName="localTaxRate" (input)="totCallTaxAmt()">
+                      <mat-error
+                        *ngIf="modelFormToBeAdded.controls.localTaxRate.errors && modelFormToBeAdded.controls.localTaxRate.touched">
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.localTaxRate.errors.required">
+                          "{{'SINGLE_UNIT_TAX' | translate}}" Is Required </div>
+                        <div class="err-field" *ngIf="modelFormToBeAdded.controls.localTaxRate.errors.pattern">
+                          {{'SINGLE_UNIT_TAX' | translate}} contains only Numbers </div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="10"></div>
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'SINGLE_UNIT_TAX_AMOUNT' | translate}}
+                      </mat-label>
+                      <input type="number" matInput formControlName="prTaxAmount"  (input)="fetchCallTaxAmt()">
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row">
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'SINGLE_UNIT_TOTAL_AMOUNT' | translate}}<span
+                          class="mandatory-style"> *</span></mat-label>
+                      <input matInput appPercentageDirective formControlName="totalPurchaseAmt" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="10"></div>
+                  <div class="form-group" fxFlex="45">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{'TOTAL_AMOUNT' | translate}} <span
+                        class="mandatory-style"> *</span>
+                      </mat-label>
+                      <input type="number" matInput formControlName="prTotalAmount" (keyup)="totCallAmnt()" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div fxFlex="30" fxHide.sm fxHide.xs fxHide.md>
+                <div class="form-group" style="margin-top: 10px; margin-left: 20px;">
+                  <div>
+                    <div class="row title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+                    <div class="row value"> {{modelFormToBeAdded.controls.assetCategoryName.value}} </div>
+                  </div>
+                  <br />
+                  <div>
+                    <div class="row title"> {{ 'ASSET_SUB_CATEGORY' | translate }} </div>
+                    <div class="row value"> {{modelFormToBeAdded.controls.assetSubCategoryName.value}} </div>
+                  </div>
+                  <br />
+                  <div>
+                    <div class="row title"> {{ 'ASSET_TYPE' | translate }} </div>
+                    <div class="row value"> {{modelFormToBeAdded.controls.assetTypeName.value}} </div>
+                  </div>
+                  <br />
+                  <div>
+                    <div class="row title"> {{ 'ASSET_GROUP' | translate }} </div>
+                    <div class="row value" style="word-break: break-word;">
+                      {{modelFormToBeAdded.controls.assetGroupName.value}} </div>
+                  </div>
+                  <br />
+                  <div>
+                    <div class="row title"> {{ 'ASSET_INSTALLATION_TYPE' | translate }} </div>
+                    <div class="row value"> {{modelFormToBeAdded.controls.installationType.value}} </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxFlex="100" fxHide.gt-md>
+              <div class="form-group">
+                <div fxFlex="20">
+                  <div class="row title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+                  <div class="row value"> {{modelFormToBeAdded.controls.assetCategoryName.value}} </div>
+                </div>
+
+                <div fxFlex="20">
+                  <div class="row title"> {{ 'ASSET_SUB_CATEGORY' | translate }} </div>
+                  <div class="row value"> {{modelFormToBeAdded.controls.assetSubCategoryName.value}} </div>
+                </div>
+
+                <div fxFlex="20">
+                  <div class="row title"> {{ 'ASSET_TYPE' | translate }} </div>
+                  <div class="row value"> {{modelFormToBeAdded.controls.assetTypeName.value}} </div>
+                </div>
+
+                <div fxFlex="20">
+                  <div class="row title"> {{ 'ASSET_GROUP' | translate }} </div>
+                  <div class="row value" style="word-break: break-word;">
+                    {{modelFormToBeAdded.controls.assetGroupName.value}} </div>
+                </div>
+
+                <div fxFlex="20">
+                  <div class="row title"> {{ 'ASSET_INSTALLATION_TYPE' | translate }} </div>
+                  <div class="row value"> {{modelFormToBeAdded.controls.installationType.value}} </div>
+                </div>
+              </div>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'ASSET_CHILD_ASSETS' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content>
+            <div fxLayout="row" [formGroup]="childAssetPreInwardAsset" *ngIf="!isViewMode">
+              <div fxFlex="30">
+                <div class="form-group">
+                  <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                  <ng-select formControlName="businessPartnerName" (search)="listOfManufacturer($event)"
+                    (click)="listOfManufacturer({})" (scrollToEnd)="listOfManufacturer({})"
+                    (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')"
+                    (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                    (change)="getManfacturerComboValueChild($event)" [items]="manufactuer"
+                    bindLabel="businessPartnerName" bindValue="businessPartnerName" loadingText="Loading..."
+                    [loading]="scrollsyncManufacturer">
+                  </ng-select>
+                </div>
+              </div>
+              <div fxFlex="2"></div>
+              <div fxFlex="30">
+                <div class="form-group">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'MODEL_NAME' | translate }}</span>
+                    <ng-select (click)="listOfAllModelChild({})" [virtualScroll]="true"
+                      (search)="listOfAllModelChild($event)" (scrollToEnd)="listOfAllModelChild({})"
+                      (keyup.backspace)="listOfAllModelChild($event.target.value ? $event : 'back')"
+                      (clear)="listOfAllModelChild('clear')" (change)="getModelComboValueChild($event)"
+                      [items]="modelCombo" bindLabel="modelName" bindValue="modelName" [loading]="scrollsyncModelChild"
+                      loadingText="Loading..." formControlName="modelName" required>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="2"></div>
+              <div fxFlex="36" fxLayoutAlign="start end">
+                <button mat-raised-button color="primary" [disabled]="childAssetPreInwardAsset.invalid "
+                  (click)="addChildAssetPreInw()">Add</button>
+              </div>
+            </div>
+            <div class="example-container" style="margin-top: 0.5%;">
+              <table #matChildAsset mat-table [dataSource]="addChildAssetDataSource">
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index; " style="text-align:left">
+                    {{i+1}} </td>
+                </ng-container>
+                <ng-container matColumnDef="modelName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'MODEL_NAME' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.modelName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="businessPartnerName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'MANUFACTURER' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.businessPartnerName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element let i=index;">
+                    <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                      *ngIf="!isViewMode" (click)="deleteChildAssetInw(element.preInwChildAssetId,i)">
+                      <mat-icon style="color: red;cursor: pointer;font-size: 17px !important;">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="childAssetDisCol;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: childAssetDisCol;">
+              </table>
+              <mat-card class="no_records_found" fxLayoutAlign="center center"
+                *ngIf="childAssetlength == 0 && !subloaderChildAsset">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+              <mat-card class="no_records_found" *ngIf="subloaderChildAsset" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'ASSET_CONTRACT_DETAILS' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content>
+
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button mat-raised-button *ngIf="!isViewMode" [disabled]="!formOneValid" class="rightbutton"
+                color="primary" (click)="addWarrantyContractInw(0,'','add')">
+                {{ 'COMMON_ADD' | translate }}</button>
+            </div>
+
+            <div class="example-container" style="margin-top: 0.5%;">
+              <table #matWarrantyContractAsset mat-table [dataSource]="addWarrantyContractDataSource">
+                <ng-container matColumnDef="seqNo">
+                  <th mat-header-cell *matHeaderCellDef> {{ 'PI_SEQ_NO' | translate }} </th>
+                  <td mat-cell *matCellDef="let element; let i=index; " style="text-align:center">
+                    {{i+1}} </td>
+                </ng-container>
+                <ng-container matColumnDef="coverageType">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'CONTRACT_COVERAGE_TYPE' | translate }}</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.coverageType }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="contractType">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'CONTRACT_TYPE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.contractType}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="coverageStartingFrom">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'PI_COVERAGE_STARTING_FROM' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.coverageStartingFrom}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="periodInYears">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'PERIOD_IN_YRS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.periodInYears}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="periodInMonths">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'PERIOD_IN_MONTHS' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.periodInMonths}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amc">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'ASSET_AMC_CMC_PERCENTAGE' | translate }} </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.amcCmcPercentage}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                  </th>
+                  <td mat-cell *matCellDef="let element let i=index;">
+                    <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                      *ngIf="!isViewMode" (click)="addWarrantyContractInw(element,i,'edit')">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                      (click)="addWarrantyContractInw(element,i,'view')">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                      *ngIf="!isViewMode" (click)="deleteWarrantyContractInw(element.preInwContractWarrantyId,i)">
+                      <mat-icon style="color: red;cursor: pointer;font-size: 17px !important;">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="warrantyContractDisCol;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: warrantyContractDisCol;">
+              </table>
+              <mat-card class="no_records_found" fxLayoutAlign="center center"
+                *ngIf="warrantyContractlength == 0 && !subloaderWarrantyContract">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+              <mat-card class="no_records_found" *ngIf="subloaderWarrantyContract" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab *ngIf="modelFormToBeAdded.controls.inwardInventoryDtlId.value>0">
+        <ng-template mat-tab-label>
+          {{'STATUTORY_REQUIREMENTS' | translate }}
+          <div *ngIf="!isViewMode">
+            <mat-icon *ngIf="!formTwoValid" class="close-icon" aria-hidden="true">error</mat-icon>
+          </div>
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content>
+            <form [formGroup]="assetCertificateFormGroup">
+              <div class="example-container">
+                <table #assetCertificate mat-table [dataSource]="listOfCertificates">
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="certificateName">
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{ 'ASSET_CERTIFICATE_NAME_ISSUE_AUTHORITY' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element?.certificateName}}
+                      <br /> <br /> {{element?.issuingAuthority}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="issueDt">
+                    <th mat-header-cell *matHeaderCellDef="let element"> {{ 'ASSET_CERTIFICATE_ISSUE_DT' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.issueDtDisp}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="startDt">
+                    <th mat-header-cell *matHeaderCellDef="let element"> {{ 'ASSET_CERTIFICATE_START_DT' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.startDtDisp}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="expiryDt">
+                    <th mat-header-cell *matHeaderCellDef="let element"> {{ 'ASSET_CERTIFICATE_EXPIRY_DT' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.expiryDtDisp}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fileCertificateNo">
+                    <th mat-header-cell *matHeaderCellDef="let element"> {{ 'ASSET_CERTIFICATE_NO' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.fileCertificateNo}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="documentNo">
+                    <th mat-header-cell *matHeaderCellDef="let element"> {{ 'ASSET_CERTIFICATE_DOCUMENT_NO' | translate
+                      }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.documentNo}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i = index;">
+                      <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                        (click)="uploadDocument(element,'Edit')" *ngIf="!isViewMode">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                        (click)="uploadDocument(element,'View')">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="statutoryRequirementCol;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: statutoryRequirementCol;">
+                </table>
+                <mat-card class="no_records_found" fxLayoutAlign="center center"
+                  *ngIf="certificateslength == 0 && !subloaderCertificates">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card class="no_records_found" *ngIf="subloaderCertificates" fxLayoutAlign="center center">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+    </mat-tab-group>
+  </form>
+</div>

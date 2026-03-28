@@ -1,0 +1,200 @@
+<div class="top-content row">
+  <div class="col-md-8">
+    <mat-toolbar-row>
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a></li>
+          <li class="breadcrumb-item">{{'MENU_ASSET' | translate}}</li>
+          <li class="breadcrumb-item active" aria-current="page">{{'EQUIPMENT_UTILITY' | translate}}</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+</div>
+<div class="content_section">
+  <form [formGroup]="equipmentUtility" class="margin-fix">
+
+    <div class="col-md-12 row">
+      <div class="col-md-3">
+        <span class="header-font">{{'EQUIPMENT_UTILITY' | translate}}</span>
+      </div>
+    </div>
+
+    <div class="col-md-12 row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <div class="example-full-width">
+            <span class="input-label">{{'UTILITY_CEID' | translate}}<span class="mandatory-style">*</span></span>
+            <ng-select [items]="assetCodeCombo" autofocus required #srLocFocus bindLabel="assetCode"
+            bindValue="assetCode" (search)="loadAssetCodeComboData($event)"
+            (click)="loadAssetCodeComboData($event)" [virtualScroll]="true"
+            (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode" loadingText="Loading..."
+            (change)="selectedAssetCodeData($event)" formControlName="assetCode"></ng-select>
+            <mat-error *ngIf="equipmentUtility.controls.assetCode.invalid && equipmentUtility.controls.assetCode.touched">
+                <div class="err-field" *ngIf="equipmentUtility.controls.assetCode.errors.required">
+                  {{'UTILITY_CEID' | translate}} is Required </div>
+              </mat-error>
+          </div>
+        </div>
+      </div>
+       <div class="col-md-3">
+        <fieldset style="background-color: cornsilk; border-radius:5px;">
+          <div class="col-md-12 row">
+            <div class="pd-2"><span class="input-label">{{'UTILITY_TOTAL_HOURS' | translate}}</span>
+            </div>
+            <div class="pd-2">-</div>
+            <div class="pd-2"><span class="input-label">
+                {{ totalUtilizationHours }} </span></div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-md-3">
+        <!-- <fieldset style="background-color: cornsilk; border-radius:5px;">
+          <div class="col-md-12 row">
+            <div class="pd-2"><span class="input-label">{{'UTILITY_TOTAL_UTILIZED_HOURS' | translate}}</span>
+            </div>
+            <div class="pd-2">-</div>
+            <div class="pd-2"><span class="input-label">
+                Value </span></div>
+          </div>
+
+        </fieldset> -->
+      </div> 
+
+      <div class="col-md-3 rightbutton">
+        <button mat-raised-button class="space" color="primary">
+          {{ 'COMMON_SEARCH' | translate }}</button>
+        <button mat-raised-button color="primary" class="space"
+          (click)="generateReportOfEquipmentUtilityOfAsset()" [disabled]="isRecordsNotPresent">{{ 'REPORT_EXPORT' | translate }}</button>
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 row">
+
+      <div class="col-md-3">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'UTILITY_START_DATE' | translate}}</mat-label>
+          <input matInput (click)="activityStartDtDisp.open()" [matDatepicker]="activityStartDtDisp"
+           required formControlName="activityStartDtDisp"
+           [max]="equipmentUtility.controls.activityStartDtDisp.value">
+          <mat-datepicker-toggle [for]="activityStartDtDisp" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #activityStartDtDisp></mat-datepicker>
+          <mat-error>
+            {{'UTILITY_START_DATE' | translate}} is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'UTILITY_START_TIME' | translate}}</mat-label>
+          <input matInput required [ngxTimepicker]="default1" name="startTime" [format]="24"
+           formControlName="assetStartTime">
+          <mat-error *ngIf="equipmentUtility.controls.assetStartTime.invalid && equipmentUtility.controls.assetStartTime.touched">
+            <div *ngIf="equipmentUtility.controls.assetStartTime.errors.required">
+              {{'UTILITY_START_TIME' | translate}} is required </div>
+          </mat-error>
+          <ngx-material-timepicker #default1></ngx-material-timepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'UTILITY_END_DATE' | translate}}</mat-label>
+          <input matInput (click)="activityEndDtDisp.open()" [matDatepicker]="activityEndDtDisp" 
+          required formControlName="activityEndDtDisp" 
+          [min]="equipmentUtility.controls.activityStartDtDisp.value">
+          <mat-datepicker-toggle [for]="activityEndDtDisp" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #activityEndDtDisp></mat-datepicker>
+          <mat-error>
+            {{'UTILITY_END_DATE' | translate}} is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'UTILITY_END_TIME' | translate}}</mat-label>
+          <input matInput required [ngxTimepicker]="default" name="endTime" [format]="24"
+          formControlName="assetEndTime">
+          <mat-error *ngIf="equipmentUtility.controls.assetEndTime.invalid && equipmentUtility.controls.assetEndTime.touched">
+            <div *ngIf="equipmentUtility.controls.assetEndTime.errors.required">
+              {{'UTILITY_END_TIME' | translate}} is required</div>
+          </mat-error>
+          <ngx-material-timepicker #default></ngx-material-timepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-2 rightbutton">
+        <button mat-raised-button color="primary" class="space" style="margin-left:-10px;"
+          (click)="saveUpdateEquipmentUtility()" [disabled]="getAddButtonStatus()">{{ 'COMMON_ADD' | translate }}</button>
+      </div>
+
+    </div>
+
+  </form>
+
+
+  <div class="example-container">
+
+    <table mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="sno">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_SNO' | translate }} </th>
+        <td mat-cell *matCellDef="let element; let i=index"> {{ getIndexValue(i) }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="CEID">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_CEID' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.assetCode}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_MODEL' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.modelName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="manufacturer">
+          <th mat-header-cell *matHeaderCellDef> {{ 'MENU_MANUFACTURER' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{element?.manufacturer}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_DESCRIPTION' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{element?.assetGroup}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dept">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_DEPT' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.departmentName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="start Dt and Time">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_START_DATE_AND_TIME' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.activityStartDtDisp}} {{element?.assetStartTime}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="end Dt and Time">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_END_DATE_AND_TIME' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.activityEndDtDisp}} {{element?.assetEndTime}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="utilized Hours">
+        <th mat-header-cell *matHeaderCellDef> {{ 'UTILITY_UTILIZATION_HOURS' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.totalEquipmentHours}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-card class="no_records_found" *ngIf="isRecordsNotPresent && !subloader">
+        {{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+
+    <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+
+  </div>
+</div>

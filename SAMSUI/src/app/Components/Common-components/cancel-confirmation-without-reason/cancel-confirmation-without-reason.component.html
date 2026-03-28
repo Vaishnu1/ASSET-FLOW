@@ -1,0 +1,22 @@
+<div fxLayout="column">
+    
+    <div>
+      <h4 *ngIf="((confirmHeading!= null && confirmHeading!= '') && confirmHeading!= undefined)"
+        class="dialogue-box-header"> {{confirmHeading}} Confirmation </h4>
+      <h4 *ngIf="(confirmHeading === null || confirmHeading === '' )" class="dialogue-box-header"> Cancel Confirmation
+      </h4>
+  
+    </div>
+    <div>
+      <p *ngIf="((confirmHeading!= null && confirmHeading!= '') && confirmHeading!= undefined)" class="cancel-content">Are
+        you Sure? You want to {{confirmHeading | lowercase}} {{titleName}}.</p>
+      <p *ngIf="(confirmHeading === null || confirmHeading === '')" class="cancel-content"> Are you sure to cancel the
+        {{titleName}} ?</p>
+    </div>
+    
+    <div class=" rightbutton" fxLayoutAlign="center center" fxLayout="row" fxFlex="100">
+      <button class=" space" mat-raised-button color="primary" (click)="Cancel()"> No </button>
+      <button mat-raised-button color="primary" (click)="Proceed()"> Yes </button>
+    </div>
+    
+  </div>

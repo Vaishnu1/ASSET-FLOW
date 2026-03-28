@@ -1,0 +1,209 @@
+<div class="top-content row">
+  <div class="col-md-12">
+    <mat-toolbar-row style="position: sticky !important;">
+      <nav aria-label="breadcrumb" class="breadcrumblink">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a></li>
+          <li class="breadcrumb-item">{{ 'MENU_MASTER' | translate }}</li>
+          <li class="breadcrumb-item"><a href="#" [routerLink]="['/organization']">{{ 'MENU_ORGANIZATION' | translate }}</a></li>
+          <li class="breadcrumb-item">{{ 'MENU_LEGAL_ENTITY' | translate }}</li>
+          <li class="breadcrumb-item active" aria-current="page">View</li>
+        </ol>
+      </nav>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </div>
+</div>
+
+<div class="row col-md-12">
+  <div class="col-md-3 mt-20">
+    <mat-card class="card-design">
+      <mat-card-content>
+        <table class="model-table" style="margin-left: 15px !important;">
+          <tr>
+            <th> {{ 'LEGAL_ENTITY' | translate }} </th>
+            <td>:</td>
+            <td>{{legalEntityFormGroup.controls.legalEntityName.value}}</td>
+          </tr>
+          <tr>
+            <th>{{ 'ENTITY_GROUP' | translate }}</th>
+            <td>:</td>
+            <td>{{legalEntityFormGroup.controls.entityGroupName.value}}</td>
+          </tr>
+
+          <tr>
+            <th>{{ 'COMMON_DESC' | translate }}</th>
+            <td>:</td>
+            <td>{{legalEntityFormGroup.controls.legalEntityDesc.value}}</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-md-9">
+      <!-- <mat-accordion class="example-headers-align">
+        <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-style">
+                  Address Info
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+        
+            <mat-card class="card-design">
+              <mat-card-content>
+                <table class="model-table">
+                  <tr>
+                    <th> Street Name</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityAddress1.value}}</td>
+                  </tr>
+                  <tr>
+                    <th>Area</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityAddress2.value}}</td>
+                  </tr>
+                  <tr>
+                    <th> City</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityCity.value}}</td>
+                  </tr>
+    
+                  <tr>
+                    <th>Country</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityCountry.value}}</td>
+                  </tr>
+                  <tr>
+                    <th>Currency</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityCurrencyCode.value}}</td>
+                  </tr>
+    
+                  <tr>
+                    <th>State</th>
+                    <td>:</td>
+                    <td>{{legalEntityFormGroup.controls.legalEntityState.value}}</td>
+                  </tr>
+    
+                  <tr>
+                    <th>Zip</th>
+                    <td>:</td> 
+                    <td>{{legalEntityFormGroup.controls.legalEntityPostalCode.value}}</td>
+                  </tr>
+                </table>
+              </mat-card-content>
+            </mat-card>
+            <mat-action-row>
+              <button mat-raised-button (click)="nextStep()" class="whitecolor" color="primary">Next</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="font-style">
+                Registration Info
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table mat-table [dataSource]="legalRegistrationList" matSort>
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                  <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.registrationName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="info">
+                  <th mat-header-cell *matHeaderCellDef> Info </th>
+                  <td mat-cell *matCellDef="let element"> {{element.registrationNo}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns">
+              </table>
+            <mat-action-row>
+              <button mat-raised-button (click)="prevStep()" class="whitecolor" color="primary">Prev</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion> -->
+    <mat-tab-group [@.disabled]="true">
+      <mat-tab label="Address Info">
+        <mat-card class="card-designform">
+          <mat-card-content>
+            <table class="model-table">
+              <tr>
+                <th class="innerth">{{ 'COMMON_STREET' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityAddress1.value}}</td>
+              </tr>
+              <tr>
+                <th class="innerth">{{ 'COMMON_AREA' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityAddress2.value}}</td>
+              </tr>
+              <tr>
+                <th class="innerth"> {{ 'COMMON_CITY' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityCity.value}}</td>
+              </tr>
+
+              <tr>
+                <th class="innerth">{{ 'COMMON_COUNTRY' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityCountry.value}}</td>
+              </tr>
+              <tr>
+                <th class="innerth">{{ 'CURRENCY_CD' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityCurrencyCode.value}}</td>
+              </tr>
+
+              <tr>
+                <th>{{ 'COMMON_STATE' | translate }}</th>
+                <td>:</td>
+                <td>{{legalEntityFormGroup.controls.legalEntityState.value}}</td>
+              </tr>
+
+              <tr>
+                <th class="innerth">{{ 'COMMON_ZIP_CODE' | translate }}</th>
+                <td>:</td> 
+                <td>{{legalEntityFormGroup.controls.legalEntityPostalCode.value}}</td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <mat-tab label="Registration Info">
+        <mat-card class="card-designform">
+          <mat-card-content>
+            <div class="content-style">
+
+              <div class="reg-container">
+                <table mat-table [dataSource]="legalRegistrationList" matSort>
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'REGISTRATION_NAME' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.registrationName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="info">
+                    <th mat-header-cell *matHeaderCellDef> {{ 'REGISTRATION_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.registrationNo}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedColumns">
+                </table>
+              </div>
+            </div>
+         </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group> 
+  </div>
+</div>  

@@ -1,0 +1,159 @@
+.mat-card-title {
+    display: block;
+    color: #7f8286 !important;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 1.75rem;
+    padding-top:2px;
+}
+
+.mat-card {
+  transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+  display: block;
+  position: relative;
+  padding: 23px !important;
+  border-radius: 0px;
+}
+
+.header-style{
+    display: block;
+    color: #7f8286 !important;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 1.75rem;
+    padding-top:2px;
+    padding-bottom: 25px;
+
+}
+
+.breadcrumbicon
+{
+  padding-top:2px !important;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+
+.example-full-width {
+    width: 70%;
+  }
+
+ .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
+.example-margin {
+    margin: 0 10px;
+  }
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+
+  .mat-option {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    line-height: 48px;
+    height: 48px;
+    padding: 0 16px;
+    text-align: left;
+    text-decoration: none;
+    max-width: 100%;
+    position: relative;
+    cursor: pointer;
+    outline: 0;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 14px !important;
+}
+
+.mat-select-value-text {
+  white-space: nowrap;
+  font-size: 16px; 
+}
+
+
+.input.mat-input-element {
+  margin-top: -.0625em;
+  font-size: 16px !important;
+}
+.mat-input-element {
+  font: inherit;
+  background: 0 0;
+  color: currentColor;
+  border: none;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  vertical-align: bottom;
+  text-align: inherit;
+  font-size: 15px !important;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle, 
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), 
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent:active 
+.mat-radio-persistent-ripple {
+  background-color: #55d43e !important;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #48af26 !important;
+}   
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #48af26 !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: rgba(39, 193, 44, 0.54) !important;
+}
+
+.timepicker__header {
+  background-color: #445C8F !important;
+}
+
+.timepicker-button {
+  color: #445C8F !important;
+}
+
+.clock-face__number > span.active {
+  background-color: #445c8f  !important;
+  color: #ffffff !important;
+}
+
+.clock-face__clock-hand{
+  background-color: #445c8f  !important;
+
+}
+.--clock-hand-color{
+  background-color: #445c8f  !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: #445C8F !important;
+  color: #fff;
+} 
+
+::ng-deep .mat-form-field-infix input[readonly]{
+  border: 3px solid maroon !important;
+  border-style: solid !important;
+  color: maroon !important;
+  border-right: none !important;
+  border-left: none !important;
+  border-top: none !important;
+  margin-bottom: -2% !important;
+}

@@ -1,0 +1,123 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{this.data.screenName | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+    <div fxLayout="row" class="form-row"> 
+      <form [formGroup]="modelFormGroup"  fxFlex="100">
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style">
+                    {{mandatoryString}}</span></span>
+                <ng-select  [items]="modelReportsList" bindLabel="modelReportsList"
+                  bindValue="modelReportsList" formControlName="modelReportsType" required tabindex="1">
+                </ng-select>
+                <mat-error *ngIf="modelFormGroup.controls.modelReportsType.errors">
+                    <div class="err-field" *ngIf="modelFormGroup.controls.modelReportsType.errors.required">{{'REPORT_CHOOSE_REPORT' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (click)="listOfAllModel({})" [virtualScroll]="true"
+                  (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)"
+                  [items]="modelCombo" bindLabel="modelName" bindValue="modelName" [loading]="scrollsyncModel"
+                  loadingText="Loading..." formControlName="modelName" tabindex="2">
+                </ng-select>
+              </div> 
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'MODEL_NO' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (search)="listOfModelNumber($event)"
+                  (click)="listOfModelNumber({})" (change)="getModelNumberComboValue($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfModelNumber({})" (keyup.backspace)="listOfModelNumber($event.target.value ? $event : 'back')" (clear)="listOfModelNumber('clear')" [loading]="modelNumberScrollsync" loadingText="Loading..."
+                  [items]="modelNumber" bindLabel="modelNoDisp" bindValue="modelNoDisp" formControlName="modelNo" tabindex="3">
+                </ng-select> 
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'MANUFACTURER' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                  (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true" [loading]="manufacturerScrollsync"
+                  loadingText="Loading..." (change)="getManfacturerComboValue($event)" [items]="manufactuer"
+                  bindLabel="manufacturerName" bindValue="manufacturerName" formControlName="manufacturerName" tabindex="4">
+                </ng-select>
+              </div>
+            </div> 
+          </div>
+        </div>
+        
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'ASSET_CATEGORY' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (search)="listOfCategory($event)"
+                  (click)="listOfCategory({})" (change)="getCategoryComboValue($event)" [virtualScroll]="true"
+                  (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')" [loading]="categoryScrollsync" loadingText="Loading..."
+                  [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName"
+                  formControlName="assetCategoryName" tabindex="5">
+                </ng-select>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'ASSET_SUB_CATEGORY' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (search)="listOfSubCategory($event)"
+                  (click)="listOfSubCategory({})" [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')"
+                  [loading]="subScrollsync" loadingText="Loading..." (change)="getSubCategoryComboValue($event)"
+                  [items]="subCategoryName" bindLabel="subCategoryName" bindValue="subCategoryName"
+                  formControlName="subCategoryName" tabindex="6">
+                </ng-select>
+              </div>
+            </div>
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                <ng-select class="ModelDetailedReportComponent-dialog-dropdown" (click)="listOfAllAssetGroup({})"
+                  [virtualScroll]="true" (search)="listOfAllAssetGroup($event)"
+                  (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')" (change)="getAssetGroupComboValue($event)"
+                  [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName"
+                  [loading]="scrollsyncAssetGroup" loadingText="Loading..."  
+                  formControlName="assetGroupName" tabindex="7">
+                </ng-select>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+ 
+    <div fxLayout="row"  class="form-buttons" style="margin-top: 10px;"> 
+      <button mat-raised-button class="space" color="primary"
+        (click)="submit()" [disabled]="getSubmitButtonStatus()">{{'COMMON_SUBMIT' | translate}}</button>
+      <button mat-raised-button class="space" (click)="clear()"
+        color="primary">{{'COMMON_CLEAR' | translate}}</button> 
+    </div> 
+  </div>
+</div>
+ 

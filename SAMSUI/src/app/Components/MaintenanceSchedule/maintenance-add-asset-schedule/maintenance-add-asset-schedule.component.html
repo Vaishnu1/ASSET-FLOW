@@ -1,0 +1,544 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <div fxLayout="row">
+      <div fxFlex="95">
+        <h1 class="section_title"> {{ 'MAINTENANCE_ADD_ASSETS' | translate}} </h1>
+      </div>
+      <div fxFlex="5" class="first-title">
+        <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <div fxLayout="row">
+      <mat-expansion-panel fxFlex="100" [expanded]="expandSearchFlag">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-header">
+            {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET'| translate}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div fxFlex="100" fxLayout="column" class="modal-dropdown">
+          <div fxLayout="row">
+            <div fxFlex="34">
+              <div class="example-full-width">
+                <div class="form-group">
+                <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                <ng-select class=" input-field" [(ngModel)]="asset.manufacturerName"
+                  [ngModelOptions]="{standalone: true}" (search)="listOfManufacturer($event)"
+                  (click)="listOfManufacturer({})" (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                  (change)="getManfacturerComboValue($event)" [items]="manufactuer"
+                  [loading]="scrollsyncmanufactuer" loadingText="Loading..."
+                  bindLabel="businessPartnerName" bindValue="businessPartnerName" >
+                </ng-select>
+               </div>
+              </div>
+
+              <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                  <ng-select  [(ngModel)]="asset.modelName"
+                    [ngModelOptions]="{standalone: true}" tabindex="4" (click)="listOfAllModel({})"
+                    [virtualScroll]="true" (search)="listOfAllModel($event)" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')"
+                    (change)="getModelComboValue($event)" [items]="modelCombo" bindLabel="modelName"
+                    bindValue="modelName" [loading]="scrollsyncModel" loadingText="Loading..." required>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'PM'" class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label">{{'PM_FREQUENCY' | translate}}</span>
+                  <ng-select  [items]="scheduleFrequencyList" bindLabel="frequency"
+                    bindValue="frequency" [(ngModel)]="asset.pmFrequency" (change)="selectedPmFrequencyData($event)">
+                  </ng-select>
+
+                </div>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'PA'" class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label">{{'PA_FREQUENCY' | translate}}</span>
+                  <ng-select  [items]="scheduleFrequencyList" bindLabel="frequency"
+                    bindValue="frequency" [(ngModel)]="asset.paFrequency" (change)="selectedPaFrequencyData($event)">
+                  </ng-select>
+
+                </div>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'QA'" class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label">{{'QA_FREQUENCY' | translate}}</span>
+                  <ng-select  [items]="scheduleFrequencyList" bindLabel="frequency"
+                    bindValue="frequency" [(ngModel)]="asset.qaFrequency" (change)="selectedQaFrequencyData($event)">
+                  </ng-select>
+
+                </div>
+              </div>
+
+              <!-- <div *ngIf="this.asset.scheduleType == 'AM'" class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label">{{'AM_FREQUENCY' | translate}}</span>
+                  <ng-select  [items]="scheduleFrequencyList" bindLabel="frequency"
+                    bindValue="frequency" [(ngModel)]="asset.amFrequency" (change)="selectedAmFrequencyData($event)">
+                  </ng-select>
+
+                </div>
+              </div> -->
+
+               <div class="example-full-width">
+                <div class="form-group">
+                <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                <ng-select [items]="assigneeDepartmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                  tabindex="9" (search)="loadAssigneeDepartmentComboData($event)"
+                  (click)="loadAssigneeDepartmentComboData($event)" [virtualScroll]="true" (change)="selectedDepartmentData($event)"
+                  (scrollToEnd)="loadAssigneeDepartmentComboData({})" (keyup.backspace)="loadAssigneeDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadAssigneeDepartmentComboData('clear')" [loading]="scrollsyncAssigneeDepartment"
+                  loadingText="Loading..." [(ngModel)]="asset.departmentName" class="input-field">
+                </ng-select>
+                </div>
+              </div>
+            
+              
+
+              <!-- <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                  <ng-select  [(ngModel)]="asset.assetGroupName"
+                    [ngModelOptions]="{standalone: true}" tabindex="3" (click)="listOfAllAssetGroup({})"
+                    [virtualScroll]="true" (search)="listOfAllAssetGroup($event)"
+                    (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')" (change)="getAssetGroupComboValue($event)"
+                    [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName"
+                    [loading]="scrollsyncAssetGroup" loadingText="Loading..." required >
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                  <ng-select class=" input-field" [(ngModel)]="asset.functionalStatus" tabindex="13"
+                    (click)="srFunctionalityStatusComboData($event)" [virtualScroll]="true" (search)="srFunctionalityStatusComboData($event)"
+                    (scrollToEnd)="srFunctionalityStatusComboData({})" (keyup.backspace)="srFunctionalityStatusComboData($event.target.value ? $event : 'back')" (clear)="srFunctionalityStatusComboData('clear')" [loading]="scrollsyncSRFunctionlityPriority"
+                    loadingText="Loading..." (change)="selectedSRFunctionalityStatusComboData($event)">
+                    <ng-option *ngFor="let functionalStatus of functionlityCombo" [value]="functionalStatus"> {{ functionalStatus.functionalityName | translate}}</ng-option>
+                  </ng-select>
+                </div>
+              </div> -->
+
+              <!-- <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'ASSIGNED_TO' | translate }}</span>
+                <ng-select [items]="assignToPersonCombo" class="input-field assign-to" bindLabel="displayName"
+                  bindValue="employeeFirstName" (search)="loadAssignToComboData($event)"
+                  (click)="loadAssignToComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadAssignToComboData({})" 
+                  (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')" 
+                  (clear)="loadAssignToComboData('clear')" [loading]="scrollsyncAssignToPerson"
+                  loadingText="Loading..." (change)="selectedAssignToPerson($event)"
+                  [(ngModel)]="asset.assignTo" [ngModelOptions]="{standalone: true}" class="input-fiel"> </ng-select>
+                </div>
+              </div> --> 
+
+            </div>
+
+            <div fxFlex="33">
+              
+              <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label">{{ 'ASSET_CATEGORY' | translate }}</span>
+                  <ng-select  [(ngModel)]="asset.assetCategoryName"
+                    [ngModelOptions]="{standalone: true}" tabindex="1" (search)="listOfCategory($event)"
+                    (click)="listOfCategory({})" (change)="getCategoryComboValue($event)" [virtualScroll]="true"
+                    (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')" [loading]="scrollsyncAssetCategory" loadingText="Loading..."
+                    [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                  <ng-select  [(ngModel)]="asset.subCategoryName"
+                    [ngModelOptions]="{standalone: true}" tabindex="2" (search)="listOfSubCategory($event)"
+                    (click)="listOfSubCategory({})" [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')"
+                    [loading]="scrollsyncAssetSubCategory" loadingText="Loading..."
+                    (change)="getSubCategoryComboValue($event)" [items]="subCategoryName" bindLabel="subCategoryName"
+                    bindValue="subCategoryName">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'PM'" class="form-group example-full-width">
+                <span class="input-label">{{ 'MONTH' | translate }} </span>
+                <ng-select  [items]="listofMonth" [(ngModel)]="asset.pmMonth"
+                  bindLabel="name" bindValue="name"  (change)="setPmMonth($event)" [disabled]="asset.pmDtDisp">
+                </ng-select>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'PA'" class="form-group example-full-width">
+                <span class="input-label">{{ 'MONTH' | translate }} </span>
+                <ng-select  [items]="listofMonth" [(ngModel)]="asset.paMonth"
+                  bindLabel="name" bindValue="name"  (change)="setPaMonth($event)" [disabled]="asset.paDtDisp">
+                </ng-select>
+              </div>
+
+              <div *ngIf="this.asset.scheduleType == 'QA'" class="form-group example-full-width">
+                <span class="input-label">{{ 'MONTH' | translate }} </span>
+                <ng-select  [items]="listofMonth" [(ngModel)]="asset.qaMonth"
+                  bindLabel="name" bindValue="name"  (change)="setQaMonth($event)" [disabled]="asset.paDtDisp">
+                </ng-select>
+              </div>
+
+              <!-- <div *ngIf="this.asset.scheduleType == 'AM'" class="form-group example-full-width">
+                <span class="input-label">{{ 'MONTH' | translate }} </span>
+                <ng-select  [items]="listofMonth" [(ngModel)]="asset.amMonth"
+                  bindLabel="name" bindValue="name"  (change)="setAmMonth($event)">
+                </ng-select>
+              </div> -->
+
+             
+              
+
+              <!-- <div class="example-full-width">
+                <div class="form-group">
+                  <span class="input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                  <ng-select [items]="subDepartmentCombo" bindLabel="subDepartmentName"
+                    bindValue="subDepartmentName" (search)="loadSubDepartmentComboData($event)"
+                    (click)="loadSubDepartmentComboData($event)" tabindex="7" [virtualScroll]="true"
+                    (scrollToEnd)="loadSubDepartmentComboData({})" (keyup.backspace)="loadSubDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentComboData('clear')" [loading]="scrollsyncSubDepartment"
+                    loadingText="Loading..." (change)="selectedSubDepartmentData($event)"
+                    [(ngModel)]="asset.subDepartment" class="input-field">
+                  </ng-select>
+                </div>
+              </div> -->
+
+            </div>
+
+            <div fxFlex="33">
+              <div class="example-full-width">
+                <div class="form-group">
+                  <mat-form-field class="add-asset-inputs" [floatLabel]="'always'">
+                    <mat-label class="example-label input-label"> {{'ASSET_CODE' | translate}} </mat-label>
+                    <input matInput [(ngModel)]="asset.assetCode" tabindex="8">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="example-full-width">
+                <div class="form-group">
+                  <mat-form-field class="add-asset-inputs asset-sr-no" [floatLabel]="'always'">
+                    <mat-label class="example-label input-label">{{ 'ASSET_SERIAL_NO' | translate }}</mat-label>
+                    <input matInput tabindex="6" [(ngModel)]="asset.serialNo" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              
+              <div *ngIf="this.asset.scheduleType == 'PM'" class="form-group" style="margin-top: -21px;">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                     <mat-label class="input-label"> {{'DATE' | translate}} </mat-label>
+                     <input matInput class="input-field" (click)="pmDt.open()" [matDatepicker]="pmDt"
+                        [(ngModel)]="asset.pmDtDisp" 
+                        [disabled]="!!asset.pmMonth">
+                     <mat-datepicker-toggle matSuffix [for]="pmDt"></mat-datepicker-toggle>
+                     <mat-datepicker #pmDt></mat-datepicker>
+                   </mat-form-field>
+               </div>
+
+               <div *ngIf="this.asset.scheduleType == 'PA'" class="form-group" style="margin-top: -21px;">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                     <mat-label class="input-label"> {{'DATE' | translate}} </mat-label>
+                     <input matInput class="input-field" (click)="paDt.open()" [matDatepicker]="paDt"
+                        [(ngModel)]="asset.paDtDisp" 
+                        [disabled]="!!asset.paMonth">
+                     <mat-datepicker-toggle matSuffix [for]="paDt"></mat-datepicker-toggle>
+                     <mat-datepicker #paDt></mat-datepicker>
+                   </mat-form-field>
+               </div>
+
+               <div *ngIf="this.asset.scheduleType == 'QA'" class="form-group" style="margin-top: -21px;">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                     <mat-label class="input-label"> {{'DATE' | translate}} </mat-label>
+                     <input matInput class="input-field" (click)="qaDt.open()" [matDatepicker]="qaDt"
+                        [(ngModel)]="asset.qaDtDisp" 
+                        [disabled]="!!asset.qaMonth">
+                     <mat-datepicker-toggle matSuffix [for]="qaDt"></mat-datepicker-toggle>
+                     <mat-datepicker #qaDt></mat-datepicker>
+                   </mat-form-field>
+               </div>
+
+               <!-- <div *ngIf="this.asset.scheduleType == 'AM'" class="form-group" style="margin-top: -21px;">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                     <mat-label class="input-label"> {{'DATE' | translate}} </mat-label>
+                     <input matInput class="input-field" (click)="amDt.open()" [matDatepicker]="amDt"
+                        [(ngModel)]="asset.amDtDisp" (dateChange)="disableMonth()"
+                        [disabled]="!!asset.amMonth">
+                     <mat-datepicker-toggle matSuffix [for]="amDt"></mat-datepicker-toggle>
+                     <mat-datepicker #amDt></mat-datepicker>
+                   </mat-form-field>
+               </div> -->
+
+            </div>
+
+
+          </div>
+          <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end">
+
+            <button mat-raised-button class="search-asset-buttons" color="primary"
+              matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'" tabindex="9"
+              (click)="searchAsset()"  [disabled]="!(asset.assetCategoryName || asset.manufacturerName || asset.modelName || asset.functionalStatus || asset.subCategoryName ||
+              asset.assetCode || asset.serialNo || asset.departmentName || asset.assetGroupName || asset.subDepartment || asset.subDepartment || asset.pmFrequency || asset.pmMonth || asset.pmDtDisp
+              || asset.paFrequency || asset.paMonth || asset.paDtDisp || asset.qaFrequency || asset.qaMonth || asset.qaDtDisp)">{{'COMMON_SEARCH' | translate}}
+            </button>
+
+            <button mat-raised-button class="search-asset-buttons" color="primary"
+              matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="10"
+              (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+          </div>
+
+
+        </div>
+
+      </mat-expansion-panel>
+    </div>
+
+
+    <div fxLayout="column">
+      <fieldset>
+
+
+        <div fxLayout="column" fxFlex="55">
+
+          <div fxLayout="row" fxLayoutAlign="end end">
+            <div class="mandatory-style" fxFlex="100">
+              {{ 'Note : Assets with status "In Use" only will be listed'}}
+            </div>
+          
+            <button mat-raised-button  color="primary"
+              matTooltip="{{'SWAP_BUTTON' | translate}}" [matTooltipPosition]="'below'" tabindex="10"
+              (click)="swapAsset()"><mat-icon>swap_horiz</mat-icon></button>
+          </div>
+
+          
+          <!-- <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)">
+          </mat-paginator> -->
+          <div class="example-container">
+
+            <!-- <table mat-table [dataSource]="assetModelList" fxFlex="100">
+
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef >
+                  <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="selectAllFlag" (change)="multipleSelectAsset(selectAllFlag)"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element;let i = index;">
+                  <mat-checkbox *ngIf="validateAssetCd(element)" color="primary"  (change)="selectAsset(element,$event.checked)"
+                    [checked]="compareValue(element)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="siNo">
+                <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }}</th>
+                <td mat-cell *matCellDef="let element; let i = index;"> {{getIndexValue(i+1)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="codeSrNo">
+                <th mat-header-cell *matHeaderCellDef> {{ 'SR_ASSET_CODE_SERIAL_NO_EQUIPMENT_CODE_GRID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.assetCode != '' ? element.assetCode : '-'}} <br />
+                  <span style="color:brown"> {{element?.serialNo != '' ? element?.serialNo : '-'}}  </span> <br />
+                    <span >{{element.equipmentCode != '' ? element.equipmentCode : '-'}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="deptSubDept">
+                <th mat-header-cell *matHeaderCellDef> {{ 'SR_DEPART_SUB_DEPART_GRID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.departmentName != '' ? element.departmentName : '-'}} <br />
+                  <span style="color:brown"> {{element?.subDepartment != '' ? element?.subDepartment : '-'}}  </span> 
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="modelManufacture">
+                <th mat-header-cell *matHeaderCellDef> {{ 'SR_ASSET_MODEL_MANUFACTURER_GRID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.modelName != '' ? element.modelName : '-'}}  <br />
+                  <span style="color:brown"> {{element?.manufacturerName != '' ? element?.manufacturerName : '-'}}  </span> 
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="groupCommonName">
+                <th mat-header-cell *matHeaderCellDef> {{ 'SR_ASSET_GROUP_COMMON_NAME_GRID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.assetGroupName != '' ? element.assetGroupName : '-'}}<br />
+                  <span style="color:brown"> {{element.assetCommonName != '' ? element.assetCommonName : '-'}}  </span> </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assigneeInfo">
+                <th mat-header-cell *matHeaderCellDef> {{ 'SR_ASSIGNED_TO_INFO_GRID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.assignedTo != '' ? element.assignedTo : '-'}} </td>
+              </ng-container> -->
+
+
+              <!-- old cmnt start -->
+              <!-- <ng-container matColumnDef="serialNo">
+                <th mat-header-cell *matHeaderCellDef> {{ 'ASSET_SERIAL_NO' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.serialNo}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="model">
+                <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_NAME' | translate }} </th>
+                <td mat-cell *matCellDef="let element" matTooltip="{{element?.modelName}}">
+                  {{ (element?.modelName.length>15) ? (element?.modelName | slice:0:15)+'...' : (element?.modelName)
+                  }}
+                </td>
+              </ng-container> -->
+              <!-- old cmnt end -->
+
+              <!-- <ng-container matColumnDef="add">
+                <th mat-header-cell *matHeaderCellDef>{{ 'MAINTENANCE_ADD_ASSETS' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+
+                  <mat-icon *ngIf="validateAssetCd(element)" (click)="addAssetToList(element)" color="primary" style="cursor: pointer;">add_circle</mat-icon>
+                  <div *ngIf="!validateAssetCd(element)"> Added</div>
+                </td>
+              </ng-container>
+
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index"></tr>
+
+            </table> -->
+          </div>
+
+          <div class="basic-container" style="height: 500px ;overflow-y: scroll;overflow-x: hidden;">
+            <div>
+              <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" [disabled]="assetModelList.length == 0"
+                  [(ngModel)]="selectAllFlag" (change)="multipleSelectAsset(selectAllFlag)"></mat-checkbox> <b> Select All</b>
+            </div>
+            
+            <mat-grid-list cols="1" gutterSize="1px" rowHeight="130px">
+              <mat-grid-tile *ngFor="let element of assetModelList; let i = index">
+                <mat-card [style.width]="'90%'" class="custom-card"  > 
+                  <div fxLayout="row">
+                    <div fxLayout="column">
+                      <div >
+                        {{i+1}}
+                       </div>
+                      <mat-checkbox *ngIf="validateAssetCd(element)" style="margin-top: 25px;" color="primary"  (change)="selectAsset(element,$event.checked)"
+                      [checked]="compareValue(element)">
+                      </mat-checkbox>
+                    </div> 
+                    <div fxFlex fxFlexAlign="center" style="margin-left: 20px;">
+                      
+                      <div fxLayout="row" style="width: 100%;">
+                        <div fxLayout="column" style="width: 25%; ">
+                            <b>{{ 'SR_ASSET_CODE_SERIAL_NO_CARD' | translate }}</b>
+                            <div fxLayout="row">
+                                {{element.assetCode != '' ? element.assetCode : '-'}} / {{element.serialNo != '' ? element.serialNo : '-'}}
+                            </div><br>
+                            <b>{{ 'MODEL_NAME' | translate }}</b>
+                            <div fxLayout="row">
+                              {{element.modelName != '' ? element.modelName : '-'}}
+                            </div><br>
+                        </div>
+                        
+                        <div fxLayout="column" style="width: 40%;">
+                            <b>{{ 'SR_DEPART_SUB_DEPART_CARD' | translate }}</b>
+                            <div fxLayout="row">
+                              {{element.departmentName != '' ? element.departmentName : '-'}} / {{element.subDepartment != '' ? element.subDepartment : '-'}}
+                            </div><br>
+                            <b>{{ 'MANUFACTURER' | translate }}</b>
+                            <div fxLayout="row">
+                                {{element.manufacturerName != '' ? element.manufacturerName : '-'}}
+                            </div><br>
+                            <div fxLayout="row" *ngIf="element.scheduleAlreadyExistForPeriod && validateAssetCd(element)" class="color-blue">Asset already registered under schedule {{element.scheduleAlreadyExistForPeriodScheduleName}}</div>
+                            <div fxLayout="row" *ngIf="!validateAssetCd(element)" class="color-blue">Asset Already Added in This Schedule</div>
+                        </div>
+
+                        <div fxLayout="column" style="width: 35%;">
+                            <b>{{ 'ASSET_ASSIGNEE' | translate }}</b>
+                            <div fxLayout="row">
+                              {{element.assignedTo != '' ? element.assignedTo : '-'}}
+                            </div><br>
+                            <b>{{ 'ASSET_GROUP' | translate }}</b>
+                            <div fxLayout="row">
+                                {{element.assetGroupName != '' ? element.assetGroupName : '-'}}
+                            </div><br>
+                        </div>
+                    </div>
+          
+                    </div>
+                  </div>
+                </mat-card>
+              </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+
+
+
+      </div>
+        <div style="border-left: 2px solid green;" fxFlex="100" fxLayout="column" fxFlex="45">
+
+          <div style="display: flex;padding: 5px;">
+
+            <div class="input-label">{{'SELECTED_ASSET' | translate }}</div>
+
+          </div>
+
+          <div style="height: 500px;overflow-y: scroll;overflow-x: hidden;" fxLayout="column">
+            <mat-grid-list cols="1" gutterSize="1px" rowHeight="130px">
+              <mat-grid-tile *ngFor="let assetAdded of swapAssetList; let i = index">
+            <mat-card [style.width]="'90%'" class="custom-card">
+
+              <div fxLayout="column">
+              <div style="font-size: 13px !important">{{i+1}}</div>
+              <div style="margin-top: 23px;">
+                <mat-icon (click)="removeSelectedAssetFromList(assetAdded)" color="warn"
+                  style="font-size: 17px !important;cursor: pointer;">remove_circle_outline</mat-icon>
+              </div>
+              </div>
+
+              <div  fxLayout="column" fxFlex="100" style="margin-left: 20px;">  
+              <div fxLayout="row" fxFlex="100" style="width: 100%;">
+                <div style="font-size: 11px !important ;width: 30%"><b>{{ 'SR_ASSET_CODE_SERIAL_NO_CARD' | translate }}</b></div>
+                <div style="font-size: 11px !important ;width: 35%"><b>{{ 'SR_DEPART_SUB_DEPART_CARD' | translate }}</b></div>
+                <div style="font-size: 11px !important ;width: 35%"><b>{{ 'ASSET_ASSIGNEE' | translate }}</b></div>
+              </div>
+              <div fxLayout="row" fxFlex="100" style="width: 100%;">
+                <div style="font-size: 11px !important; width: 30%">{{assetAdded.assetCode != '' ? assetAdded.assetCode : '-'}} / {{assetAdded.serialNo != '' ? assetAdded.serialNo : '-'}}</div>
+                <div style="font-size: 11px !important; width: 35%">{{assetAdded.departmentName != '' ? assetAdded.departmentName : '-'}} / {{assetAdded.subDepartment != '' ? assetAdded.subDepartment : '-'}}</div>
+                <div style="font-size: 11px !important; width: 35%">{{assetAdded.assignedTo != '' ? assetAdded.assignedTo : '-'}}</div>
+              </div><br>
+              <div fxLayout="row" fxFlex="100" style="width: 100%;">
+                <div style="font-size: 11px !important ;width: 30%"><b>{{ 'MODEL_NAME' | translate }}</b></div>
+                <div style="font-size: 11px !important ;width: 35%"><b>{{ 'MANUFACTURER' | translate }}</b></div>
+                <div style="font-size: 11px !important ;width: 35%"><b>{{ 'ASSET_GROUP' | translate }}</b></div>
+              </div>
+              <div fxLayout="row" fxFlex="100" style="width: 100%;">
+                <div style="font-size: 11px !important; width: 30%">{{assetAdded.modelName != '' ? assetAdded.modelName : '-'}}</div>
+                <div style="font-size: 11px !important; width: 35%">{{assetAdded.manufacturerName != '' ? assetAdded.manufacturerName : '-'}}</div>
+                <div style="font-size: 11px !important; width: 35%">{{assetAdded.assetGroupName != '' ? assetAdded.assetGroupName : '-'}}</div>
+              </div>
+              
+            </div>
+            </mat-card>
+            </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+
+        
+          <div style="display: flex;padding: 5px;" fxLayout="row">
+            <div fxFlex="50">
+              <div class="input-label">{{'COMMON_SELECTED' | translate }} ({{swapAssetList.length}})</div>
+            </div>
+
+            <div fxFlex="50" fxLayoutAlign="end start">
+              <button mat-raised-button color="primary" [disabled]="swapAssetList.length == 0" (click)="updateAddedAssert()">{{ 'COMMON_SUBMIT' |
+                translate}}</button>
+            </div>
+          </div>
+        </div>
+
+      </fieldset>
+    </div>
+  </div>
+</div>

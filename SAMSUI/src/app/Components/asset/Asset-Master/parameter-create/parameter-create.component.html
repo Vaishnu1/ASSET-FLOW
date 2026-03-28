@@ -1,0 +1,160 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_PARAMETER' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeParameterModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="column" [formGroup]="parameterForm">
+
+    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+
+        <div style="padding: 10px;" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+
+          <div class="form-group h-55">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'SR_PARAMETER_TYPE' | translate }} <span class="mandatory-style">*</span>
+              </span>
+              <ng-select [items]="parameterTypeCombo" class="input-field" required bindLabel="parameterTypeNameDisp"
+                #parameterFocus (search)="loadParameterTypeComboData($event)"
+                (click)="loadParameterTypeComboData($event)" [virtualScroll]="true"
+                (scrollToEnd)="loadParameterTypeComboData({})"
+                (keyup.backspace)="loadParameterTypeComboData($event.target.value ? $event : 'back')"
+                (clear)="loadParameterTypeComboData('clear')" [loading]="scrollsyncParameterType"
+                loadingText="Loading..." (change)="selectedParameterTypeData($event)"
+                formControlName="parameterTypeNameDisp">
+              </ng-select>
+              <mat-error
+                *ngIf="parameterForm.controls.parameterTypeName.invalid && parameterForm.controls.parameterTypeName.touched">
+                <div class="err-field" *ngIf="parameterForm.controls.parameterTypeName.errors.required">
+                  Kindly Select The "{{ 'SR_PARAMETER_TYPE' | translate }}"</div>
+              </mat-error>
+            </div>
+          </div>
+
+          <div class="form-group h-55">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'SR_PARAMETER_GROUP' | translate }}
+              </span>
+              <ng-select [items]="parameterGroupCombo" class="input-field"  bindLabel="parameterGroupName"
+                #parameterFocus (search)="loadParameterGroupComboData($event)"
+                (click)="loadParameterGroupComboData($event)" [virtualScroll]="true"
+                (scrollToEnd)="loadParameterGroupComboData({})"
+                (keyup.backspace)="loadParameterGroupComboData($event.target.value ? $event : 'back')"
+                (clear)="loadParameterGroupComboData('clear')" [loading]="scrollsyncParameterGroup"
+                loadingText="Loading..." (change)="selectedParameterGroupData($event)"
+                formControlName="parameterGroupName">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <span class="input-label"> {{ 'SR_PARAMETER' | translate }}<span class="mandatory-style"> *</span> </span>
+              <input matInput formControlName="parameterName" class="input-field" required
+                (input)="checkUniqueConstrainForParameter()" [maxlength]="100"
+                oninput="this.value = this.value.toUpperCase()">
+              <mat-hint align="end">{{parameterForm.controls.parameterName.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="parameterForm.controls.parameterName.errors && parameterForm.controls.parameterName.touched">
+                <div class="err-field" *ngIf="parameterForm.controls.parameterName.errors.required">"{{ 'SR_PARAMETER' |
+                  translate
+                  }}" Is Required</div>
+                <div class="err-field" *ngIf="parameterForm.controls.parameterName.errors.notUnique">
+                  {{ErrorMsgParameter}}</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group h-55">
+            <div class="example-full-width check-box">
+              <mat-checkbox class="example-margin input-label" color="primary" formControlName="active" [tabIndex]=19>
+                {{'COMMON_ACTIVE' | translate }}
+              </mat-checkbox>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="padding: 10px;" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+
+          <div class="form-group h-55">
+            <div class="example-full-width">
+              <span class="input-label">{{ 'UOM_NAME' | translate }}</span>
+              <ng-select class="input-field" formControlName="uomCd" (search)="listOfUOM($event)"
+                (click)="listOfUOM({})" (scrollToEnd)="listOfUOM({})"
+                (keyup.backspace)="listOfUOM($event.target.value ? $event : 'back')" (clear)="listOfUOM('clear')"
+                [items]="uomCombo" bindLabel="uomCode" bindValue="uomCode" [virtualScroll]="true"
+                [loading]="scrollUomsync" (change)="getUOMValue($event)">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-group h-55">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'PARAMETER_INPUT_TYPE' | translate }} <span class="mandatory-style">*</span>
+              </span>
+              <ng-select class="input-field" formControlName="inputType" [items]="inputTypeList" bindLabel="name"
+                bindValue="name" (change)="changeFieldsForInputType($event)" tabindex="3">
+              </ng-select>
+              <mat-error *ngIf="parameterForm.controls.inputType.invalid && parameterForm.controls.inputType.touched">
+                <div class="error-message" *ngIf="parameterForm.controls.inputType.errors.required">
+                  {{ 'PARAMETER_INPUT_TYPE' | translate }} is Required </div>
+              </mat-error>
+            </div>
+          </div>
+
+
+          <div class="form-group h-55" *ngIf="parameterForm.controls.inputType.value === 'Number'">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10 }}">
+
+              <mat-label class="input-label">{{'PARAMETER_DEFAULT_VALUE' | translate}}<span class="mandatory-style">
+                  *</span>
+              </mat-label>
+              <input matInput class="input-field" #supplierSite formControlName="defaultValue" [tabIndex]=2
+                (input)="formOneValidation()" [maxlength]="10" oninput="this.value = this.value.toUpperCase()">
+              <mat-hint align="end">{{parameterForm.controls.defaultValue.value?.length || 0}}/10
+              </mat-hint>
+            </mat-form-field>
+          </div>
+
+
+          <div class="form-group h-55" *ngIf="parameterForm.controls.inputType.value === 'Number'">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10 }}">
+              <mat-label class="input-label">{{'PARAMETER_MIN_ALLOWED_VALUE' | translate}}<span class="mandatory-style">
+                  *</span></mat-label>
+              <input matInput class="input-field" formControlName="minAllowedValue" [tabIndex]=2
+                (input)="formOneValidation()" [maxlength]="10" oninput="this.value = this.value.toUpperCase()">
+              <mat-hint align="end">{{parameterForm.controls.minAllowedValue.value?.length || 0}}/10</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group h-55" *ngIf="parameterForm.controls.inputType.value === 'Number'">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10 }}">
+              <mat-label class="input-label">{{'PARAMETER_MAX_ALLOWED_VALUE' | translate}}<span class="mandatory-style">
+                  *</span></mat-label>
+              <input matInput class="input-field" formControlName="maxAllowedValue" [tabIndex]=2
+                (input)="formOneValidation()" [maxlength]="10" oninput="this.value = this.value.toUpperCase()">
+              <mat-hint align="end">{{parameterForm.controls.maxAllowedValue.value?.length || 0}}/10</mat-hint>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div fxLayoutAlign="center center" style="margin-top:20px;">
+      <button mat-raised-button class="space" color="primary" (click)="submitParameter()"
+        [disabled]="parameterForm.invalid || !parameterForm.dirty || uploadParameterFlag">
+        <span *ngIf="!uploadParameterFlag">{{displayButton}}</span>
+        <span *ngIf="uploadParameterFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+
+  </form>
+</div>

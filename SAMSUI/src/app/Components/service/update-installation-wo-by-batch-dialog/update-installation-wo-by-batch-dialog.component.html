@@ -1,0 +1,74 @@
+<div fxLayout="column">
+    <div fxFlex="100"> 
+      <div fxLayout="row"> 
+        <div fxFlex="95">
+          <h4 class="section_title"> {{ 'SR_INSTALLATION_BATCH_UPDATE' | translate }} </h4>
+        </div>
+        
+        <div fxFlex="5" class="first-title"> 
+            <mat-icon class="close-icon" (click)="closeDialog()">highlight_off</mat-icon>
+        </div>
+      </div> 
+   
+
+    <div>
+        <div class="confirmation-message input-label">
+            <div [innerHTML]="confirmationTitle"></div>
+        </div>
+        <mat-dialog-content>
+            <div class="table-container">
+                <table mat-table [dataSource]="installationSrList">
+
+                    <ng-container matColumnDef="assetCode">
+                        <th mat-header-cell *matHeaderCellDef id="assetCode" style="width: 20%; text-align: center;">{{'ASSET_CODE' | translate}}</th>
+                        <td mat-cell *matCellDef="let element;" style="width: 20%; text-align: center;"> {{element.assetCode}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serialNo">
+                        <th mat-header-cell *matHeaderCellDef id="serialNo" style="width: 20%; text-align: center;">{{'ASSET_SERIAL_NO' | translate}}</th>
+                        <td mat-cell *matCellDef="let element;" style="width: 20%; text-align: center;"> {{element.assetSerialNo}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="srStatus">
+                        <th mat-header-cell *matHeaderCellDef id="srStatus" style="width: 15%; text-align: center;">{{'SR_STATUS' | translate}}</th>
+                        <td mat-cell *matCellDef="let element;" style="width: 15%; text-align: center;"> {{element.srStatusName}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="srNo">
+                        <th mat-header-cell *matHeaderCellDef id="srNo" style="width: 15%; text-align: center;">{{'SR_NO' | translate}}</th>
+                        <td mat-cell *matCellDef="let element;" style="width: 15%; text-align: center;"> {{element.srNo}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="selectedForBatchUpdate">
+                        <th mat-header-cell *matHeaderCellDef id="selectedForBatchUpdate" style="width: 15%; text-align: center;">
+                            <mat-checkbox [(ngModel)]="selectedAllForBatchUpdate" [ngModelOptions]="{standalone: true}" color="primary"
+                            (change)="selectAllForBatchUpdate($event)" matTooltip="{{'COMMON_SELECT_ALL' | translate}}"></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index" style="width: 15%; text-align: center;">
+                            <mat-checkbox [(ngModel)]="element.selectedForBatchUpdate" [ngModelOptions]="{standalone: true}" color="primary"
+                            (change)="changeSelectionStatusOfCheckBox($event, i)"></mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                </table>
+                <mat-card class="no_records_found" *ngIf="length==0 && !subLoader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+        
+                <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-dialog-actions fxLayoutAlign="center center">
+        <div>
+            <button mat-raised-button color="primary"  (click)="closeDialog()">{{'COMMON_CANCEL' | translate}}</button>
+            <button mat-raised-button color="primary"  (click)="confirm()" [disabled]="length === 0">{{'COMMON_SUBMIT' | translate}}</button>
+        </div>
+    </mat-dialog-actions>
+</div>

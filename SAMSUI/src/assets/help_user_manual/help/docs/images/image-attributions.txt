@@ -1,0 +1,4 @@
+# Mention image name and download url
+manual.svg/favicon.ico : https://www.flaticon.com/free-icon/manual_2055730?term=manual&page=2&position=90
+404.jpg : https://www.freepik.com/free-vector/404-error-page-found_5703361.htm#page=1&query=page%20not%20found&position=3
+underconstruction.jpg : https://www.freepik.com/free-vector/construction-set-icons_6589393.htm#page=1&query=under%20construction&position=3

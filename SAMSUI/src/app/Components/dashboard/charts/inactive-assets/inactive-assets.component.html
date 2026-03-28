@@ -1,0 +1,68 @@
+<div fxLayout="column">
+  <div class="view-financialyear" fxLayout="row" fxLayoutAlign="space-between center" style="padding: 0px 10px;">
+    <div *ngIf="dropDownDisplayForRetDisChart" fxFlex="30">
+      <p class="input-label"> {{ 'DASHBOARD_FY_YEAR' | translate }} </p>
+      <ng-select class=" input-field" [items]="financialYearList" [(ngModel)]="financialYear"
+        bindLabel="name" bindValue="name" (click)="changeFinancialYear()">
+      </ng-select>
+    </div>
+
+    <div *ngIf="dropDownDisplayForAssetChart" fxFlex="30">
+      <p class="input-label"> {{ 'DASHBOARD_FY_YEAR' | translate }} </p>
+      <ng-select class=" input-field" [items]="financialYearList" [(ngModel)]="financialYear"
+        bindLabel="name" bindValue="name" (change)="changeFinancialYear()">
+      </ng-select>
+      <span style="color: red;">{{totalAssets <= 0 ? "Kindly update the purchase date to get actual data" : ""}}</span>
+    </div>
+
+    <div *ngIf="dropDownDisplayForAssetChart" fxFlex="30">
+      <p class="input-label"> Assets </p>
+      <ng-select class=" input-field" [items]="AssetType" [(ngModel)]="value" bindLabel="name"
+        bindValue="name" (change)="getCategoryComboValue($event)">
+      </ng-select>
+    </div>
+  </div>
+
+  <div *ngIf="dropDownDisplayForAssetChart" style="padding: 0px 10px;">
+    <br>
+    <span class="input-label"> Total No Of Assets </span>
+    <span class="input-label" style="margin-left: 18px;"> :</span>
+    <span class="input-label mandatory-style"> {{totalAssets}}</span>
+    <br>
+    <span class="input-label">Total Value Of Assets </span>
+    <span class="input-label"> :</span>
+    <span class="input-label mandatory-style"> {{ totalValueOfAssets | currency:locCurrCd }}</span>
+  </div>
+
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center">
+    <div *ngIf="retDisChart"
+      style="height: 350px !important; width: 450px !important; bottom: 0px !important" echarts
+      class="demo-chart" (chartClick)="onChartClick($event)" [options]="option " theme={{theme}}>
+    </div>
+
+    <div *ngIf="assetChart"
+      style="height: 350px !important; width: 750px !important; bottom: 0px !important" echarts
+      class="demo-chart" (chartClick)="onAssetChartClick($event)" [options]="option1" theme={{theme}}>
+    </div>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <div *ngIf="noRecordForAssetChart">
+      <div class="no_records_found">
+        No Record Found for the selected year...
+      </div>
+    </div>
+
+    <div *ngIf="noRecordForRetDisChart">
+      <div class="no_records_found">
+        No Record Found for the selected year...
+      </div>
+    </div>
+
+    <div *ngIf="noRecord">
+      <div class="no_records_found">
+        No Record Found for the selected year...
+      </div>
+    </div>
+  </div>
+</div>

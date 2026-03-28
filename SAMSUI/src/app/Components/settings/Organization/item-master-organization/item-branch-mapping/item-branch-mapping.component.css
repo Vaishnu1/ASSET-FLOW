@@ -1,0 +1,9 @@
+.card-style{
+    background: #fff;
+    color: rgba(0,0,0,.87);
+    border-radius: 0%; 
+    padding: 20px;
+    position: fixed;
+      bottom: 10%;
+      left: 45%;
+  }

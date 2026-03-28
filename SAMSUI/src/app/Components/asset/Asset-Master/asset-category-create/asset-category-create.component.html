@@ -1,0 +1,146 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_ASSET_CATEGORY' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="assetCategoryForm">
+    <div fxLayout="row">
+      <div fxFlex="50">
+        <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}" class=" example-full-width">
+          <mat-label class="input-label"> {{'ASSET_CATEGORY' | translate}}
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <input matInput formControlName="assetCategoryName" #assetcategoryFocus [maxlength]="100"
+            (input)="checkForAssetCategoryNameExistence()" oninput="this.value = this.value.toUpperCase()"
+            class="input-field">
+          <mat-hint align="end">{{assetCategoryForm.controls.assetCategoryName.value?.length || 0}}/100</mat-hint>
+          <mat-error
+            *ngIf="assetCategoryForm.controls.assetCategoryName.errors && assetCategoryForm.controls.assetCategoryName.touched">
+            <div class="err-field" *ngIf="assetCategoryForm.controls.assetCategoryName.errors.required">
+            "{{'ASSET_CATEGORY' | translate}}" Is Required</div>
+            <div class="err-field" *ngIf="assetCategoryForm.controls.assetCategoryName.errors.notUnique">{{ErrorMsg}}</div>
+
+          </mat-error>
+        </mat-form-field>
+
+        <div class="pad-1-per">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_5 }}">
+            <mat-label class="example-label  input-label"> {{ 'ASSET_CATEGORY_CODE' | translate }}
+            </mat-label>
+            <input #assetCategoryCode (input)="checkForAssetCategoryCodeExistence()" matInput formControlName="assetCategoryCode" [maxlength]="5"
+              oninput="this.value = this.value.toUpperCase()" class="input-field">
+            <mat-hint align="end">{{assetCategoryForm.controls.assetCategoryCode.value?.length || 0}}/5
+            </mat-hint>
+            <mat-error *ngIf="assetCategoryForm.controls.assetCategoryCode.errors && assetCategoryForm.controls.assetCategoryCode.touched">
+              <div class="err-field" *ngIf="assetCategoryForm.controls.assetCategoryCode.errors.notUnique">{{ErrorMsgCode}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+      </div>
+
+      <div fxFlex="50">
+
+        <!-- <div class="col-md-12">
+            <div class="form-group">
+              <p class="spacing"> {{'ASSET_VERTICAL' | translate}}  <span class="mandatory-style">*</span> </p>
+              <ng-select
+                      formControlName="businessType"
+                      (search) ="listOfBusinessType($event)"
+                      (change)="getBusinessTypeComboValue($event)"
+                      [items]="businessType" bindLabel="businessTypeValue" bindValue="businessTypeValue" tabindex="2">
+              </ng-select>
+            </div>
+          </div> -->
+
+        <div fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100">
+
+          <div>
+            <div>
+              <h4 class="input-label">Tabs to be enabled in Model screen</h4>
+            </div>
+            <div class="height-30">
+              <mat-checkbox class="example-margin input-field" color="primary" formControlName="customFields"
+                tabindex="9"  [disabled]="viewFlag">{{ 'MODEL_CUSTOM_FIELDS' | translate }}</mat-checkbox>
+            </div>
+            <div class="height-30">
+              <mat-checkbox class="example-margin input-field" color="primary" formControlName="depreciation"
+                tabindex="4" [disabled]="viewFlag">{{'MODEL_DEPRICIATION' | translate}}</mat-checkbox>
+            </div>
+            <div class="height-30">
+              <mat-checkbox class="example-margin input-field" color="primary" formControlName="maintenanceSchedule"
+                tabindex="9" [disabled]="viewFlag">{{'ASSET_MAINTENANCE_SCHEDULING' | translate}}</mat-checkbox>
+            </div>
+            <div class="height-30">
+              <mat-checkbox class="example-margin input-field" color="primary" formControlName="childModel"
+                tabindex="9" [disabled]="viewFlag">{{'CHILD_MODEL' | translate}}</mat-checkbox>
+            </div>
+            <div class="height-30">
+              <mat-checkbox class="example-margin input-field" color="primary" formControlName="modelItems"
+                tabindex="5" [disabled]="viewFlag">{{'MODEL_ITEMS' | translate}}</mat-checkbox>
+            </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="selfAnalysis"
+                  tabindex="6" [disabled]="viewFlag">{{'MODEL_SELF_ANALYSIS' | translate}}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="document"
+                  tabindex="7" [disabled]="viewFlag">{{'MODEL_DOCUMENT' | translate}}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="checkList"
+                  tabindex="8" [disabled]="viewFlag">{{'SR_CHECK_POINTS' | translate}}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="additionalInfo"
+                  tabindex="9" [disabled]="viewFlag">{{'MODEL_ADDITIONAL_INFO' | translate}}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="inventoryModule"
+                  tabindex="9" [disabled]="viewFlag">{{ 'MENU_INVENTORY_MODULE' | translate }}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="technicalSpecelist"
+                  tabindex="9" [disabled]="viewFlag">{{ 'TECHNICAL_SPECELIST' | translate }}</mat-checkbox>
+              </div>
+              <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="solutionBank"
+                  tabindex="9" [disabled]="viewFlag">{{'MODEL_SOLUTION_BANK' | translate}}</mat-checkbox>
+              </div>
+              <!-- <div class="height-30">
+                <mat-checkbox class="example-margin input-field" color="primary" formControlName="specification"
+                  tabindex="3" [disabled]="true">{{'MODEL_SPECIFICATION' | translate}}</mat-checkbox>
+              </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <mat-checkbox class="example-margin" [(ngModel)]="checked">Details / Description</mat-checkbox>
+          </div>
+        </div>
+      </div>  -->
+
+
+    <div fxLayoutAlign="center center" style="margin-top:20px;">
+      <!-- <button mat-raised-button class="space col-md-2" color="primary" (click)="closeModal()">{{'COMMON_BACK' |translate}}</button> -->
+      <button mat-raised-button class="space" color="primary" (click)="submit()" [style.visibility]="viewFlag ? 'hidden': 'visible'"
+        [disabled]="assetCategoryForm.invalid || !assetCategoryForm.dirty || uploadFlagAssetCategory">
+        <span *ngIf="!uploadFlagAssetCategory">{{displayButton}}</span>
+        <span *ngIf="uploadFlagAssetCategory">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

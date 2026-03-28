@@ -1,0 +1,32 @@
+<div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start">
+        <div>
+            <h2 matDialogTitle>{{ locValidMsg }}</h2>
+        </div>
+        <div>
+            <button mat-icon-button mat-dialog-close class="close-button">
+                <mat-icon aria-label="Close dialog" class="close-icon">close</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start">
+
+            <table>
+                <tr>
+                    <th>S.No</th>
+                    <th>Purchase Request No</th>
+                    <th>Purchase Order No</th>
+                    <th>Remarks</th>
+                </tr>
+                <tr *ngFor="let item of tempPRConvertPOData; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.prReqNo }}</td>
+                    <td>{{ item.poNo }}</td>
+                    <td>{{ item.remarks }}</td>
+                </tr>
+            </table>
+   
+    </div>
+
+</div>

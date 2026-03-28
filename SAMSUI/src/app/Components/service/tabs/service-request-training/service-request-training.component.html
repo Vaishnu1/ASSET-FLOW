@@ -1,0 +1,176 @@
+<div fxLayout="column" class="trainging-model">
+  <div fxFlex="100">
+    <div fxLayout="row" class="mb-10" class="top-menu">
+      <div fxFlex="95">
+        <h4 class="section_title"> {{headingDisplay}} {{'TRAINING' | translate}} </h4>
+      </div>
+
+      <div fxFlex="5" class="first-title">
+        <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <div fxLayout="row" class="mb-10">
+      <form [formGroup]="srTrainingForm" fxFlex="100" class="modalForm">
+
+        <div fxLayout="row">
+          <div fxFlex="25">
+
+            <div class="example-full-width">
+              <div class="form-group">
+                <span class="input-label"> {{ 'TRAINING_TYPE' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select  formControlName="trainingTypeName" [items]="trainingType"
+                  bindLabel="name" bindValue="name" dropdownPosition=top (change)="selectedTrainingType($event)">
+                </ng-select>
+                <mat-error
+                  *ngIf="srTrainingForm.controls.trainingTypeName.invalid && srTrainingForm.controls.trainingTypeName.touched">
+                  <div class="err-field" *ngIf="srTrainingForm.controls.trainingTypeName.errors.required">
+                    {{'TRAINING_TYPE' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class=" input-label"> {{'TRAINING_DESC' | translate}} <span class="mandatory-style">*</span>
+              </mat-label>
+              <textarea matInput formControlName="trainingDesc" [maxlength]="500"></textarea>
+
+              <mat-error
+              *ngIf="srTrainingForm.controls.trainingDesc.invalid && srTrainingForm.controls.trainingDesc.touched">
+              <div class="err-field" *ngIf="srTrainingForm.controls.trainingDesc.errors.required">
+                {{'TRAINING_DESC' | translate}} is Required </div>
+            </mat-error>
+
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class=" input-label"> {{'TRAINING_COMPANY' | translate}} <span class="mandatory-style">*</span>
+              </mat-label>
+              <input matInput formControlName="trainingCompany" [maxlength]="25">
+
+              <mat-error
+              *ngIf="srTrainingForm.controls.trainingCompany.invalid && srTrainingForm.controls.trainingCompany.touched">
+              <div class="err-field" *ngIf="srTrainingForm.controls.trainingCompany.errors.required">
+                {{'TRAINING_COMPANY' | translate}} is Required </div>
+            </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class=" input-label">{{ 'TRAINED_DATE' | translate}}</mat-label>
+              <input matInput (click)="trainingDtDisp.open()" [matDatepicker]="trainingDtDisp"
+                formControlName="trainingDtDisp" required>
+              <mat-datepicker-toggle matSuffix [for]="trainingDtDisp"></mat-datepicker-toggle>
+              <mat-datepicker #trainingDtDisp></mat-datepicker>
+              <mat-error
+              *ngIf="srTrainingForm.controls.trainingCompany.invalid && srTrainingForm.controls.trainingCompany.touched">
+              <div class="err-field" *ngIf="srTrainingForm.controls.trainingCompany.errors.required">
+                {{'TRAINED_DATE' | translate}} is Required </div>
+            </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class=" input-label"> {{'TRAINEER_NAME' | translate}}
+                  </mat-label>
+                  <input matInput formControlName="traineerName" [maxlength]="25">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class=" input-label"> {{'TRAINEER_CONTACT_NO' | translate}}
+              </mat-label>
+              <input matInput formControlName="traineerContactNo" [maxlength]="25">
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class=" input-label"> {{'TRAINEER_EMAIL_ID' | translate}}
+              </mat-label>
+              <input matInput formControlName="traineerEmailId" [maxlength]="25">
+            </mat-form-field>
+
+          </div>
+
+          <div fxFlex="2">
+          </div>
+          <div fxFlex="46">
+
+            <div>
+              <h6 class="panel-header">{{ 'TRAINING_EMPLOYEES' | translate}}</h6>
+            </div>
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'DESIGNATION_NAME' | translate }} </span>
+                <ng-select [items]="designationName" bindLabel="designationName" bindValue="designationName"
+                  (search)="listOfDesignationName($event, false)" (click)="listOfDesignationName($event, false)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfDesignationName({}, true)" (keyup.backspace)="listOfDesignationName({}, true)" (clear)="listOfDesignationName('clear', true)" [loading]="scrollsyncDesignationName"
+                  loadingText="Loading..." (change)="selectedDesignation($event)" formControlName="designationName">
+                </ng-select>
+              </div>
+            </div>
+
+            <table mat-table [dataSource]="employeeList" matSort>
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+              </ng-container>
+              <ng-container matColumnDef="employeeDispName">
+                <th mat-header-cell *matHeaderCellDef style="width:55%;"> {{ 'EMPLOYEE_NAME' | translate }} </th>
+                <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.employeeDispName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="add">
+                <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'ADD' | translate }} </th>
+                <td mat-cell *matCellDef="let element">
+
+                  <mat-icon (click)="addEmployeeToList(element)"
+                    style="color: blue; font-size: 17px !important;cursor: pointer;">add_circle</mat-icon>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="dispSRTrainingEmpColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: dispSRTrainingEmpColumns;">
+            </table>
+
+          </div>
+          <div fxFlex="2">
+          </div>
+          <div fxFlex="25">
+            <div>
+              <h6 class="panel-header">{{ 'TRAINED_EMPLOYEES' | translate}}</h6>
+            </div>
+
+            <div style="height: 300px;overflow-y: scroll;overflow-x: hidden;">
+              <mat-card *ngFor="let srTrainingEmpAdded of srTrainingEmpList; let i = index">
+                <div  fxLayout="column" fxFlex="100">
+                  <div fxLayout="row" fxFlex="100">
+
+                    <div style="font-size: 11px !important;">{{i+1}}. {{srTrainingEmpAdded.employeeDispName}}</div>
+                  </div>
+                <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end">
+
+                  <mat-icon (click)="removeEmpFromList(srTrainingEmpAdded)"
+                    style="font-size: 17px !important;cursor: pointer;">remove_circle_outline</mat-icon>
+
+                </div>
+                </div>
+            
+            </mat-card>
+          </div>
+
+        </div>
+    </div>
+
+    <div fxLayout="row" class="request-training-button">
+      <button *ngIf="modeDisplay" [disabled]="srTrainingForm.invalid" mat-raised-button class="space col-md-3"
+        color="primary" (click)="saveUpdateSrTrainingInfo()">
+        <span *ngIf="!uploadFlag"> {{buttonDisplay}} </span>
+        <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button>
+    </div>
+
+    </form>
+  </div>
+</div>
+</div>

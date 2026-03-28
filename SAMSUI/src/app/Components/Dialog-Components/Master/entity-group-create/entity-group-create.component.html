@@ -1,0 +1,51 @@
+<mat-icon class="close-icon-large" (click)="closeEntityGroupModal()">highlight_off</mat-icon>
+<form [formGroup]="entityGroupForm">
+  <div class="row closebutton">
+    <div class="col-md-10">
+      <h6 class="section_title">{{headingDisplay}} {{ 'MENU_ENTITY_GROUP' | translate }}</h6>
+    </div>
+  </div>
+  <fieldset>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="example-label input-label">{{ 'ENTITY_GROUP' | translate }}</mat-label>
+            <textarea #entityfocus id="entityGroupName" matInput class="text-to-uppercase"
+              formControlName="entityGroupName" required tabindex="1" (input)="checkForEntityGroupExistence()"
+              [maxlength]="100" oninput="this.value = this.value.toUpperCase()"></textarea>
+            <mat-hint align="end">{{entityGroupForm.controls.entityGroupName.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="entityGroupForm.controls.entityGroupName.errors && entityGroupForm.controls.entityGroupName.touched">
+              <div *ngIf="entityGroupForm.controls.entityGroupName.errors.required">{{ 'ENTITY_GROUP' | translate }} is
+                Required </div>
+              <div *ngIf="entityGroupForm.controls.entityGroupName.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300 }}">
+            <mat-label class="example-label input-label">{{ 'COMMON_DESC' | translate }}</mat-label>
+            <textarea id="entityGroupDesc" matInput class="text-to-uppercase" formControlName="entityGroupDesc"
+              tabindex="2" [maxlength]="300" oninput="this.value = this.value.toUpperCase()"></textarea>
+            <mat-hint align="end">{{entityGroupForm.controls.entityGroupDesc.value?.length || 0}}/300</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="row">
+    <div class="col-md-12 rightbutton">
+      <button mat-raised-button class="space col-md-4" color="primary" (click)="submitEntityGroup()"
+        [disabled]="entityGroupForm.invalid || !entityGroupForm.dirty || uploadEntityGroupFlag" tabindex="3">
+        <span *ngIf="!uploadEntityGroupFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadEntityGroupFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+  </div>
+</form>

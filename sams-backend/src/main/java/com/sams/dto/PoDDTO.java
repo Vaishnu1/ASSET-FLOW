@@ -1,0 +1,75 @@
+package com.sams.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+public class PoDDTO {
+    private Long poDtlId;
+    private Long poId;
+    private String poNo;
+    private Long poLineNo;
+    private Long itemId;
+    private String itemName;
+    private String itemDesc;
+    private String suppItemCd;
+    private String manufacturerPartNo;
+    private String uomCd;
+    private Double poQty;
+    private Long poBalanceQty;
+    private Long cancelQty;
+    private String cancelReasonDesc;
+    private Long receivedQty;
+    private Long invoicedQty;
+    private Double masterUnitPrice;
+    private Double unitPrice;
+    private Double locUnitPrice;
+    private Double poBasicAmt;
+    private Double localPoBasicAmt;
+    private String inspectionRequired;
+    private LocalDateTime poReqDt;
+    private LocalDateTime lastReceivedDt;
+    private String custPoNo;
+    private String remarks;
+    private String holdFlg;
+    private Long assetHdrId;
+    private String assetCode;
+    private Long srId;
+    private String srNo;
+    private String taxCd1;
+    private Double taxRate1;
+    private Double taxAmt1;
+    private String taxCd2;
+    private Double taxRate2;
+    private Double taxAmt2;
+    private String taxCd3;
+    private Double taxRate3;
+    private Double taxAmt3;
+    private Double itemTotalTaxAmt;
+    private Double netAmt;
+    private String shipType;
+    private LocalDateTime expectedDeliveryDate;
+    private Long prDtlId;
+    private Boolean prCancel;
+    private LocalDateTime invoiceRcvdDate;
+    private Long invoiceClear;
+    private Double pendingInvAmnt;
+    private Long rejectQty;
+    private Long poReqId;
+    private String poReqNo;
+    private LocalDateTime delCfmDt;
+    private Boolean poItemCancel;
+    private Double rtvQty;
+    private String createdBy;
+    private LocalDateTime createdDt;
+    private String updatedBy;
+    private LocalDateTime updatedDt;
+    private Long itemTypeId;
+    private String itemTypeName;
+    private String serialNo;
+    private String modelName;
+    private String assetGroupName;
+    private String poType;
+}

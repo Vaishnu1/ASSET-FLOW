@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Asset Optima </title>
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="././assets/images/ao_tab_logo.png" sizes="50x50">   
+<style> 
+.responsive-show-block {
+  display: none;
+}
+ 
+@media screen and (max-width : 767px) {
+  .responsive-show-block {
+    width: 340px;
+    height: 120px;
+    border-radius: 10px;
+    margin-top: 45vh;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+    background: #fff;
+    padding: 25px;
+    box-shadow: 0px 0px 6px 0px black;
+    color: red;
+    font-weight: 500;
+  }
+
+  .responsive-show-block h4 { 
+    margin-top: 45px;
+  }
+
+  .responsive-block {
+    display: none;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <div class="responsive-show-block">
+    <h4>Please download the mobile App for smaller devices</h4>
+  </div>
+<app-root  class="responsive-block">
+    <style> 
+        .center {
+          margin-top: 5vh;
+          font-family: 'Roboto', sans-serif;
+        }
+        .logo-design{
+          margin-top: 10vh;
+        }
+      </style>
+      <center class="logo-design" >
+          <img src="assets/images/ao_new_logo.png" alt="Logo" width="250">
+      </center>
+      <center class="center">
+        <img src="assets/images/largeloader.gif" alt="Loading..."> 
+      </center> 
+</app-root>
+</body>
+</html> 

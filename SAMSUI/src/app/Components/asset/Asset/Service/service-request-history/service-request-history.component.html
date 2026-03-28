@@ -1,0 +1,71 @@
+<div fxLayout="column" fxFlexFill>
+  <form>
+    <mat-card class="card-style">
+      <mat-card-content>
+        <div class="content-style" style="padding-top: 0.5%;">
+          <div class="example-container">
+
+            <div class="total-down-time" style="margin-bottom: 10px; font-weight: bold;text-align: right;">
+              Total Downtime: {{ totalDownTimeStr }}
+            </div>
+
+
+            <table mat-table [dataSource]="srDataSource">
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'COMMON_S_NO' | translate }} </th>
+                <td mat-cell *matCellDef="let element; let i=index;" class="table-cell-data"> {{i+1}} </td>
+              </ng-container>
+              <ng-container matColumnDef="srNo">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'SR_NO' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element.srNo}} </td>
+              </ng-container>
+              <ng-container matColumnDef="locationName">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data">{{'LOCATION_NAME' | translate}}</th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{ element.locationName }} </td>
+              </ng-container>
+              <ng-container matColumnDef="srType">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'SR_TYPE' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element.srType}} </td>
+              </ng-container>
+              <ng-container matColumnDef="srStatus">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'SR_STATUS' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element.srStatusName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="problemReported">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'SR_PROBLEM_REPORTED' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element.problemReported}} </td>
+              </ng-container>
+              <ng-container matColumnDef="totalDownHrs">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'SR_TOTAL_DOWN_HOURS' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element.totalDownHrsStr}} </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'COMMON_ACTION' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data">
+                  <button mat-icon-button matTooltipPosition="below" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                    (click)="viewServiceRequestDtl(element.srId,'view')">
+                    <mat-icon color="primary"><a>visibility</a></mat-icon>
+                  </button>
+                  <!-- <button *ngIf="!modeDisplay && element.srStatusName != 'CLOSED' && modelAccessModule.updateFlagDisplay" mat-icon-button matTooltipPosition="below" 
+                        matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="viewServiceRequestDtl(element.srId,'edit')">
+                        <mat-icon color="primary"><a>edit</a></mat-icon>
+                      </button> -->
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedSRColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: displayedSRColumns;">
+            </table>
+            <mat-card class="no_records_found" fxLayoutAlign="center center"
+              *ngIf="length=='0' && !subloader">{{'COMMON_NO_RECORDS_FOUND' | translate}}
+            </mat-card>
+            <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40" fxLayoutAlign="center center"></mat-spinner>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

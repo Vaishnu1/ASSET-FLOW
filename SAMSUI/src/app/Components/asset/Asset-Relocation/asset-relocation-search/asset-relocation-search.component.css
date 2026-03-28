@@ -1,0 +1,134 @@
+.breadcrumblink {
+  float: left;
+}
+
+.example-full-width {
+  width: 95%;
+}
+
+
+.content_section {
+  background-color: #ffffff;
+  height: auto;
+  padding: 15px;
+  width: 100%;
+}
+
+.mat-card {
+  margin-bottom: 1%;
+}
+
+.check-box {
+  margin-top: 4rem;
+}
+
+.space {
+  margin-left: 10px;
+}  
+
+legend {
+  background: transparent !important;
+  font-size: 13px;
+  width: auto;
+  border: 1px;
+  border-radius: 4px;
+  padding: 0px 6px 1px 8px;
+}
+
+.rightbutton {
+  text-align: right;
+  float: right;
+  margin-right: 1%;
+}
+
+.rightbuttonFooter {
+  text-align: right;
+  padding-bottom: 10px;
+}
+
+.btmfooter {
+  padding-right: 1px;
+  position: fixed;
+  bottom: 0px;
+  background-color: #4a27271f;
+  width: 100%;
+  height: 45px;
+  z-index: 1000;
+}
+
+.card-design {
+  border-radius: 0%;
+  width: 100%;
+  margin-right: 1%;
+}
+
+.mb-31 {
+  margin-top: 5px;
+}
+
+.header-font {
+  font-size: 14px;
+  color: #31a7c7;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 480;
+}
+
+::ng-deep .mat-tooltip {
+  color: #000 !important;
+  background: #fff;
+  border:1px solid #ccc;
+  padding:7px;
+  font-size: 12px;
+}
+
+.panel-form-po{
+  border-radius: 10px;
+  margin-left: 0px;
+  margin-right: 0px;     
+  margin-bottom: 5px;
+  background-color: #fafafa;
+}
+
+.fieldset-style{
+  background-color: cornsilk;
+  border-radius: 10px;
+}
+
+.no_records_found {
+  width: 100%;
+  text-align: center;
+}
+
+.relocate-form {
+  margin-top: 15px; 
+}
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 10px;
+}
+
+th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+  padding-right: 10px;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  padding: 5px;
+}
+
+tr th:not(:first-child) {
+  min-width: 115px;
+}
+
+tr th:nth-child(2) {
+  min-width: 35px;
+}
+
+.ASSET_CODE_CHANGE_REQUESTED {
+  color: crimson !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  
+}
+.ASSET_CODE_CHANGE_REQUESTED:hover {
+  border-bottom: 1px solid gray;
+}

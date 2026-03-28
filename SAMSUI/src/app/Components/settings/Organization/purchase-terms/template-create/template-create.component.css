@@ -1,0 +1,26 @@
+.example-full-width {
+    width: 90% !important;
+}
+
+.example-full-width-all {
+    width: 100% !important;
+}
+
+.section_title {
+    font-size: 22px;
+    color: #445c8f;
+}
+
+.field-top-margin {
+    margin-top: -18px;
+}
+
+.field-top-margin-increase {
+    margin-top: 10px;
+}
+
+.example-container {
+    max-height: 280px !important; 
+    overflow-y: auto !important; 
+    width: 100%; 
+}

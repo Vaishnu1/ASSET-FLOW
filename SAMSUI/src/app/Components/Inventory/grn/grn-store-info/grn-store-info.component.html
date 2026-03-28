@@ -1,0 +1,49 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h4 class="dialogue-box-header">GRN Additional Info</h4>
+        </div>
+
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon class="close-icon" (click)="closeGRNAdditionalInfoPopUp()">highlight_off</mat-icon>
+        </div>
+    </div>
+    <form [formGroup]="grnAdditionalInfoFormGroup" fxLayout="column">
+
+        <div class="form-group h-55">
+            <div class="example-full-width">
+                <span class="input-label"> Store <span class="mandatory-style">*</span> </span>
+                <ng-select class=" input-field" (search)="listOfStore($event)" (click)="listOfStore({})"
+                    (change)="getStoreValue($event)" formControlName="storeName" [virtualScroll]="true"
+                    (scrollToEnd)="listOfStore({})"
+                    (keyup.backspace)="listOfStore($event.target.value ? $event : 'back')"
+                    (clear)="listOfStore('clear')" [loading]="scrollStoreNamesync" [items]="storeList"
+                    bindLabel="storeName" bindValue="storeName">
+                </ng-select>
+                <mat-error *ngIf="grnAdditionalInfoFormGroup.controls.storeName.invalid && grnAdditionalInfoFormGroup.controls.storeName.touched">
+                    <div class="err-field" *ngIf="grnAdditionalInfoFormGroup.controls.storeName.errors.required">
+                      Store Name is Required </div>
+                </mat-error>
+            </div>
+        </div>
+
+        <div class="form-group h-55">
+            <div class="example-full-width">
+                <span class="input-label"> Manufacturer Part No </span>
+                <ng-select class=" input-field" (search)="listOfManufacturerPartNo($event)" (click)="listOfManufacturerPartNo({})"
+                    (change)="getManufacturerPartNoValue($event)" formControlName="manufacturerPartNo" [virtualScroll]="true"
+                    (scrollToEnd)="listOfManufacturerPartNo({})"
+                    (keyup.backspace)="listOfManufacturerPartNo($event.target.value ? $event : 'back')"
+                    (clear)="listOfManufacturerPartNo('clear')" [loading]="scrollManufacturerPartNosync" [items]="manufacturerPartNoList"
+                    bindLabel="comboDisp" bindValue="comboDisp">
+                </ng-select>
+            </div>
+        </div>  
+     
+    </form>
+    <div fxLayoutAlign="center center" style="margin-top: 20px;">
+        <button mat-raised-button color="primary" (click)="submitGRNAdditionalInfo()" [disabled]="(grnAdditionalInfoFormGroup.invalid || !grnAdditionalInfoFormGroup.dirty)">
+            Add
+        </button>
+    </div>
+</div>

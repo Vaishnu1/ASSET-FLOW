@@ -1,0 +1,51 @@
+
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_ASSET_TYPE' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="assetTypeForm">
+
+        <div fxLayout="column" fxFlex="100">
+
+          <div class="form-group" style="margin-top: 20px;">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 50 Character">
+              <mat-label class="example-label input-label"> {{'ASSET_TYPE' | translate}}
+                <span class="mandatory-style">*</span>
+              </mat-label>
+                <input matInput  formControlName="assetTypeName" (input)="checkForAssetTypeNameExistence()" oninput="this.value = this.value.toUpperCase()" class="font_styles" [maxlength]="50">
+                <mat-hint align="end">{{assetTypeForm.controls.assetTypeName.value?.length || 0}}/50</mat-hint>
+                <mat-error *ngIf="assetTypeForm.controls.assetTypeName.errors && assetTypeForm.controls.assetTypeName.touched">
+                    <div class="err-field" *ngIf="assetTypeForm.controls.assetTypeName.errors.required">"{{'ASSET_TYPE' | translate}}" Is Required </div>
+                    <div class="err-field" *ngIf="assetTypeForm.controls.assetTypeName.errors.notUnique">{{ErrorMsg}}</div>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+
+          <div class="form-group" style="margin-top: 20px;">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'ASSET_SUB_CATEGORY' | translate }} </span>
+                <ng-select class="sub-cat-fld" [items]="subCategoryCombo" bindLabel="subCategoryName"
+                  (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" formControlName="subCategoryName"
+                  (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" (change)="selectedSubCategory($event)" [virtualScroll]="true"
+                  [loading]="subScrollsync" loadingText="Loading..." bindValue="subCategoryName"
+                  [(ngModel)]="assetSubCategoryModel.subCategoryName" [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+          </div>
+
+
+            <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 20px;">
+              <button  mat-raised-button class="space " color="primary" (click)="submit()" [style.visibility]="(headingDisplay=='View' && displayButton=='Back') ? 'hidden': 'visible'" [disabled]="assetTypeForm.invalid || !assetTypeForm.dirty || uploadFlag" >
+              <span *ngIf="!uploadFlag">{{displayButton}}</span>
+              <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}} </span>
+              </button>
+            </div>
+        </div>
+  </form>
+</div>

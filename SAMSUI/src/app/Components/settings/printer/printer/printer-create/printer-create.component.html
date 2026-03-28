@@ -1,0 +1,146 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+
+    <div fxFlex="50">
+
+      <mat-toolbar-row>
+        <mat-list aria-label="breadcrumb" class="breadcrumblink" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#"
+              [routerLink]="['/home/dashboard']">
+              <mat-icon class="breadcrumbicon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center">{{'MENU_SETTING' | translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a
+              (click)="navigateToPrinter()">{{'PRINTER' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content active" aria-current="page" fxLayoutAlign="start center">
+            {{headingDisplay}}</mat-list-item>
+        </mat-list>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+
+    </div>
+
+    <div fxFlex="35" fxLayoutAlign="end center">
+      <button mat-raised-button class="space" color="primary" (click)="navigateToPrinter()">{{'COMMON_BACK' |
+        translate}}</button>
+      <button *ngIf="!isViewMode" mat-raised-button color="primary" class="space" (click)="clearPrinter()"
+        [disabled]="disableClear">{{ 'COMMON_CLEAR' | translate }}</button>
+        <button *ngIf="!isViewMode" mat-raised-button class="space" color="primary" (click)="savePrinter()"
+        [disabled]="printerForm.invalid || uploadFlag || updateFlag">
+        <span *ngIf="!uploadFlag">{{displayButton}}</span>
+        <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+
+  </div>
+
+  <div fxFlex="100" class="card">
+      <form [formGroup]="printerForm" style="margin-bottom: 10px;">
+        <div fxLayout="column">
+
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+
+            <div fxFlex="23" fxFlex.sm="30" fxFlex.xs="30">
+              <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="locationName"
+                (search)="listOfLocationName($event)" (click)="listOfLocationName({})"
+                (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                (scrollToEnd)="listOfLocationName({})" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')" (clear)="listOfLocationName('clear')" [loading]="scrollLocationNameSync" bindLabel="locDisplayField"
+                bindValue="locDisplayField" tabindex="1">
+              </ng-select>
+              <mat-error *ngIf="printerForm.controls.locationName.invalid && printerForm.controls.locationName.touched">
+                <div class="err-field" *ngIf="printerForm.controls.locationName.errors.required">
+                  Kindly Select The "{{'LOCATION_NAME' | translate}}" </div>
+              </mat-error>
+            </div>
+            <div fxFlex="23" fxFlex.sm="30" fxFlex.xs="30">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}" style="margin-top: 20px;">
+                <mat-label class="input-label">{{ 'PRINTER' | translate }}
+                  <span class="mandatory-style">*</span>
+                </mat-label>
+                <input matInput class="input-field" formControlName="printerName" [maxlength]="50"
+                  oninput="this.value = this.value.toUpperCase()" tabindex="2" (input)="uniqueValidation()">
+                <mat-hint align="end">{{printerForm.controls.printerName.value?.length || 0}}/50</mat-hint>
+                <mat-error *ngIf="printerForm.controls.printerName.invalid && printerForm.controls.printerName.touched">
+                  <div class="err-field" *ngIf="printerForm.controls.printerName.errors.required">"{{ 'PRINTER' | translate }}" Is Required</div>
+                    <div class="err-field" *ngIf="printerForm.controls.printerName.errors.notUnique">{{ErrorMsg}}</div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="23" fxFlex.sm="30" fxFlex.xs="30">
+              <span class="input-label">{{'PRINTER_MANUFACTURER' | translate}}<span
+                  class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="printerManufacturer"
+                (search)="listOfPrinterManufacturer($event)" (click)="listOfPrinterManufacturer({})"
+                (change)="setPrinterManufacturer($event)" [items]="printerManufacturerCombo" [virtualScroll]="true"
+                (scrollToEnd)="listOfPrinterManufacturer({})" (keyup.backspace)="listOfPrinterManufacturer($event.target.value ? $event : 'back')" (clear)="listOfPrinterManufacturer('clear')" [loading]="scrollPrinterManufacturerSync"
+                bindLabel="printerManufacturer" bindValue="printerManufacturer" tabindex="3">
+              </ng-select>
+              <mat-error
+                *ngIf="printerForm.controls.printerManufacturer.invalid && printerForm.controls.printerManufacturer.touched">
+                <div class="err-field" *ngIf="printerForm.controls.printerManufacturer.errors.required">
+                  Kindly Select The "{{'PRINTER_MANUFACTURER' | translate}}" </div>
+              </mat-error>
+            </div>
+            <div fxFlex="23" fxHide.sm fxHide.xs>
+              <span class="input-label">{{'PRINTER_MODEL' | translate}}<span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="printerModel"
+                (search)="listOfPrinterModel($event)" (click)="listOfPrinterModel({})"
+                (change)="setPrinterModel($event)" [items]="printerModelCombo" [virtualScroll]="true"
+                (scrollToEnd)="listOfPrinterModel({})" (keyup.backspace)="listOfPrinterModel($event.target.value ? $event : 'back')" (clear)="listOfPrinterModel('clear')" [loading]="scrollPrinterModelSync" bindLabel="printerModel"
+                bindValue="printerModel" tabindex="4">
+              </ng-select>
+              <mat-error *ngIf="printerForm.controls.printerModel.invalid && printerForm.controls.printerModel.touched">
+                <div class="err-field" *ngIf="printerForm.controls.printerModel.errors.required">
+                  Kindly Select "{{'PRINTER_MODEL' | translate}}" </div>
+              </mat-error>
+            </div>
+
+          </div>
+
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxFlex.sm="30" fxHide.gt-sm>
+              <span class="input-label">{{'PRINTER_MODEL' | translate}}<span class="mandatory-style">*</span></span>
+              <ng-select class=" input-field" required formControlName="printerModel"
+                (search)="listOfPrinterModel($event)" (click)="listOfPrinterModel({})"
+                (change)="setPrinterModel($event)" [items]="printerModelCombo" [virtualScroll]="true"
+                (scrollToEnd)="listOfPrinterModel({})" (keyup.backspace)="listOfPrinterModel($event.target.value ? $event : 'back')" (clear)="listOfPrinterModel('clear')" [loading]="scrollPrinterModelSync" bindLabel="printerModel"
+                bindValue="printerModel" tabindex="4">
+              </ng-select>
+              <mat-error *ngIf="printerForm.controls.printerModel.invalid && printerForm.controls.printerModel.touched">
+                <div class="err-field" *ngIf="printerForm.controls.printerModel.errors.required">
+                  Kindly Select "{{'PRINTER_MODEL' | translate}}" </div>
+              </mat-error>
+            </div>
+
+            <div fxFlex="23" fxFlex.sm="30" fxFlex.xs="30">
+              <span class="input-label">{{ 'PRINTER_COMMUNICATION_TYPE' | translate }} <span
+                  class="mandatory-style">*</span> </span>
+              <ng-select class=" input-field" formControlName="communicationType" appendTo="body"
+                [items]="communicationTypeCombo" bindLabel="name" bindValue="name" tabindex="5" required>
+              </ng-select>
+              <mat-error
+                *ngIf="printerForm.controls.communicationType.invalid && printerForm.controls.communicationType.touched">
+                <div class="err-field" *ngIf="printerForm.controls.communicationType.errors.required">Kindly Select The "{{
+                  'PRINTER_COMMUNICATION_TYPE' | translate }}"</div>
+              </mat-error>
+            </div>
+
+            <section class="example-section" fxFlex="23" fxFlex.sm="30" fxFlex.xs="30" fxLayoutAlign="start center">
+              <mat-checkbox color="primary" formControlName="defaultPrinter" tabindex="6">
+                <label>{{ 'PRINTER_DEFAULT' | translate }}</label>
+              </mat-checkbox>
+            </section>
+
+          </div>
+
+        </div>
+      </form>
+  </div>
+</div>

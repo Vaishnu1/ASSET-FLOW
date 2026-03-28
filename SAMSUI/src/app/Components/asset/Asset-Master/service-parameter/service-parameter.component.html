@@ -1,0 +1,30 @@
+<div fxLayout="column">
+
+  <div style="margin-bottom:5%;" [@.disabled]="true" >
+    <mat-tab-group dynamicHeight>
+      <mat-tab *ngIf="parameterTypeModuleAccess.readFlagDisplay || parameterTypeModuleAccess.createFlagDisplay || parameterTypeModuleAccess.deleteFlagDisplay || parameterTypeModuleAccess.updateFlagDisplay"> 
+            <ng-template mat-tab-label>
+              {{ 'SR_PARAMETER_TYPE' | translate }}
+            </ng-template>
+            <div style="margin-top: 0.5%;"></div>
+        <app-parameter-type-list></app-parameter-type-list>
+      </mat-tab>
+
+      <mat-tab> 
+        <ng-template mat-tab-label>
+          {{ 'SR_PARAMETER_GROUP' | translate }}
+        </ng-template>
+        <div style="margin-top: 0.5%;"></div>
+        <app-parameter-group-list></app-parameter-group-list>
+      </mat-tab>
+
+      <mat-tab *ngIf="parameterModuleAccess.readFlagDisplay || parameterModuleAccess.createFlagDisplay || parameterModuleAccess.deleteFlagDisplay || parameterModuleAccess.updateFlagDisplay"> 
+        <ng-template mat-tab-label>
+          {{ 'SR_PARAMETER' | translate }}
+        </ng-template>
+        <div style="margin-top: 0.5%;"></div>
+        <app-parameter-list></app-parameter-list>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

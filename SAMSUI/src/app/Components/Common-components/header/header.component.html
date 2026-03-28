@@ -1,0 +1,81 @@
+<div fxLayout="row" *ngIf="UserLoggedIn">  
+    <div class="logoheader">  
+        <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+          <div fxFlex="33.33" class="logo">
+            <img *ngIf="pwdChangeCount == 0" class="image" src="assets/images/ao_logo.svg" alt="Logo" />
+            <img (click)="routingToDashboard()" *ngIf="pwdChangeCount > 0" class="logo-image" src="assets/images/ao_new_logo.png" alt="Logo" width="165" />
+
+          </div>
+
+          <div fxFlex="33.33" class="top-create">
+            <!-- <button mat-flat-button [matMenuTriggerFor]="createMenu" class="header-create-buttton" *ngIf="pwdChangeCount > 0">
+              <mat-icon class="locicon" inline=true>add</mat-icon> Create
+            </button> -->
+            <mat-menu #createMenu="matMenu">
+              <button mat-menu-item (click)="locationCreate(0,'add')">{{'MENU_LOCATION' | translate}}</button>
+              <button mat-menu-item (click)="assetCreate(0,'add')">{{'MENU_ASSET' | translate}}</button>
+              <button mat-menu-item (click)="supplierCreate(0,'add')">{{'MENU_SUPPLIER' | translate}}</button>
+              <button mat-menu-item (click)="associateCreate(0)">{{'MENU_EMPLOYEE' | translate}}</button>
+              <button mat-menu-item (click)="itemCreate(0)">{{'MENU_ITEM' | translate}}</button>
+            </mat-menu>
+          </div>
+
+          <div fxFlex="33.33" [formGroup]="locationSetForm" class="header-right-items">
+
+            <div class="help">
+              <mat-icon class="help"  (click)="showHelpDocument()" matTooltip="Help">live_help</mat-icon>
+            </div>
+
+            <div class="notify" id="notifyCountDiv" *ngIf="pwdChangeCount > 0">
+              <mat-icon class="notify" id="allnotifications" matBadge="{{notifyCount}}" [matBadgeHidden]="notifyCount<=0" (click)="showNotifyScreen()" matBadgeColor="warn">notifications</mat-icon>
+              </div> 
+              
+              <!-- <div class="notify" id="notificationCountDiv" *ngIf="pwdChangeCount > 0">
+                <mat-icon class="notify" id="menuAssetAssignment"  matTooltip="{{ 'MENU_ASSET_ASSIGNMENT' | translate }}" matBadge="{{assetAssignmentCount}}" [matBadgeHidden]="assetAssignmentCount<=0" (click)="showAssetAssignment()" matBadgeColor="warn">supervisor_account</mat-icon>
+              
+              </div> -->
+    
+              <div class="notify" id="woCountDiv" *ngIf="pwdChangeCount > 0">
+                <mat-icon class="notify"  matTooltip="{{ 'SERVICE_REQUEST' | translate }}" matBadge="{{srCount}}" [matBadgeHidden]="srCount<=0" (click)="showOpenSrCount()" matBadgeColor="warn">build</mat-icon>
+                <!-- <img class="notify-icon" 
+                  src="assets/images/communication.png" 
+                  alt="Download" 
+                  matTooltip="{{ 'SERVICE_REQUEST' | translate }}" 
+                  (click)="showOpenSrCount()" 
+                  [matBadge]="srCount" 
+                  [matBadgeHidden]="srCount <= 0" 
+                  matBadgeColor="warn"
+                  style="cursor: pointer; width: 24px; height: 24px;" /> -->
+
+              </div>
+    
+              <div class="profile" style="margin-top: -2px;padding-top:7px">
+                <button mat-flat-button [matMenuTriggerFor]="profilemenu" class="header-create-buttton row" [disabled]="pwdChangeCount == 0">
+                  <mat-icon class="profile" *ngIf="empImage === ''">account_circle</mat-icon>
+                  
+                  <img class="userimage" src="{{userImage}}" *ngIf="empImage !== ''" alt="Logo" />
+
+                  <div class="username">
+                          {{ userName }}
+                  </div>
+                </button>
+                <mat-menu #profilemenu="matMenu" style="right:1% !important;">
+                  <button mat-menu-item [routerLink]="['/home/changePassword']">{{'MENU_CHANGE_PASSWORD' | translate}}</button>
+                  <button mat-menu-item (click)="logout()">{{'MENU_LOG_OUT' | translate}}</button>
+                </mat-menu>
+              </div>
+          </div>
+        </div>  
+    </div> 
+</div>
+<!-- <div fxLayout="row" *ngIf="emailStatus=='0'">
+  <div class="mailVerifyMessage">
+    <p>Kindly verify your Email
+      <span><a (click)="verifyMail()" class="verifyMail">Verify Now</a></span>
+
+      <span class="rgt">
+        <mat-icon style="font-size: 18px !important;line-height: 25px;" (click)="clearMail()">close</mat-icon>
+      </span>
+    </p>
+  </div>
+</div> -->

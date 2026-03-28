@@ -1,0 +1,56 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{ 'SR_DOCUMENT' | translate }} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div> 
+ 
+    <div fxLayout="row"> 
+      <form [formGroup]="srDocumentForm" fxFlex="100"> 
+        <div class="form-group">
+          <div class="example-full-width">
+            <mat-label class="input-label"> {{ 'SR_DOCUMENT_TYPE' | translate }} <span
+                class="mandatory-style">*</span> </mat-label>
+            <ng-select formControlName="docType" (change)="setDocType($event)" bindLabel="name" 
+              [items]="docTypeList">
+            </ng-select>
+            <mat-error *ngIf="srDocumentForm.controls.docType.invalid && srDocumentForm.controls.docType.touched">
+              <div *ngIf="srDocumentForm.controls.docType.errors.required" class="err-field">
+                {{ 'SR_DOCUMENT_TYPE' | translate }} is Required </div>
+            </mat-error>
+          </div>
+        </div> 
+        <div class="form-group">
+          <div fxLayout="row" style="margin-top: 20px;">
+              <div fxFlax="30">
+                  <label class="input-label" >{{ 'COMMON_FILE' | translate }}<span class="mandatory-style">*</span></label>
+              </div>
+              <div fxFlax="5"></div>
+              <div fxFlax="65">
+                <div class="attach-file">
+                  <button color="grey" onclick="document.getElementById('srDocImageUpload').click()" mat-mini-fab
+                    matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+                    <mat-icon>attachment</mat-icon>
+                  </button>
+                  <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+                  <input style="display:none" id="srDocImageUpload" type="file" name="organizFile" formControlName="filePath"
+                    (change)="handleFileInput($event.target.files)" class="input-field" />
+                </div>
+              </div>
+          </div>
+           
+        </div>
+
+        <div fxLayout="row" class="srStatusUpdateFormbtn"> 
+            <button mat-raised-button type="button" (click)="uploadSRDocFileByCheckingConfirmation()" color="primary"
+              [disabled]="srDocumentForm.invalid || !srDocumentForm.dirty">{{ 'COMMON_SUBMIT' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

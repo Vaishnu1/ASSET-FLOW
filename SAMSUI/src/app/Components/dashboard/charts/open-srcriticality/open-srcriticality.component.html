@@ -1,0 +1,12 @@
+<div>
+      <div fxLayoutAlign="end center">
+            <mat-icon mat-raised-button class="rightbutton" id="duration" color="primary" (click)="duration()"
+                  matTooltip="{{ 'TIME_PERIOD' | translate }}">calendar_today
+            </mat-icon>
+      </div>
+
+      <div class="hgt-175" fxLayout="column">
+            <div echarts class="demo-chart" [options]="options" (chartClick)="onChartClick($event)"
+                  [loading]="showSpinner" theme={{theme}}></div>
+      </div>
+</div>

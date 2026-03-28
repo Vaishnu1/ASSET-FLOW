@@ -1,0 +1,22 @@
+
+
+
+
+.btn-margin-5px {
+  margin: 5px;
+}
+
+.pad-1-per{
+  padding: 1%;
+}
+
+.example-full-width{
+  width: 95% !important;
+}
+.mat-raised-button{
+  padding: 0px !important;
+}
+
+.space{
+  margin-right: 5px;
+}

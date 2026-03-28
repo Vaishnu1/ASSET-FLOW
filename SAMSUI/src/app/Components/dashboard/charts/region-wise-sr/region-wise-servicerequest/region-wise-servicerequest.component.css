@@ -1,0 +1,12 @@
+::ng-deep .mat-tab-body-content {
+  overflow: auto;
+}
+
+.pageDisplay {
+  height: auto;
+  overflow: auto;
+}
+
+.hgt-150 {
+  height: 40%;
+}

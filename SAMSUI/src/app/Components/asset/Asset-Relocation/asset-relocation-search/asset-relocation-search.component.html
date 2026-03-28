@@ -1,0 +1,314 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{'MENU_ASSET_RELOCATION' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div> 
+      
+    </mat-toolbar-row>
+
+    <div fxLayout="row" fxFlex="28" style="width: 100%;">
+      <div fxLayoutAlign="end end" fxFlex="100">
+        <button mat-raised-button class="space" color="primary" (click)="backToPreviousPage()" tabindex="56">
+          {{'COMMON_BACK' | translate}}</button>
+      </div>
+    </div>
+  </div>
+  
+ 
+  <div fxLayout="row"> 
+    <div class="content_section"  fxFlex="100">
+      <div fxLayout="row" >
+        <form [formGroup]="assetRelocation" fxFlex="100" class="margin-fix">
+  
+          <div fxLayout="row">
+            <span class="header-font">{{'RELOCATE_FROM' | translate}}</span>
+          </div>
+  
+          <div fxLayout="row">
+              <div fxFlex="23"> 
+                <div class="form-group">
+                  <div class="example-full-width">
+                    <span class="font-style-combo input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                        class="mandatory-style">*</span></span>
+                    <ng-select [items]="locationCombo"  class="input-field"  required #srLocFocus bindLabel="locDisplayField"
+                      bindValue="locDisplayField" (search)="loadLocationComboData($event,true)"
+                      (click)="loadLocationComboData($event,true)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({},true)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',true)" (clear)="loadLocationComboData('clear',true)"
+                      [loading]="scrollsyncLocation" loadingText="Loading..." (change)="selectedLocationData($event)"
+                      formControlName="sourceLocName"></ng-select>
+                      <mat-error
+                      *ngIf="assetRelocation.controls.sourceLocName.invalid && assetRelocation.controls.sourceLocName.touched">
+                      <div class="err-field"
+                        *ngIf="assetRelocation.controls.sourceLocName.errors.required">
+                        Kindly Select The "{{'LOCATION_NAME'| translate}}"</div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="2"> 
+              </div>
+              <div fxFlex="23"> 
+                <div class="form-group">
+                  <div class="example-full-width">
+                    <span class="font-style-combo input-label"> {{ 'DEPARTMENT_NAME' | translate }}</span>
+                    <ng-select [items]="departmentComboList"  class="input-field" required bindLabel="departmentName" bindValue="departmentName"
+                      (search)="loadDepartmentComboData($event,true)" (click)="loadDepartmentComboData($event,true)"
+                      [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({},true)" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back',true)" (clear)="loadDepartmentComboData('clear',true)" [loading]="scrollsyncDepartment"
+                      loadingText="Loading..." (change)="selectedDepartmentData($event)" formControlName="sourceDepName">
+                    </ng-select>
+                    <!-- <mat-error
+                      *ngIf="assetRelocation.controls.sourceDepName.invalid && assetRelocation.controls.sourceDepName.touched">
+                      <div class="err-field"
+                        *ngIf="assetRelocation.controls.sourceDepName.errors.required">
+                        Kindly Select The "{{'DEPARTMENT_NAME'| translate}}"</div>
+                    </mat-error> -->
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="2"> 
+              </div>
+              <div fxFlex="23"> 
+                <div class="form-group">
+                  <div class="example-full-width">
+                    <span class="font-style-combo input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                    <ng-select [items]="subDepartmentCombo"  class="input-field" bindLabel="subDepartmentName" bindValue="subDepartmentName"
+                      (search)="loadSubDepartmentComboData($event)" (click)="loadSubDepartmentComboData($event)"
+                      [virtualScroll]="true" (scrollToEnd)="loadSubDepartmentComboData({})" (keyup.backspace)="loadSubDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentComboData('clear')" [loading]="scrollsyncSubDepartment"
+                      loadingText="Loading..." (change)="selectedSubDepartmentData($event)" formControlName="sourceSubDepName">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="2"> 
+              </div>
+              <div fxFlex="23"> 
+                <button mat-raised-button class="space" color="primary"
+                  [disabled]="assetRelocation.controls.sourceLocId.value == 0"
+                  (click)="searchSource()">{{'COMMON_SEARCH' | translate}}</button>
+                <button mat-raised-button color="primary" class="space"
+                  (click)="resetSourceDestination()">{{ 'COMMON_CLEAR' | translate }}</button>
+              </div>
+          </div>
+
+          <br />
+          <br />
+
+          <div style="border-bottom: solid 3px;">
+          </div>
+
+          <div fxLayout="row" class="relocate-form">
+            <span class="header-font">{{'RELOCATE_TO' | translate}}</span>
+          </div>
+  
+          <div fxLayout="row">
+            <div fxFlex="23"> 
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="font-style-combo input-label"> {{ 'LOCATION_NAME' | translate }} <span
+                      class="mandatory-style">*</span></span>
+                  <ng-select [items]="locationCombo" required #srLocFocus bindLabel="locDisplayField"
+                    bindValue="locDisplayField"  class="input-field" (search)="loadLocationComboData($event,false)"
+                    (click)="loadLocationComboData($event,false)" [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({},false)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',false)" (clear)="loadLocationComboData('clear',false)"
+                    [loading]="scrollsyncLocationRelocate" loadingText="Loading..." (change)="selectedLocationDataDestination($event)"
+                    formControlName="relocateLocName"></ng-select>
+                  <mat-error
+                    *ngIf="assetRelocation.controls.relocateLocName.invalid && assetRelocation.controls.relocateLocName.touched">
+                    <div class="err-field"
+                      *ngIf="assetRelocation.controls.relocateLocName.errors.required">
+                      Kindly Select The "{{'LOCATION_NAME'| translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+            </div>
+            <div fxFlex="2"> 
+            </div>
+            <div fxFlex="23"> 
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="font-style-combo input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                  <ng-select [items]="departmentComboList"  class="input-field" required bindLabel="departmentName" bindValue="departmentName"
+                    (search)="loadDepartmentComboData($event,false)" (click)="loadDepartmentComboData($event,false)"
+                    [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({},false)" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back',false)" (clear)="loadDepartmentComboData('clear',false)" [loading]="scrollsyncDepartmentRelocate"
+                    loadingText="Loading..." (change)="selectedDepartmentDataRelocate($event)"
+                    formControlName="relocateDepName">
+                  </ng-select>
+                  <!-- <mat-error
+                    *ngIf="assetRelocation.controls.relocateDepName.invalid && assetRelocation.controls.relocateDepName.touched">
+                    <div class="err-field"
+                      *ngIf="assetRelocation.controls.relocateDepName.errors.required">
+                      Kindly Select The "{{'DEPARTMENT_NAME'| translate}}" </div>
+                </mat-error> -->
+                </div>
+              </div>
+
+              <br>
+              <!-- <div class="form-group">
+                <div class="example-full-width">
+                  <span class="font-style-combo input-label"> {{ 'PRIMARY_TECHNICIAN' | translate }} <span
+                      class="mandatory-style">*</span></span>
+                  <ng-select [items]="primaryEnggCombo" class="input-field" bindLabel="employeeFirstName" appendTo="body"
+                      bindValue="employeeFirstName" tabindex="2" (search)="loadPrimaryEnggComboData($event)"
+                      (click)="loadPrimaryEnggComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadPrimaryEnggComboData({})"
+                      (keyup.backspace)="loadPrimaryEnggComboData($event.target.value ? $event : 'back')"
+                      (clear)="loadPrimaryEnggComboData('clear')" [loading]="scrollSyncPrimaryEnggPerson" loadingText="Loading..."
+                      (change)="selectedPrimaryEngg($event)" formControlName="primaryEnggName" required> 
+                  </ng-select>
+                  <mat-error *ngIf="assetRelocation.controls.primaryEnggName.invalid && assetRelocation.controls.primaryEnggName.touched">
+                    <div class="err-field" *ngIf="assetRelocation.controls.primaryEnggName.errors.required"> Kindly Select The "{{'PRIMARY_TECHNICIAN'| translate}}" </div>
+                  </mat-error>
+                </div>
+              </div> -->
+            </div>
+            <div fxFlex="2"> 
+            </div>
+            <div fxFlex="23"> 
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="font-style-combo input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                  <ng-select [items]="subDepartmentComboList" class="input-field" bindLabel="subDepartmentName" bindValue="subDepartmentName"
+                    (search)="loadSubDepartmentForRelocation($event)" (click)="loadSubDepartmentForRelocation($event)"
+                    [virtualScroll]="true" (scrollToEnd)="loadSubDepartmentForRelocation({})" (keyup.backspace)="loadSubDepartmentForRelocation($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentForRelocation('clear')" [loading]="scrollsyncSubDepartmentRelocate"
+                    loadingText="Loading..." (change)="selectedSubDepartmentDataRelocate($event)"
+                    formControlName="relocateSubDepName">
+                  </ng-select>
+                </div>
+              </div>
+
+              <br>
+              <!-- <div class="form-group">
+                <div class="example-full-width">
+                  <span class="font-style-combo input-label"> {{ 'SECONDARY_TECHNICIAN' | translate }} <span class="mandatory-style">*</span></span>
+                  <ng-select [items]="secondaryEnggCombo" class="input-field" bindLabel="employeeFirstName" appendTo="body"
+                        bindValue="employeeFirstName" tabindex="2" (search)="loadSecondaryEnggComboData($event)"
+                        (click)="loadSecondaryEnggComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadSecondaryEnggComboData({})"
+                        (keyup.backspace)="loadSecondaryEnggComboData($event.target.value ? $event : 'back')"
+                        (clear)="loadSecondaryEnggComboData('clear')" [loading]="scrollSyncSecondaryEnggPerson" loadingText="Loading..."
+                        (change)="selectedSecondaryEngg($event)" formControlName="secondaryEnggName" required> 
+                  </ng-select>
+                  <mat-error *ngIf="assetRelocation.controls.secondaryEnggName.invalid && assetRelocation.controls.secondaryEnggName.touched">
+                    <div class="err-field" *ngIf="assetRelocation.controls.secondaryEnggName.errors.required"> Kindly Select The "{{'SECONDARY_TECHNICIAN'| translate}}" </div>
+                  </mat-error>
+                </div>
+              </div> -->
+            </div>
+            <div fxFlex="2"> 
+            </div>
+            <div fxFlex="23"> 
+              <button mat-raised-button class="space" color="primary" (click)="reallocatSearch()"
+                [disabled]="reallocateFlag || assetRelocation.controls.relocateLocId.value == 0" *ngIf="modelAccessModule.createFlagDisplay">
+                <span *ngIf="!uploadAssetRelocation">{{'GENERATE_TRANSFER_RECORD' | translate}}</span>
+                <span *ngIf="uploadAssetRelocation">{{'COMMON_LOADING' | translate}}</span>
+              </button>
+            </div>
+          </div> 
+        </form>
+      </div>
+
+      <div fxLayout="row">
+        <div fxFlex="100">
+          
+        <div fxLayout="row" fxFlex="100" class="asset-reloacation-container-table">
+          <table fxFlex="100" mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index;"> {{i+1}} </td>
+            </ng-container>
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'LOCATION_NAME' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element?.locationName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="assetCode">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_CODE' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element" matTooltip="{{element?.assetCode}}">
+                {{ element?.assetCode }} <br> 
+                / <br /> 
+                <span class="ASSET_CODE_CHANGE_REQUESTED" (click)="navigateToSourceScreen(element.assetTransactionSrcId,element.assetTransactionSrc,'edit')" *ngIf="element?.assetTransActive"> {{element?.assetTransactionSrcDesc | translate}} </span>       
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="assetCategoryName">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_CATEGORY' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element" matTooltip="{{element?.assetCategoryName}}">
+                {{ element?.assetCategoryName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="modelName">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef> {{'MODEL_NAME' | translate}} </th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element" matTooltip="{{element?.modelName}}">
+                {{ element?.modelName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="assetGroupName">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_GROUP' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element" matTooltip="{{element?.assetGroupName}}">
+                {{ element?.assetGroupName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="serialNo">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_SERIAL_NO' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element">
+                {{element?.serialNo}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element" matTooltip="{{element?.departmentName}}">
+                {{ element?.departmentName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>{{'ASSET_STATUS' | translate}}</th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element"> {{element?.assetStatus | translate}} </td>
+            </ng-container>
+            <ng-container matColumnDef="select">
+              <th mat-header-cell class="table-head-data" *matHeaderCellDef>
+                <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin"
+                  [(ngModel)]="selectAllFlag" (change)="selectAll(selectAllFlag,$event.checked)"[disabled]="dataSource.length==0">
+                </mat-checkbox>
+              </th>
+              <td mat-cell class="table-cell-data" *matCellDef="let element;let i = index;">
+                <div *ngIf="element?.hasChild">
+                  <p>{{'WARNING_MESSAGE_CAN_NOT_BE_SELECTED' | translate}} <br> 
+                  {{'WARNING_MESSAGE_CHILD_ASSET_PRESENT' | translate}}</p>
+                </div>
+                <div *ngIf="!element?.hasChild">
+                  <mat-checkbox [disabled]="element?.assetTransactionSrc == 'EXTERNAL LOAN' || element?.assetTransactionSrc == 'INTERNAL LOAN' || element?.assetTransactionSrc == 'GATE PASS'" (change)="enableFlag($event.checked)" [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}" color="primary"
+                  class="example-margin">
+                </mat-checkbox>
+                </div>
+                
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+          </table>
+
+
+        </div>
+  
+
+        </div> 
+      </div> 
+    </div> 
+  </div>
+  
+  <div fxLayout="row" fxFlex="100">
+    <mat-card class="no_records_found" *ngIf="dataSource.length== 0 && !subLoader">
+      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+    </mat-card>
+
+    <mat-card *ngIf="subLoader" class="no_records_found"  fxLayoutAlign="center center">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </mat-card>
+  </div> 
+</div>

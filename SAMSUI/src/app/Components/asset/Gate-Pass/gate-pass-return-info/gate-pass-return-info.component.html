@@ -1,0 +1,70 @@
+<div fxLayout="column" class="budget-detail-popup">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title">{{headingDisplay}} {{'GATE_PASS_RETURN_INFO' | translate}}</h4>
+      </div>  
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div> 
+ 
+    <div fxLayout="row"> 
+ 
+      <form [formGroup]="gatePassReturnInfo" fxFlex="100" class="modalForm"> 
+ 
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'RETURN_RECEIVED_BY' | translate }} <span class="mandatory-style">*</span> </span>
+                <ng-select [items]="returnReceivedByCombo" bindLabel="employeeFirstName"
+                  (search)="loadReturnReceivedByComboData($event)" (click)="loadReturnReceivedByComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadReturnReceivedByComboData({})" (keyup.backspace)="loadReturnReceivedByComboData($event.target.value ? $event : 'back')" (clear)="loadReturnReceivedByComboData('clear')"
+                  [loading]="scrollSyncReturnReceivedBy" loadingText="Loading..."
+                  (change)="selectedReceivedBy($event)" formControlName="returnReceivedByName">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label"> {{'RETURN_RETURN_STATUS' | translate}}
+                </mat-label>
+                <input matInput formControlName="returnedStatus" [maxlength]="25">
+              </mat-form-field>
+            </div> 
+
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{ 'RETURN_RECEIVED_DT' | translate}}</mat-label>
+                <input matInput (click)="returnReceivedDtDisp.open()" [matDatepicker]="returnReceivedDtDisp"
+                  formControlName="returnReceivedDtDisp" [max]="gatePassReturnInfo.controls.returnReceivedDtDisp.value"
+                  (keypress)="dateValidationinstall($event)">
+                <mat-datepicker-toggle matSuffix [for]="returnReceivedDtDisp"></mat-datepicker-toggle>
+                <mat-datepicker #returnReceivedDtDisp></mat-datepicker>
+                <mat-error *ngIf="gatePassReturnInfo.controls.returnReceivedDtDisp.invalid && gatePassReturnInfo.controls.returnReceivedDtDisp.touched">
+                  <div *ngIf="gatePassReturnInfo.controls.returnReceivedDtDisp.errors.required">{{ 'RETURN_RECEIVED_DT' | translate}} is
+                    required </div>
+                </mat-error>
+              </mat-form-field>
+            </div> 
+
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{ 'RETURN_REMARKS' | translate }}<span class="mandatory-style">{{mandatoryActivity}}</span></mat-label>
+                <textarea rows="7" matInput formControlName="returnRemarks" tabindex="2" [maxlength]="500"></textarea>
+                <mat-hint align="end">{{gatePassReturnInfo.controls.returnRemarks.value?.length || 0}}/500</mat-hint>
+              </mat-form-field>
+            </div> 
+
+            <div fxLayout="row" class="submit-button" *ngIf="submitButton"> 
+                <button mat-raised-button class="space col-md-3" color="primary"
+                  [disabled]="gatePassReturnInfo.invalid" (click)="updateGatePassReturnInfo()">
+                  <span *ngIf="!uploadFlag"> {{buttonDisplay}} </span>
+                  <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button>
+            </div>
+ 
+      </form>  
+    </div>
+  </div>
+</div>

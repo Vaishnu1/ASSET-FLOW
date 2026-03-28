@@ -1,0 +1,32 @@
+<div fxLayout="column">
+    <div fxFlex="100"> 
+      <div fxLayout="row"  fxLayoutAlign="center center"> 
+        <div fxFlex="95" class="pdf-form">
+          <h4 class="section_title"> {{confirmHeading}} </h4>
+        </div>
+        
+        <div fxFlex="5" class="first-title"> 
+          <mat-icon class="close-icon-large close-icon" (click)="closeModel()">highlight_off</mat-icon>
+        </div>
+      </div>
+      
+      <div fxLayout="row" class="pdf-form">
+        <label>{{confirmMsg}}</label>
+      </div>
+    
+      <div fxLayout="column" class="pdf-form"  fxLayoutAlign="center center"> 
+          <mat-radio-group name="reportType" [(ngModel)]="reportType" fxLayout="column"> 
+              <mat-radio-button value="radioButton1" >{{radioButtonName1}}
+              </mat-radio-button> 
+              <mat-radio-button  value="radioButton2" class="button2">{{radioButtonName2}}
+              </mat-radio-button> 
+          </mat-radio-group> 
+      </div> 
+      
+  
+      <div fxLayout="row" class="create-emp-button">  
+        <button color="primary" mat-raised-button
+          (click)="Proceed()">{{ 'COMMON_DOWNLOAD' | translate }}</button>
+      </div>
+    </div>
+  </div>

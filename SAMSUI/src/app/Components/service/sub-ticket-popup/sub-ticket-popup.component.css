@@ -1,0 +1,51 @@
+.example-full-width {
+  width: 95%;
+}
+
+
+.example-label{
+  font-size: 20px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  color:#000000;
+}
+
+.form-group{
+  margin-bottom: 0.5rem !important;
+  /* font-size: 12px !important;
+  margin-left:7%; */
+  font-weight: 400;
+}
+
+input.mat-input-element {
+  margin-top: 0.70em !important;
+  font-size: 12px !important;
+} 
+
+
+
+.space{
+  margin-right: 10px;
+}
+
+.modalform {
+  padding:0px;
+}
+
+.srStatusUpdateFormbtn {
+  display: grid;
+  justify-content: center;
+}
+
+.section_title {
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+.uploadSubTicketFlagbtn {
+  display: grid;
+  justify-content: center;
+}
+
+.textarea-height{
+  height: 28px;
+}

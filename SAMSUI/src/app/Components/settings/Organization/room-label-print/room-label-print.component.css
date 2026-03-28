@@ -1,0 +1,64 @@
+/* Main Container Spacing */
+.dialog-content {
+  padding: 10px 5px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-width: 300px;
+}
+
+/* "Label Type" Text */
+.label-title {
+  font-size: 16px;
+  color: #333; /* Dark gray text */
+  margin-bottom: 15px;
+  display: block;
+}
+
+/* Radio Group Layout */
+.custom-radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 30px; /* Space between the two radio buttons */
+  margin-bottom: 30px; /* Space between radios and print button */
+}
+
+/* The Red Print Button */
+.custom-print-btn {
+  background-color: #cf5662 !important; /* The exact salmon/red color from image */
+  color: white !important;
+  padding: 0 35px; /* Wide button */
+  font-weight: 500;
+  /* Shadow for depth */
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 
+              0px 2px 2px 0px rgba(0,0,0,0.14), 
+              0px 1px 5px 0px rgba(0,0,0,0.12);
+}
+
+/* Center the button */
+.action-section {
+  display: flex;
+  justify-content: center; 
+  width: 100%;
+}
+
+/* --- Material Design Color Overrides (To make the radio buttons Pink) --- */
+
+/* 1. The outer circle border color when checked */
+::ng-deep .pink-radio.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #ff4081 !important; /* Hot pink */
+}
+
+/* 2. The inner dot color when checked */
+::ng-deep .pink-radio .mat-radio-inner-circle {
+  background-color: #ff4081 !important; /* Hot pink */
+}
+
+/* 3. The ripple effect when clicking */
+::ng-deep .pink-radio .mat-radio-ripple .mat-ripple-element {
+  background-color: rgba(255, 64, 129, 0.1) !important;
+}
+
+/* 4. Text styling for the radio labels */
+::ng-deep .pink-radio .mat-radio-label-content {
+  color: #333;
+  padding-left: 8px;
+}

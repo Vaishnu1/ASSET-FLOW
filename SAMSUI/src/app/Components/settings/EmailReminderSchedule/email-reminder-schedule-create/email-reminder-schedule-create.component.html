@@ -1,0 +1,153 @@
+<div fxLayout="column">
+
+    <div fxLayout="row">
+      <div fxFlex="50">
+        <h4 class="dialogue-box-header">{{headingDisplay}} {{'EMAIL_REMINDER' | translate}}</h4>
+      </div>
+      <div fxFlex="50" fxLayoutAlign="end start">
+          <button mat-raised-button class="bttn-space" color="primary"
+          (click)="close()"> {{'COMMON_BACK' | translate}} </button>
+
+          <button *ngIf="!modeDisplay" class="bttn-space" [disabled]="emailReminderHdrFormGroup.invalid"
+           mat-raised-button color="primary"
+          (click)="addEmailReminderDtlToList()"> {{'COMMON_ADD' | translate}} </button>
+
+          <button *ngIf="!modeDisplay" mat-raised-button class="bttn-space" color="primary" (click)="saveOrUpdate()"
+          [disabled]="emailReminderHdrFormGroup.invalid || length == 0 || !isValid || uniqueList || 
+          (!emailReminderHdrFormGroup.dirty && !enableOnEdit)">
+            <span *ngIf="!uploadFlag">{{buttonDisplay}}</span>
+            <span *ngIf="uploadFlag">{{'COMMON_LOADING' | translate}}</span></button>
+      </div>
+
+    </div>
+
+    <div fxLayout="column">
+      <mat-card style="margin-top: 5px;">
+        <div fxLayout="column">
+          <div fxLayout="row" fxFlex="100">
+            <mat-card-content>
+              <form [formGroup]="emailReminderHdrFormGroup" style="width: 100%;">
+                <div  fxLayout="row" fxFlex="100">
+                  <div fxFlex="40" class="form-group">
+                    <div class="example-width-notify">
+                      <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span></span>
+                      <ng-select [items]="locationCombo" class="input-field" required bindLabel="locDisplayField"
+                        bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                        (click)="loadLocationComboData($event)" [virtualScroll]="true"  formControlName="locationName"
+                        (scrollToEnd)="loadLocationComboData({})" (change)="selectedLocationData($event)"
+                        (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                        (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')">
+                      </ng-select>
+                      <mat-error
+                        *ngIf="emailReminderHdrFormGroup.controls.locationName.invalid && emailReminderHdrFormGroup.controls.locationName.touched">
+                        <div class="err-field" *ngIf="emailReminderHdrFormGroup.controls.locationName.errors.required">
+                          Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+                      </mat-error>
+                    </div>
+                  </div>
+
+                  <div fxFlex="40" class="form-group">
+                    <div class="example-width-notify">
+                      <span class="input-label"> {{ 'PROCESS_NAME' | translate }}<span class="mandatory-style"> *</span></span>
+                      <ng-select class="input-field" required (search)="loadProcessComboData($event)"
+                      (click)="loadProcessComboData($event)" [virtualScroll]="true"  formControlName="processName"
+                      (scrollToEnd)="loadProcessComboData({})" (change)="selectedProcessData($event)"
+                      (clear)="loadProcessComboData('clear')" [loading]="scrollsyncProcess" loadingText="Loading..."
+                      (keyup.backspace)="loadProcessComboData($event.target.value ? $event : 'back')" [ngModelOptions]="{standalone: true}">
+                      <ng-option *ngFor="let processNameList of processCombo" class="input-field" [value]="processNameList | translate"> {{ processNameList.processName | translate}}</ng-option>
+                    </ng-select>
+                      <mat-error
+                        *ngIf="emailReminderHdrFormGroup.controls.processName.invalid && emailReminderHdrFormGroup.controls.processName.touched">
+                        <div class="err-field" *ngIf="emailReminderHdrFormGroup.controls.processName.errors.required">
+                          Kindly Select The "{{'PROCESS_NAME' | translate}}" </div>
+                        <div class="err-field" *ngIf="emailReminderHdrFormGroup.controls.processName.errors.notUnique">{{errorMsg}}</div>
+                      </mat-error>
+                    </div>
+                  </div>
+
+                  <div fxFlex="20" class="form-group">
+                    <div class="example-width-notify">
+                      <mat-checkbox fxLayoutAlign="end center" style="margin-top: 16px;" color="primary" formControlName="active">
+                        {{'COMMON_ACTIVE' | translate }}
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            </mat-card-content>
+          </div>
+          <div fxLayout="row" fxFlex="100">
+            <mat-card-content style="height: 12px;">
+              <div *ngIf="!emailReminderHdrFormGroup.invalid && length == 0" class="mandatory-style">
+                {{error_msg_1}}
+              </div>
+              <div *ngIf="(!emailReminderHdrFormGroup.invalid && length > 0 && !isValid)" class="mandatory-style">
+                {{error_msg}}
+              </div>
+              <div *ngIf="(!emailReminderHdrFormGroup.invalid && length > 0 && uniqueList)" class="mandatory-style">
+                {{error_msg_2}}
+              </div>
+            </mat-card-content>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div fxLayout="row" fxFlex="100">
+      <mat-tab-group style="width: 100%;">
+        <mat-tab>
+          <ng-template mat-tab-label>{{'EMAIL_REMINDER_SCHEDULE' | translate }}</ng-template>
+            <mat-card>
+              <mat-card-content>
+                <div class="content-style">
+                  <div  fxLayout="column" class="email-container-inner-table">
+                    <table mat-table [dataSource]="emailReminderDtlListDataSource" style="width: 100%;">
+                        <ng-container matColumnDef="sno">
+                            <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">
+                              {{'COMMON_S_NO' | translate}}</th>
+                            <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:10%;">{{ i+1 }}</td>
+                          </ng-container>
+                          <ng-container matColumnDef="numberOfDays">
+                            <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:40%;">{{'NO_OF_DAYS' | translate}}</th>
+                            <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:40%;">
+                              <mat-form-field class="example-width-notify-table" [floatLabel]="'always'">
+                                <input [disabled]="modeDisplay" type="number" matInput [(ngModel)]="element.numberOfDays"
+                                 (input)="isElementValid(element)" maxlength="3" [ngModelOptions]="{standalone: true}" class="input-field" />
+                              </mat-form-field>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="reminderType">
+                            <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:40%;">{{'REMINDER_TYPE' | translate}}</th>
+                            <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:40%;">
+                              <ng-select [disabled]="modeDisplay" class="example-width-notify-table" [(ngModel)]="element.reminderType" 
+                              [ngModelOptions]="{standalone: true}" (change)="isValidList();enableEdit()"  class="input-field">
+                                <ng-option value="BEFORE_EXPIRY_DATE">Before Expiry Date</ng-option>
+                                <ng-option value="AFTER_EXPIRY_DATE">After Expiry Date</ng-option>
+                              </ng-select>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">{{'COMMON_ACTION' | translate}}</th>
+                            <td mat-cell *matCellDef="let element; let i = index;" style="width:10%;">
+                              <button color="warn" mat-icon-button matTooltip="Delete" 
+                              (click)="deleteEmailNotify(i)" 
+                              [disabled]="modeDisplay"> <mat-icon>delete</mat-icon>
+                            </button>
+                            </td>
+                          </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-card class="no_records_found"  fxLayoutAlign="center center" *ngIf="length== 0 && !subLoaderEmailRem">
+                        {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                      <mat-card *ngIf="subLoaderEmailRem"  fxLayoutAlign="center center" class="no_records_found">
+                        <mat-spinner [diameter]="40"></mat-spinner>
+                      </mat-card>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+</div>

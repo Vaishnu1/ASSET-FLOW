@@ -1,0 +1,75 @@
+package com.sams.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+public class ContractHeaderDTO {
+    private Long id;
+    private String columnName;
+    private String direction;
+    private Long locationId;
+    private String locationName;
+    private Long contractHdrId;
+    private String contractNo;
+    private String contractName;
+    private String contractType;
+    private String coverageType;
+    private String contractingPartyType;
+    private Long contractPartyId;
+    private String contractPartyName;
+    private Long contractPartyLocationId;
+    private String contractPartyLocationName;
+    private Boolean active;
+    private String termsConditions;
+    private String contactPerson;
+    private String phoneNumber;
+    private String curCd;
+    private LocalDateTime contractStartDt;
+    private String contractStartDtDisp;
+    private LocalDateTime contractEndDt;
+    private String contractEndDtDisp;
+    private Integer expiryPriorNotifyDays;
+    private Integer contractBasicValue;
+    private Integer discountRate;
+    private Integer discountAmt;
+    private Integer contractGrossValue;
+    private String taxCode1;
+    private String taxCode2;
+    private String taxCode3;
+    private Integer taxRate1;
+    private Integer taxRate2;
+    private Integer taxValue1;
+    private Integer taxValue2;
+    private Integer netContractValue;
+    private String includedService;
+    private String excludedService;
+    private String autoRenewal;
+    private Boolean expiredContracts;
+    private String intervalBasedContract;
+    private String createdBy;
+    private LocalDateTime createdDt;
+    private String updatedBy;
+    private LocalDateTime updatedDt;
+    private Long orgId;
+    private String updatedDtDisp;
+    private String createdDtDisp;
+    private Long logInUserOrgId;
+    private Long logInUserLocId;
+    private Long logInUserId;
+    private String assetList;
+    private String searchValue;
+    private String searchValue1;
+    private String contractStatus;
+    private Long contractStatusId;
+    private Integer daysElapsed;
+    private Long approvalId;
+    private Boolean contractWithoutPrice;
+    private Boolean contractWithoutSupplier;
+    private String processStatus;
+    private Long workflowProcessStatusId;
+    private Long selectedLocationIds;
+    private String selectedLocationNames;
+}

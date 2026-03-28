@@ -1,0 +1,229 @@
+/* General class need to be import in all components */
+.form-group{
+  margin-bottom: 0.5rem !important;
+  font-size: 15px !important;
+  margin-left:7%;
+  font-weight: 400;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 95%;
+}
+
+
+.example-label{
+    font-size: 20px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color:#000000;
+}
+
+::ng-deep .ng-select .ng-select-container  {
+  min-height: 0px;
+  border: none !important;
+  border-bottom: 1px solid #6a6d70 !important;
+  border-radius: 0;
+}
+
+
+
+table{
+  width:100%;
+}
+
+.mat-table {
+  max-height: 500px;
+}
+
+
+.Footer {
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  padding: 0px 15px;
+  background-color: rgba(62, 59, 59, 0.13);
+  height: 45px;
+  text-align: right
+}
+.mandatory-style{
+  color: crimson;
+}
+
+/* Specific design */
+
+.font-style{
+  font-size: 17px;
+  color: #000000;
+  text-align: center;
+}
+
+.card-design{
+  margin-left: 20px;
+  border-radius: 0%;
+  box-shadow:1px 1px 10px #d4d4d4;
+  position: fixed;
+  width: 22%;
+}
+
+.content-style{
+  padding-top: 10px;
+}
+
+.card-style{
+  box-shadow:1px 1px 10px #d4d4d4;
+  border-radius: 0%;
+  margin-bottom: 20px;
+  z-index:800;
+  padding: 15px;
+}
+::ng-deep .mat-card:not([class*=mat-elevation-z])
+{
+  box-shadow: none !important;
+}
+.breadcrumblink{
+  float: left;
+}
+.whitecolor {
+  color: #ffffff !important;
+}
+/* Default design for Table */
+tr.mat-header-row {
+  height: 35px;
+}
+
+.mat-header-cell {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.icon-Style{
+  cursor: pointer;
+  float: right !important;
+}
+
+/* .margin-fix{
+  margin-top: 40px;
+} */
+
+
+
+/* .top-content {
+  width: 100%;
+  position: fixed !important;
+} */
+
+.footer{
+  padding-right: 35px;
+  position: fixed;
+  bottom: 0px;
+  background-color:#4a27271f;
+  width: 100%;
+  height: 45px;
+ }
+
+.footer p {
+  font-size: 14px;
+  text-align: center;
+  padding-top:15px;
+  padding-bottom: 30px;
+}
+
+button{
+  margin-top:0.5%;
+  color:white;
+}
+.mat-raised-button {
+  color:#fff !important;
+  min-width: 30px !important;
+}
+.space{
+  margin-right: 10px;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 0.2rem;
+}
+
+.action_icon{
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+
+.footer{
+  padding-right: 35px;
+  position: fixed;
+  /* bottom: 0px; */
+  background-color:#4a27271f;
+  width: 100%;
+  height: 45px;
+  z-index: 1000;
+ }
+
+.card-design-basic{
+  padding-top: 5%;
+}
+
+.no-record-found{
+  /* margin: 1% 0 0 0; */
+  text-align: center !important;
+  background-color: white !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: black;
+}
+
+.button-padding {
+  padding: 0 5% 0 5%;
+  width: 25%;
+}
+
+.custom-field-form-group{
+  font-size: 15px !important;
+  font-weight: 400;
+}
+
+.btn-margin-5px{
+  margin: 5px;
+}
+
+.pad-1-per{
+  padding: 1%;
+}
+
+
+.left-margin-1-per{
+  margin-left: 1%;
+}
+
+.mat-card{
+  border-radius: 0px !important;
+  /* margin-top: 10px !important; */
+  padding: 10px !important;
+}
+
+.select-fields{
+  margin-top: -20px;
+}
+
+.card-height {
+  height: 328px;
+}
+
+.mt-20px {
+  margin-top: 20px;
+}
+
+.ml-10px {
+  margin-left: 10px;
+}
+
+.ht-41px {
+  height: 41px;
+}

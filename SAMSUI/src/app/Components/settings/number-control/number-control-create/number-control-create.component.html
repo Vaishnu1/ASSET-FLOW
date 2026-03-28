@@ -1,0 +1,141 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} </h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="close()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form fxLayout="column" class="modalform" [formGroup]="numberControlForm">
+
+    <div fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="start center" style="height: 80px;">
+        <div fxFlex="34">
+          <span class="input-label"> {{'LOCATION_NAME' | translate}} <span class="mandatory-style">*</span>
+          </span>
+          <ng-select [items]="branchCombo" autofocus required bindLabel="locDisplayField" bindValue="locDisplayField"
+            (search)="listOfBranch($event)" (click)="listOfBranch($event)" [virtualScroll]="true"
+            (scrollToEnd)="listOfBranch({})" (keyup.backspace)="listOfBranch($event.target.value ? $event : 'back')" (clear)="listOfBranch('clear')" [loading]="scrollsyncBranch" loadingText="Loading..."
+            (change)="selectedBrachData($event)" formControlName="locationName" class="input-field example-full-width"></ng-select>
+          <mat-error
+            *ngIf="numberControlForm.controls.locationName.invalid && numberControlForm.controls.locationName.touched"
+            style="position: fixed;">
+            <div class="err-field" *ngIf="numberControlForm.controls.locationName.errors.required">
+              Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+          </mat-error>
+        </div>
+
+        <div fxFlex="33">
+          <span class="input-label"> {{'NUMBERCONTROL_NUMBERCONTROLSEQUENCE'| translate}}</span><span
+            class="mandatory-style">*</span>
+          <ng-select [items]="numberControlCombo" required bindLabel="numberCtrlCdName" bindValue="numberCtrlCdName"
+            (search)="loadNumberControlSequence($event)" (click)="loadNumberControlSequence($event)"
+            [virtualScroll]="true" (scrollToEnd)="loadNumberControlSequence({})" (keyup.backspace)="loadNumberControlSequence($event.target.value ? $event : 'back')" (clear)="loadNumberControlSequence('clear')" [loading]="scrollsyncNumberControlSeq"
+            loadingText="Loading..." (change)="selectedNumberControl($event)" formControlName="numberCtrlName" class="input-field example-full-width">
+          </ng-select>
+          <mat-error
+            *ngIf="numberControlForm.controls.numberCtrlName.invalid && numberControlForm.controls.numberCtrlName.touched"
+            style="position: fixed;">
+            <div class="err-field" *ngIf="numberControlForm.controls.numberCtrlName.errors.required">
+             Kindly Select The "{{'NUMBERCONTROL_NUMBERCONTROLSEQUENCE'| translate}}"</div>
+          </mat-error>
+        </div>
+
+        <div fxFlex="33" style="width: 100%;">
+          <span class="input-label"> {{'LABEL_MODULE_NAME' | translate}}</span> <span
+            class="mandatory-style">*</span>
+          <ng-select [items]="moduleCombo" required #srLocFocus bindLabel="numberCtrlModule" bindValue="numberCtrlModule"
+            formControlName="numberCtrlModule" class="input-field example-full-width"
+            (search)="loadModulesComboData($event)" (click)="loadModulesComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadModulesComboData({})" (keyup.backspace)="loadModulesComboData($event.target.value ? $event : 'back')" (clear)="loadModulesComboData('clear')" [loading]="scrollsyncModule"
+            loadingText="Loading..." (change)="selectedNumberControlModule($event)"></ng-select>
+          <mat-error
+            *ngIf="numberControlForm.controls.numberCtrlModule.invalid && numberControlForm.controls.numberCtrlModule.touched"
+            style="position: fixed;">
+            <div class="err-field" *ngIf="numberControlForm.controls.numberCtrlModule.errors.required">
+              Kindly Select The "{{'LABEL_MODULE_NAME'| translate}}"</div>
+          </mat-error>
+        </div>
+
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" style="height: 80px;">
+        <div fxFlex="34">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10 }}">
+            <mat-label class="example-label input-label"> {{ 'NUMBERCONTROL_PREFIX' | translate}}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput formControlName="prefixCd" [maxlength]="10">
+            <mat-hint align="end">{{numberControlForm.controls.prefixCd.value?.length || 0}}/10</mat-hint>
+            <mat-error
+              *ngIf="numberControlForm.controls.prefixCd.invalid && numberControlForm.controls.prefixCd.touched">
+              <div class="err-field" *ngIf="numberControlForm.controls.locationName.errors.required">
+                "{{'NUMBERCONTROL_PREFIX' | translate}}" Is Required</div>
+              
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="33">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_10 }}">
+            <mat-label class="example-label input-label"> {{'NUMBERCONTROL_SUFFIX'| translate}}
+            </mat-label>
+            <input matInput formControlName="suffixCd" [maxlength]="10">
+            <mat-hint align="end">{{numberControlForm.controls.suffixCd.value?.length || 0}}/10</mat-hint>
+            <mat-error
+              *ngIf="numberControlForm.controls.suffixCd.invalid && numberControlForm.controls.suffixCd.invalid">
+              
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="33">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{ 'NUMBERCONTROL_LASTNUMBER'| translate}}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput  formControlName="lastNumber">
+            <mat-error
+              *ngIf="numberControlForm.controls.lastNumber.invalid && numberControlForm.controls.lastNumber.touched">
+              <div class="err-field" *ngIf="numberControlForm.controls.lastNumber.errors.required">
+                "{{'NUMBERCONTROL_LASTNUMBER'| translate}}" Is Required </div>
+              <div class="err-field" *ngIf="numberControlForm.controls.lastNumber.errors.pattern">
+                {{ 'NUMBERCONTROL_LASTNUMBER' | translate }} is Invalid </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" style="height: 80px;">
+        <div fxFlex="34">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label"> {{'NUMBERCONTROL_MAXNUMBER'| translate}}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput formControlName="maxNumber">
+            <mat-error
+              *ngIf="numberControlForm.controls.maxNumber.invalid && numberControlForm.controls.maxNumber.touched">
+              <div class="err-field" *ngIf="numberControlForm.controls.maxNumber.errors.required">
+                "{{'NUMBERCONTROL_MAXNUMBER'| translate}}" Is Required</div>
+              <div class="err-field" *ngIf="numberControlForm.controls.maxNumber.errors.pattern">
+                {{ 'NUMBERCONTROL_MAXNUMBER' | translate }} is Invalid </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="66"></div>
+
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <div fxFlex="100" fxLayoutAlign="center center">
+          <button mat-raised-button class="space" color="primary" (click)="Submit()"
+            [disabled]="numberControlForm.invalid || uploadFlag || isView || updateFlag">
+            <span *ngIf="!uploadFlag">{{buttonDisplay}}</span>
+            <span *ngIf="uploadFlag && !isView">{{'COMMON_LOADING'| translate}}</span></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

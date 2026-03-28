@@ -1,0 +1,50 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <div fxLayout="row">
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'MENU_SEVERITY' | translate }} </h4>
+      </div>
+
+      <div fxFlex="5" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" (click)="closeSeverityModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+
+    <div fxLayout="row"  style="padding-top: 20px;">
+      <form class="modalform" fxFlex="100" [formGroup]="severityForm">
+        <div fxFlex="100">
+          <div fxLayout="row">
+
+            <mat-form-field class="example-full-width" fxFlex="100" [floatLabel]="'always'"
+              hintLabel="{{ CommonhintMsg.MAX_100 }}">
+              <mat-label class="input-label"> {{ 'SR_SEVERITY' | translate }} 
+                <span class="mandatory-style">*</span>
+              </mat-label>
+              <input matInput class="input-field" formControlName="severityName" #severityFocus
+                (input)="checkUniqueConstrainForSeverity()" [maxlength]="100"
+                oninput="this.value = this.value.toUpperCase()">
+              <mat-hint align="end">{{severityForm.controls.severityName.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="severityForm.controls.severityName.errors && severityForm.controls.severityName.touched">
+                <div *ngIf="severityForm.controls.severityName.errors.required">{{ 'SR_SEVERITY' | translate }} is
+                  Required </div>
+                <div *ngIf="severityForm.controls.severityName.errors.notUnique">{{ErrorMsgSeverity}}</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div fxLayout="row" class="create-priority-button" style="padding-top: 5px;">
+            <button mat-raised-button  color="primary" (click)="submitSeverity()"
+              [disabled]="severityForm.invalid || !severityForm.dirty || uploadSeverityFlag">
+              <span *ngIf="!uploadSeverityFlag">{{displayButton}}</span>
+              <span *ngIf="uploadSeverityFlag">{{'COMMON_LOADING' | translate}}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>

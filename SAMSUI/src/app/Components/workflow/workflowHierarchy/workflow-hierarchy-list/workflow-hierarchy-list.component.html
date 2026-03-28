@@ -1,0 +1,207 @@
+<div fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{'MENU_WORKFLOW'|
+          translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+          {{'MENU_WORKFLOW_HIERARCHY'| translate}}
+        </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="column" style="padding-top: 0.5%;">
+    <div class="table_section" fxFlex="100">
+
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-header">
+            {{'COMMON_SEARCH'| translate}} {{'MENU_WORKFLOW_HIERARCHY'| translate}}
+          </mat-panel-title>
+          <mat-panel-description fxLayoutAlign="end end">
+            <mat-icon>search</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div fxLayout="column">
+          <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxFlex.lt-md="100">
+            <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+              <div fxFlex="34">
+                <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField"
+                  (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" tabindex="1"
+                  [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                  loadingText="Loading..." (change)="selectedLocationData($event)"
+                  [(ngModel)]="workflowHierarchyHdrModel.locationName" [ngModelOptions]="{standalone: true}"
+                  appendTo="body" class="example-full-width input-field"></ng-select>
+              </div>
+
+              <div fxFlex="33" class="process-name-feild">
+                <span class="input-label">{{ 'WORKFLOW_PROCESS_NAME' | translate }}</span>
+                <ng-select class=" example-full-width input-field"
+                  [(ngModel)]="workflowHierarchyHdrModel.workflowProcessName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfWorkflowProcess($event)" (click)="listOfWorkflowProcess({})"
+                  (change)="setWorkflowProcess($event)" [virtualScroll]="true" appendTo="body"
+                  (scrollToEnd)="listOfWorkflowProcess({})" (keyup.backspace)="listOfWorkflowProcess($event.target.value ? $event : 'back')" (clear)="listOfWorkflowProcess('clear')" [loading]="scrollProcessSync"tabindex="7">
+                  <ng-option  *ngFor="let list of processCombo" [value]="list" > {{list.workflowProcessName | translate}}</ng-option> 
+                </ng-select>
+              </div>
+
+              <div fxFlex="33" class="process-name-feild">
+                <span class="input-label">{{'WORKFLOW_DESCRIPTION' | translate}}</span>
+                <ng-select class=" example-full-width input-field"
+                  [(ngModel)]="workflowHierarchyHdrModel.workflowName" [ngModelOptions]="{standalone: true}"
+                  (search)="listOfWorkflowDescription($event)" (click)="listOfWorkflowDescription({})"
+                  (change)="setWorkflowDescription($event)" [items]="workflowDescriptionCombo" [virtualScroll]="true"
+                  (scrollToEnd)="listOfWorkflowDescription({})" (keyup.backspace)="listOfWorkflowDescription($event.target.value ? $event : 'back')" (clear)="listOfWorkflowDescription('clear')" [loading]="scrollWorkflowDescriptionSync"
+                  bindLabel="workflowName" bindValue="workflowName" appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+            <div fxLayout="row" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100" >
+              <div fxFlex="100" fxHide.lt-md fxLayoutAlign="end end" >
+                <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" tabindex="7" (click)="searchWorkflowHierarchy()" style="margin-right: 10px;">{{'COMMON_SEARCH' |
+                  translate}}</button>
+                <button mat-raised-button style="margin-left: 2px;" color="primary"
+                  matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="8"
+                  (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+              </div>
+              <div fxFlex="100" fxHide.gt-md fxHide.md fxLayoutAlign="end end" style="margin-top: 10px;">
+                <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" tabindex="7" (click)="searchWorkflowHierarchy()"  class="space">
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button mat-raised-button style="margin-left: 2px;" color="primary"
+                  matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="8"
+                  (click)="clear()"  class="space">
+                  <mat-icon>clear_all</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mat-expansion-panel>
+
+      <hr>
+      <mat-toolbar>
+        <span>{{'MENU_WORKFLOW_HIERARCHY'| translate}} List</span>
+        <span class="example-spacer"></span>
+  
+        <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+        <span class="example-spacer"></span>
+  
+        <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay"  class="space sqr-btn"
+        matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+        (click)="workflowHierarchyAddEdit(0,'add')"><mat-icon>add</mat-icon></button>
+  
+        <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+        matTooltip="{{ 'COMMON_EDIT' | translate }}"  *ngIf="modelAccessModule.updateFlagDisplay"
+        (click)="workflowHierarchyAddEdit(selectedItem, 'edit')">
+        <mat-icon>edit</mat-icon></button>
+  
+        <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+        *ngIf="modelAccessModule.readFlagDisplay"  matTooltip="{{ 'COMMON_VIEW' | translate }}"
+        (click)="workflowHierarchyAddEdit(selectedItem, 'view')">
+        <mat-icon>visibility</mat-icon></button>
+
+        <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay"  class="space sqr-btn btnpadding"
+        matTooltip="{{ 'DEFAULT_CREATE' | translate }}" [matTooltipPosition]="'below'"
+        (click)="createDefaultHieararchy(0,'add')">{{ 'DEFAULT_CREATE' | translate }}</button>
+  
+      </mat-toolbar>
+      <div class="example-container">
+      <div fxLayout="row">
+
+        <table mat-table [dataSource]="workflowHierarchyDataSource" matSort (matSortChange)="customSort($event)"
+          matSortActive="name" matSortDirection="asc" matSortDisableClear>
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="width:4%"> {{'COMMON_SELECT' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i=index;"> 
+              <mat-checkbox color="primary" class="example-margin" (change)="selectworkflowHierarchy(element)"
+              [checked]="selectedItem == element?.workflowHierarchyHdrId">
+             </mat-checkbox>  
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="locationTO.locationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LOCATION_NAME' | translate}} </th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element">
+              {{ element?.locationName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="workflowProcessName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'WORKFLOW_PROCESS_NAME' | translate }} </th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.workflowProcessName  | translate}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="workflowName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'WORKFLOW_DESCRIPTION' | translate }} </th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.workflowName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
+            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element">
+              <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+              <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_CREATED_BY' | translate}}</th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.createdBy}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdDt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_CREATED_DT' | translate}}</th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.createdDtDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_BY' | translate}}</th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.updatedBy}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedDt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_DT' | translate}}</th>
+            <td mat-cell (click)="selectworkflowHierarchy(element)" *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="workflowHierarchyDispColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: workflowHierarchyDispColumns;"></tr>
+
+        </table>
+
+      </div>
+
+      
+      <div fxLayout="row"> 
+        <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+          {{'COMMON_NO_RECORDS_FOUND' | translate}}
+        </mat-card>
+        <mat-card class="no_records_found" *ngIf="subLoader" fxLayoutAlign="center center">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+      </div>
+
+    </div>
+
+    </div>
+  </div>
+
+</div>

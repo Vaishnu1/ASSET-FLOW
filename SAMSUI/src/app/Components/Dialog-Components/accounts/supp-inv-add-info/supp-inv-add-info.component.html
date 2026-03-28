@@ -1,0 +1,51 @@
+<div fxLayout="column" fxFlexFill>
+    <div class="content_section_background">
+        <div fxLayout="column">
+            <hr />
+            <mat-toolbar>
+                <span>Supplier Invoice Additional Info</span>
+                <span class="example-spacer"></span>
+                <span class="example-spacer"></span>
+                <button mat-raised-button class="space col-md-5" color="primary" (click)="addGRNAddInfo()">
+                    Add
+                </button>
+
+                <button mat-raised-button class="space col-md-5" color="primary" (click)="closeModal()">
+                    Close
+                </button>
+            </mat-toolbar>
+        </div>
+    </div>
+    <div class="row">
+        <form fxLayout="column" [formGroup]="supplierInvoiceMainInfoForm">
+            <!-- supplier invoice hdr start here -->
+            <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                <div fxFlex="20" fxFlex.sm="20" fxFlex.xs="20">
+                    <!--3 rows per column 1-->
+                    <div style="padding: 10px;" fxFlex="35" fxFlex.sm="35" fxFlex.xs="35">
+                        <div fxLayout="row">
+                            <div class="form-group h-55">
+                                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                                    <mat-label class="example-label">Advance payments</mat-label>
+                                    <input matInput class="input-field" formControlName="advancePayments">
+                                </mat-form-field>
+                            </div>
+                            <div class="form-group h-55">
+                                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                                    <mat-label class="example-label">Transport Charges</mat-label>
+                                    <input matInput class="input-field" formControlName="tranCharges">
+                                </mat-form-field>
+                            </div>
+                            <div class="form-group h-55">
+                                <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                                    <mat-label class="example-label">Misc Charges</mat-label>
+                                    <input matInput class="input-field" formControlName="miscCharges">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>                        
+</div>                

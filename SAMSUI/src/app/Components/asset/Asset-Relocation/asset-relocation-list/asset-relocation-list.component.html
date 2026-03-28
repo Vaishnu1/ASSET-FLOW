@@ -1,0 +1,390 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a></mat-list-item>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{'MENU_ASSET_RELOCATION_APPROVAL' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+      </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="content_section_background" fxFlex="100">
+      <div class="row">
+        <div class="table_section">
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="panel-header">
+                {{'COMMON_SEARCH'| translate}}
+              </mat-panel-title>
+              <mat-panel-description fxLayoutAlign="end end">
+                <mat-icon>search</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <form class="margin-fix">
+
+              <div fxLayout="row">
+                <span class="header-font">{{'RELOCATE_FROM' | translate}}</span>
+              </div>
+
+              <div fxLayout="row">
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo"  class="input-field" autofocus required #srLocFocus bindLabel="locDisplayField"
+                        bindValue="locDisplayField" (search)="loadLocationComboData($event,true )"  appendTo="body"
+                        (click)="loadLocationComboData($event,true)" [virtualScroll]="true"
+                        (scrollToEnd)="loadLocationComboData({},true)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',true)" (clear)="loadLocationComboData('clear',true)" [loading]="scrollsyncLocation" loadingText="Loading..."
+                        (change)="selectedLocationData($event)" [(ngModel)]="assetRelocation.sourceLocName"
+                        [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                      <ng-select [items]="departmentComboList"  class="input-field" required bindLabel="departmentName"
+                        bindValue="departmentName" (search)="loadDepartmentComboData($event,true)"  appendTo="body"
+                        (click)="loadDepartmentComboData($event,true)" [virtualScroll]="true"
+                        (scrollToEnd)="loadDepartmentComboData({},true)" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back',true)" (clear)="loadDepartmentComboData('clear',true)" [loading]="scrollsyncDepartment"
+                        loadingText="Loading..." (change)="selectedDepartmentData($event)"
+                        [(ngModel)]="assetRelocation.sourceDepName" [ngModelOptions]="{standalone: true}">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                      <ng-select [items]="subDepartmentCombo"  class="input-field" bindLabel="subDepartmentName" bindValue="subDepartmentName"
+                        (search)="loadSubDepartmentComboData($event)" (click)="loadSubDepartmentComboData($event)"
+                        [virtualScroll]="true" (scrollToEnd)="loadSubDepartmentComboData({})" (keyup.backspace)="loadSubDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentComboData('clear')"  appendTo="body"
+                        [loading]="scrollsyncSubDepartment" loadingText="Loading..."
+                        (change)="selectedSubDepartmentData($event)" [(ngModel)]="assetRelocation.sourceSubDepName"
+                        [ngModelOptions]="{standalone: true}">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="form-group">
+                    <mat-form-field class="example-full-width bacth-no-field" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label"> {{ 'RELOCATE_BATCH_NO' | translate }}
+                      </mat-label>
+                      <input matInput type="number" class="input-field" [(ngModel)]="assetRelocation.relocateBatchNo" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div fxLayout="row">
+                <span class="header-font">{{'RELOCATE_TO' | translate}}</span>
+              </div>
+
+              <div fxLayout="row">
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo"  class="input-field" required #srLocFocus bindLabel="locDisplayField"
+                        bindValue="locDisplayField" (search)="loadLocationComboData($event,false)"  appendTo="body"
+                        (click)="loadLocationComboData($event,false)" [virtualScroll]="true"
+                        (scrollToEnd)="loadLocationComboData({},false)" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back',false)" (clear)="loadLocationComboData('clear',false)" [loading]="scrollsyncLocationRelocate" loadingText="Loading..."
+                        (change)="selectedLocationDataDestination($event)" [(ngModel)]="assetRelocation.relocateLocName"
+                        [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }}</span>
+                      <ng-select [items]="departmentComboList"  class="input-field" required bindLabel="departmentName"
+                        bindValue="departmentName" (search)="loadDepartmentComboData($event,false)"
+                        (click)="loadDepartmentComboData($event,false)" [virtualScroll]="true"
+                        (scrollToEnd)="loadDepartmentComboData({},false)" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back',false)" (clear)="loadDepartmentComboData('clear',false)" [loading]="scrollsyncDepartmentRelocate"
+                        loadingText="Loading..." (change)="selectedDepartmentDataRelocate($event)"
+                        [(ngModel)]="assetRelocation.relocateDepName" [ngModelOptions]="{standalone: true}" appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                      <ng-select [items]="subDepartmentComboList"  class="input-field" bindLabel="subDepartmentName"
+                        bindValue="subDepartmentName" (search)="loadSubDepartmentForRelocation($event)"
+                        (click)="loadSubDepartmentForRelocation($event)" [virtualScroll]="true"
+                        (scrollToEnd)="loadSubDepartmentForRelocation({})" (keyup.backspace)="loadSubDepartmentForRelocation($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentForRelocation('clear')" [loading]="scrollsyncSubDepartmentRelocate"
+                        loadingText="Loading..." (change)="selectedSubDepartmentDataRelocate($event)"
+                        [(ngModel)]="assetRelocation.relocateSubDepName" [ngModelOptions]="{standalone: true}" appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="2">
+                </div>
+                <div fxFlex="23">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'RELOCATE_STATUS' | translate }} </span>
+                    <ng-select [ngModelOptions]="{standalone: true}"
+                      (search)="loadStatusComboData($event)" (click)="loadStatusComboData({})"
+                      [virtualScroll]="true" (scrollToEnd)="loadStatusComboData({})" (keyup.backspace)="loadStatusComboData($event.target.value ? $event : 'back')" (clear)="loadStatusComboData('clear')" [loading]="scrollsyncRelocateStatus"
+                      loadingText="Loading..." (change)="selectedRelocateStatus($event)" appendTo="body"
+                      class="input-field" [(ngModel)]="assetRelocation.relocateStatusName">
+                      <ng-option *ngFor="let relocateStatus of relocateStatusCombo" [value]="relocateStatus">
+                        {{ relocateStatus.processStatusName | translate }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+
+              <div fxLayout="row">
+                <div fxFlex="77">
+                </div>
+                <div fxFlex="23"  fxLayoutAlign="end end">
+                  <button mat-raised-button fxHide.lt-md class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" (click)="searchSource()">{{'COMMON_SEARCH' | translate}}</button>
+
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="searchSource()"  fxHide.gt-sm><mat-icon>search</mat-icon></button>
+
+                  <button mat-raised-button fxHide.lt-md class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="resetSourceDestination()">{{'COMMON_CLEAR' | translate}}</button>
+
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="resetSourceDestination()"  fxHide.gt-sm><mat-icon>clear_all</mat-icon></button>
+                </div>
+              </div>
+
+            </form>
+          </mat-expansion-panel>
+
+          <hr />
+
+          <mat-toolbar>
+          
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+              <mat-icon>view_week</mat-icon>
+            </button>
+      
+            <div class="custom-dialog" *ngIf="showManageColumns">
+              <div>
+                <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+              </div>
+              <hr>
+              <div class="custom-dialog-body" *ngIf="showManageColumns">
+                <div id="column1">        
+                  <input type="checkbox" [checked]="displayedColumns.includes('sourceLocName')"(change)="toggleColumn('sourceLocName')">
+                  <span>{{'SOURCE_LOC_NAME' | translate}}</span>
+                  <br>
+                  
+                  <input type="checkbox" [checked]="displayedColumns.includes('sourceDepName')"(change)="toggleColumn('sourceDepName')">
+                  <span>{{'SOURCE_DEPT_NAME' | translate}} / {{'SOURCE_SUB_DEPT_NAME' | translate}}</span>
+                  <br>
+                  
+                  <input type="checkbox" [checked]="displayedColumns.includes('relocateLocName')" (change)="toggleColumn('relocateLocName')">
+                  <span>{{'RELOCATE_LOC_NAME' | translate}}</span>
+                  <br>
+
+                  <input type="checkbox" (change)="toggleColumn('relocateDepName')" [checked]="displayedColumns.includes('relocateDepName')">
+                  <span>{{'RELOCATE_DEPT_NAME' | translate}} / {{'RELOCATE_SUB_DEPT' | translate}}</span> <br>
+
+                </div>
+          
+                <div id="column2">
+
+                  <input type="checkbox" (change)="toggleColumn('relocateBatchNo')" [checked]="displayedColumns.includes('relocateBatchNo')">
+                  <span>{{'RELOCATE_BATCH_NO' | translate}}</span> <br>
+          
+                  <input type="checkbox" (change)="toggleColumn('relocateStatus')" [checked]="displayedColumns.includes('relocateStatus')">
+                  <span>{{'RELOCATE_STATUS' | translate}}</span> <br>
+          
+                  <input type="checkbox" (change)="toggleColumn('relocateApprovalStatus')" [checked]="displayedColumns.includes('relocateApprovalStatus')">
+                  <span>{{'RELOCATE_APPROVAL_STATUS' | translate}}</span> <br>
+
+                  <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+                  <span>{{'COMMON_CREATED_BY' | translate}} / {{'COMMON_CREATED_DT' | translate}}</span><br>
+                </div>
+          
+                <div id="column3">
+                
+                  <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+                  <span>{{'COMMON_UPDATED_DT' | translate}}</span>
+                </div>
+              </div>
+          
+              <hr>
+              
+              <div fxLayoutAlign="end end">
+                <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                  {{'COMMON_OK' | translate}}
+                </button>
+                <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                  {{'COMMON_RESET' | translate}}
+                </button>
+              </div>
+              
+            </div>
+
+            <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+              [matTooltipPosition]="'below'" *ngIf="modelAccessModule.createFlagDisplay"
+              (click)="createAssetTransfer('add')"><mat-icon>add</mat-icon>
+            </button>
+          
+            <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.updateFlagDisplay" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+              (click)="viewAssets('edit')">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn"
+              *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="viewAssets('view')">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+              matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="transferWorkflowApproval(true)">
+              <mat-icon>spellcheck</mat-icon>
+            </button>
+          
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+              matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="transferWorkflowApproval(false)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          
+          </mat-toolbar>
+
+          <div class="row">
+            <div class="example-container">
+              <div class="row">
+                <table mat-table fxFlex="100" [dataSource]="dataSource" class="asset-relocation-list-table">
+
+                  <!-- <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" [checked]="selectedAllAssest" class="example-margin" (change)="selectAllAssets($event)">
+                    </mat-checkbox>  </th>
+                    <td mat-cell *matCellDef="let element;let i = index;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectAssets(element)" [checked]="compareValue(element)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container> -->
+
+
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" [checked]="selectedAllAssest" class="example-margin" (change)="selectAllAssets($event)">
+                    </mat-checkbox>  </th>
+                    <td mat-cell *matCellDef="let element;let i = index;">
+                      <mat-checkbox color="primary" class="example-margin" (change)="selectAssets(element)" [checked]="compareValue(element)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sNo" >
+                    <th mat-header-cell *matHeaderCellDef style="width: 5%;"> {{'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;"> {{getIndexValue(i+1)}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sourceLocName">
+                    <th mat-header-cell *matHeaderCellDef >{{'SOURCE_LOC_NAME' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" >{{ element?.sourceLocName }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="sourceDepName">
+                    <th mat-header-cell *matHeaderCellDef >{{'SOURCE_DEPT_NAME' | translate}} / <br /> {{'SOURCE_SUB_DEPT_NAME' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" >{{ element?.sourceDepName }} / <br /> {{ element?.sourceSubDepName }}</td>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="sourceSubDepName">
+                    <th mat-header-cell *matHeaderCellDef > {{'SOURCE_SUB_DEPT_NAME' | translate}} </th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" ></td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="relocateLocName">
+                    <th mat-header-cell *matHeaderCellDef >{{'RELOCATE_LOC_NAME' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" >{{ element?.relocateLocName }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="relocateDepName">
+                    <th mat-header-cell *matHeaderCellDef >{{'RELOCATE_DEPT_NAME' | translate}} / <br /> {{'RELOCATE_SUB_DEPT' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" >{{ element?.relocateDepName }} / <br /> {{ element?.relocateSubDepName }}</td>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="relocateSubDepName">
+                    <th mat-header-cell *matHeaderCellDef ></th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" ></td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="relocateBatchNo">
+                    <th mat-header-cell style="min-width:10px !important" *matHeaderCellDef >{{'RELOCATE_BATCH_NO' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element" > {{element?.relocateBatchNo}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="relocateStatus">
+                    <th mat-header-cell *matHeaderCellDef >{{'RELOCATE_STATUS' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element"  class="{{element?.relocateStatusName.replace(' ','')}}"> {{element?.relocateStatusName | translate}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="relocateApprovalStatus">
+                    <th mat-header-cell *matHeaderCellDef >{{'RELOCATE_APPROVAL_STATUS' | translate}}</th>
+                    <td mat-cell (click)="selectAssets(element)" *matCellDef="let element"  class="{{element?.approvalStatus.replace(' ','')}}"> {{element?.approvalStatus}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell *matHeaderCellDef > {{'COMMON_CREATED_BY' | translate}} / <br /> {{'COMMON_CREATED_DT' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                      {{element?.createdBy}} / <br /> {{element?.createdDtDisp}} </td>
+                  </ng-container>
+
+                  <!-- <ng-container matColumnDef="createdDt">
+                    <th mat-header-cell *matHeaderCellDef > 
+                    </th>
+                    <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                      {{element?.createdDtDisp}}</td>
+                  </ng-container> -->
+
+                  <ng-container matColumnDef="updatedDt">
+                    <th mat-header-cell *matHeaderCellDef > {{'COMMON_UPDATED_DT' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                      {{element?.updatedDtDisp}}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                  </tr>
+                </table>
+              </div>
+
+              <div class="row">
+                <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+
+                <mat-card *ngIf="subLoader" fxLayoutAlign="center center" class="no_records_found">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

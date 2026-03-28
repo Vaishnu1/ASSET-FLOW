@@ -1,0 +1,115 @@
+<div fxLayout="column">
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayout="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0">{{'MENU_SETTING' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="breadcrumb-padding-0" aria-current="page">{{'MENU_USER_MGMT' | translate}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start">
+    <div fxFlex="14" fxFlex.sm="2" fxFlex.xs="2">
+
+      <div fxLayoutAlign="center start">
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list style="padding-top: 0%;" fxLayout="column" class="Tabs" fxShow="true" fxHide.lt-md>
+        
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_group'}"
+          (click)="Active_Tab_Change('user_group')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'user_group'" class="group-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'user_group'" class="group-icon-white"></mat-icon>
+          {{'MENU_GROUP' | translate}}
+        </mat-list-item>
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_group_access'}"
+          (click)="Active_Tab_Change('user_group_access')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'user_group_access'" class="group-access-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'user_group_access'" class="group-access-icon-white"></mat-icon>
+          {{'MENU_GROUP_ACCESS' | translate}}
+        </mat-list-item>
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_view'}"
+          (click)="Active_Tab_Change('user_view')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'user_view'" class="user-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'user_view'" class="user-icon-white"></mat-icon>
+          {{'MENU_USER' | translate}}
+        </mat-list-item>
+
+        <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'location_access'}"
+          (click)="Active_Tab_Change('location_access')" fxLayoutAlign="start center">
+          <mat-icon *ngIf="Active_Tab != 'location_access'" class="location-access-icon-blue"></mat-icon>
+          <mat-icon *ngIf="Active_Tab === 'location_access'" class="location-access-icon-white float-icon"></mat-icon>
+          {{'MENU_LOCATION_ACCESS' | translate}}
+        </mat-list-item>
+      </mat-nav-list>
+
+      <mat-sidenav-container fxHide.gt-sm>
+        <mat-sidenav #sidenav style="margin-top: 55px;">
+          <mat-nav-list fxFlexlayout="column" fxShow="true">
+
+            <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_group'}"
+            (click)="Active_Tab_Change('user_group')" fxLayoutAlign="start center">
+            <mat-icon *ngIf="Active_Tab != 'user_group'" class="group-icon-blue"></mat-icon>
+            <mat-icon *ngIf="Active_Tab === 'user_group'" class="group-icon-white"></mat-icon>
+            {{'MENU_GROUP' | translate}}
+          </mat-list-item>
+  
+          <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_group_access'}"
+            (click)="Active_Tab_Change('user_group_access')" fxLayoutAlign="start center">
+            <mat-icon *ngIf="Active_Tab != 'user_group_access'" class="group-access-icon-blue"></mat-icon>
+            <mat-icon *ngIf="Active_Tab === 'user_group_access'" class="group-access-icon-white"></mat-icon>
+            {{'MENU_GROUP_ACCESS' | translate}}
+          </mat-list-item>
+  
+          <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'user_view'}"
+            (click)="Active_Tab_Change('user_view')" fxLayoutAlign="start center">
+            <mat-icon *ngIf="Active_Tab != 'user_view'" class="user-icon-blue"></mat-icon>
+            <mat-icon *ngIf="Active_Tab === 'user_view'" class="user-icon-white"></mat-icon>
+            {{'MENU_USER' | translate}}
+          </mat-list-item>
+  
+          <mat-list-item class="Tab" [ngClass]="{'active-menu-item':Active_Tab === 'location_access'}"
+            (click)="Active_Tab_Change('location_access')" fxLayoutAlign="start center">
+            <mat-icon *ngIf="Active_Tab != 'location_access'" class="location-access-icon-blue"></mat-icon>
+            <mat-icon *ngIf="Active_Tab === 'location_access'" class="location-access-icon-white float-icon"></mat-icon>
+            {{'MENU_LOCATION_ACCESS' | translate}}
+          </mat-list-item>
+
+          </mat-nav-list>
+
+        </mat-sidenav>
+      </mat-sidenav-container>
+    </div>
+
+    <div fxFlex="83" fxFlex.sm="93" fxFlex.xs="93">
+      <div *ngIf="Active_Tab === 'user_group'" fxFlexFill>
+        <app-group-list></app-group-list>
+      </div>
+
+      <div *ngIf="Active_Tab === 'user_group_access'" fxFlexFill>
+        <app-group-access></app-group-access>
+      </div>
+
+      <div *ngIf="Active_Tab === 'user_view'" fxFlexFill>
+        <app-user-list></app-user-list>
+      </div>
+
+      <div *ngIf="Active_Tab === 'location_access'" fxFlexFill>
+        <app-user-location-list></app-user-location-list>
+      </div>
+    </div>
+  </div>
+</div>

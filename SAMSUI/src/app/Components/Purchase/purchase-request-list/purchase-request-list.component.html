@@ -1,0 +1,427 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-toolbar-row fxFlex="50" fxFlex.sm="40" fxFlex.xs="40" fxLayoutAlign="start center">
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="end center">
+        <mat-list-item><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item>{{'MENU_PURCHASE' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item aria-current="page">{{'PURCHASE_REQUEST' | translate}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+  </div>
+
+
+  <div fxLayout="column" style="padding-top:0.5%">
+    <mat-expansion-panel fxLayout="column" style="overflow: visible;" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+ 
+          <div class="form-group" fxFlex="25">
+            <div class="example-full-width">
+            <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+            <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField"
+              (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" appendTo="body"
+              [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+              loadingText="Loading..." (change)="selectedLocationData($event)" [(ngModel)]="prHdr.selectedLocationNames"
+              [ngModelOptions]="{standalone: true}" class="input-field" multiple="true"></ng-select>
+              </div>
+          </div>
+
+          <div class="form-group pos-rel-t-10-px" fxFlex="23" style="margin-top:3px">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{ 'PR_NO' | translate }}
+              </mat-label>
+              <input matInput class="input-field" [(ngModel)]="prHdr.poReqNo" [ngModelOptions]="{standalone: true}"  oninput="this.value = this.value.toUpperCase()">
+            </mat-form-field>
+          </div> 
+          <div class="form-group" fxFlex="23">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'SR_NO' | translate }} </span>
+              <ng-select [items]="srNoCombo" class="input-field" bindLabel="srNo" bindValue="srNo"
+                (search)="loadServiceRequestNumbers($event)" (click)="loadServiceRequestNumbers($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadServiceRequestNumbers({})" (keyup.backspace)="loadServiceRequestNumbers($event.target.value ? $event : 'back')" (clear)="loadServiceRequestNumbers('clear')" [loading]="scrollSRNosync"
+                loadingText="Loading..." (change)="selectedSRNo($event)" [(ngModel)]="prHdr.selectedSrNos" appendTo="body"
+                [ngModelOptions]="{standalone: true}" multiple="true"></ng-select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group" fxFlex="23">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'PURCHASE_PHYSICAL_DAMAGE' | translate }} </span>
+                <ng-select [items]="['YES', 'NO']" [(ngModel)]="prHdr.physicalDamage"
+                  [ngModelOptions]="{standalone: true}">
+                </ng-select>
+            </div>
+          </div> 
+
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="form-group" fxFlex="25">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+              <input matInput class="input-field" (click)="fromDt.open()" [matDatepicker]="fromDt" [(ngModel)]="prHdr.fromDt" [matDatepickerFilter]="filterStartDate"
+                [ngModelOptions]="{standalone: true}" (dateChange)="purchaseStartDateValidation($event)">
+              <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+              <mat-datepicker #fromDt></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" fxFlex="23">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+              <input matInput class="input-field" (click)="endDt.open()" [matDatepicker]="endDt" [(ngModel)]="prHdr.endDt"        [matDatepickerFilter]="filterEndDate"
+                [ngModelOptions]="{standalone: true}" (dateChange)="purchaseEndDateValidation($event)">
+              <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+              <mat-datepicker #endDt></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" fxFlex="23" style="margin-top: -15px;">
+            <div class="example-full-width"> 
+            <span class="input-label"> {{ 'PR_STATUS' | translate }} </span>
+            <ng-select [items]="purchaseStatusCombo" bindLabel="purchaseStatusName" bindValue="purchaseStatusName"
+              (search)="loadPRStatusData($event)" (click)="loadPRStatusData($event)" [virtualScroll]="true"
+              (scrollToEnd)="loadPRStatusData({})" (keyup.backspace)="loadPRStatusData($event.target.value ? $event : 'back')" (clear)="loadPRStatusData('clear')" [loading]="scrollsyncPurchaseRequest" loadingText="Loading..."
+              (change)="selectedPRStatusData($event)" [(ngModel)]="prHdr.poReqStatus" appendTo="body"
+              [ngModelOptions]="{standalone: true}">
+            </ng-select> 
+            </div>
+          </div>
+          <div class="form-group" fxFlex="23" style="margin-top: -15px;">
+            <div class="example-full-width">
+            <span class="input-label"> {{ 'APPROVAL_STATUS' | translate }} </span>
+            <ng-select  [(ngModel)]="prHdr.processStatus"
+              (click)="listOfProcessStatus({})" [virtualScroll]="true"
+              (search)="listOfProcessStatus($event)" (scrollToEnd)="listOfProcessStatus({})" (keyup.backspace)="listOfProcessStatus($event.target.value ? $event : 'back')" (clear)="listOfProcessStatus('clear')"
+              (change)="setProcessStatus($event)" [items]="processStatusCombo1" bindLabel="processName"
+              bindValue="processName" [loading]="scrollSyncProcessStatus" loadingText="Loading...">
+            </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: -10px;">
+          <div class="form-group" fxFlex="25">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'ASSET_CODE' | translate }} </span>
+              <ng-select [items]="assetCodeCombo" class="input-field" bindLabel="assetCode" bindValue="assetCode"
+                (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                loadingText="Loading..." (change)="selectedAssetCodeData($event)" [(ngModel)]="prHdr.selectedAssetCodes"
+                [ngModelOptions]="{standalone: true}" appendTo="body" multiple="true">
+              </ng-select>
+            </div>
+          </div> 
+          <div class="form-group" fxFlex="23" style="margin-left: 27px;">
+            <div class="example-full-width">
+              <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+              <ng-select  [(ngModel)]="prHdr.selectedAssetGroupNames"
+                [ngModelOptions]="{standalone: true}" (click)="listOfAllAssetGroup({})" [virtualScroll]="true"
+                (search)="listOfAllAssetGroup($event)" appendTo="body" (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')"
+                (change)="getAssetGroupComboValue($event)" [items]="assetGroup" bindLabel="assetGroupName"
+                bindValue="assetGroupName" [loading]="scrollsyncAssetGroup" loadingText="Loading..."  class="input-field ast-grp" multiple="true">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-group" fxFlex="23" style="margin-left: 30px;">
+            <div class="example-full-width">
+            <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+            <ng-select class=" input-field" [(ngModel)]="prHdr.selectedModelNames" [ngModelOptions]="{standalone: true}"
+              (click)="listOfAllModel({})" [virtualScroll]="true" (search)="listOfAllModel($event)"
+              appendTo="body" (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)"
+              [items]="modelCombo" bindLabel="modelName" bindValue="modelName" [loading]="scrollsyncModel"
+              loadingText="Loading..." multiple="true">
+            </ng-select>
+            </div>
+          </div>
+          <div fxFlex="60" fxLayout="row" fxLayoutAlign="end" >
+            <div>
+              <button mat-raised-button color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                [matTooltipPosition]="'below'" tabindex="10" (click)="searchPR()">{{'COMMON_SEARCH' |
+                translate}}</button>
+            </div>
+            <div>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                [matTooltipPosition]="'below'" tabindex="11" (click)="clear()">{{'COMMON_CLEAR' |
+                translate}}</button>
+            </div>
+            <div>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}" (click)="generateReport()"
+              [matTooltipPosition]="'below'" tabindex="12">{{'REPORT_EXPORT' | translate}}</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </mat-expansion-panel>
+
+    <hr>
+
+    <mat-toolbar>
+      <span class="example-spacer"></span>
+
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+      [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+        <mat-icon>view_week</mat-icon>
+      </button>
+
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('assetCode')"(change)="toggleColumn('assetCode')">
+            <span>{{'SR_NO' | translate}}/{{'ASSET_CODE' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('poReqNo')" (change)="toggleColumn('poReqNo')">
+            <span>{{'PR_INFO' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('createdBy')" (change)="toggleColumn('createdBy')">
+            <span>{{'PR_REQUESTED_BY' | translate}}</span>
+            <br>
+          </div>
+    
+          <div id="column2">
+            <input type="checkbox" (change)="toggleColumn('poReqStatus')" [checked]="displayedColumns.includes('poReqStatus')">
+            <span>{{'PR_STATUS' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('prApprovalStatus')" [checked]="displayedColumns.includes('prApprovalStatus')">
+            <span>{{'APPROVAL_STATUS' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('grandTotal')" [checked]="displayedColumns.includes('grandTotal')">
+            <span>{{'PR_GRAND_AMT' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span> <br>
+          </div>
+    
+          <div id="column3">
+            <input type="checkbox" (change)="toggleColumn('supplierName')" [checked]="displayedColumns.includes('supplierName')">
+            <span>{{'SUPPLIER_NAME' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('itemDesc')" [checked]="displayedColumns.includes('itemDesc')">
+            <span>{{'ITEM_DESC' | translate}}</span>
+          </div>
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+
+      <button mat-raised-button color="primary"  class="space sqr-btn" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+       [matTooltipPosition]="'below'" *ngIf="prModelAccessModule.createFlagDisplay" 
+      (click)="createPR(0,'add')"><mat-icon>add</mat-icon></button>
+
+      <button  [disabled]="enableActionBtn || selectedPoReqStatus == 'CANCELLED' || selectedPoReqStatus == 'PO CONVERTED' || selectedPoReqStatus == 'CONVERT PO' " mat-raised-button color="primary"  class="space sqr-btn"
+      matTooltip="{{ 'COMMON_EDIT' | translate }}" *ngIf="prModelAccessModule.updateFlagDisplay" (click)="createPR(selectedItem,'edit')">
+     <mat-icon>edit</mat-icon>
+     </button>
+
+     <button  [disabled]="enableActionBtn" mat-raised-button color="primary"  class="space sqr-btn" (click)="createPR(selectedItem,'view')" matTooltip="{{ 'COMMON_VIEW' | translate }}" *ngIf="prModelAccessModule.readFlagDisplay">
+     <mat-icon>visibility</mat-icon>
+     </button>
+<!-- 
+     <button  [disabled]="enableActionBtn" mat-raised-button color="primary"  class="space sqr-btn"
+     matTooltip="{{ 'COMMON_PDF' | translate }}" (click)="generatePRPDF(selectedItem)">
+     <mat-icon>picture_as_pdf</mat-icon>
+     </button> -->
+
+    <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+      matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="prApproval(selectedItem,true)">
+      <mat-icon>spellcheck</mat-icon>
+    </button>
+    
+    <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+      matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="prWorkflowCancel()">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    
+    <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+      matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="cancelPR()">
+      <mat-icon>clear</mat-icon>
+    </button>
+    
+    <button [disabled]="selectedPoReqStatus != 'CONVERT PO' " mat-raised-button color="primary" matTooltip="{{'CONVERT_PO' | translate}}"
+      (click)="validatePrPoConversion()">{{'CONVERT_PO' | translate}}
+    </button>
+
+     <!-- <button [disabled]=" selectedItem == 0 || selectedPoReqStatus != 'REQUEST RAISED'" mat-raised-button color="primary"  class="space sqr-btn btnpadding" matTooltip="{{'PURCHASE_DEVELOP_PO' | translate}}" [matTooltipPosition]="'below'" *ngIf="poModelAccessModule.createFlagDisplay"
+     (click)="raisePO()" > {{'PURCHASE_DEVELOP_PO' | translate}}</button>
+
+     <button [disabled]=" selectedItem == 0 || selectedPoReqStatus != 'REQUEST RAISED'" mat-raised-button color="primary"  class="space sqr-btn btnpadding" matTooltip="{{'PURCHASE_CANCEL_PR' | translate}}" [matTooltipPosition]="'below'" *ngIf="prModelAccessModule.deleteFlagDisplay" (click)="cancelPR()">
+        {{'PURCHASE_CANCEL_PR' | translate}}</button> -->
+    
+    </mat-toolbar>
+
+    <div class="example-container">
+    <div fxLayout="column" fxFlex="100">
+      <table mat-table [dataSource]="prMainDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+        matSortDirection="asc" matSortDisableClear class="PR-list-table">
+        
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" class="example-margin"
+            (change)="selectMultiplePR()" [(ngModel)]="multiSelectFlag">
+        </mat-checkbox> </th>
+          <td mat-cell *matCellDef="let element;let i = index;">
+            <mat-checkbox color="primary" class="example-margin" (change)="selectPR(element)"
+            [checked]="compareValue(element)">
+           </mat-checkbox>
+          </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="sNo">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" style="width:3%;"> {{'COMMON_S_NO' | translate }} </th>
+          <td mat-cell *matCellDef="let element; let i=index;" style="width:3%;"> {{getIndexValue(i+1)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="locationName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LOCATION_NAME' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)">
+            <!-- {{ (element?.locationName.length>30) ? (element.locationName | slice:0:20)+'...' :
+            (element.locationName) }} -->
+            {{element.locationName}}
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="assetCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ASSET_CODE' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> {{element?.assetCode}}</td>
+        </ng-container> -->
+        <ng-container matColumnDef="assetCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'SR_NO' | translate}}/{{'ASSET_CODE' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> {{element?.srNo}} <br />
+            {{element?.assetCode}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pr_po_details">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)">
+            <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+              (click)="viewPrPoDetails(element)">
+              <mat-icon>info</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="poReqNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PR_INFO' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)">
+            {{ (element?.poReqNo.length>30) ? (element.poReqNo | slice:0:20)+'...' : (element.poReqNo) }} <br />
+            {{element?.poReqDtDisp.split(" ")[0]}} <br /> 
+            {{element?.poReqDtDisp.split(" ")[1]}} 
+            <span class="{{element?.prType}}">{{element?.prType}}</span>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="poReqDt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PR_DT' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> 
+            {{element?.poReqDtDisp.split(" ")[0]}} <br /> 
+            {{element?.poReqDtDisp.split(" ")[1]}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="prType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PR_TYPE' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)" class="{{element?.prType}}">
+            {{element?.prType}}
+          </td>
+        </ng-container> -->
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PR_REQUESTED_BY' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> {{element?.createdBy}}</td>
+        </ng-container>
+        <ng-container matColumnDef="poReqStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'PR_STATUS' | translate}}</th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)" class="{{element?.poReqStatus}}"> {{element?.poReqStatus}} </td>
+        </ng-container>
+        <ng-container matColumnDef="prApprovalStatus">
+          <th mat-header-cell *matHeaderCellDef> {{'APPROVAL_STATUS' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)">
+            <span class="{{element?.prApprovalStatus.replace(' ','')}}">
+              {{ element?.poReqStatus == 'CANCELLED' ? '-' : element?.prApprovalStatus }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="grandTotal">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'PR_GRAND_AMT' | translate}}</th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)" style='text-align: center'> {{element?.grandTotal}}</td>
+        </ng-container>
+        <ng-container matColumnDef="updatedDt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'COMMON_UPDATED_BY_DATE' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> {{element?.updatedBy}} <br>
+            {{element?.updatedDtDisp.split(" ")[0]}} <br />
+            {{element?.updatedDtDisp.split(" ")[1]}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="supplierName">
+          <th mat-header-cell *matHeaderCellDef>{{'SUPPLIER_NAME' | translate}}</th>
+          <td mat-cell *matCellDef="let element" style='text-align: center'> {{element?.supplierName != '' ? element?.supplierName : '-'}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="itemDesc">
+          <th mat-header-cell *matHeaderCellDef>{{'ITEM_DESC' | translate}}</th>
+          <td mat-cell *matCellDef="let element" style='text-align: center'> {{element?.itemDesc != '' ? element?.itemDesc : '-'}}</td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="updatedDt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'COMMON_UPDATED_DT' | translate}} </th>
+          <td mat-cell *matCellDef="let element" (click)="selectPR(element)"> 
+            {{element?.updatedDtDisp.split(" ")[0]}} <br />
+            {{element?.updatedDtDisp.split(" ")[1]}}
+          </td>
+        </ng-container> -->
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+        </tr>
+      </table>
+      <mat-card class="no_records_found" *ngIf="length=='0' && !subloaderPR">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+      <mat-card class="no_records_found" *ngIf="subloaderPR" fxLayoutAlign="center cenetr"> 
+          <mat-spinner [diameter]="60"></mat-spinner>
+      </mat-card>
+    </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="col-md-12 row">
+  <div class="col-md-10">
+    <h6>{{ 'PURCHASE_HISTORY' | translate}}</h6>
+  </div>
+  <div class="col-md-1">
+      <button mat-raised-button color="primary" (click)="generateReport()">{{'REPORT_EXPORT' | translate}}</button>
+    </div>
+  <div class="col-md-1">
+      <mat-icon class="close-icon-large" (click)="exit()">highlight_off</mat-icon>
+  </div>
+</div>

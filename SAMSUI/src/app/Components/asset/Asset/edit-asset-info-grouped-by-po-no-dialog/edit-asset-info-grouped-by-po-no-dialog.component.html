@@ -1,0 +1,747 @@
+<div fxLayout="column" fxFlexfill>
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h6 class="section_title"> {{ 'MENU_ASSET' | translate }} - {{ 'UPDATE_BY_BATCH' | translate }} </h6>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon class="close-icon" (click)="closeDialog()">highlight_off</mat-icon>
+        </div>
+    </div>
+
+    <form [formGroup]="inwardAssetFormGroup">
+
+        <mat-dialog-content fxLayout="column">
+
+            <div fxLayout="row" class="mt-10">
+
+                <mat-card class="mat-elevation-z2" fxFlex="100">
+                    <strong>{{ 'INWARD_ASSET_INFO' | translate }}</strong>
+                    <table  class="mt-10">
+                        <tr class="table-header">
+                            <th id="loc-row">{{'LOCATION_NAME' | translate}}
+                            </th>
+                            <th id="po-row">{{'ASSET_PUR_ORD_NO' | translate}} <br /> {{'ASSET_PUR_DATE' | translate}}
+                            </th>
+                            <th id="cat-row">{{'ASSET_CATEGORY_SUB_CATEGORY' | translate}}
+                                <br />{{'ASSET_GROUP' | translate}}
+                            </th>
+                            <th id="model-row">{{'MODEL_NAME_MANKER_SUPPLIER' | translate}}</th>
+                            <th id="status-row">{{'ASSET_STATUS' | translate}}</th>
+                            <th id="ownership-row">{{'ASSET_OWNERSHIP_TYPE' | translate}}</th>
+                            <th id="ownership-row">{{'INWARD_QTY' | translate}}</th>
+
+                        </tr>
+                        <tr class="table-header">
+                            <td>
+                                {{ inwardAssetInfo?.locationName }}
+                            </td>
+                            <td>
+                                {{ inwardAssetInfo?.purchaseOrderNo }} <br />
+                                {{ inwardAssetInfo?.purchaseDtDisp }}
+                            </td>
+                            <td>
+                                {{ inwardAssetInfo?.assetCategoryName }} <br />
+                                {{ inwardAssetInfo?.subCategoryName }} <br />
+                                {{ inwardAssetInfo?.assetGroupName }}
+                            </td>
+                            <td>
+                                {{ inwardAssetInfo?.modelName }} <br />
+                                {{ inwardAssetInfo?.manufacturerName }} <br />
+                                {{ inwardAssetInfo?.supplierName }}
+                            </td>
+                            <td>
+                                {{ inwardAssetInfo?.assetStatus }}
+                            </td>
+                            <td>
+                                {{inwardAssetInfo?.ownershipType}}
+                            </td>
+                            <td>
+                                {{inwardAssetFormGroup.controls.qty.value}}
+                            </td>
+                        </tr>
+                    </table>
+                </mat-card>
+            </div>
+
+
+            <div class="common-info-sec full-width"
+            fxLayout="row" fxFlex="100"  fxLayoutAlign="space-between start"
+                fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column">
+                <div class="number-generator-group full-width" *ngIf="!autoGenerateAssetCode" fxLayout="column" fxFlex="100">
+                    <div >
+                        <label class="input-label">{{'ASSET_CODE' | translate}}</label>
+                    </div>
+                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center">
+
+                        <div fxFlex="20">
+                            <div class="form-group">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="input-label"> {{ 'PREFIX' | translate }}
+                                        <span class="mandatory-style">*</span>
+                                    </mat-label>
+                                    <input matInput class="input-field" formControlName="preFixForAssetCode" [maxlength]=5
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <mat-hint align="end">
+                                        {{inwardAssetFormGroup.controls.preFixForAssetCode.value?.length || 0}}
+                                    </mat-hint>
+                                    <mat-error
+                                        *ngIf="inwardAssetFormGroup.controls.preFixForAssetCode.invalid && inwardAssetFormGroup.controls.preFixForAssetCode.touched">
+                                        <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.preFixForAssetCode.errors.required">
+                                        "{{ 'PREFIX' | translate }}" Is Required</div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div fxFlex="20">
+                            <div class="form-group">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="input-label"> {{'SEPARATOR' |
+                                        translate}}<span class="mandatory-style">*</span>
+                                    </mat-label>
+                                    <input matInput class="input-field" [maxlength]=1
+                                        formControlName="separator" oninput="this.value = this.value.toUpperCase()">
+                                    <mat-error
+                                        *ngIf="inwardAssetFormGroup.controls.separator.invalid && inwardAssetFormGroup.controls.separator.touched">
+                                        <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.separator.errors.required">
+                                        "{{'SEPARATOR' | translate}}" Is Required </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div fxFlex="20" class="mb-22">
+                            <div class="form-group">
+                                <span class="input-label"> {{ 'VARIABLE_1' | translate }}</span>
+                                <ng-select class="example-full-width input-field" bindLabel="name" bindValue="name" 
+                                [items]="variableList" (change)="setVariableOne($event)" ></ng-select>
+                            </div>
+                        </div>
+                        <div fxFlex="20" class="mb-22">
+                            <div class="form-group">
+                                <span class="input-label"> {{ 'VARIABLE_2' | translate }}</span>
+                                <ng-select class="example-full-width input-field" bindLabel="name" bindValue="name" 
+                                [items]="variableList" (change)="setVariableTwo($event)" ></ng-select>
+                            </div>
+                        </div>
+                        <div fxFlex="20" class="mb-22">
+                            <div class="form-group">
+                                <span class="input-label"> {{ 'VARIABLE_3' | translate }}</span>
+                                <ng-select class="example-full-width input-field" bindLabel="name" bindValue="name" 
+                                [items]="variableList" (change)="setVariableThree($event)"></ng-select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="common-info-sec" fxLayout="row" fxFlex="100" fxLayoutAlign="space-between start"
+                fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column">
+              
+                <div fxLayout="row" fxFlex="50" class="full-width">
+                    <div fxFlex="50" style="margin-right: 5px">
+
+                        <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                <mat-label class="input-label"> {{'INWARD_DEFAULT_EQUIPMENT_CODE' | translate}}
+                                </mat-label>
+                                <input matInput class="input-field" formControlName="equipmentCode"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <mat-hint align="end">{{inwardAssetFormGroup.controls.equipmentCode.value?.length ||
+                                    0}}/100
+                                </mat-hint>
+                                <mat-error
+                                    *ngIf="inwardAssetFormGroup.controls.equipmentCode.invalid && inwardAssetFormGroup.controls.equipmentCode.touched">
+                                    <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.equipmentCode.errors.maxlength">
+                                        {{'INWARD_DEFAULT_EQUIPMENT_CODE' | translate}} Maximum length is 100 </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="{{ CommonhintMsg.MAX_200 }}">
+                                <mat-label class="input-label"> {{'INWARD_DEFAULT_ASSET_DESC' | translate}}
+                                </mat-label>
+                                <input matInput class="input-field" formControlName="description"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <mat-hint align="end">{{inwardAssetFormGroup.controls.description.value?.length ||
+                                    0}}/200
+                                </mat-hint>
+                                <mat-error
+                                    *ngIf="inwardAssetFormGroup.controls.description.invalid && inwardAssetFormGroup.controls.description.touched">
+                                    <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.description.errors.maxlength">
+                                        {{'INWARD_DEFAULT_ASSET_DESC' | translate}} Maximum length is 200 </div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                              hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                              <mat-label class="input-label"> {{'ASSET_INVOICE_NO' | translate}}
+                                <span *ngIf="contractForInvDt" class="mandatory-style">* </span>
+                             </mat-label>
+                             <input matInput class="input-field" formControlName="doNo" [maxlength]="100"
+                              oninput="this.value = this.value.toUpperCase().trim()">
+                             <mat-hint align="end">{{inwardAssetFormGroup.controls.doNo.value?.length || 0}}/100</mat-hint>
+                             <mat-error
+                               *ngIf="inwardAssetFormGroup.controls.doNo.invalid && inwardAssetFormGroup.controls.doNo.touched">
+                               <div class="err-field" *ngIf="inwardAssetFormGroup.controls.doNo.errors.maxlength">{{'ASSET_INVOICE_NO' | translate}}
+                                 Maximum length is 100</div>
+                                 <div class="err-field" *ngIf="inwardAssetFormGroup.controls.doNo.errors.required">
+                                   "{{'ASSET_INVOICE_NO' | translate}}" Is Required</div>
+                             </mat-error>
+                           </mat-form-field>
+                          </div>
+                          
+                          <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="input-label"> {{'ASSET_INVOICE_DT' | translate}}
+                                <span *ngIf="contractForInvDt" class="mandatory-style">* </span> </mat-label>
+                              <input matInput class="input-field" (click)="doDtDisp.open()" [matDatepicker]="doDtDisp"
+                                formControlName="doDtDisp" (keypress)="dateValidationinstall($event);">
+                              <mat-datepicker-toggle matSuffix [for]="doDtDisp"></mat-datepicker-toggle>
+                              <mat-datepicker #doDtDisp></mat-datepicker>
+                            
+                                <mat-error
+                                *ngIf="inwardAssetFormGroup.controls.doDtDisp.invalid && inwardAssetFormGroup.controls.doDtDisp.touched">
+                                <div class="err-field" *ngIf="inwardAssetFormGroup.controls.doDtDisp.errors.required">
+                                    Kindly Select The "{{'ASSET_INVOICE_DT' | translate}}" </div>
+                                </mat-error>
+                            </mat-form-field>
+                          </div>
+  
+                          <div class="form-group">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                              hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                              <mat-label class="input-label"> {{'ASSET_INVOICE_VALUE' | translate}}
+                                <span *ngIf="contractForInvDt" class="mandatory-style">* </span> </mat-label>
+                              <input matInput class="input-field" formControlName="invoiceValue" type="number"
+                              [maxlength]="100">
+                              <mat-hint align="end">{{inwardAssetFormGroup.controls.invoiceValue.value?.length || 0}}/100</mat-hint>
+                              <mat-error
+                                *ngIf="inwardAssetFormGroup.controls.invoiceValue.invalid && inwardAssetFormGroup.controls.invoiceValue.touched">
+                                <div class="err-field" *ngIf="inwardAssetFormGroup.controls.invoiceValue.errors.maxlength">
+                                  {{'ASSET_INVOICE_VALUE' | translate}}
+                                  Maximum length is 100</div>
+                                  <div class="err-field" *ngIf="inwardAssetFormGroup.controls.invoiceValue.errors.required">
+                                    "{{'ASSET_INVOICE_VALUE' | translate}}" Is Required</div>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          
+
+                    </div>
+
+                    <div fxFlex="50" style="margin-right: 5px">
+
+                        <div class="form-group">
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_DEPARTMENT' | translate }} <span
+                                class="mandatory-style"> *</span></span>
+                            <ng-select [items]="departmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                                (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                                [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')"
+                                [loading]="scrollsyncDepartment" loadingText="Loading..."
+                                class="example-full-width input-field" (change)="selectedDepartmentData($event);"
+                                formControlName="departmentName">
+                            </ng-select>
+                            <mat-error
+                                *ngIf="inwardAssetFormGroup.controls.departmentName.invalid && inwardAssetFormGroup.controls.departmentName.touched">
+                                <div class="err-field"
+                                    *ngIf="inwardAssetFormGroup.controls.departmentName.errors.required">
+                                    Kindly Select The "{{'INWARD_DEFAULT_DEPARTMENT' | translate}}"</div>
+                            </mat-error>
+                        </div>
+
+                        <div class="form-group mt-20" >
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_SUB_DEPARTMENT' | translate }} </span>
+                            <ng-select [items]="subDepartmentCombo" bindLabel="subDepartmentName"
+                                bindValue="subDepartmentName" (search)="loadSubDepartmentComboData($event)"
+                                (click)="loadSubDepartmentComboData($event)" [virtualScroll]="true"
+                                (scrollToEnd)="loadSubDepartmentComboData({})" (keyup.backspace)="loadSubDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentComboData('clear')" [loading]="scrollsyncSubDepartment"
+                                loadingText="Loading..." (change)="selectedSubDepartmentData($event)"
+                                formControlName="subDepartment" class="example-full-width input-field">
+                            </ng-select>
+                        </div>
+
+                        <div class="form-group mt-22">
+                            <span class="input-label"> {{'INWARD_DEFAULT_PRIORITY' | translate}} </span>
+                            <ng-select [items]="priorityCombo" bindLabel="priorityName" bindValue="priorityName"
+                                (search)="loadPriorityComboData($event)" (click)="loadPriorityComboData($event)"
+                                [virtualScroll]="true" (scrollToEnd)="loadPriorityComboData({})" (keyup.backspace)="loadPriorityComboData($event.target.value ? $event : 'back')" (clear)="loadPriorityComboData('clear')"
+                                [loading]="scrollsyncPriority" loadingText="Loading..."
+                                (change)="selectedPriorityData($event)" formControlName="priorityName"
+                                class="example-full-width input-field">
+                            </ng-select>
+                        </div>
+
+                        <div class="form-group mt-28">
+                            <span class="input-label"> {{'INWARD_DEFAULT_RISK' | translate}} </span>
+                            <ng-select [items]="riskNatureCombo" bindLabel="name" bindValue="name"
+                                 formControlName="riskNature"
+                                class="example-full-width input-field">
+                            </ng-select>
+                        </div>
+
+                        <div class="form-group mt-22">
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_FUNCTIONALITY' | translate }} </span>
+                            <ng-select class=" example-full-width input-field"
+                                formControlName="functionalStatus" [items]="functionalStatus" bindLabel="name"
+                                bindValue="name">
+                            </ng-select>
+                        </div>
+
+                    </div>
+                </div>
+                <div fxLayout="row" fxFlex="50" fxFlex.md="100" class="full-width">
+                    <div fxFlex="50" style="margin-right: 5px">    
+                        
+                        <div class="form-group">
+                          <p class="input-label">{{'SUPPLIER_SITE_NAME' | translate }}
+                            <span class="mandatory-style">*</span>
+                          </p>
+                          <ng-select class="example-full-width input-field" formControlName="supplierSiteName"
+                            (search)="listOfSupplierApproved($event)" (click)="listOfSupplierApproved({})"
+                            [virtualScroll]="true" (scrollToEnd)="listOfSupplierApproved({})" (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')" (clear)="listOfSupplierApproved('clear')"
+                            [loading]="scrollApprovedSuppliersync" loadingText="Loading..."
+                            (change)="fetchIdOfSupplierApproved($event)" [items]="supplierLocationList"
+                            bindLabel="supplierSiteName" bindValue="supplierSiteName" required>
+                          </ng-select>
+                          <mat-error
+                            *ngIf="inwardAssetFormGroup.controls.supplierSiteName.invalid && inwardAssetFormGroup.controls.supplierSiteName.touched">
+                            <div class="err-field" *ngIf="inwardAssetFormGroup.controls.supplierSiteName.errors.required">
+                                Kindly Select The "{{'SUPPLIER_SITE_NAME' | translate}}"</div>
+                          </mat-error>
+
+                        </div>
+
+                        <div class="form-group mt-20">
+                            <span class="input-label"> {{'INWARD_DEFAULT_RECEIVED_BY' | translate}} <span
+                                    class="mandatory-style"> *</span> </span>
+                            <ng-select class="example-full-width input-field" [items]="serviceEngineer1Combo"
+                                bindLabel="employeeFirstName" bindValue="employeeFirstName"
+                                (search)="loadServiceEngineer1ComboData($event)"
+                                (click)="loadServiceEngineer1ComboData($event)" [virtualScroll]="true"
+                                (scrollToEnd)="loadServiceEngineer1ComboData({})" (keyup.backspace)="loadServiceEngineer1ComboData($event.target.value ? $event : 'back')" (clear)="loadServiceEngineer1ComboData('clear')" [loading]="scrollsyncServiceEngineer1"
+                                loadingText="Loading..." (change)="selectedServiceEngineerList1($event);"
+                                formControlName="receivedBy"></ng-select>
+                            <mat-error
+                                *ngIf="inwardAssetFormGroup.controls.receivedBy.invalid && inwardAssetFormGroup.controls.receivedBy.touched">
+                                <div class="err-field"
+                                    *ngIf="inwardAssetFormGroup.controls.receivedBy.errors.required">
+                                    Kindly Select The "{{'INWARD_DEFAULT_RECEIVED_DT' | translate}}"</div>
+                            </mat-error>
+                        </div>
+
+                        <div class="form-group mt-20">
+                            <span class="input-label"> {{ 'ASSET_RECEIVED_TO' | translate }} 
+                              <span class="mandatory-style">* </span>
+                              </span>
+                            <ng-select class="example-full-width input-field" formControlName="storeName"
+                              (search)="listOfStore($event)" (click)="listOfStore({})"
+                              (change)="selectedStoreName($event)" (scrollToEnd)="listOfStore({})" (keyup.backspace)="listOfStore($event.target.value ? $event : 'back')" (clear)="listOfStore('clear')"
+                              [items]="storeNameList" bindLabel="storeName" [virtualScroll]="true"
+                              [loading]="scrollSyncStore" bindValue="storeName" >
+                            </ng-select>
+                            <mat-error
+                              *ngIf="inwardAssetFormGroup.controls.storeName.invalid && inwardAssetFormGroup.controls.storeName.touched">
+                              <div class="err-field" *ngIf="inwardAssetFormGroup.controls.storeName.errors.required">
+                                Kindly Select The "{{ 'ASSET_RECEIVED_TO' | translate }}" Store</div>
+                            </mat-error>
+                        </div>
+
+                        <div class="form-group mt-28">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                <mat-label class="input-label"> {{'INWARD_DEFAULT_RECEIVED_DT' | translate}}<span
+                                        class="mandatory-style"> *</span></mat-label>
+                                <input matInput class="input-field" (click)="receivedDtDisp.open()"
+                                    [matDatepicker]="receivedDtDisp" [min]="defaultPurchaseDt"
+                                    formControlName="receivedDtDisp" (keypress)="dateValidationinstall($event)">
+                                <mat-datepicker-toggle matSuffix [for]="receivedDtDisp"></mat-datepicker-toggle>
+                                <mat-datepicker #receivedDtDisp></mat-datepicker>
+                                <mat-error
+                                    *ngIf="inwardAssetFormGroup.controls.receivedDtDisp.invalid && inwardAssetFormGroup.controls.receivedDtDisp.touched">
+                                    <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.receivedDtDisp.errors.required">
+                                        Kindly Select the "{{'INWARD_DEFAULT_RECEIVED_DT' | translate}}"</div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group mt-03">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                <mat-label class="input-label"> {{'INWARD_DEFAULT_EXP_INSTALLATION_DT' |
+                                    translate}}<span class="mandatory-style"> *</span></mat-label>
+                                <input matInput class="input-field" (click)="expectedInstallationDtDisp.open()"
+                                    [matDatepicker]="expectedInstallationDtDisp" [min]="expectedArrivalDtDisp"
+                                    formControlName="expectedInstallationDtDisp"
+                                    (keypress)="dateValidationinstall($event)">
+                                <mat-datepicker-toggle matSuffix [for]="expectedInstallationDtDisp">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #expectedInstallationDtDisp></mat-datepicker>
+                                <mat-error
+                                    *ngIf="inwardAssetFormGroup.controls.expectedInstallationDtDisp.invalid && inwardAssetFormGroup.controls.expectedInstallationDtDisp.touched">
+                                    <div class="err-field"
+                                        *ngIf="inwardAssetFormGroup.controls.expectedInstallationDtDisp.errors.required">
+                                        Kindly Select the "{{'INWARD_DEFAULT_EXP_INSTALLATION_DT' |
+                                        translate}}"</div>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div fxFlex="50">
+
+                        <div class="form-group">
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_BLOCK' | translate }}</span>
+                            <ng-select [items]="blockNameCombo" bindLabel="blockName" bindValue="blockName"
+                                (search)="loadBlockNameComboData($event)" (click)="loadBlockNameComboData($event)"
+                                [virtualScroll]="true" (scrollToEnd)="loadBlockNameComboData({})"  (keyup.backspace)="loadBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="loadBlockNameComboData('clear')"
+                                [loading]="scrollsyncBlock" loadingText="Loading..."
+                                (change)="selectedBlockData($event)" formControlName="blockName"
+                                class="example-full-width input-field"></ng-select>
+                        </div>
+
+                        <div class="form-group mt-20" >
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_ROOM' | translate }}</span>
+                            <ng-select [items]="roomNameCombo" bindLabel="roomName" bindValue="roomName"
+                                (search)="loadRoomNameComboData($event)" (click)="loadRoomNameComboData($event)"
+                                [virtualScroll]="true" (scrollToEnd)="loadRoomNameComboData({})" (keyup.backspace)="loadRoomNameComboData($event.target.value ? $event : 'back')" (clear)="loadRoomNameComboData('clear')"
+                                [loading]="scrollsyncRoom" loadingText="Loading..." (change)="selectedRoomData($event)"
+                                formControlName="roomName" class="example-full-width input-field"></ng-select>
+                        </div>
+
+                        <div class="form-group mt-20">
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_SEGMENT' | translate }} </span>
+                            <ng-select [items]="floorNameCombo" bindLabel="floorName" bindValue="floorName"
+                                (search)="loadFloorComboData($event)" (click)="loadFloorComboData($event)"
+                                [virtualScroll]="true" (scrollToEnd)="loadFloorComboData({})"  (keyup.backspace)="loadFloorComboData($event.target.value ? $event : 'back')"  (clear)="loadFloorComboData('clear')"
+                                [loading]="scrollsyncFloor" loadingText="Loading..."
+                                (change)="selectedFloorData($event)" formControlName="floorName"
+                                class="example-full-width input-field"></ng-select>
+                        </div>
+
+                        <div class="form-group mt-28">
+                            <span class="input-label"> {{ 'INWARD_DEFAULT_FLOOR' | translate }}</span>
+                            <ng-select [items]="segmentNameCombo" bindLabel="segmentName" bindValue="segmentName"
+                                (search)="loadSegmentNameComboData($event)" (click)="loadSegmentNameComboData($event)"
+                                [virtualScroll]="true"   (scrollToEnd)="loadSegmentNameComboData({})"  (keyup.backspace)="loadSegmentNameComboData($event.target.value ? $event : 'back')"  (clear)="loadSegmentNameComboData('clear')"
+                                [loading]="scrollsyncSegment" loadingText="Loading..."
+                                (change)="selectedSegmentData($event)" formControlName="segmentName"
+                                class="example-full-width input-field">
+                            </ng-select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="end center">
+                <button mat-raised-button color="primary" (click)="generateSerialNo()"
+                    [disabled]="inwardAssetFormGroup.invalid || generateSerialNoFlag">
+                    <span *ngIf="generateSerialNoFlag">{{'COMMON_LOADING' | translate}}</span>
+                    <span *ngIf="!generateSerialNoFlag">{{'INWARD_GENERATE_SERIAL_NO' | translate}}</span>
+                </button>
+            </div>
+
+            <div fxLayout="row">
+
+                <div class="full-width" *ngIf="assetList.length > 0">
+
+                    <hr>
+
+                    <table mat-table id="assetInfoTable" [dataSource]="assetList" multiTemplateDataRows>
+
+                        <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef id="sno" style="width: 3%;"> {{'COMMON_S_NO' |
+                                translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 3%;" (click)="toggleRow(element,i)"> {{(i+1)}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="assetCode">
+                            <th mat-header-cell *matHeaderCellDef id="assetCode" style="width: 15%;"> {{'ASSET_CODE' |
+                                translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 15%;" (click)="toggleRow(element,i)">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <input matInput [(ngModel)]="element.assetCode"
+                                        (blur)="uniqueValidation(element.assetCode, i)"
+                                        [ngModelOptions]="{standalone: true}" style="font-size: 12px; width: 90%;"
+                                        name="assetCode" type="text" id="assetCode" class="form-control"
+                                        matTooltip="{{element.assetCode}}"
+                                        [disabled]="autoGenerateAssetCode || (element.assetStatusId !== 14)"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <div style="font-size: 11px; color: red;" *ngIf="element.nonUniqueAssetCode">
+                                        {{'COMMON_REC_ALREADY_EXISTS' | translate}}
+                                    </div>
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="serialNO">
+                            <th mat-header-cell *matHeaderCellDef id="serialNo" style="width: 8%;"> {{'ASSET_SERIAL_NO'
+                                | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 8%;" (click)="toggleRow(element,i)">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <input matInput [(ngModel)]="element.serialNo" [ngModelOptions]="{standalone: true}"
+                                        name="serialNo" type="text" id="serialNo" class="form-control"
+                                        matTooltip="{{element.serialNo}}"
+                                        (blur)="checkForAssetSerialNoExistence(element.serialNo, i)"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                </mat-form-field>
+                                <div style="font-size: 11px; color: red;" *ngIf="element.serialNoIsNotUnique">
+                                    {{'COMMON_REC_ALREADY_EXISTS' | translate}}
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="department">
+                            <th mat-header-cell *matHeaderCellDef id="department" style="width: 10%;">
+                                {{'DEPARTMENT_NAME' | translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 10%;" (click)="toggleRow(element,i)">
+                                <ng-select class="example-full-width" [items]="departmentCombo"
+                                    bindLabel="departmentName" bindValue="departmentName"
+                                    (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                                    [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')"
+                                    [loading]="scrollsyncDepartment" loadingText="Loading..." type="text"
+                                    id="departmentName" (change)="selectedDepartmentForElement($event,i);"
+                                    [(ngModel)]="element.departmentName" [ngModelOptions]="{standalone: true}"
+                                    name="departmentName" matTooltip="{{element.departmentName}}">
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="subDepartment">
+                            <th mat-header-cell *matHeaderCellDef id="subDepartment" style="width: 10%;">
+                                {{'SUB_DEPARTMENT_NAME' | translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 10%;" (click)="toggleRow(element,i)">
+                                <ng-select class="example-full-width" [items]="subDepartmentComboForElement"
+                                    bindLabel="subDepartmentName" bindValue="subDepartmentName"
+                                    (search)="loadSubDepartmentForElementComboData($event,element)"
+                                    (click)="loadSubDepartmentForElementComboData($event,element)" [virtualScroll]="true"
+                                    (scrollToEnd)="loadSubDepartmentForElementComboData({})" (keyup.backspace)="loadSubDepartmentForElementComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentForElementComboData('clear')"
+                                    [loading]="scrollsyncSubDepartment" loadingText="Loading..." type="text"
+                                    id="subDepartmentName" (change)="selectedSubDepartmentForElement($event,i);"
+                                    [(ngModel)]="element.subDepartment" [ngModelOptions]="{standalone: true}"
+                                    name="subDepartmentName" matTooltip="{{element.subDepartment}}">
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="functionality">
+                            <th mat-header-cell *matHeaderCellDef id="functionality" style="width: 10%;">
+                                {{'ASSET_FUNCTIONALITY' | translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 10%;" (click)="toggleRow(element,i)">
+                                <ng-select class="example-full-width" [items]="functionalStatus" bindLabel="name"
+                                    bindValue="name" id="functionalStatus" [(ngModel)]="element.functionalStatus"
+                                    [ngModelOptions]="{standalone: true}" name="functionalStatus"
+                                    matTooltip="{{element.functionalStatus}}">
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="priority">
+                            <th mat-header-cell *matHeaderCellDef id="priority" style="width: 10%;">
+                                {{'ASSET_PRIORITY' | translate}} </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 10%;" (click)="toggleRow(element,i)">
+                                <ng-select class="example-full-width" [items]="priorityCombo" bindLabel="priorityName"
+                                    bindValue="priorityName" (search)="loadPriorityComboData($event)"
+                                    (click)="loadPriorityComboData($event)" [virtualScroll]="true"
+                                    (scrollToEnd)="loadPriorityComboData({})" (keyup.backspace)="loadPriorityComboData($event.target.value ? $event : 'back')" (clear)="loadPriorityComboData('clear')" [loading]="scrollsyncPriority"
+                                    loadingText="Loading..." type="text" id="priorityName"
+                                    (change)="selectedPriorityNameForElement($event,i);"
+                                    [(ngModel)]="element.priorityName" [ngModelOptions]="{standalone: true}"
+                                    name="priorityName" matTooltip="{{element.priorityName}}">
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="equipmentCode">
+                            <th mat-header-cell *matHeaderCellDef id="equipmentCode" style="width: 10%;">
+                                {{'EQUIPMENT_CODE' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" style="width: 10%;" (click)="toggleRow(element,i)">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <input matInput [(ngModel)]="element.equipmentCode" 
+                                        oninput="this.value = this.value.toUpperCase()"
+                                        [ngModelOptions]="{standalone: true}" style="font-size: 12px; width: 90%;"
+                                        name="equipmentCode" type="text" id="equipmentCode" class="form-control"
+                                        matTooltip="{{element.equipmentCode}}">
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="description">
+                            <th mat-header-cell *matHeaderCellDef id="description" style="width: 10%;">
+                                {{'ASSET_DESCRIPTION' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i=dataIndex;" appearance="standard"
+                                style="width: 10%;" (click)="toggleRow(element,i)">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <input matInput [(ngModel)]="element.description"
+                                        oninput="this.value = this.value.toUpperCase()"
+                                        [ngModelOptions]="{standalone: true}" name="description" type="text"
+                                        id="description" class="form-control" matTooltip="{{element.description}}">
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        <ng-container matColumnDef="expandedDetail">
+                            <td mat-cell *matCellDef="let element; let i=dataIndex"
+                                [attr.colspan]="displayedColumns.length">
+                                <div class="example-element-detail"
+                                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10%;">{{'ASSET_RISK' | translate}}</th>
+                                                <th style="width: 10%;">{{'BUILDING_BLOCK' | translate}}</th>
+                                                <th style="width: 10%;">{{'BUILDING_ROOM' | translate}}</th>
+                                                <th style="width: 10%;">{{'BUILDING_FLOOR' | translate}}</th>
+                                                <th style="width: 10%;">{{'BUILDING_SEGMENT' | translate}}</th>
+                                                <th style="width: 10%;">{{'ASSET_RECEIVED_BY' | translate}}</th>
+                                                <th style="width: 10%;">{{'ASSET_RECEIVED_DT' | translate}}</th>
+                                                <th style="width: 10%;">{{'EXPECTED_INSTALLATION_DT' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 10%;">
+                                                    <ng-select class="form-control innertable-dropdown" [items]="riskNatureCombo"
+                                                        bindLabel="name" bindValue="name" id="riskNature"
+                                                        [(ngModel)]="element.riskNature" appendTo="body"
+                                                        [ngModelOptions]="{standalone: true}" name="riskNature"
+                                                        matTooltip="{{element.riskNature}}">
+                                                    </ng-select>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <ng-select class="form-control innertable-dropdown" [items]="blockNameCombo"
+                                                        bindLabel="blockName" bindValue="blockName" appendTo="body" 
+                                                        (search)="loadBlockNameComboData($event)"
+                                                        (click)="loadBlockNameComboData($event)" [virtualScroll]="true"
+                                                        (scrollToEnd)="loadBlockNameComboData({})"  (keyup.backspace)="loadBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="loadBlockNameComboData('clear')"
+                                                        [loading]="scrollsyncBlock" loadingText="Loading..." type="text"
+                                                        id="blockName" (change)="selectedBlockDataForElement($event,i);"
+                                                        [(ngModel)]="element.blockName"
+                                                        [ngModelOptions]="{standalone: true}" name="blockName"
+                                                        matTooltip="{{element.blockName}}">
+                                                    </ng-select>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <ng-select class="form-control innertable-dropdown" [items]="roomNameComboForElement"
+                                                        bindLabel="roomName" bindValue="roomName" appendTo="body" 
+                                                        (search)="loadRoomNameComboDataForElement($event, i)"
+                                                        (click)="loadRoomNameComboDataForElement($event, i)"
+                                                        [virtualScroll]="true"
+                                                        (scrollToEnd)="loadRoomNameComboDataForElement({})" (keyup.backspace)="loadRoomNameComboDataForElement($event.target.value ? $event : 'back')" (clear)="loadRoomNameComboDataForElement('clear')"
+                                                        [loading]="scrollsyncRoom" loadingText="Loading..."
+                                                        (change)="selectedRoomDataForElement($event, i)"
+                                                        [(ngModel)]="element.roomName"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                    </ng-select>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                        <input matInput [(ngModel)]="element.floorName"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            style="font-size: 12px;" name="floorName" type="text"
+                                                            id="floorName" class="form-control"
+                                                            matTooltip="{{element.floorName}}" disabled>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                        <input matInput [(ngModel)]="element.segmentName"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            style="font-size: 12px;" name="segmentName" type="text"
+                                                            id="segmentName" class="form-control"
+                                                            matTooltip="{{element.segmentName}}" disabled>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <ng-select class="form-control innertable-dropdown" [items]="serviceEngineer1Combo"
+                                                        bindLabel="employeeFirstName" bindValue="employeeFirstName"
+                                                        (search)="loadServiceEngineer1ComboData($event)"
+                                                        (click)="loadServiceEngineer1ComboData($event)"
+                                                        [virtualScroll]="true" appendTo="body" 
+                                                        (scrollToEnd)="loadServiceEngineer1ComboData({})" (keyup.backspace)="loadServiceEngineer1ComboData($event.target.value ? $event : 'back')" (clear)="loadServiceEngineer1ComboData('clear')"
+                                                        [loading]="scrollsyncServiceEngineer1" loadingText="Loading..."
+                                                        type="text" id="employeeFirstName"
+                                                        (change)="selectedReceivedEmpForElement($event,i);"
+                                                        [(ngModel)]="element.receivedBy"
+                                                        [ngModelOptions]="{standalone: true}" name="employeeFirstName"
+                                                        matTooltip="{{element.receivedBy}}">
+                                                    </ng-select>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+
+                                                        <input matInput class="input-field"
+                                                            (click)="receivedDtDisp.open()"
+                                                            [matDatepicker]="receivedDtDisp" [min]="defaultPurchaseDt"
+                                                            formControlName="receivedDtDisp"
+                                                            (keypress)="dateValidationinstall($event)"
+                                                            (dateInput)="dateValidations('receivedDt')">
+                                                        <mat-datepicker-toggle matSuffix [for]="receivedDtDisp">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #receivedDtDisp></mat-datepicker>
+
+
+                                                    </mat-form-field>
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                        <input matInput class="input-field"
+                                                            (click)="expectedInstallationDtDisp.open()"
+                                                            [matDatepicker]="expectedInstallationDtDisp"
+                                                            [min]="expectedArrivalDtDisp"
+                                                            formControlName="expectedInstallationDtDisp"
+                                                            (keypress)="dateValidationinstall($event)"
+                                                            (dateInput)="dateValidations('expectedInstallationDt')">
+                                                        <mat-datepicker-toggle matSuffix
+                                                            [for]="expectedInstallationDtDisp">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #expectedInstallationDtDisp></mat-datepicker>
+                                                    </mat-form-field>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+                        [class.example-element-row]="innerElement?.receivedBy != ''"
+                        [class.example-expanded-row]="expandedElement === element">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+                    </table>
+                </div>
+
+            </div>
+
+        </mat-dialog-content>
+
+    </form>
+
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="primary" class="space" (click)="clearAllFields()">{{ 'COMMON_CLEAR' | translate
+            }}</button>
+        <button mat-raised-button color="primary" class="space" [disabled]="length === 0 || disableSubmit ||
+            uploadAssetFlag" (click)="saveInwardAssetListGroupedByPoNo()">
+            <span *ngIf="!uploadAssetFlag">{{ 'COMMON_SUBMIT' | translate }}</span>
+            <span *ngIf="uploadAssetFlag">{{'COMMON_LOADING' | translate}}</span>
+        </button>
+    </mat-dialog-actions>
+</div>

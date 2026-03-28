@@ -1,0 +1,75 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="section_title"> {{'MODEL_SELF_ANALYSIS' | translate}}</h4>
+    </div>
+   
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" style="cursor: pointer; color: red;">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="modelSelfAnalysisForm">
+    
+    <div fxLayout="column">
+      <div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+            <span class="example-label input-label"> {{'MODEL_DEFECT_TYPE' | translate}}
+              <span class="mandatory-style">*</span>
+            </span>
+            <input #defectType matInput formControlName="defectType" required>
+              <mat-error *ngIf="modelSelfAnalysisForm.controls.defectType.invalid && modelSelfAnalysisForm.controls.defectType.invalid">
+                <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectType.errors.required">"{{ 'MODEL_DEFECT_TYPE' | translate }}" Is Required </div>
+                <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectType.errors.maxlength">{{ 'MODEL_DEFECT_TYPE' | translate }} Maximum length is 50</div>
+              </mat-error>
+            </mat-form-field>
+        </div>
+      </div>
+   
+      <div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+            <span class="example-label input-label"> {{'MODEL_DEFECT_TAG' | translate}}
+              <span class="mandatory-style">*</span>
+            </span>
+            <input #defectTag matInput formControlName="defectTag" required> 
+              <mat-error *ngIf="modelSelfAnalysisForm.controls.defectTag.invalid && modelSelfAnalysisForm.controls.defectTag.invalid">
+                <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectTag.errors.required">"{{ 'MODEL_DEFECT_TAG' | translate }}" Is Required </div>
+                <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectTag.errors.maxlength">{{ 'MODEL_DEFECT_TAG' | translate }} Maximum length is 50</div>
+              </mat-error>
+            </mat-form-field>
+        </div>
+      </div>
+   
+      <div >
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" fxFlex="90">
+            <span class="example-label input-label"> {{'MODEL_QUESTION' | translate}}
+              <span class="mandatory-style">*</span>
+            </span>
+            <textarea #question matInput formControlName="defectQuestion" required></textarea>
+            <mat-error *ngIf="modelSelfAnalysisForm.controls.defectQuestion.invalid && modelSelfAnalysisForm.controls.defectQuestion.invalid">
+              <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectQuestion.errors.required">"{{ 'MODEL_QUESTION' | translate }}" Is Required </div>
+              <div class="err-field" *ngIf="modelSelfAnalysisForm.controls.defectQuestion.errors.maxlength"> {{ 'MODEL_QUESTION' | translate }} Maximum length is 50</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div >
+          <mat-checkbox type="checkbox" color="primary" formControlName="active">{{ 'COMMON_ACTIVE' | translate}}
+            </mat-checkbox>
+      </div>
+     
+      
+      <div >
+        <div fxLayoutAlign="center center">      
+          <button mat-raised-button type="button" class="space " *ngIf="buttonShowOnEdit"
+          (click)="addSelfAnalysisModel()" color="primary" [disabled]="modelSelfAnalysisForm.invalid || !modelSelfAnalysisForm.dirty "> 
+          {{ buttonDisplay }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

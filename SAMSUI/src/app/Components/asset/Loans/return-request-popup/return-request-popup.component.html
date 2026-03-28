@@ -1,0 +1,167 @@
+<mat-icon class="close-icon-large" (click)="closeModal()">highlight_off</mat-icon>
+<form [formGroup]="loanCreateForm" *ngIf="sourceScreenTemp!='listScreen'">
+    <div class="row closebutton" style="padding-bottom: 5%;">
+        <div class="col-md-8">
+          <h6 class="section_title"> {{ 'LOAN_RETURN' | translate }} </h6>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+            <mat-form-field [floatLabel]="'always'">
+              <mat-label class="example-label input-label">{{'LOAN_RETURN_REQUEST_RAISED_BY' | translate}}</mat-label>
+              <input matInput formControlName="returnRequestRaisedBy" #returnCondition>
+            </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="example-label input-label">{{'LOAN_RETURN_REQUEST_RAISED_DT' | translate}}</mat-label>
+            <input matInput required formControlName="returnRequestRaisedDtDisp" tabindex="6" (click)="picker4.open()"
+              [matDatepicker]="picker4">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+            <mat-error *ngIf="loanCreateForm.controls.returnRequestRaisedDtDisp.invalid && loanCreateForm.controls.returnRequestRaisedDtDisp.touched">
+              <div class="err-field" *ngIf="loanCreateForm.controls.returnRequestRaisedDtDisp.errors.required">
+                {{ 'LOAN_RETURN_REQUEST_RAISED_DT' | translate }} is Required </div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                  <mat-label class="example-label input-label"> {{ 'LOAN_RETURN_CONDITION' | translate }}<span class="mandatory-style">*</span>
+                  </mat-label>
+                  <textarea matInput formControlName="returnCondition" [maxlength]="500"></textarea>
+                  <mat-hint align="end">{{loanCreateForm.controls.returnCondition.value?.length || 0}}/500</mat-hint>
+                </mat-form-field>
+              </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 rightbutton">
+          <button mat-raised-button class="space col-md-3" color="primary" (click)="submit()"
+            [disabled]="loanCreateForm.invalid || !loanCreateForm.dirty ">
+            <span>{{'COMMON_SAVE' | translate}} </span>
+          </button>
+        </div>
+      </div>
+
+</form>
+
+<form [formGroup]="loanCreateForm" *ngIf="sourceScreenTemp=='listScreen'">
+<div class="row closebutton" style="padding-bottom: 5%;">
+    <div class="col-md-8">
+      <h6 class="section_title"> {{ 'LOAN_APPROVAL_INFO' | translate }} </h6>
+    </div>
+</div>
+<div class="col-md-12 row">
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_RAISED_DT'| translate}}</mat-label>
+          <input matInput formControlName="loanRaisedBy">
+        </mat-form-field>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_ISSUED_DT'| translate}}</mat-label>
+          <input matInput formControlName="loanRaisedDtDisp">
+        </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 row" *ngIf="this.loanCreateForm.controls.loanStatusId.value!=3">
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_APPROVED_BY'| translate}}</mat-label>
+          <input matInput formControlName="loanApprovedBy">
+        </mat-form-field>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_APPROVED_DT'| translate}}</mat-label>
+          <input matInput formControlName="loanApprovedDtDisp">
+        </mat-form-field>
+    </div>
+  </div>
+</div> 
+
+<div class="col-md-12 row" *ngIf="this.loanCreateForm.controls.loanStatusId.value==3">
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_REJECTED_BY'| translate}}</mat-label>
+          <input matInput formControlName="loanApprovedBy">
+        </mat-form-field>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label class="example-label input-label">{{'LOAN_REJECTED_DT'| translate}}</mat-label>
+          <input matInput formControlName="loanApprovedDtDisp">
+        </mat-form-field>
+    </div>
+  </div>
+</div> 
+
+<div class="col-md-12 row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{'LOAN_RETURN_REQUEST_RAISED_BY'| translate}}</mat-label>
+        <input matInput formControlName="returnRequestRaisedBy">
+      </mat-form-field>
+  </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{'LOAN_RETURN_REQUEST_RAISED_DT'| translate}}</mat-label>
+        <input matInput formControlName="returnRequestRaisedDtDisp">
+      </mat-form-field>
+  </div>
+  </div>
+</div>
+
+ <div class="col-md-12 row">
+   <div class="col-md-12">
+    <div class="form-group">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{'LOAN_ASSET_CONDITION'| translate}}</mat-label>
+        <input matInput formControlName="assetCondition">
+      </mat-form-field>
+    </div>
+   </div>
+</div> 
+
+ <div class="col-md-12 row">
+   <div class="col-md-12">
+    <div class="form-group">
+      <mat-form-field [floatLabel]="'always'">
+        <mat-label class="example-label input-label">{{'LOAN_RETURN_CONDITION'| translate}}</mat-label>
+        <input matInput formControlName="returnCondition">
+      </mat-form-field>
+  </div>
+   </div>
+  </div>
+</form>
+
+

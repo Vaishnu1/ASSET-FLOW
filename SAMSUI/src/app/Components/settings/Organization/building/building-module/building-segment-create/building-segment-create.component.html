@@ -1,0 +1,71 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'BUILDING_SEGMENT' | translate }}</h4>
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeSegmentModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" fxLayout="column" [formGroup]="buildingSegmentCreateForm">
+
+    <div fxLayout="column">
+      <div >
+        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select #locationName class="input-field" [items]="locationCombo" bindLabel="locDisplayField"
+          bindValue="locDisplayField" (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)"
+          [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+          loadingText="Loading..." (change)="selectedLocationData($event)" formControlName="locationName" required>
+        </ng-select>
+        <mat-error
+          *ngIf="buildingSegmentCreateForm.controls.locationName.invalid && buildingSegmentCreateForm.controls.locationName.touched">
+          <div class="err-field" *ngIf="buildingSegmentCreateForm.controls.locationName.errors.required">
+            Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div class="mt-10">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+          <mat-label class="example-label input-label"> {{ 'SEGMENT_NAME' | translate }}
+            <span class="mandatory-style">*</span></mat-label>
+          <input  class=" input-field" matInput formControlName="segmentName" (blur)="checkForSegmentNameExistence()"
+            [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+          <mat-hint align="end">{{buildingSegmentCreateForm.controls.segmentName.value?.length || 0}}/100</mat-hint>
+          <mat-error
+            *ngIf="buildingSegmentCreateForm.controls.segmentName.errors && buildingSegmentCreateForm.controls.segmentName.touched">
+            <div  class="err-field" *ngIf="buildingSegmentCreateForm.controls.segmentName.errors.required"> "{{ 'SEGMENT_NAME' | translate
+            }}" Is Required</div>
+            <div  class="err-field" *ngIf="buildingSegmentCreateForm.controls.segmentName.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="mt-10">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300 }}">
+          <mat-label class="example-label input-label"> {{ 'COMMON_DESC' | translate }} </mat-label>
+          <textarea class=" input-field" matInput formControlName="segmentDesc" [maxlength]="300"
+            oninput="this.value = this.value.toUpperCase()"></textarea>
+          <mat-hint align="end">{{buildingSegmentCreateForm.controls.segmentDesc.value?.length || 0}}/300</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div >
+        <div class="text">
+          <mat-checkbox color="primary" formControlName="active">
+            {{'COMMON_ACTIVE' | translate}}
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div fxLayoutAlign="center center" *ngIf="headingDisplay!='View'">
+        <button mat-raised-button class="space" color="primary" (click)="submitSegment()"
+          [disabled]="buildingSegmentCreateForm.invalid || !buildingSegmentCreateForm.dirty || uploadSegmentFlag">
+          <span *ngIf="!uploadSegmentFlag">{{buttonDisplay}}</span>
+          <span *ngIf="uploadSegmentFlag">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

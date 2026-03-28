@@ -1,0 +1,101 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{ 'PRINTER_TEMPLATE' | translate }}</h4>
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="printerTemplateForm" fxLayout="column">
+    <div class="mb-10-px">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="example-label input-label"> {{ 'PRINTER_TEMPLATE_NAME' | translate }} 
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input #docName matInput formControlName="templateName" (blur)="uniqueValidation()"
+          oninput="this.value = this.value.toUpperCase()" [maxlength]="100">
+        <mat-hint align="end"> {{printerTemplateForm.controls.templateName.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="printerTemplateForm.controls.templateName.invalid && printerTemplateForm.controls.templateName.touched">
+          <div class="err-field" *ngIf="printerTemplateForm.controls.templateName.errors.required"> "{{ 'PRINTER_TEMPLATE_NAME' |
+            translate }}" Is Required</div>
+          <div class="err-field" *ngIf="printerTemplateForm.controls.templateName.errors.notUnique">{{ErrorMsg}} for {{'PRINTER_MODEL' | translate}} - "{{printerTemplateForm.controls.printerModel.value}}"</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="mb-10-px">
+      <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style">*</span></span>
+      <ng-select class=" input-field" required formControlName="locationName"
+        (search)="listOfLocationName($event)" (click)="listOfLocationName({})"
+        (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+        (scrollToEnd)="listOfLocationName({})" (keyup.backspace)="listOfLocationName($event.target.value ? $event : 'back')" (clear)="listOfLocationName('clear')" [loading]="scrollLocationNameSync" bindLabel="locDisplayField"
+        bindValue="locDisplayField" tabindex="1">
+      </ng-select>
+      <mat-error *ngIf="printerTemplateForm.controls.locationName.invalid && printerTemplateForm.controls.locationName.touched">
+        <div class="err-field" *ngIf="printerTemplateForm.controls.locationName.errors.required">
+          Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+      </mat-error>
+    </div>
+
+    <div class="mb-10-px">
+      <span class="input-label">{{'PRINTER_MODEL' | translate}}<span class="mandatory-style">*</span></span>
+      <ng-select class=" input-field" required formControlName="printerModel" (search)="listOfPrinterModel($event)"
+        (click)="listOfPrinterModel({})" (change)="setPrinterModel($event)" [items]="printerModelCombo"
+        [virtualScroll]="true" (scrollToEnd)="listOfPrinterModel({})" (keyup.backspace)="listOfPrinterModel($event.target.value ? $event : 'back')" (clear)="listOfPrinterModel('clear')" [loading]="scrollPrinterModelSync"
+        bindLabel="printerModel" bindValue="printerModel" tabindex="2">
+      </ng-select>
+      <mat-error
+        *ngIf="printerTemplateForm.controls.printerModel.invalid && printerTemplateForm.controls.printerModel.touched">
+        <div class="err-field" *ngIf="printerTemplateForm.controls.printerModel.errors.required">
+          Kindly Select The "{{'PRINTER_MODEL' | translate}}" </div>
+      </mat-error>
+    </div>
+
+    <div class="mb-10-px">
+      <span class="input-label">{{ 'PRINTER_LABEL_SIZE' | translate }}<span class="mandatory-style">*</span></span>
+      <ng-select class="lable-size-drpdown input-field" formControlName="labelSize" (search)="listOfPrinterLabelSize($event)"
+        [virtualScroll]="true" (click)="listOfPrinterLabelSize({})" (scrollToEnd)="listOfPrinterLabelSize({})" (keyup.backspace)="listOfPrinterLabelSize($event.target.value ? $event : 'back')" (clear)="listOfPrinterLabelSize('clear')"
+        [loading]="scrollPrinterLabelSizeSync" loadingText="Loading..." (change)="setPrinterLabelSize($event)"
+        [items]="printerLabelSizeCombo" bindLabel="labelSize" bindValue="labelSize" required>
+      </ng-select>
+      <mat-error
+        *ngIf="printerTemplateForm.controls.labelSize.invalid && printerTemplateForm.controls.labelSize.touched">
+        <div class="err-field" *ngIf="printerTemplateForm.controls.labelSize.errors.required"> Kindly Select The "{{
+          'PRINTER_LABEL_SIZE' | translate }}"</div>
+      </mat-error>
+    </div>
+
+
+    <div class="mb-10-px" fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex="40" class="input-label">{{ 'PRINTER_TEMPLATE' | translate }}<span
+          class="mandatory-style">*</span></label>
+      <div fxFlex="60" fxLayoutAlign="start center">
+        <button color="grey" onclick="document.getElementById('imgContractupload').click()" mat-mini-fab
+          matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+          <mat-icon>attachment</mat-icon>
+        </button>
+        <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+        <input style="display:none" id="imgContractupload" type="file" name="organizFile" formControlName="templatePath"
+          (change)="handleFileInput($event.target.files)" />
+      </div>
+    </div>
+
+    <div fxLayoutAlign="start center">
+      <mat-checkbox type="checkbox" formControlName="defaultTemplate" color="primary">{{ 'PRINTER_DEFAULT_TEMPLATE' |
+        translate}}
+      </mat-checkbox>
+    </div>
+
+    <div fxLayoutAlign="center center">
+      <button mat-raised-button type="button" class="space" *ngIf="!isViewMode"
+        (click)="uploadPrinterTemplateFile()" color="primary"
+        [disabled]="printerTemplateForm.invalid || !printerTemplateForm.dirty || !fileUploadFlag">{{displayButton}}</button>
+    </div>
+
+  </form>
+</div>

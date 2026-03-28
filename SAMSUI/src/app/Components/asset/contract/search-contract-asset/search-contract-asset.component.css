@@ -1,0 +1,33 @@
+/* .content_section_background{ 
+    min-height: 500px
+} */
+
+.form-group{  
+    margin-bottom: 0.5rem !important;
+    font-size: 15px !important;
+    /* margin-top:2%; */
+    font-weight: 400;
+}
+
+
+.example-full-width {
+    width: 95% !important; 
+}
+
+.space{
+    margin: 0px 5px;
+}
+
+::ng-deep .contract-asset-list-page .ng-dropdown-panel{
+    opacity: 1;
+    width: 247px;
+    position:fixed;
+}
+
+.contract-search-panel-header {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    padding: 2px;
+    margin-bottom: 10px;
+  }

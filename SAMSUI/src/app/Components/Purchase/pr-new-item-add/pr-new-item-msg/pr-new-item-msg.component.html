@@ -1,0 +1,19 @@
+<div>
+    <div>
+        <h2 matDialogTitle> {{ locValidMsg }} </h2>
+    </div>
+    <div>
+        <mat-dialog-content>
+            <table>
+                <tr *ngFor="let item of tempLocNameData ; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{item.locationName}}</td>
+                </tr>
+            </table>
+        </mat-dialog-content>
+    </div>
+    <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close class="space col-md-2 rightbutton"
+        id = "backButton" color="primary" (click)="close()">{{ 'COMMON_BACK' | translate }}</button>
+    </mat-dialog-actions>
+</div>

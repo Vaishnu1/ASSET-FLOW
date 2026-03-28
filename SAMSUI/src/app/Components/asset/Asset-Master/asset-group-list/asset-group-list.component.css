@@ -1,0 +1,64 @@
+ 
+
+
+.closebutton {
+  margin-top: -20px; 
+  margin-right: -35px; 
+}
+.closebutton button {
+  border-radius: 0px !important;
+  height: 33px;
+  width: 40px !important;
+  padding: 0px 7px !important;
+}
+.space {
+  margin-right: 5px;
+}
+.model-table th {
+  padding:10px 0px !important;
+}
+.mat-select-value-text {
+    font-size: 13px !important;
+}
+.mat-icon-button {
+  border-radius: 50%;
+  background-color: transparent !important;
+}
+
+
+.create {
+  margin-top: -10px;
+
+}
+
+#downFields{
+  margin-top: 10px;
+}
+
+#buttons {
+  margin-right: -30%;
+}
+
+#buttonsGap{
+  margin-top: 10px;
+}
+
+.margin-bottom {
+  margin-bottom: 10px;
+}
+
+.example-full-width{
+  width: 95% !important;
+}
+
+.form-second-row {
+  margin-top: 20px;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell { 
+  max-width: 140px;
+}
+
+.mat-card.no_records_found {
+  padding: 10px 0px !important;
+}

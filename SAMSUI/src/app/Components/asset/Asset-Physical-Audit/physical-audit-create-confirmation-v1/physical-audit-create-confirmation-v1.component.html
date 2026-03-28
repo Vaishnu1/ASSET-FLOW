@@ -1,0 +1,55 @@
+
+
+<div mat-dialog-content class="ceid-dialog-container">
+
+  <h2 class="dialog-title">Warning</h2>
+
+  <p class="dialog-description">
+    The following assets are currently <strong>under Change CEID approval</strong> and cannot be processed immediately.
+    <br /><br />
+    You can choose whether to include or exclude these assets in the current Physical Audit creation.
+  </p>
+
+  <!-- Table scrolls independently -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 ceid-table">
+
+      <ng-container matColumnDef="assetCode">
+        <th mat-header-cell *matHeaderCellDef>Asset Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.assetCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="newAssetCode">
+        <th mat-header-cell *matHeaderCellDef>New Asset Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.newAssetCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef>Reason</th>
+        <td mat-cell *matCellDef="let element">{{ element.reason }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </div>
+
+  <!-- Radio Group stays outside scroll -->
+  <div class="radio-group-wrapper">
+    <mat-radio-group [(ngModel)]="ceidDecision" class="ceid-radio-group">
+      <mat-radio-button value="include">
+        Continue <strong>with</strong> these assets
+      </mat-radio-button><br />
+      <mat-radio-button value="exclude">
+        Continue <strong>without</strong> these assets (they can be processed later with another audit)
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+</div>
+
+<!-- Action buttons -->
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!ceidDecision" (click)="proceedWithDecision()">Proceed</button>
+</div>

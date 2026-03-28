@@ -1,0 +1,73 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="95">
+            <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_ITEM_CATEGORY' | translate}}</h4>
+        </div>
+        <div fxFlex="5" fxLayoutAlign="end start">
+            <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+        </div>
+    </div>
+
+    <form class="modalform" [formGroup]="itemCategoryForm">
+        <div fxLayout="column" fxFlex="100">
+            <div fxLayout="column">
+                <div class="form-group mb-10-px">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                        hintLabel="{{ CommonhintMsg.MAX_50 }}" style="width: 100%;">
+                        <span class="input-label">{{'ITEM_CATEGORY' | translate }} <span
+                                class="mandatory-style">*</span></span>
+                        <input matInput formControlName="categoryName" #itemCategory
+                            oninput="this.value = this.value.toUpperCase()" (input)="checkUniqueConstrainForItemType()"
+                            [maxlength]="50" class="input-field">
+                        <mat-hint align="end"
+                            oninput="this.value = this.value.toUpperCase()">{{itemCategoryForm.controls.categoryName.value?.length
+                            || 0}}/50</mat-hint>
+                        <mat-error *ngIf="itemCategoryForm.controls.categoryName.errors && itemCategoryForm.controls.categoryName.touched">
+                            <div *ngIf="itemCategoryForm.controls.categoryName.errors.required">"{{'ITEM_CATEGORY' | translate}}" Is Required</div>
+                            <div *ngIf="itemCategoryForm.controls.categoryName.errors.notUnique">{{ErrorMsg}}</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div fxLayout="column">
+                <div class="form-group">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                        hintLabel="{{ CommonhintMsg.MAX_100 }}" style="width: 100%;">
+                        <span class="input-label">{{'COMMON_DESC' | translate }}</span>
+                        <!-- (input)="checkFormFields('itemCategoryDesc')" (keyup)="checkFormFieldSpecialCharValidation('itemCategoryDesc')" -->
+                        <input matInput formControlName="itemCategoryDesc" [maxlength]="100"
+                            oninput="this.value = this.value.toUpperCase()" class="input-field">
+                        <mat-hint align="end">{{itemCategoryForm.controls.itemCategoryDesc.value?.length ||
+                            0}}/100</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group mt-10-px">
+                    <label class="input-label">Allow Item Desc Edit in PR</label> <br />
+                    <mat-radio-button [checked]="this.itemCategoryForm.controls.allowEditItemName.value == 'Y'"
+                        [value]="this.itemCategoryForm.controls.allowEditItemName.value"
+                        (change)="changeAllowEditItem('Y')" style="margin-top: 6px;">
+                        {{'YES' | translate}}
+                    </mat-radio-button>
+
+                    <mat-radio-button [checked]="this.itemCategoryForm.controls.allowEditItemName.value == 'N'"
+                        [value]="this.itemCategoryForm.controls.allowEditItemName.value"
+                        (change)="changeAllowEditItem('N')" style="margin-left: 8px;margin-top: 6px;" >
+                        {{'NO' | translate}}
+                    </mat-radio-button>
+                </div>
+            </div>
+            <div fxLayout="column">
+                <div fxLayoutAlign="center center" class="mt-10-px">
+                    <button mat-raised-button type="button" color="primary" (click)="createitemCategory()"
+                        [style.visibility]="headingDisplay=='View' ? 'hidden': 'visible'"
+                        [disabled]="(itemCategoryForm.invalid || !itemCategoryForm.dirty) && allowPrRadioButtonFlagChange">
+                        <span *ngIf="!uploadFlagUser"> {{buttonDisplay}} </span>
+                        <span *ngIf="uploadFlagUser"> {{'COMMON_LOADING' | translate}} </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

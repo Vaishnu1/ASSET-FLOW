@@ -1,0 +1,21 @@
+.element-style {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.custom-textarea {
+    height: 150px; 
+    width: 100%;   
+    resize: none;  
+}
+.btn{
+    display: flex;
+    justify-content: center;
+}
+.btn button:nth-child(2){
+    margin-left: 10px;
+}

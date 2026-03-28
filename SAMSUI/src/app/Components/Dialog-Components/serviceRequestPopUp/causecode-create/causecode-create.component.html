@@ -1,0 +1,43 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <div fxFlex="95" fxLayoutAlign="start center">
+        <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'MENU_CAUSE_CODE' | translate }}</h4>
+      </div>
+
+      <div fxFlex="5" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" (click)="closeCauseCodeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <form class="modalform" fxFlex="100" [formGroup]="causecodeForm"  style="padding-top: 20px;">
+      <div fxLayout="column" fxFlex="100">
+        <div>
+          <mat-form-field class="example-full-width" fxFlex="100" [floatLabel]="'always'"
+            hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="input-label">{{ 'SR_CAUSE_CODE' | translate }}
+              <span class="mandatory-style">*</span>
+            </mat-label>
+            <input matInput formControlName="attribute3Name" #causecodeFocus class="input-field"
+              (input)="checkUniqueConstrainForCauseCodeType()" [maxlength]="100"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{causecodeForm.controls.attribute3Name.value?.length || 0}}/100</mat-hint>
+            <mat-error
+              *ngIf="causecodeForm.controls.attribute3Name.errors && causecodeForm.controls.attribute3Name.touched">
+              <div *ngIf="causecodeForm.controls.attribute3Name.errors.required">{{ 'SR_CAUSE_CODE' | translate }} is
+                Required </div>
+              <div *ngIf="causecodeForm.controls.attribute3Name.errors.notUnique">{{ErrorMsg}}</div>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxLayoutAlign="center center"  style="padding-top: 5px;">
+          <button mat-raised-button  color="primary" (click)="submitCauseCode()"
+            [disabled]="causecodeForm.invalid || !causecodeForm.dirty || uploadCauseCodeFlag">
+            <span *ngIf="!uploadCauseCodeFlag">{{displayButton}}</span>
+            <span *ngIf="uploadCauseCodeFlag">{{'COMMON_LOADING' | translate}}</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+</div>

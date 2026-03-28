@@ -1,0 +1,436 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' |
+          translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{'MENU_GATE_PASS' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+    </mat-toolbar-row>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="content_section_background" fxFlex="100" style="padding-top:0.5%">
+      <div class="row">
+        <div class="table_section" fxFlex="100">
+
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{'COMMON_SEARCH'| translate}}
+              </mat-panel-title>
+              <mat-panel-description fxLayoutAlign="end end">
+                <mat-icon>search</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div fxLayout="row" fxFlex="100" fxLayout.lt-md="column" fxLayout.md="column">
+              <div fxLayout="row" fxFlex="75">
+                <div fxFlex="34">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField"
+                        bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                        (click)="loadLocationComboData($event)" [virtualScroll]="true"
+                        (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                        loadingText="Loading..." (change)="selectedLocationData($event)" appendTo="body"
+                        [(ngModel)]="gatePassHdrModel.locationName" [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group ng-select-fields">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{'REPORT_FROM_DATE' | translate}}</mat-label>
+                      <input matInput class="input-field" [(ngModel)]="gatePassHdrModel.createdDtDisp"
+                        [max]="gatePassHdrModel.updatedDtDisp" (click)="picker1.open()" (dateChange)="getFromDate($event)"
+                        [matDatepicker]="picker1" [ngModelOptions]="{standalone:true}">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{ 'GATE_PASS_NO' | translate }}</mat-label>
+                      <input matInput class="input-field" tabindex="2" [(ngModel)]="gatePassHdrModel.gatePassNo"
+                        [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group pos-rel-t-4-px">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label">{{'REPORT_TO_DATE' | translate}}</mat-label>
+                      <input matInput class="input-field" [(ngModel)]="gatePassHdrModel.updatedDtDisp"
+                        (click)="picker2.open()" [min]="gatePassHdrModel.createdDtDisp" [max]="currentDate"
+                        [matDatepicker]="picker2" (dateChange)="getToDate($event)" [ngModelOptions]="{standalone:true}">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'ASSET_CODE' | translate }}
+                      </span>
+                      <!-- <ng-select autofocus #srLocFocus [items]="assetCodeCombo"  bindLabel="comboDisp" bindValue="comboDisp"
+                        (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                        [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                        loadingText="Loading..." [(ngModel)]="gatePassHdrModel.assetCode" (change)="selectedAssetCodeData($event,true)" multiple="false" appendTo="body">
+                      </ng-select> -->
+
+                      <ng-select [items]="assetCodeCombo" class="input-field" bindLabel="comboDisp"
+                        bindValue="comboDisp" (search)="loadAssetCodeComboData($event)"
+                        (click)="loadAssetCodeComboData($event)" [virtualScroll]="true" [(ngModel)]="gatePassHdrModel.assetCode"
+                        (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                        loadingText="Loading..." (change)="selectedAssetCodeData($event)" dropdownPosition=bottom appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 15px;">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="gatePassHdrModel.assetGroupName"
+                        [ngModelOptions]="{standalone: true}" (click)="listOfAllAssetGroup({})" [virtualScroll]="true"
+                        (search)="listOfAllAssetGroup($event)" (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')" appendTo="body"
+                        (change)="getAssetGroupComboValue($event)" [items]="assetGroup" bindLabel="assetGroupName"
+                        bindValue="assetGroupName" [loading]="scrollsyncAssetGroup" loadingText="Loading...">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group ng-select-fields">
+                    <div fxLayout="row">
+                      <div fxFlex="90">
+                        <span class="input-label">{{'PERIOD' | translate}}</span>
+                        <ng-select [items]="durataionOptions" class="input-field" bindLabel="duration"
+                          bindValue="duration" [(ngModel)]="gatePassHdrModel.duration"
+                          [ngModelOptions]="{standalone:true}" (change)="slecetedDuration($event)" appendTo="body">
+                        </ng-select>
+                      </div>
+                      <div fxFlex="6">
+
+                      </div>
+                      <div fxFlex="47" *ngIf="!hideNextPrevButtons">
+                        <button mat-raised-button class="nextPrevButtons" (click)="changeToPreviousDate($event)"
+                          color="primary"> {{'REPORT_PREV' | translate}}</button>
+
+                        <button mat-raised-button class="nextPrevButtons" (click)="changeToNextDate($event)"
+                          [disabled]="exceedsCurrentDate" color="primary">{{'REPORT_NEXT' | translate}}</button>
+                      </div>
+
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+
+              <div fxLayout="row" fxFlex="25" class="panel-bottom-field mt-6-px">
+                <div fxFlex="100" fxLayout="column" fxLayout.lt-md="row" fxLayout.md="row">
+
+                  <div class="example-full-width gatepass-status">
+                    <span class="input-label"> {{ 'GATE_PASS_STATUS' | translate }} </span>
+                    <ng-select [ngModelOptions]="{standalone: true}"
+                      (search)="loadStatusComboData($event)" (click)="loadStatusComboData({})"
+                      [virtualScroll]="true" (scrollToEnd)="loadStatusComboData({})" (keyup.backspace)="loadStatusComboData($event.target.value ? $event : 'back')" (clear)="loadStatusComboData('clear')" [loading]="scrollsyncGatePassStatus"
+                      loadingText="Loading..." (change)="selectedGatePassStatus($event)" appendTo="body"
+                      class="example-full-width input-field" [(ngModel)]="gatePassHdrModel.gatePassStatus">
+                      <ng-option *ngFor="let gatePassStatus of GatePassStatusCombo" [value]="gatePassStatus">
+                        {{ gatePassStatus.processStatusName | translate }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+
+                  <div class="button panel-buttons" fxLayoutAlign="end end" style="margin-right: 25px;">
+
+                    <button mat-raised-button class="space space-button-left" color="primary" fxHide.lt-md
+                      matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="searchGatePass()">{{'COMMON_SEARCH' | translate}}</button>
+
+                    <button mat-raised-button class="space" fxHide.gt-sm color="primary"
+                      matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="searchGatePass()">
+                      <mat-icon>search</mat-icon>
+                    </button>
+
+                    <button mat-raised-button class="space" fxHide.lt-md color="primary"
+                      matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+                    <button mat-raised-button class="space" fxHide.gt-sm color="primary"
+                      matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" (click)="clear()">
+                      <mat-icon>clear_all</mat-icon>
+                    </button>
+
+                    <button mat-raised-button color="primary" fxHide.lt-md class="space"
+                      matTooltip="{{'REPORT_EXPORT' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="generateGatePassReport()">{{ 'REPORT_EXPORT' | translate }}
+                    </button>
+
+                    <button mat-raised-button class="space" fxHide.gt-sm color="primary"
+                      matTooltip="{{'COMMON_APPROVE_ALL' | translate}}" [matTooltipPosition]="'below'"
+                      (click)="generateGatePassReport()">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </mat-expansion-panel>
+
+          <hr>
+
+          <mat-toolbar>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+
+                      <!-- custom column -->
+        <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+          <mat-icon>view_week</mat-icon>
+        </button>
+        
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('gatePassNo')"(change)="toggleColumn('gatePassNo')">
+            <span>{{'GATE_PASS_NO_GRID' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('gatePassDt')" (change)="toggleColumn('gatePassDt')">
+            <span>{{'GATE_PASS_DATE' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('gatePassPurpose')" (change)="toggleColumn('gatePassPurpose')">
+            <span>{{'GATE_PASS_PURPOSE' | translate}}</span>
+            <br>
+          </div>
+    
+          <div id="column2">
+            <input type="checkbox" (change)="toggleColumn('gatePassStatusId')" [checked]="displayedColumns.includes('gatePassStatusId')">
+            <span>{{'GATE_PASS_STATUS' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('woApprovalStatus')" [checked]="displayedColumns.includes('woApprovalStatus')">
+            <span>{{'WORKFLOW_APPROVE_STATUS' | translate}}</span> <br>
+    
+            <!-- <input type="checkbox" (change)="toggleColumn('gatePassSource')" [checked]="displayedColumns.includes('gatePassSource')">
+            <span>{{'GATE_PASS_SOURCE' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('gatePassSourceNo')" [checked]="displayedColumns.includes('gatePassSourceNo')">
+            <span>{{'GATE_PASS_SOURCE_NO' | translate}}</span> <br> -->
+          </div>
+    
+          <div id="column3">
+            <input type="checkbox" (change)="toggleColumn('deliveryTo')" [checked]="displayedColumns.includes('deliveryTo')">
+            <span>{{'DELIVERY_TO' | translate}}</span><br>
+
+            <!-- <input type="checkbox" (change)="toggleColumn('deliveryMode')" [checked]="displayedColumns.includes('deliveryMode')">
+            <span>{{'DELIVERY_MODE' | translate}}</span><br> -->
+
+            <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+            <span>{{'COMMON_CREATED_BY_DT' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('updatedBy')" [checked]="displayedColumns.includes('updatedBy')">
+            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span><br>
+            
+          </div>
+
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+      <!-- custom column end -->
+
+          <button mat-raised-button class="space sqr-btn" color="primary"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            *ngIf="moduleAccessModel.createFlagDisplay" (click)="createGatePass('add')"><mat-icon>add</mat-icon>
+          </button>
+          <button [disabled]="enableActionBtn || disableEdit()" color="primary" mat-raised-button class="space sqr-btn" *ngIf="moduleAccessModel.updateFlagDisplay"
+            matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="editGatePass('edit')">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn" *ngIf="moduleAccessModel.readFlagDisplay"
+              matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="editGatePass('view')">
+              <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn" matTooltip="{{ 'COMMON_PDF' | translate }}"  (click)="generateGatePassPDF()">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="gatepassWorkflowApproval(true)">
+          <mat-icon>spellcheck</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="gatepassWorkflowApproval(false)">
+          <mat-icon>cancel</mat-icon>
+          </button>
+          </mat-toolbar>
+
+          <div fxLayout="column" class="example-container">
+            <table id="gatePassTable" mat-table class="gatepass-table" [dataSource]="gatePassDataSource"  matSort (matSortChange)="customSort($event)"
+              matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" [checked]="selectAllGP" class="example-margin" (change)="selectAllGatepass($event)">
+              </mat-checkbox>  </th>
+              <td mat-cell *matCellDef="let element;let i = index;">
+                <mat-checkbox color="primary" class="example-margin" (change)="selectGatePass(element)" [checked]="compareValue(element)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data" class="example-margin"> {{'COMMON_S_NO' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectGatePass(element)" class="example-margin"> {{getIndexValue(i+1)}} </td>
+            </ng-container>
+              <ng-container matColumnDef="locationName">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element">{{element?.locationName}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="gatePassNo">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>
+                  {{'GATE_PASS_NO_GRID' | translate}} / <br /> {{'GATE_PASS_DATE' | translate}} </th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element">
+                  {{element?.gatePassNo}} / <br /> {{element?.createdDtDisp}}  </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="gatePassDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>
+                  {{'GATE_PASS_DATE' | translate}} </th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element">
+                  {{element?.createdDtDisp}} </td>
+              </ng-container> -->
+              <ng-container matColumnDef="gatePassPurpose">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header> {{'GATE_PASS_PURPOSE' |
+                  translate}} </th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.gatePassPurpose}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="gatePassStatusId">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'GATE_PASS_STATUS' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element">
+                  <span class="{{element?.gatePassStatus.replace(' ','')}}">{{element?.gatePassStatus | translate}}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="woApprovalStatus">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'GP_WORKFLOW_APPROVE_STATUS' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element">
+                  <span class="{{element?.woApprovalStatus.replace(' ','')}}">{{element?.woApprovalStatus}}</span>
+                </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="gatePassSource">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'GATE_PASS_SOURCE' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.gatePassSource}} </td>
+              </ng-container>
+              <ng-container matColumnDef="gatePassSourceNo">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'GATE_PASS_SOURCE_NO' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.gatePassSourceNo}} </td>
+              </ng-container> -->
+              <ng-container matColumnDef="deliveryTo">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'DELIVERY_TO' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> 
+                  {{element?.deliveryTo}} / <br /> {{element?.deliveryToName}} / <br /> {{element?.siteServiceLocationName}} </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="deliveryMode">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'DELIVERY_MODE' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.deliveryMode}} </td>
+              </ng-container> -->
+
+
+
+              <ng-container matColumnDef="createdBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_BY_DT' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                  {{element?.createdBy}} / <br> {{element?.createdDtDisp}}</td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="createdDt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_CREATED_DT' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let element" (click)="selectAssets(element)" style="text-align: left">
+                  {{element?.createdDtDisp}}</td>
+              </ng-container> -->
+
+
+              <ng-container matColumnDef="updatedBy">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_BY_DATE' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.updatedBy}} /<br> {{element?.updatedDtDisp}} </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="updatedDt">
+                <th mat-header-cell class="table-head-data" *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_DT' |
+                  translate}}</th>
+                <td mat-cell (click)="selectGatePass(element)" class="table-cell-data" *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+              </ng-container> -->
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+              </tr>
+            </table>
+            <div fxLayoutAlign="center center">
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+            </div>
+
+            <mat-card *ngIf="subLoader" fxLayoutAlign="center center" class="no_records_found">
+              <mat-spinner [diameter]="40"></mat-spinner>
+            </mat-card>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

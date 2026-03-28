@@ -1,0 +1,150 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+  
+    <div fxFlex="90"  fxLayoutAlign="start center">
+      <h4 class="section_title">{{headingDisplay}} {{'MENU_STORE' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+
+  <form [formGroup]="storeForm" fxLayout="column"> 
+    <div fxLayout="row" fxFlex="100">
+     
+      <div fxLayout="column" fxFlex="50" >
+
+          <div class="form-group h-55">
+            <span class="input-label">{{'LOCATION_NAME' | translate}}<span class="mandatory-style"> *</span></span>
+            <ng-select class="example-full-width float-bottom StoreDialogCreateComponent-dialog-dropdown" formControlName="locationName" (search)="listOfLocation($event)"
+              (click)="listOfLocation({})" (scrollToEnd)="listOfLocation({})" (keyup.backspace)="listOfLocation($event.target.value ? $event : 'back')" (clear)="listOfLocation('clear')" (change)="getLocationList($event)"
+              [items]="locationList" bindLabel="locDisplayField" [virtualScroll]="true" required
+              (scrollToEnd)="listOfLocation({})" (keyup.backspace)="listOfLocation($event.target.value ? $event : 'back')" (clear)="listOfLocation('clear')" [loading]="scrollLocationNamesync" [tabIndex]="1"
+              bindValue="locDisplayField">
+            </ng-select>
+            <mat-error
+              *ngIf="storeForm.controls.locationName.invalid && storeForm.controls.locationName.touched">
+              <div style="font-size: 10px;" *ngIf="storeForm.controls.locationName.errors.required">
+                  {{'LOCATION_NAME' | translate}} is Required </div>
+            </mat-error>
+          </div>
+
+          <div class="form-group h-55 pos-rel-t-5-px">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 50 Characters">
+              <mat-label class="example-label input-label">{{'STORE' | translate }}</mat-label>
+              <input #autoFocus #focusSet matInput required formControlName="storeName" tabindex="2"
+                (blur)="checkForStoreNameExistence()" [maxlength]="50" oninput="this.value = this.value.toUpperCase()" class="input-field" >
+              <mat-hint align="end">{{storeForm.controls.storeName.value?.length || 0}}/50</mat-hint>
+              <mat-error *ngIf="storeForm.controls.storeName.errors && storeForm.controls.storeName.touched">
+                <div *ngIf="storeForm.controls.storeName.errors.required"> {{'STORE' | translate}} is Required
+                </div>
+                <div *ngIf="storeForm.controls.storeName.errors.notUnique">{{ErrorMsg}}</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group h-55">
+            <span class="input-label">{{'INVENTORY_STORE_TYPE'| translate}}<span class="mandatory-style"> *</span></span>
+            <ng-select class="example-full-width float-bottom StoreDialogCreateComponent-dialog-dropdown" formControlName="storeTypeName" [tabIndex]="3"
+              (search)="listOfStoreTypeName($event)" (scrollToEnd)="listOfStoreTypeName({})" (keyup.backspace)="listOfStoreTypeName($event.target.value ? $event : 'back')" (clear)="listOfStoreTypeName('clear')"
+              (click)="listOfStoreTypeName({})" (change)="setStoreType($event)" [items]="storeTypeList"
+              [virtualScroll]="true" (scrollToEnd)="listOfStoreTypeName({})" (keyup.backspace)="listOfStoreTypeName($event.target.value ? $event : 'back')" (clear)="listOfStoreTypeName('clear')" [loading]="scrollStoreTypeNamesync"
+              bindLabel="storeTypeName" bindValue="storeTypeName">
+            </ng-select>
+            <mat-error *ngIf="storeForm.controls.storeTypeName.errors && storeForm.controls.storeTypeName.touched">
+                <div style="font-size: 10px;" *ngIf="storeForm.controls.storeTypeName.errors.required"> {{'STORE' | translate}} is Required
+                </div> 
+              </mat-error>
+          </div>
+
+          <div class="form-group h-55 pos-rel-t-5-px" >
+            <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel=" Max 100 Characters">
+              <mat-label class="example-label input-label">{{'COMMON_DESC' | translate }}</mat-label>
+              <input matInput formControlName="storeDescription" tabindex="4"
+              oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-hint align="end">{{storeForm.controls.storeDescription.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="storeForm.controls.storeDescription.invalid && storeForm.controls.storeDescription.touched">
+                <div *ngIf="storeForm.controls.storeDescription.errors.maxlength"> {{'COMMON_DESC' | translate}}
+                  Maximum Length is 100 </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group" *ngIf="storeForm.controls.storeId.value > 0">
+            <mat-checkbox color="primary" formControlName="active">{{ 'COMMON_ACTIVE' | translate }}</mat-checkbox>
+          </div>
+          <div class="form-group">
+            <mat-checkbox formControlName="defaultStore"
+            color="primary" (change)="defalutStoreCheckBox()">Set Default Store
+            </mat-checkbox>
+          </div>
+
+      </div>
+      
+      <div fxLayout="column" fxFlex="50" >
+        <div class="form-group h-55">
+          <span class="input-label"> {{ 'BUILDING_BLOCK' | translate }}</span>
+          <ng-select class="float-bottom StoreDialogCreateComponent-dialog-dropdown" [items]="blockNameCombo" bindLabel="blockName" bindValue="blockName" [tabIndex]="5"
+            (search)="loadBlockNameComboData($event)" (click)="loadBlockNameComboData($event)"
+            [virtualScroll]="true" (scrollToEnd)="loadBlockNameComboData({})"  (keyup.backspace)="loadBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="loadBlockNameComboData('clear')" [loading]="scrollsyncBlock"
+            loadingText="Loading..." (change)="selectedBlockData($event)" formControlName="blockName"
+            ></ng-select>
+        </div>
+
+        <div class="form-group h-55" >
+          <span class="input-label"> {{ 'BUILDING_ROOM' | translate }}</span><span class="mandatory-style" *ngIf="storeAddButtonStatus"> *</span>
+          <ng-select class="float-bottom StoreDialogCreateComponent-dialog-dropdown" [items]="roomNameCombo" bindLabel="roomName" bindValue="roomName"
+            (search)="loadRoomNameComboData($event)" (click)="loadRoomNameComboData($event)"
+            [virtualScroll]="true" (scrollToEnd)="loadRoomNameComboData({})" (keyup.backspace)="loadRoomNameComboData($event.target.value ? $event : 'back')" (clear)="loadRoomNameComboData('clear')" [loading]="scrollsyncRoom"
+            loadingText="Loading..." (change)="selectedRoomData($event)" formControlName="roomName" [tabIndex]="6"
+            ></ng-select>
+            <mat-error *ngIf="storeAddButtonStatus && storeForm.controls.roomName.touched"  style="font-size: 10px;">
+                {{ 'BUILDING_ROOM' | translate }} is Required
+              </mat-error>
+        </div>
+
+        <div class="form-group h-55" >
+          <span class="input-label"> {{ 'BUILDING_FLOOR' | translate }} </span>
+          <ng-select class="float-bottom StoreDialogCreateComponent-dialog-dropdown" [items]="floorNameCombo" bindLabel="floorName" bindValue="floorName"
+            (search)="loadFloorComboData($event)" (click)="loadFloorComboData($event)"
+            [virtualScroll]="true" (scrollToEnd)="loadFloorComboData({})"  (keyup.backspace)="loadFloorComboData($event.target.value ? $event : 'back')"  (clear)="loadFloorComboData('clear')" [loading]="scrollsyncFloor"
+            loadingText="Loading..." (change)="selectedFloorData($event)" formControlName="floorName"
+          ></ng-select>
+        </div>
+
+        <div class="form-group h-55">
+          <span class="input-label"> {{ 'BUILDING_SEGMENT' | translate }}</span>
+          <ng-select class="float-bottom StoreDialogCreateComponent-dialog-dropdown" [items]="segmentNameCombo" bindLabel="segmentName" bindValue="segmentName"
+            (search)="loadSegmentNameComboData($event)" (click)="loadSegmentNameComboData($event)"
+            [virtualScroll]="true"   (scrollToEnd)="loadSegmentNameComboData({})"  (keyup.backspace)="loadSegmentNameComboData($event.target.value ? $event : 'back')"  (clear)="loadSegmentNameComboData('clear')"
+            [loading]="scrollsyncSegment" loadingText="Loading..." (change)="selectedSegmentData($event)"
+            formControlName="segmentName"></ng-select>
+        </div>
+      </div>
+    </div>
+
+       
+
+    <div *ngIf="headingDisplay != 'View'" fxLayout="row"  fxFlex="100" >
+
+      <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100" style="margin-top: 10px;">
+
+        <button mat-raised-button class="space" color="primary" (click)="saveStock()"
+          [disabled]="storeForm.invalid || storeAddButtonStatus || defalutStoreFlag" tabindex="7">
+          <span *ngIf="!uploadFlagStore">{{displayButton}}</span>
+          <span *ngIf="uploadFlagStore">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+        <button mat-raised-button color="primary" class="space" (click)="clearStore()"
+          [disabled]="disableClear" tabindex="8">{{ 'COMMON_CLEAR' | translate }}</button>
+
+      </div>
+
+    </div>
+
+ 
+  </form>
+
+</div>

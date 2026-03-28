@@ -1,0 +1,67 @@
+<!-- <mat-tab label="{{ 'ASSET_DOCUMENT' | translate }}">-->
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90"> </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon ">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <mat-card class="card-style">
+    <mat-card-content>
+      <div fxLayout="column">
+        <div fxLayout="row" fxFlex="100" >
+          <div fxFlex="95" fxLayoutAlign="end center">
+          <button *ngIf="!modeDisplay" mat-raised-button class="rightbutton" color="primary"
+            (click)="documentAddEdit()"> {{ 'COMMON_ADD' | translate }}</button>
+          </div>
+          <div fxFlex="5"></div>
+        </div>
+        <div class="content-style" style="padding-top: 0.5%;">
+          <div class="example-container">
+            <table mat-table [dataSource]="assetDocumentDataSource" matSort fxFlex="100">
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'COMMON_S_NO' | translate }} </th>
+                <td mat-cell *matCellDef="let element; let i=index;" class="table-cell-data"> {{i+1}} </td>
+              </ng-container>
+              <ng-container matColumnDef="docName">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'ASSET_DOCUMENT_NAME' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.docName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="fileName">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'FILE_NAME' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.fileName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="docType">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'ASSET_DOCUMENT_TYPE' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.docType}} </td>
+              </ng-container>
+              <ng-container matColumnDef="createdBy">
+                <th mat-header-cell *matHeaderCellDef  class="table-head-data">{{ 'ASSET_DOC_UPLOADED_BY' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.createdBy}} </td>
+              </ng-container>
+              <ng-container matColumnDef="createdDt" >
+                <th mat-header-cell *matHeaderCellDef class="table-head-data">{{ 'ASSET_DOC_UPLOADED_DATE' | translate }} </th>
+                <td mat-cell *matCellDef="let element" class="table-cell-data"> {{element?.createdDtDisp}} </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'COMMON_ACTION' | translate }} </th>
+                <td mat-cell *matCellDef="let element; let i = index" class="table-cell-data">
+                  <mat-icon color="primary" (click)="downloadDocument(element?.filePath,element?.contentType)"
+                    matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" class="actionicon">cloud_download
+                  </mat-icon>
+                  <mat-icon class="action_icon" *ngIf="!modeDisplay" color="primary"
+                    matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                    (click)="deleteDocument(element.assetDocId,i,element.fileName)">delete </mat-icon>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="assetDocumentDisCol;sticky: true"></tr>
+              <tr mat-row *matRowDef="let element; columns: assetDocumentDisCol;">
+            </table>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<!--</mat-tab> -->

@@ -1,0 +1,607 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="50" class="dialogue-box-header">
+            {{'PR_INFO' | translate }}
+        </div>
+
+        <div fxFlex="50" class="mb-5">
+
+            <button mat-raised-button class="space" color="primary" (click)="addPRItem()" *ngIf="!viewMode && mode != 'view'"
+                [disabled]="poDtlForm.invalid">{{displayButton}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="clear()" *ngIf="!viewMode && mode != 'view'">{{'COMMON_CLEAR' |
+                translate}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' |
+                translate}}</button>
+
+        </div>
+
+    </div>
+    <div fxLayout="row">
+        <div [@.disabled]="true" fxFlex="100">
+            <div class="row">
+                <mat-tab-group>
+                    <mat-tab label="{{'ADD_PR_ITEM' | translate}}">
+                        <mat-card>
+                            <mat-card-content>
+                                <form [formGroup]="poDtlForm">
+                                    <div class="row">
+                                        <div class="content-style">
+                                            <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+                                                <div fxFlex="100" fxFlex.sm="100" fxFlex.xs="100">
+                                                    <div fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">                            
+                                                        <div class="form-group" *ngIf="prType === 'MATERIAL'">
+                                                            <div class="example-full-width">
+                                                                <span class="input-label">{{'ITEM_TYPE' | translate}} <span class="mandatory-style">*</span></span>
+                                                                <ng-select class=" input-field" formControlName="itemTypeName"
+                                                                    (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({})"
+                                                                    (change)="getItemTypeValue($event)" [items]="itemTypeList" [virtualScroll]="true"
+                                                                    (scrollToEnd)="listOfItemTypeCombo({})"
+                                                                    (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                                                                    (clear)="listOfItemTypeCombo('clear')" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                                                                    bindValue="itemTypeName" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                                                                    required>
+                                                                </ng-select>
+                                                                <mat-error *ngIf="poDtlForm.controls.itemTypeName.invalid && poDtlForm.controls.itemTypeName.touched">
+                                                                <div style="font-size: 10px " *ngIf="poDtlForm.controls.itemTypeName.errors.required">
+                                                                    {{'ITEM_TYPE' | translate }} is Required </div>
+                                                                </mat-error>
+                                                            </div>
+                                                        </div>       
+                            
+                                                        <div class="form-group" *ngIf="prType === 'MATERIAL'">
+                                                            <div class="example-full-width">
+                                                                <span class="input-label">{{'ITEM_NAME' | translate}} <span
+                                                                        class="mandatory-style">*</span></span>
+                                                                <ng-select autofocus #focusItemName class=" input-field" formControlName="itemName"
+                                                                    (search)="listOfItemFromMaster($event)" (click)="listOfItemFromMaster({})"
+                                                                    (change)="getItemValueFromMaster($event)" [items]="itemList"
+                                                                    [virtualScroll]="true" (scrollToEnd)="listOfItemFromMaster({})"
+                                                                    (keyup.backspace)="listOfItemFromMaster($event.target.value ? $event : 'back')"
+                                                                    (clear)="listOfItemFromMaster('clear')" [loading]="scrollItemNamesync"
+                                                                    bindLabel="itemMasterName" bindValue="itemMasterName" tabindex="1"
+                                                                    loadingText="Loading..." [ngModelOptions]="{standalone: true}" required>
+                                                                </ng-select>
+                                                                <mat-error *ngIf="poDtlForm.controls.itemName.invalid && poDtlForm.controls.itemName.touched">
+                                                                    <div style="font-size: 10px " *ngIf="poDtlForm.controls.itemName.errors.required">
+                                                                        {{'ITEM_NAME' | translate }} is Required </div>
+                                                                </mat-error>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group h-55" *ngIf="prType === 'MATERIAL'">
+                                                            <div class="example-full-width">
+                                                                <span class="input-label">{{'ITEM_DESC' | translate}} <span
+                                                                        class="mandatory-style">*</span></span>
+                                                                <ng-select #focusLocationName class=" input-field" formControlName="itemDesc"
+                                                                    (search)="listOfItemDescFromMaster($event)"
+                                                                    (click)="listOfItemDescFromMaster({})"
+                                                                    (change)="getItemDescValueFromMaster($event)" [items]="itemDescList"
+                                                                    [virtualScroll]="true" (scrollToEnd)="listOfItemDescFromMaster({})"
+                                                                    (keyup.backspace)="listOfItemDescFromMaster($event.target.value ? $event : 'back')"
+                                                                    (clear)="listOfItemDescFromMaster('clear')" [loading]="scrollItemDescsync"
+                                                                    bindLabel="itemMasterDesc" bindValue="itemMasterDesc" tabindex="1"
+                                                                    loadingText="Loading..." [ngModelOptions]="{standalone: true}">
+                                                                </ng-select>
+                                                                <mat-error
+                                                                    *ngIf="poDtlForm.controls.itemDesc.invalid && poDtlForm.controls.itemDesc.touched">
+                                                                    <div style="font-size: 10px "
+                                                                        *ngIf="poDtlForm.controls.itemDesc.errors.required">
+                                                                        {{'ITEM_DESC' | translate }} is Required </div>
+                                                                </mat-error>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group" *ngIf="prType === 'SERVICE'">
+                                                            <div class="example-full-width">
+                                                                <span class="input-label">{{'ITEM_TYPE' | translate}} <span class="mandatory-style">*</span></span>
+                                                                <ng-select class=" input-field" formControlName="itemTypeName"
+                                                                    (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({})"
+                                                                    (change)="getItemTypeValue($event)" [items]="itemTypeList" [virtualScroll]="true"
+                                                                    (scrollToEnd)="listOfItemTypeCombo({})"
+                                                                    (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                                                                    (clear)="listOfItemTypeCombo('clear')" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                                                                    bindValue="itemTypeName" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                                                                    required>
+                                                                </ng-select>
+                                                                <mat-error *ngIf="poDtlForm.controls.itemTypeName.invalid && poDtlForm.controls.itemTypeName.touched">
+                                                                <div style="font-size: 10px " *ngIf="poDtlForm.controls.itemTypeName.errors.required">
+                                                                    {{'ITEM_TYPE' | translate }} is Required </div>
+                                                                </mat-error>
+                                                            </div>
+                                                        </div>       
+                            
+                                                        <div class="form-group h-55" *ngIf="prType === 'SERVICE'">
+                                                            <div class="example-full-width">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'ITEM_DESC' | translate}}<span
+                                                                        class="mandatory-style">*</span></mat-label>
+                                                                    <input matInput  class="input-field" formControlName="itemDesc" oninput="this.value = this.value.toUpperCase().trim()"> 
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                            
+                                                            <div class="form-group h-55">
+                                                                <div class="example-full-width">
+                                                                    <span class="input-label">{{'SUPPLIER_NAME' | translate}} <span
+                                                                            class="mandatory-style">*</span></span>
+                                                                            <ng-select formControlName="supplierName" (search)="listOfSupplier($event)"
+                                                                            (click)="listOfSupplier({})" (change)="fetchIdOfSupplier($event)" [virtualScroll]="true"
+                                                                             (scrollToEnd)="listOfSupplier({})"
+                                                                            (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"
+                                                                            (clear)="listOfSupplier('clear')" [loading]="scrollSuppliersync" [items]="supplierList"
+                                                                            bindLabel="businessPartnerName" bindValue="businessPartnerName">
+                                                                          </ng-select>
+                                                                    
+                                                                </div>
+                                                            </div>
+                            
+                                                            <div class="form-group h-55">
+                                                                <div class="example-full-width">
+                                                                  <span class="input-label"> {{'SUPPLIER_SITE_NAME' | translate }} <span class="mandatory-style">*</span></span>
+                                                                  <ng-select class=" input-field" (search)="listOfSupplierApproved($event)" (click)="listOfSupplierApproved({})"
+                                                                    (change)="setSupplierSiteNameComboValue($event)" formControlName="supplierSiteName" [virtualScroll]="true"
+                                                                    (scrollToEnd)="listOfSupplierApproved({})"
+                                                                    (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')"
+                                                                    (clear)="listOfSupplierApproved('clear')" [loading]="scrollApprovedSuppliersync" [items]="supplierLocationList"
+                                                                    bindLabel="comboDisp" bindValue="comboDisp">
+                                                                  </ng-select>
+                                                                 
+                                                                </div>
+                                                              </div>
+                            
+                                                              <div class="form-group h-55">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                                                                  <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate }} </mat-label>
+                                                                  <textarea formControlName="partnerSiteAddress" matInput class="input-field form-control" 
+                                                                  [maxlength]="500" style="height: 60px;" readonly></textarea>
+                                                                  <mat-hint align="end">{{poDtlForm.controls.partnerSiteAddress.value?.length || 0}}/500</mat-hint>
+                                                                </mat-form-field>
+                                                              </div>
+                            
+                                                        <div fxLayout="row" style="margin-top: 60px;">
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'UOM_CODE' | translate}} </mat-label>
+                                                                        <input matInput class="input-field" formControlName="uomCode" [tabIndex]=2
+                                                                            readonly>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'REQ_QTY' | translate }} <span
+                                                                                class="mandatory-style">*</span></mat-label>
+                                                                        <input matInput class="input-field" formControlName="poReqQty" [tabIndex]=13
+                                                                            (change)="calculationForLineItem()" style="font-size:12px;color:red" type="number" min="1">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="28">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'PURCHASE_UNIT_PRICE' | translate }} <span
+                                                                                class="mandatory-style">*</span></mat-label>
+                                                                        <input matInput class="input-field" formControlName="unitPrice"
+                                                                            [tabIndex]=13 (change)="calculationForLineItem()"
+                                                                            style="font-size:12px;color:red" type="number" min="1">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="padding: 10px;" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+                                                        <div class="form-group">
+                                                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                <mat-label class="input-label">{{'BASIC_AMT' | translate }}</mat-label>
+                                                                <input matInput class="input-field" formControlName="basicAmt" [tabIndex]=13
+                                                                    readonly style="font-size:12px;color:red">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="30">
+                                                                <div class="example-full-width">
+                                                                    <span class="input-label">{{'TAX_CD_1' | translate}} </span>
+                                                                    <ng-select class=" input-field" formControlName="taxCd1"
+                                                                        (search)="listOfTaxCd1($event)" (click)="listOfTaxCd1({})"
+                                                                        (change)="fetchTaxCd1Id($event);" [readonly]="viewMode"
+                                                                        [virtualScroll]="true" (scrollToEnd)="listOfTaxCd1({})"
+                                                                        (keyup.backspace)="listOfTaxCd1($event.target.value ? $event : 'back')"
+                                                                        (clear)="listOfTaxCd1('clear')" [loading]="scrollTaxCd1sync"
+                                                                        [items]="taxCD1List" bindLabel="taxCode" bindValue="taxCode">
+                                                                    </ng-select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="30">
+                                                                <div class="example-full-width">
+                                                                    <span class="input-label">{{'TAX_CD_2' | translate}} </span>
+                                                                    <ng-select class=" input-field" formControlName="taxCd2"
+                                                                        (search)="listOfTaxCd2($event)" (click)="listOfTaxCd2({})"
+                                                                        (change)="fetchTaxCd2Id($event);" [readonly]="viewMode"
+                                                                        [virtualScroll]="true" (scrollToEnd)="listOfTaxCd2({})"
+                                                                        (keyup.backspace)="listOfTaxCd2($event.target.value ? $event : 'back')"
+                                                                        (clear)="listOfTaxCd2('clear')" [loading]="scrollTaxCd2sync"
+                                                                        [items]="taxCD2List" bindLabel="taxCode" bindValue="taxCode">
+                                                                    </ng-select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="30">
+                                                                <div class="example-full-width">
+                                                                    <span class="input-label">{{'TAX_CD_3' | translate}} </span>
+                                                                    <ng-select class=" input-field" formControlName="taxCd3"
+                                                                        (search)="listOfTaxCd3($event)" (click)="listOfTaxCd3({})"
+                                                                        (change)="fetchTaxCd3Id($event);" [readonly]="viewMode"
+                                                                        [virtualScroll]="true" (scrollToEnd)="listOfTaxCd3({})"
+                                                                        (keyup.backspace)="listOfTaxCd3($event.target.value ? $event : 'back')"
+                                                                        (clear)="listOfTaxCd3('clear')" [loading]="scrollTaxCd3sync"
+                                                                        [items]="taxCD3List" bindLabel="taxCode" bindValue="taxCode">
+                                                                    </ng-select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_RATE_1' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxRate1" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_RATE_2' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxRate2" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_RATE_3' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxRate3" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_AMT_1' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxAmt1" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_AMT_2' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxAmt2" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="25">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'TAX_AMT_3' | translate }}</mat-label>
+                                                                        <input matInput class="input-field" formControlName="taxAmt3" [tabIndex]=13
+                                                                            readonly style="font-size:12px;color:red">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="50">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'PURCHASE_TOTAL_TAX_AMT' | translate
+                                                                        }}</mat-label>
+                                                                    <input matInput class="input-field" formControlName="itemTotalTaxAmt"
+                                                                        [tabIndex]=13 readonly style="font-size:12px;color:red">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="50">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'TOTAL_AMT' | translate }}</mat-label>
+                                                                    <input matInput class="input-field" formControlName="totalAmt" [tabIndex]=13
+                                                                        readonly style="font-size:12px;color:red">
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                            
+                                                         <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="50">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'COMMON_EXC_RATE' | translate
+                                                                        }}</mat-label>
+                                                                    <input matInput class="input-field" formControlName="exchRate" (change)="calculationForLineItem()"
+                                                                        [tabIndex]=13 style="font-size:12px;color:red" type="number" min="1" required>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="50">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'LOCAL_TOTAL_AMT' | translate }}</mat-label>
+                                                                    <input matInput class="input-field" formControlName="localTotalAmt" [tabIndex]=13
+                                                                        readonly style="font-size:12px;color:red">
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                        <div fxLayout="row">
+                                                            <div class="form-group" fxFlex="45">
+                                                                <div class="example-full-width">
+                                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                        <mat-label class="input-label">{{'PR_NEED_BY_DATE' | translate}} <span class="mandatory-style">*</span>
+                                                                        </mat-label>
+                                                                        <input matInput class="input-field" formControlName="needByDtDisp"
+                                                                            tabindex="2" readonly (click)="picker2.open()"
+                                                                            [matDatepicker]="picker2" [min]="currentDate" (dateChange)="dateChange()">
+                                                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                                                        <mat-datepicker #picker2 [readonly]="false"></mat-datepicker>
+                                                                        <mat-error *ngIf="poDtlForm.controls.needByDtDisp.invalid && poDtlForm.controls.needByDtDisp.touched">
+                                                                            <div style="font-size: 10px" *ngIf="poDtlForm.controls.needByDtDisp.errors.required">
+                                                                                {{'PR_NEED_BY_DATE' | translate}} is Required 
+                                                                            </div>
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" fxFlex="45">
+                                                                <div class="example-full-width">
+                                                                  <span class="input-label">{{'CURRENCY_CD' | translate }}
+                                                                  </span>
+                                                                  <ng-select class=" input-field" [tabIndex]=9 formControlName="curCd"
+                                                                    (search)="listOfCurrencyCd($event)" (click)="listOfCurrencyCd({})" [virtualScroll]="true"
+                                                                    (scrollToEnd)="listOfCurrencyCd({})" (keyup.backspace)="listOfCurrencyCd($event.target.value ? $event : 'back')" (clear)="listOfCurrencyCd('clear')" [loading]="scrollCurrencyCodesync"
+                                                                    loadingText="Loading..." (change)="getCurrencyCodeData($event)"
+                                                                    [items]="currencycdList" bindLabel="curCd" bindValue="curCd">
+                                                                  </ng-select>
+                                                                </div>
+                                                              </div>
+                                                         
+                                                        </div>
+                                                        <div class="form-group h-55">
+                                                            <div class="example-full-width">
+                                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                                    <mat-label class="input-label">{{'REMARKS' | translate }}</mat-label>
+                                                                    <textarea matInput class="input-field" formControlName="remarks" oninput="this.value = this.value.toUpperCase().trim()"></textarea>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                </form>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab label="{{'ASSET_INFO' | translate}}">
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                                <div fxFlex="100" fxLayout="row">
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                    
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_CODE' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.assetCode.value}} </div>
+                                      </div>
+                    
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_SERIAL_NO' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.serialNo.value}} </div>
+                                      </div>
+                    
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_STATUS' | translate }} </div>
+                                        <div class=" value mandatory-style"> {{assetMainForm.controls.assetStatus.value |
+                                          translate}}
+                                        </div>
+                                      </div>
+                    
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.assetCategoryName.value}}</div>
+                                      </div>
+                    
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_GROUP' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.assetGroupName.value}} </div>
+                                      </div>
+                                    </div>
+                    
+                    
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'MANUFACTURER' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.manufacturerName.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'MODEL_NAME' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.modelName.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'DEPARTMENT_NAME' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.departmentName.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.subDepartment.value}} </div>
+                                      </div>
+                                    </div>
+                    
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_PRIORITY' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.assetPriority.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_RISK' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.assetRisk.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_FUNCTIONALITY' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.functionalityName.value}} </div>
+                                      </div>
+                                    </div>
+                    
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'BUILDING_ROOM' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.roomName.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'BUILDING_FLOOR' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.floorName.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'BUILDING_SEGMENT' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.segmentName.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'BUILDING_BLOCK' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.blockName.value}}</div>
+                                      </div>
+                                    </div>
+                    
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'PURCHASE_PO_NUMBER' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.purchaseOrderNo.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'PURCHASE_PO_DATE' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.purchaseDtDisp.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'SUPPLIER_NAME' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.supplierName.value}} </div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'COMMON_CONTACT_NAME' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.supplierContactPerson.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'COMMON_PHONE_NO' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.supplierContactNo.value}}</div>
+                                      </div>
+                                    </div>
+                    
+                                    <div fxLayout="column" fxFlex="20" class="edit-table-form-table">
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'INSTALLED_DT' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.actualInstalledDtDisp.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'INSTALLED_BY' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.installationDoneBy.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_AMC_PERCENT' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.amcPercent.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_AMC_VALUE' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.amcValue.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_CMC_PERCENT' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.cmcPercent.value}}</div>
+                                      </div>
+                                      <div style="margin-bottom: 50px;">
+                                        <div class=" title"> {{ 'ASSET_CMC_VALUE' | translate }} </div>
+                                        <div class=" value"> {{assetMainForm.controls.cmcValue.value}}</div>
+                                      </div>
+                                    </div>
+                                </div>
+                    
+                                  
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab label="{{'ITEM_DETAILS' | translate}}">
+                        <mat-card class="card-style">
+                            <mat-card-content>
+                                <div class="example-container">
+                                    <div fxLayout="column" fxFlex="100">
+                                      <table mat-table [dataSource]="prItemHistorySource" class="PR-list-table">
+                                                                        
+                                        <ng-container matColumnDef="sNo">
+                                          <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{'COMMON_S_NO' | translate }} </th>
+                                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="supplierName">
+                                          <th mat-header-cell *matHeaderCellDef> {{'SUPPLIER_NAME' | translate}} </th>
+                                          <td mat-cell *matCellDef="let element">
+                                            {{element.supplierName}}
+                                          </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="supplierSite">
+                                          <th mat-header-cell *matHeaderCellDef > {{'SUPPLIER_SITE_NAME' | translate}} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.supplierSiteName}}</td>
+                                        </ng-container>                      
+                                        <ng-container matColumnDef="unitPrice">
+                                            <th mat-header-cell *matHeaderCellDef > {{'UNIT_PRICE' | translate}} </th>
+                                            <td mat-cell *matCellDef="let element" > {{element?.unitPrice}}</td>
+                                          </ng-container>
+                                        <ng-container matColumnDef="tax1">
+                                            <th mat-header-cell *matHeaderCellDef > {{'TAX_CD_1' | translate}} </th>
+                                            <td mat-cell *matCellDef="let element"> {{element?.taxCd1}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="tax2">
+                                            <th mat-header-cell *matHeaderCellDef > {{'TAX_CD_2' | translate}} </th>
+                                            <td mat-cell *matCellDef="let element"> {{element?.taxCd2}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="tax3">
+                                            <th mat-header-cell *matHeaderCellDef > {{'TAX_CD_3' | translate}} </th>
+                                            <td mat-cell *matCellDef="let element"> {{element?.taxCd3}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="prNo">
+                                          <th mat-header-cell *matHeaderCellDef > {{'PR_NO' | translate}} </th>
+                                          <td mat-cell *matCellDef="let element"> {{element?.prNo}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="prDate">
+                                          <th mat-header-cell *matHeaderCellDef >{{'PR_DT' | translate}}</th>
+                                          <td mat-cell *matCellDef="let element" > {{element?.poReqDtDisp}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="qty">
+                                          <th mat-header-cell *matHeaderCellDef >{{'REQ_QTY' | translate}}</th>
+                                          <td mat-cell *matCellDef="let element"style='text-align: center'> {{element?.poReqQty}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="poNo">
+                                            <th mat-header-cell *matHeaderCellDef >{{'PURCHASE_PO_NUMBER' | translate}}</th>
+                                            <td mat-cell *matCellDef="let element"style='text-align: center'> {{element?.poNo}}</td>
+                                        </ng-container>
+                                    
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                                        </tr>
+                                      </table>
+                                      <mat-card class="no_records_found" *ngIf="length==0 && !subloaderPR">{{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                                      <mat-card class="no_records_found" *ngIf="subloaderPR" fxLayoutAlign="center cenetr"> 
+                                          <mat-spinner [diameter]="60"></mat-spinner>
+                                      </mat-card>
+                                    </div>
+                                
+                                    </div>
+                                              
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+
+</div>

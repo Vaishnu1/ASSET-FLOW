@@ -1,0 +1,160 @@
+  <div fxLayout="column" fxFlexFill>
+    <div fxLayout="row">
+      <div fxFlex="90">
+        <h4 class="section_title">{{ 'UPLOAD_CERTIFICATE' | translate }}</h4>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" (click)="closeModel()" >highlight_off
+        </mat-icon>
+      </div>
+    </div>
+
+    <form [formGroup]="uploadDocForCertificate">
+      <div fxLayout="column">
+        <div fxLayout="row">
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="example-label input-label"> {{ 'ASSET_CERTIFICATE_NAME' | translate }} </mat-label>
+              <input #certificateName matInput formControlName="certificateName" required readonly>
+              <mat-error
+                *ngIf="uploadDocForCertificate.controls.certificateName.invalid && uploadDocForCertificate.controls.certificateName.touched">
+                <div *ngIf="uploadDocForCertificate.controls.certificateName.errors.required">
+                  "{{ 'ASSET_CERTIFICATE_NAME' | translate }}" Is Required </div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+        <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center">
+
+          <div fxFlex="30">
+            <div class="form-group">
+              <mat-form-field [floatLabel]="'always'"  class="example-full-width">
+                <span class="example-label input-label">{{'ASSET_CERTIFICATE_ISSUE_DT' | translate}} <span
+                  class="mandatory-style">*</span></span>
+                <input matInput (click)="issueDtDisp.open()" [matDatepicker]="issueDtDisp" required
+                  formControlName="issueDtDisp">
+                <mat-datepicker-toggle [for]="issueDtDisp" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #issueDtDisp></mat-datepicker>
+                <mat-error
+                  *ngIf="uploadDocForCertificate.controls.issueDtDisp.invalid && uploadDocForCertificate.controls.issueDtDisp.touched">
+                  <div *ngIf="uploadDocForCertificate.controls.issueDtDisp.errors.required">
+                    Kindly Select The "{{ 'ASSET_CERTIFICATE_ISSUE_DT' | translate }}"</div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxFlex="30">
+            <div class="form-group">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <span class="example-label input-label">{{'ASSET_CERTIFICATE_START_DT' | translate}} <span
+                  class="mandatory-style">*</span></span>
+                <input matInput (click)="startDtDisp.open()" [matDatepicker]="startDtDisp" required
+                  [max]="uploadDocForCertificate.controls.expiryDtDisp.value" formControlName="startDtDisp">
+                <mat-datepicker-toggle [for]="startDtDisp" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #startDtDisp></mat-datepicker>
+                <mat-error
+                  *ngIf="uploadDocForCertificate.controls.startDtDisp.invalid && uploadDocForCertificate.controls.startDtDisp.touched">
+                  <div *ngIf="uploadDocForCertificate.controls.startDtDisp.errors.required">
+                    Kindly Select The "{{ 'ASSET_CERTIFICATE_START_DT' | translate }}"</div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxFlex="30">
+            <div class="form-group">
+              <mat-form-field [floatLabel]="'always'" class="example-full-width">
+                <span class="example-label input-label">{{'ASSET_CERTIFICATE_EXPIRY_DT' | translate}} <span
+                  class="mandatory-style">*</span></span>
+                <input matInput (click)="expiryDtDisp.open()" [matDatepicker]="expiryDtDisp"
+                  [min]="uploadDocForCertificate.controls.startDtDisp.value" formControlName="expiryDtDisp">
+                <mat-datepicker-toggle [for]="expiryDtDisp" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #expiryDtDisp></mat-datepicker>
+                <mat-error
+                  *ngIf="uploadDocForCertificate.controls.startDtDisp.invalid && uploadDocForCertificate.controls.startDtDisp.touched">
+                  <div *ngIf="uploadDocForCertificate.controls.startDtDisp.errors.required">
+                    Kindly Select The "{{ 'ASSET_CERTIFICATE_EXPIRY_DT' | translate }}"</div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div>
+          <div class="form-group">
+            <mat-form-field [floatLabel]="'always'" class="example-full-width">
+              <span class="example-label input-label">{{'ASSET_CERTIFICATE_NO' | translate}} <span
+                class="mandatory-style">*</span></span>
+              <input matInput type="text" formControlName="fileCertificateNo" [maxlength]="100">
+              <mat-hint align="end">
+                {{uploadDocForCertificate.controls.fileCertificateNo.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="uploadDocForCertificate.controls.fileCertificateNo.invalid && uploadDocForCertificate.controls.fileCertificateNo.touched">
+                <div *ngIf="uploadDocForCertificate.controls.fileCertificateNo.errors.required">
+                  "{{ 'ASSET_CERTIFICATE_NO' | translate }}" Is Required</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <mat-form-field [floatLabel]="'always'"  class="example-full-width">
+              <mat-label class="example-label input-label">{{'ASSET_CERTIFICATE_DOCUMENT_NO' | translate}} <span
+                class="mandatory-style">*</span></mat-label>
+              <input matInput type="text" formControlName="documentNo" [maxlength]="100">
+              <mat-hint align="end">
+                {{uploadDocForCertificate.controls.documentNo.value?.length || 0}}/100</mat-hint>
+              <mat-error
+                *ngIf="uploadDocForCertificate.controls.documentNo.invalid && uploadDocForCertificate.controls.documentNo.touched">
+                <div *ngIf="uploadDocForCertificate.controls.documentNo.errors.required">
+                  "{{ 'ASSET_CERTIFICATE_DOCUMENT_NO' | translate }}" Is Required</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="modeDisplay=='add'" fxLayout="row" fxFlex="100" style="margin-top: 15px;">
+          <label fxFlex="10" class="input-label">{{ 'COMMON_FILE' | translate }} <span class="mandatory-style">*</span></label>
+          <div fxFlex="50" fxLayoutAlign="start center">
+            <button color="grey" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab
+              matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+              <mat-icon>attachment</mat-icon>
+            </button>
+            <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+            <input style="display:none" id="imgModelupload" type="file" name="organizFile" formControlName="filePath"
+              (change)="handleFileInput($event.target.files)" />
+          </div>
+          <div fxFlex="40"></div>
+        </div>
+
+        <div >
+          <div class="rightbutton" style="margin-top:10px;">
+            <button *ngIf="modeDisplay=='add'" mat-mini-fab type="button" class="space"
+              (click)="uploadAssetDocFile()" color="primary"
+              [disabled]="uploadDocForCertificate.invalid || !uploadDocForCertificate.dirty"
+              (change)="handleFileInput($event.target.files)" matTooltip="{{ 'COMMON_UPLOAD' | translate }}">
+              <mat-icon>cloud_upload</mat-icon>
+            </button>
+            <button *ngIf="modeDisplay=='edit'" mat-mini-fab type="button" class="space"
+              (click)="downloadCertificate(uploadDocForCertificate.controls.filePath.value, uploadDocForCertificate.controls.contentType.value)"
+              color="primary" matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}">
+              <mat-icon>cloud_download</mat-icon>
+            </button>
+            <button mat-mini-fab matTooltip="{{ 'COMMON_CLEAR' | translate }}" type="button" class="space"
+              (click)="clear()" color="primary" [disabled]="mode == 'View'"
+              *ngIf="modeDisplay=='edit'">
+              <mat-icon>cached</mat-icon>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>

@@ -1,0 +1,100 @@
+
+<div fxLayout="column" fxFlex="100">
+   
+    <app-header ></app-header> 
+
+  <div fxLayout="row" *ngIf="pwdChangeCount > 0">
+    <button mat-icon-button class="side-menu-toggle-icon" (click)="mainSideNav.toggle()" fxShow="true" fxHide.gt-sm>
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+      <mat-toolbar class="mat-elevation-z1 menu-bar-height" style="background-color: #467B9A !important;" fxHide.lt-md>
+
+        <ng-container *ngFor="let mainMenuItem of menuData">
+
+          <li mat-menu-item [matMenuTriggerFor]="subMenu" *ngIf="mainMenuItem.text!='Dashboard' && mainMenuItem.text!='Reports'" #subMenuTrigger="matMenuTrigger"
+            (click)="enableDashboard(mainMenuItem.text)" class="menu-font"> 
+            <mat-icon class="{{mainMenuItem.iconCls}}-icon-white"></mat-icon>
+            {{mainMenuItem.text}}
+          </li>
+
+          <li mat-menu-item  *ngIf="mainMenuItem.text=='Dashboard'"
+            (click)="enableDashboard(mainMenuItem.text)" class="menu-font"> 
+            <mat-icon class="{{mainMenuItem.iconCls}}-icon-white"></mat-icon>
+            {{mainMenuItem.text}}
+          </li>
+
+          <li mat-menu-item  *ngIf="mainMenuItem.text=='Reports'"
+            (click)="enableReports(mainMenuItem.text)" class="menu-font"> 
+            <mat-icon class="{{mainMenuItem.iconCls}}-icon-white"></mat-icon>
+            {{mainMenuItem.text}}
+          </li>
+
+          <mat-menu #subMenu="matMenu" direction="down" yPosition="below">
+            <span *ngIf="mainMenuItem.text!='Dashboard'" (mouseenter)="menuEnter()"
+              (mouseleave)="menuLeave(subMenuTrigger, button)">
+              <ng-container *ngFor="let subMenu of mainMenuItem.menus" [routerLinkActive]="'active'">
+                <a [routerLink]="subMenu.routerPath">
+                <li mat-menu-item class="submenu-item">
+                  <mat-icon class="{{subMenu.iconCls}}-icon-blue"></mat-icon>
+                  {{subMenu.text | translate}}
+                </li></a>
+              </ng-container>
+            </span>
+          </mat-menu>
+
+        </ng-container>
+      </mat-toolbar> 
+
+    <mat-sidenav-container fxHide.gt-sm class="custom-sidenav-container">
+      <mat-sidenav #mainSideNav class="responsive-menu">
+        <mat-nav-list fxLayout="column" fxShow="true" style="align-items: flex-start;">
+
+          <ng-container *ngFor="let mainMenuItem of menuData">
+
+            <button #button mat-button [matMenuTriggerFor]="subMenu" *ngIf="mainMenuItem.text!='Dashboard' && mainMenuItem.text!='Reports'" #subMenuTrigger="matMenuTrigger"
+              (click)="enableDashboard(mainMenuItem.text)"> 
+              <mat-icon class="{{mainMenuItem.iconCls}}-icon-blue"></mat-icon>
+              {{mainMenuItem.text}}
+            </button>
+
+            <button #button mat-button *ngIf="mainMenuItem.text=='Dashboard'"
+              (click)="enableDashboard(mainMenuItem.text)"> 
+              <mat-icon class="{{mainMenuItem.iconCls}}-icon-blue"></mat-icon>
+              {{mainMenuItem.text}}
+            </button>
+
+            <button #button mat-button  *ngIf="mainMenuItem.text=='Reports'"
+              (click)="enableReports(mainMenuItem.text)"> 
+              <mat-icon class="{{mainMenuItem.iconCls}}-icon-blue"></mat-icon>
+              {{mainMenuItem.text}}
+            </button>
+
+            <mat-menu #subMenu="matMenu" direction="down" yPosition="below">
+              <span *ngIf="mainMenuItem.text!='Dashboard'" (mouseenter)="menuEnter()"
+                (mouseleave)="menuLeave(subMenuTrigger, button)">
+                <ng-container *ngFor="let subMenu of mainMenuItem.menus" [routerLinkActive]="'active'">
+                  <li mat-menu-item class="submenu-item" >
+                    <a  [routerLink]="subMenu.routerPath">
+                    <mat-icon class="{{subMenu.iconCls}}-icon-blue"></mat-icon>
+                    {{subMenu.desc}} </a>
+                  </li>
+                </ng-container>
+              </span>
+            </mat-menu>
+
+          </ng-container>
+
+        </mat-nav-list>
+      </mat-sidenav>
+    </mat-sidenav-container>
+  </div>
+
+  
+
+  <div fxLayout="row" class="main-body mat-typography"> 
+    <div fxFlex="100">
+      <router-outlet></router-outlet> 
+    </div> 
+  </div>
+</div>

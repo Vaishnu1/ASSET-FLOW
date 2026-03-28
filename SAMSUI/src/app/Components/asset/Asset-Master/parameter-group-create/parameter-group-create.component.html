@@ -1,0 +1,37 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <div fxFlex="90">
+        <h4 class="dialogue-box-header">{{headingDisplay}} {{'MENU_PARAMETER_GROUP' | translate}}</h4>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+        <mat-icon (click)="closeParameterGroupModal()" class="close-icon">highlight_off</mat-icon>
+      </div>
+    </div>
+
+    <form class="modalform" [formGroup]="parameterGroupForm">
+    <div fxLayout="column">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <mat-label class="input-label"> {{ 'SR_PARAMETER_GROUP' | translate }} </mat-label>
+        <input matInput formControlName="parameterGroupName" required #parameterGroupFocus
+          (input)="checkUniqueConstrainForParameterGroup()" [maxlength]="100"
+          oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{parameterGroupForm.controls.parameterGroupName.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="parameterGroupForm.controls.parameterGroupName.errors && parameterGroupForm.controls.parameterGroupName. touched">
+          <div class="err-field" *ngIf="parameterGroupForm.controls.parameterGroupName.errors.required">"{{ 'SR_PARAMETER_GROUP' | translate
+          }}" Is Required </div>
+          <div class="err-field" *ngIf="parameterGroupForm.controls.parameterGroupName.errors.notUnique">{{ErrorMsgParameterGroup}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutAlign="center center" style="margin-top:20px;">
+        <!-- <button mat-raised-button class="space col-md-3" (click)="closeParameterTypeModal()" color="primary">{{ 'COMMON_BACK' | translate }}</button> -->
+        <button mat-raised-button class="space" color="primary" (click)="submitParameterGroup()"
+          [disabled]="parameterGroupForm.invalid || !parameterGroupForm.dirty || uploadParameterGroupFlag">
+          <span *ngIf="!uploadParameterGroupFlag">{{displayButton}}</span>
+          <span *ngIf="uploadParameterGroupFlag">{{'COMMON_LOADING' | translate}}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  

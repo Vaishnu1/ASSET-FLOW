@@ -1,0 +1,34 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header">{{'SR_REMARKS' | translate}}</h4>
+      </div>
+      <div fxFlex="5" fxLayoutAlign="end start">
+        <mat-icon class="close-icon" color="primary" (click)="closeModal('close')">highlight_off</mat-icon>
+      </div>
+    </div>
+  
+    <div>
+      <hr>
+    </div>
+  
+    <div class="form-group">
+      <div fxLayout="column" fxFlex="100" fxLayoutAlign="start">
+        
+        <div class="element-style">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ 'REMARKS' | translate }}</mat-label>
+            <textarea matInput [(ngModel)]="remarks" placeholder="Enter your remarks"></textarea>
+          </mat-form-field>
+        </div>
+  
+        <div fxFlex="20"  class="btn">
+            <button mat-raised-button color="primary" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button> 
+            <button mat-raised-button color="primary"  [disabled]="!remarks" (click)="closeModal('submit')">
+            {{ 'COMMON_SUBMIT' | translate }}
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

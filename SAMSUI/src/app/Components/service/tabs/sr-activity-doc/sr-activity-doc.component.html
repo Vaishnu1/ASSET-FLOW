@@ -1,0 +1,108 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{ 'SR_ACTIVITY_DOCUMENT' | translate }} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class=" close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+ 
+    <div fxLayout="row"> 
+      <form [formGroup]="srActivityDocForm" fxFlex="100"> 
+        <div fxLayout="row">
+          <div fxFlex="23"> 
+            <div class="form-group">
+              <div class="example-full-width">
+                <mat-label class="input-label"> {{ 'SR_ACTIVITY_DOCUMENT_TYPE' | translate }} <span
+                    class="mandatory-style">*</span> </mat-label>
+                <ng-select formControlName="docType" (change)="setDocType($event)" bindLabel="name" 
+                  [items]="docTypeList">
+                </ng-select>
+                <mat-error *ngIf="srActivityDocForm.controls.docType.invalid && srActivityDocForm.controls.docType.touched">
+                  <div *ngIf="srActivityDocForm.controls.docType.errors.required" class="err-field">
+                    {{ 'SR_ACTIVITY_DOCUMENT_TYPE' | translate }} is Required </div>
+                </mat-error>
+              </div>
+            </div> 
+
+            <div class="form-group" style="margin-top: 20px;">
+              <div fxLayout="row">
+              <label class="input-label">{{ 'COMMON_FILE' | translate }}<span class="mandatory-style">*</span></label>
+             
+                <div >
+                  <button color="grey" onclick="document.getElementById('srAcctivityDocImageUpload').click()" mat-mini-fab
+                    matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+                    <mat-icon>attachment</mat-icon>
+                  </button>
+                  <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+                  <input style="display:none" id="srAcctivityDocImageUpload" type="file" name="organizFile"
+                    formControlName="filePath" (change)="handleFileInput($event.target.files)" />
+                </div>
+              </div>
+            </div>
+
+            <div class="row" class="submit-button" style="margin-top: 10px;">
+                <button mat-raised-button type="button" (click)="uploadSRActivityDocFile()"
+                  color="primary"
+                  [disabled]="srActivityDocForm.invalid || !srActivityDocForm.dirty">{{ 'COMMON_SUBMIT' | translate }}</button>
+            </div>
+          </div>
+          
+          <div fxFlex="2"> </div>
+
+          <div fxFlex="75">  
+            <mat-card class="card-style" fxFlex="100">
+              <mat-card-content>
+                <div class="content-style" [formGroup]="srActivityDocForm">
+                  <div class="example-container">
+                    <table mat-table [dataSource]="srActicityFileList" matSort fxFlex="100">
+                      <ng-container matColumnDef="sNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docName">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_DOCUMENT_NAME' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="docType">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_DOCUMENT_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.docType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdBy">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_UPLOADED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdDtDisp">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'SR_UPLOADED_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                          <mat-icon color="primary" (click)="downloadDocument(element?.filePath,element?.contentType)"
+                            matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" class="actionicon">cloud_download
+                          </mat-icon>
+                          <mat-icon class="action_icon" *ngIf="!modeDisplay" color="primary" style="margin-left: 10px;"
+                            matTooltip="{{ 'COMMON_DELETE' | translate }}" (click)="deleteSRActivityDoc(element.srActivityDocId,i)">
+                            delete </mat-icon>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="dispSrActivityFIleColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: dispSrActivityFIleColumns;">
+                    </table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card> 
+          </div>
+
+        </div>
+
+        
+      </form>
+    </div>
+  </div>
+</div>

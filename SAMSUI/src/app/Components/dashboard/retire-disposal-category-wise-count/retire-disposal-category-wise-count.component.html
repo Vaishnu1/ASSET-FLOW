@@ -1,0 +1,15 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="95">
+            <p class="dialogue-box-header"> {{ header }} </p>
+        </div>
+        <div fxFlex="5" fxLayoutAlign="end start">
+            <mat-icon class="close-icon" (click)="closeCategoryModal()">highlight_off</mat-icon>
+        </div>
+    </div>
+
+    <div>
+        <div echarts [options]="option" class="chart" (chartClick)="onChartClick($event)"
+            theme="roma"></div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeDesignationModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+  <form class="modalform" fxLayout="column" [formGroup]="designationForm">
+    <div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+        <mat-label class="example-label input-label"> {{ 'DESIGNATION_NAME' | translate }} 
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input #designationName matInput formControlName="designationName" tabindex="1"
+          (blur)="checkForDesignationExistence()" [maxlength]="50" oninput="this.value = this.value.toUpperCase()"
+          class="input-field">
+        <mat-hint align="end">{{designationForm.controls.designationName.value?.length || 0}}/50</mat-hint>
+        <mat-error
+          *ngIf="designationForm.controls.designationName.errors && designationForm.controls.designationName.touched">
+          <div class="err-field" *ngIf="designationForm.controls.designationName.errors.required">"{{ 'DESIGNATION_NAME' | translate }}" Is Required</div>
+          <div class="err-field" *ngIf="designationForm.controls.designationName.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+        <mat-label class="example-label input-label"> {{ 'COMMON_DESC' | translate }} </mat-label>
+        <textarea matInput formControlName="designationDesc" tabindex="2" [maxlength]="500"
+          oninput="this.value = this.value.toUpperCase()" class="input-field"></textarea>
+        <mat-hint align="end">{{designationForm.controls.designationDesc.value?.length || 0}}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutAlign="center center" *ngIf="headingDisplay != 'View Designation'">
+      <!-- <button mat-raised-button class="space col-md-4" (click)="closeDesignationModal()" color="primary" tabindex="4">{{ 'COMMON_BACK' | translate }}</button> -->
+      <button mat-raised-button class="space col-md-3" color="primary" tabindex="3" (click)="submitDesignation()"
+        [disabled]="designationForm.invalid || !designationForm.dirty || uploadDesignationFlag">
+        <span *ngIf="!uploadDesignationFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadDesignationFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+  </div>
+  </form>
+</div>

@@ -1,0 +1,179 @@
+<!-- ===== BREADCRUMB ===== -->
+<div class="page-wrapper">
+  <div class="breadcrumb-strip">
+
+    <!-- LEFT -->
+    <div class="breadcrumb">
+      <mat-icon class="home-icon">home</mat-icon>
+      <span class="crumb">Notification</span>
+      <mat-icon>keyboard_arrow_right</mat-icon>
+      <span class="crumb active">Notification Configuration</span>
+
+    </div>
+
+    <!-- RIGHT BUTTONS -->
+    <div class="top-right-actions">
+
+      <button mat-raised-button color="primary" (click)="goBack()">
+        Back
+      </button>
+      <button *ngIf="mode == 'view'" mat-raised-button color="primary" (click)="goToScheduler()">Next</button>
+      <button *ngIf="mode !== 'view'" mat-raised-button color="primary" (click)="clear()">Clear</button>
+
+      <button *ngIf="mode !== 'view'" mat-raised-button color="primary" [disabled]="notificationTypeForm.invalid" (click)="onSubmit()">
+        {{ mode === 'create' ? 'Add to Notification Type' : 'Update Notification Type' }}
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ===== HEADER TABS ===== -->
+  <div class="asset-header-tabs">
+    <div class="tab-group">
+      <span class="tab" (click)="goToTemplate()">Template</span>
+      <div class = "left-group">
+      <span class="tab active">Notification Configuration</span>
+
+      <!-- SETTINGS -->
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
+        <mat-icon class="settings-btn">settings</mat-icon>
+      </button>
+      </div>
+        <span class="tab" (click)="goToScheduler()">Scheduler</span>
+      </div>
+
+
+      <mat-menu #settingsMenu="matMenu">
+        <button *ngIf="mode !== 'view'" mat-menu-item (click)="deleteNotificationType()">
+
+          <mat-icon color="warn">delete</mat-icon>
+          Delete
+        </button>
+      </mat-menu>
+
+     
+    </div> 
+
+    <!-- ===== FORM CARD ===== -->
+    <div class="form-card">
+      <form [formGroup]="notificationTypeForm" [class.view-mode]="mode === 'view'">
+
+      <!-- COMMON FIELDS -->
+      <div fxLayout="row" fxLayoutGap="30px">
+
+        <div fxFlex="33">
+          <label class="input-label">Process <span class="req">*</span></label>
+          <ng-select
+            [items]="moduleList"
+            bindLabel="moduleName"
+            bindValue="moduleId"
+            formControlName="module"
+  >
+          </ng-select>
+        </div>
+
+        <div fxFlex="33">
+          <label class="input-label">Status <span class="req">*</span></label>
+          <ng-select
+            [items]="processList"
+            bindLabel="processName"
+            bindValue="processId"
+            formControlName="process">
+          </ng-select>
+        </div>
+
+        <div fxFlex="33">
+          <label class="input-label">Type <span class="req">*</span></label>
+          <ng-select
+          
+            [items]="typeList"
+            bindLabel="label"
+            bindValue="value"
+            formControlName="type"
+            [clearable]="false"
+            [searchable]="false">
+          </ng-select>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIVE -->
+      <div class="mt-20">
+        <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+      </div>
+
+      <!-- ================= EXPIRY TABLE ================= -->
+      <div class="mt-25" *ngIf="selectedType === 'EXPIRY'" formGroupName="expiryConfig">
+      <div class="table-wrapper">
+        <table class="notify-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Module</th>
+              <th>Process</th>
+              <th>Type</th>
+              <th>Before Expiry Days</th>
+              <th>After Expiry Days</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>{{ selectedModuleName }}</td>
+              <td>{{ selectedProcessName }}</td>
+              <td>Expiry</td>
+              <td><input type="number" class="plain-input table-input" formControlName="beforeDays" minlength="1" maxlength="30"></td>
+              
+
+             
+              <td><input type="number" class="plain-input table-input" formControlName="afterDays" minlength="1" maxlength="30"></td>
+              
+              
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+      <!-- ================= ESCALATION TABLE ================= -->
+      <div class="mt-25" *ngIf="selectedType === 'ESCALATION'" formGroupName="escalationConfig">
+        <div class="table-wrapper">
+        <table class="notify-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Module</th>
+              <th>Process</th>
+              <th>Type</th>
+              <th>From Status</th>
+              <th>To Status</th>
+              <th>Exceeded Hrs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>{{ selectedModuleName }}</td>
+              <td>{{ selectedProcessName }}</td>
+              <td>Escalation</td>
+              
+              <td><ng-select
+                [items]="srStatusList" bindLabel="statusName" bindValue="id" formControlName="fromStatus" appendTo="body">
+              </ng-select></td>
+
+              <td><ng-select
+                [items]="filteredToStatusList" bindLabel="statusName" bindValue="id" formControlName="toStatus" appendTo="body">
+              </ng-select></td>
+
+              <td><input type="number" class="plain-input table-input" formControlName="hours" minlength="1" maxlength="24"></td>
+
+              
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </form>
+  </div>
+</div>

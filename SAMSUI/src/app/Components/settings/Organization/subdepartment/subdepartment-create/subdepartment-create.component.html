@@ -1,0 +1,70 @@
+<div class="pad-1-per dialogue-dropdown-medium" fxLayout="column"> 
+
+  <div fxLayout="row" class="mb-10"> 
+    <div fxFlex="95">
+      <h4 class="dialogue-box-header"> {{headingDisplay}} </h4>
+    </div>
+    
+    <div fxFlex="5" fxLayoutAlign="end start"> 
+      <mat-icon class="close-icon" (click)="closeSubDeptModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="subdepartmentForm" fxLayout="column">
+
+    <div class="example-full-width">
+      <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} <span class="mandatory-style">*</span>
+    </span>
+      <ng-select formControlName="departmentName" (search)="listOfDepartment($event)" (click)="listOfDepartment({})"
+        (change)="getDepartmentValue($event)" (blur)="checkForSubDepartmentNameExistence()" [items]="departmentList"
+        [virtualScroll]="true" (scrollToEnd)="listOfDepartment({})" (keyup.backspace)="listOfDepartment($event.target.value ? $event : 'back')" (clear)="listOfDepartment('clear')" [loading]="scrollsync" loadingText="Loading..."
+        bindLabel="departmentName"  bindValue="departmentName" class="input-field SubdepartmentCreateComponent-dialog-dropdown" >
+      </ng-select>
+      <mat-error
+        *ngIf="subdepartmentForm.controls.departmentName.invalid && subdepartmentForm.controls.departmentName.touched">
+        <div class="err-field" *ngIf="subdepartmentForm.controls.departmentName.errors.required">
+          Kindly Select The "{{ 'DEPARTMENT_NAME' | translate }}" </div>
+      </mat-error>
+    </div>
+
+    <div>
+      <mat-form-field class="example-full-width"  hintLabel="{{ CommonhintMsg.MAX_100 }}">
+        <span class="input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} <span class="mandatory-style">*</span> </span>
+        <input matInput formControlName="subDepartmentName" required #subDepartmentName
+          (blur)="checkForSubDepartmentNameExistence()" [maxlength]="100"
+          oninput="this.value = this.value.toUpperCase()">
+        <mat-hint align="end">{{subdepartmentForm.controls.subDepartmentName.value?.length || 0}}/100</mat-hint>
+        <mat-error
+          *ngIf="subdepartmentForm.controls.subDepartmentName.errors && subdepartmentForm.controls.subDepartmentName.touched">
+          <div class="err-field" *ngIf="subdepartmentForm.controls.subDepartmentName.errors.required">
+            "{{ 'SUB_DEPARTMENT_NAME' | translate }}" Is Required</div>
+          <div class="err-field" *ngIf="subdepartmentForm.controls.subDepartmentName.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field class="example-full-width" hintLabel="{{ CommonhintMsg.MAX_5 }}">
+        <span class="input-label"> {{ 'SUB_DEPARTMENT_CODE' | translate }} </span>
+        <input #subDepartmentCode matInput formControlName="subDepartmentCode" [maxlength]="5"
+          oninput="this.value = this.value.toUpperCase()" class="input-field" (blur)="checkForSubDepartmentCodeExistence()">
+        <mat-hint align="end">{{subdepartmentForm.controls.subDepartmentCode.value?.length || 0}}/5
+        </mat-hint>
+        <mat-error
+          *ngIf="subdepartmentForm.controls.subDepartmentCode.errors && subdepartmentForm.controls.subDepartmentCode.touched">
+          <div class="err-field" *ngIf="subdepartmentForm.controls.subDepartmentCode.errors.notUnique">{{ErrorMsgCode}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="pad-1-per" fxLayoutAlign="center center" id="buttons" style="margin-top: 10px;"  *ngIf="headingDisplay != 'View Sub Department'">
+      <button mat-raised-button color="primary" (click)="submitSubDepartment()"
+        [disabled]="subdepartmentForm.invalid || !subdepartmentForm.dirty || uploadSubDepartmentFlag">
+        <span *ngIf="!uploadSubDepartmentFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadSubDepartmentFlag">{{'COMMON_LOADING'| translate}}</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

@@ -1,0 +1,691 @@
+<div fxFlex="100%" fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center"><a href="#"
+            [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+          </a></mat-list-item>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page" >
+         <a (click) = "exit()" class="bread-crumb-link" > {{ 'SR_SERVICE_REQUEST' | translate }} </a>
+        </mat-list-item>
+        <mat-icon>keyboard_arrow_right</mat-icon>
+        <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">{{ 'COMMON_CREATE'
+          | translate }}
+        </mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div>
+      <button mat-raised-button color="primary" class="space" (click)="exit()" tabindex="14">{{'COMMON_BACK' |
+        translate}}</button>
+      <button mat-raised-button color="primary" class="space" (click)="clear()" tabindex="13">{{ 'COMMON_CLEAR' |
+        translate }}</button>
+
+
+      <button mat-raised-button class="space" color="primary" (click)="createServiceRequest()"
+        [disabled]="srBreakDownForm.invalid" tabindex="12">
+        <span *ngIf="!uploadFlag"> {{'COMMON_SUBMIT' | translate}} </span>
+        <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </mat-toolbar-row>
+  </div>
+
+  <div class="content_section">
+    <div fxFlex="100">
+      <form [formGroup]="srBreakDownForm">
+        <div fxLayout="row" fxLayoutAlign="start center" class="service-create-form">
+          <div fxFlex="25">
+            <div class="form-group h-60">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'ASSET_CODE' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select autofocus #srLocFocus [items]="assetCodeCombo" required bindLabel="assetCode" bindValue="assetCode"
+                  (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollsyncAssetCode"
+                  loadingText="Loading..." (change)="selectedAssetCodeData($event,true)" formControlName="assetCode">
+                </ng-select>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.assetCode.invalid && srBreakDownForm.controls.assetCode.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.assetCode.errors.required">
+                    {{'ASSET_CODE' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="form-group h-60">
+              <div class="example-full-width">
+                <div class="form-group" style="margin-top: 16px;">
+                  <mat-checkbox (change)="setUnkownAssetCode()" formControlName="unknownAssetCode" color="primary"> {{ 'ASSET_CODE_UNKNOWN'| translate }}</mat-checkbox>
+                </div>
+              </div>
+            </div>    
+
+            <div class="form-group h-60" >
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select [items]="locationCombo" required bindLabel="locDisplayField"
+                  bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                  (click)="loadLocationComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation" loadingText="Loading..."
+                  (change)="selectedLocationData($event)" formControlName="locationName"></ng-select>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.locationName.invalid && srBreakDownForm.controls.locationName.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.locationName.errors.required">
+                    {{'LOCATION_NAME' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <div class="form-group h-60" >
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SR_TYPE' | translate }} <span class="mandatory-style">*</span>
+                </span>
+                <ng-select [items]="srTypeCombo" required bindLabel="srTypeName" bindValue="srTypeName"
+                  (search)="loadSrTypeComboData($event)" (click)="loadSrTypeComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadSrTypeComboData({})" (keyup.backspace)="loadSrTypeComboData($event.target.value ? $event : 'back')" (clear)="loadSrTypeComboData('clear')" [loading]="scrollsyncSrType" loadingText="Loading..."
+                  (change)="changeFieldsForSRType($event)" formControlName="srTypeName"></ng-select>
+              </div>
+              <mat-error
+                  *ngIf="srBreakDownForm.controls.srType.invalid && srBreakDownForm.controls.srType.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.srType.errors.required">
+                    {{'SR_TYPE' | translate}} is Required </div>
+                </mat-error>
+            </div>
+
+            
+
+            
+          </div>
+
+
+          <div fxFlex="25" class="align-self-field">
+            <div class="form-group h-60">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                <ng-select [items]="departmentCombo" bindLabel="departmentName" bindValue="departmentName"
+                  (search)="loadDepartmentComboData($event)" (click)="loadDepartmentComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadDepartmentComboData({})" (keyup.backspace)="loadDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentComboData('clear')" [loading]="scrollsyncDepartment"
+                  loadingText="Loading..." (change)="selectedDepartmentData($event)" formControlName="departmentName">
+                </ng-select>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.departmentName.invalid && srBreakDownForm.controls.departmentName.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.departmentName.errors.required">
+                    {{'DEPARTMENT_NAME' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div>
+
+            <!-- <div class="form-group m-t-4">
+              <mat-form-field class="example-full-width  h-60" [floatLabel]="'always'">
+                <mat-label class=" input-label"> {{'ASSET_DESCRIPTION' | translate}}
+                </mat-label>
+                <input matInput formControlName="assetDescription" readonly class="input-field">
+              </mat-form-field>
+            </div> -->
+
+            <div class="form-group h-60" >
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </span>
+                <ng-select [items]="subDepartmentCombo" bindLabel="subDepartmentName" bindValue="subDepartmentName"
+                  (search)="loadSubDepartmentComboData($event)" (click)="loadSubDepartmentComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadSubDepartmentComboData({})" (keyup.backspace)="loadSubDepartmentComboData($event.target.value ? $event : 'back')" (clear)="loadSubDepartmentComboData('clear')"
+                  [loading]="scrollsyncSubDepartment" loadingText="Loading..."
+                  (change)="selectedSubDepartmentData($event)" formControlName="subDepartment">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group h-60">
+              <div class="example-full-width" style="margin-top: -2px;">
+                <span class="input-label"> {{ 'ASSET_SERIAL_NO' | translate }} 
+                </span>
+                <ng-select [items]="serialNoCombo" bindLabel="serialNo" bindValue="serialNo"
+                  (search)="loadSerialNoComboData($event)" (click)="loadSerialNoComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadSerialNoComboData({})" (keyup.backspace)="loadSerialNoComboData($event.target.value ? $event : 'back')" (clear)="loadSerialNoComboData('clear')" [loading]="scrollsyncSerialNo"
+                  loadingText="Loading..." (change)="selectedSerialCodeData($event)" formControlName="assetSerialNo">
+                </ng-select>
+              </div>
+            </div>
+
+            <!-- <div class="form-group h-60">
+              <div class="example-full-width" style="margin-top: -2px;">
+                <mat-form-field class="example-full-width  h-60" [floatLabel]="'always'">
+                  <mat-label class=" input-label"> {{'SR_ACTIVITY_EFS' | translate}}
+                  </mat-label>
+                  <input matInput formControlName="srEFSValue" readonly class="input-field">
+                </mat-form-field>
+              </div>
+            </div> -->
+          </div>
+
+
+          <div fxFlex="25" class="align-self-field">
+
+            <div class="form-group " class="row">
+              <div fxFlex="85" class="h-60">
+                <mat-form-field [floatLabel]="'always'" style="width: 152px !important;">
+                  <mat-label class=" input-label"> {{'SR_ASSIGNED_TO' | translate}} <span
+                      class="mandatory-style">*</span>
+                  </mat-label>
+                  <textarea matInput formControlName="assignedToDisp" readonly style="height: 20px;" class="input-field"></textarea>
+                  <mat-error
+                    *ngIf="srBreakDownForm.controls.assignedToDisp.invalid && srBreakDownForm.controls.assignedToDisp.touched">
+                    <div *ngIf="srBreakDownForm.controls.assignedToDisp.errors.required"> {{'SR_ASSIGNED_TO' |
+                      translate}}
+                      is Required
+                    </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex="15">
+                <button style="right:10px; margin-top:5px;" mat-icon-button (click)="openAssignEng()"
+                  matTooltip="{{'ASSET_ASSIGNED_PERSON' | translate}}">
+                  <img src="assets/images/subMenus/assigned-engineer-24px.png" alt="Assigned To" />
+                </button>
+              </div>
+            </div>
+
+
+            <div class="form-group m-t-4">
+              <mat-form-field class="example-full-width  h-60" [floatLabel]="'always'"
+                hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                <mat-label class=" input-label"> {{'SR_CALLER_NAME' | translate}} <span
+                    class="mandatory-style">*</span>
+                </mat-label>
+                <input matInput formControlName="callerName" [maxlength]="100" class="input-field">
+                <mat-hint align="end">{{srBreakDownForm.controls.callerName.value?.length || 0}}/100</mat-hint>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.callerName.invalid && srBreakDownForm.controls.callerName.touched">
+                  <div *ngIf="srBreakDownForm.controls.callerName.errors.required"> {{'SR_CALLER_NAME' | translate}} is
+                    Required
+                  </div>
+                  <div *ngIf="srBreakDownForm.controls.callerName.errors.maxlength"> {{'SR_CALLER_NAME' | translate}}
+                    Max. Length is 100 </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group h-60" >
+              <mat-form-field class="example-full-width m-t-4" [floatLabel]="'always'"
+                hintLabel="{{ CommonhintMsg.MAX_15_DIG }}">
+                <mat-label class=" input-label"> {{'SR_CALLER_NUMBER' | translate}} <span
+                    class="mandatory-style">*</span>
+                </mat-label>
+                <input matInput formControlName="callerContactNo"  pattern="[0-9]*"  oninput="this.value = this.value.replace(/[^0-9]/g, '')" [maxlength]="15" class="input-field">
+                <mat-hint align="end">{{srBreakDownForm.controls.callerContactNo.value?.length || 0}}/15</mat-hint>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.callerContactNo.invalid && srBreakDownForm.controls.callerContactNo.touched">
+                  <div *ngIf="srBreakDownForm.controls.callerContactNo.errors.required">
+                    {{'SR_CALLER_NUMBER' | translate}} is
+                    Required </div>
+                  <div *ngIf="srBreakDownForm.controls.callerContactNo.errors.maxlength">
+                    {{'SR_CALLER_NUMBER' | translate}}
+                    Max. Length is 15 </div>
+                  <div *ngIf="srBreakDownForm.controls.callerContactNo.errors.pattern">
+                    {{'SR_CALLER_NUMBER' | translate}}
+                    should be in valid format </div>
+                  <div *ngIf="srBreakDownForm.controls.callerContactNo.errors.minlength">
+                    {{'SR_CALLER_NUMBER' | translate}}
+                    Min. Length is 10 </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+
+          </div>
+
+          <div fxFlex="25" class="align-self-field">
+
+            <div class="form-group h-60">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SR_PRIORITY' | translate }} </span>
+                <ng-select [items]="priorityCombo" bindLabel="priorityName" bindValue="priorityName"
+                  (search)="loadPriorityComboData($event)" (click)="loadPriorityComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadPriorityComboData({})" (keyup.backspace)="loadPriorityComboData($event.target.value ? $event : 'back')" (clear)="loadPriorityComboData('clear')" [loading]="scrollsyncPriority"
+                  loadingText="Loading..." (change)="selectedPriorityData($event)" formControlName="srPriority">
+                </ng-select>
+                <!-- <mat-error
+                  *ngIf="srBreakDownForm.controls.srPriority.invalid && srBreakDownForm.controls.srPriority.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.srPriority.errors.required">
+                    {{'SR_PRIORITY' | translate}} is Required </div>
+                </mat-error> -->
+              </div>
+            </div>
+
+            <div class="form-group h-60">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SR_SEVERITY' | translate }} </span>
+                <ng-select [items]="severityCombo" bindLabel="severityName" bindValue="severityName"
+                  (search)="loadSeverityComboData($event)" (click)="loadSeverityComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadSeverityComboData({})" (keyup.backspace)="loadSeverityComboData($event.target.value ? $event : 'back')" (clear)="loadSeverityComboData('clear')" [loading]="scrollsyncSeverity"
+                  loadingText="Loading..." (change)="selectedSeverityData($event)" formControlName="srSeverity">
+                </ng-select>
+                <!-- <mat-error
+                  *ngIf="srBreakDownForm.controls.srSeverity.invalid && srBreakDownForm.controls.srSeverity.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.srSeverity.errors.required">
+                    {{'SR_SEVERITY' | translate}} is Required </div>
+                </mat-error> -->
+              </div>
+            </div>
+
+            <div class="form-group h-60" >
+              <mat-form-field class="example-full-width m-t-4" [floatLabel]="'always'"
+                hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                <mat-label class=" input-label"> {{'SR_PROBLEM_REPORTED' | translate}} <span
+                    class="mandatory-style">*</span>
+                </mat-label>
+                <textarea matInput formControlName="problemReported" [maxlength]="500" class="input-field"></textarea>
+                <mat-hint align="end">{{srBreakDownForm.controls.problemReported.value?.length || 0}}/500</mat-hint>
+                <mat-error
+                  *ngIf="srBreakDownForm.controls.problemReported.invalid && srBreakDownForm.controls.problemReported.touched">
+                  <div class="err-field" *ngIf="srBreakDownForm.controls.problemReported.errors.required">
+                    {{'SR_PROBLEM_REPORTED' | translate}} is Required </div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div fxLayout="row">
+          <div [@.disabled]="true" fxFlex="100">
+            <mat-tab-group>
+              <mat-tab label="{{ 'ASSET_INFO' | translate }}">
+                <mat-card>
+                  <div fxFlex="100" fxLayout="row">
+                    <div fxLayout="column" fxFlex="17" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_CODE' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetCode.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_SERIAL_NO' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetSerialNo.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_STATUS' | translate }} </div>
+                        <div class="value mandatory-style" > {{srBreakDownForm.controls.assetStatus.value | translate }}
+                        </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_CONDITION' | translate }} </div>
+                        <div class="value mandatory-style" > {{srBreakDownForm.controls.assetCondition.value | translate }}
+                        </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_CATEGORY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetCategoryName.value}}</div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_GROUP' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetGroupName.value}} </div>
+                      </div>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="17" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'MANUFACTURER' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.manufacturerName.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'MODEL_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.modelName.value}}</div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'DEPARTMENT_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.departmentName.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'SUB_DEPARTMENT_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.subDepartment.value}} </div>
+                      </div>
+                    </div>
+
+
+                    <div fxLayout="column" fxFlex="15" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_PRIORITY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetPriority.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_RISK' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetRisk.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_FUNCTIONALITY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.functionality.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'MAINTENANCE_STRATEGY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.maintenanceStrategy.value}} </div>
+                      </div>
+
+                      <!-- <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'PM_STRATEGY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.pmMaintenanceStrategy.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'PA_STRATEGY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.paMaintenanceStrategy.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'QA_STRATEGY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.qaMaintenanceStrategy.value}} </div>
+                      </div> -->
+                    </div>
+
+
+                    <div fxLayout="column" fxFlex="17" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'BUILDING_ROOM' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetRoom.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'BUILDING_FLOOR' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetFloor.value}}</div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'BUILDING_SEGMENT' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetSegment.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'BUILDING_BLOCK' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.assetBlock.value}}</div>
+                      </div>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="17" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'PURCHASE_PO_NUMBER' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.poNo.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'PURCHASE_PO_DATE' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.poDtDisp.value}}</div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'SUPPLIER_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.businessPartnerName.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'COMMON_CONTACT_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.businessPartnerContactPersonName.value}}</div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'COMMON_PHONE_NO' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.businessPartnerSiteContactNo.value}}</div>
+                      </div>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="17" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'INSTALLED_DT' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installationDtDisp.value}} </div>
+                      </div>
+
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'INSTALLED_BY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installationDoneBy.value}}</div>
+                      </div>
+                    </div>
+
+                  </div>
+                </mat-card>
+              </mat-tab>
+
+
+              <mat-tab label="{{ 'SR_WARRANTY_CONTRACT_INFO' | translate }}">
+                <mat-card class="card-style">
+                  <mat-card-content>
+                    <div class="content-style" style="padding-top: 0.5%;">
+                      <div class="example-container">
+                        <table mat-table [dataSource]="contractDataSource" matSort>
+    
+                          <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="contractNo">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_NUMBER' | translate }} / <br />
+                              {{ 'COMMON_TITLE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.contractNo}} <br /> <br />
+                              {{element?.contractName}} </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="coverageType">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_COVERAGE_TYPE' | translate }} / <br />
+                              {{ 'CONTRACT_TYPE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.coverageType}} <br /> <br />
+                              {{element?.contractType}} </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="contractingPartyType">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_PARTY' | translate }} / <br />
+                              {{ 'COMMON_NAME' | translate }} </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.contractingPartyType}} <br /> <br />
+                              {{element?.contractPartyName}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="contactInfo">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'CONTRACT_CONTACT_PERSON' | translate }} / <br />
+                              {{ 'CONTRACT_PHONE_NUMBER' | translate }} </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.contactPerson}} <br /> <br />
+                              {{element?.phoneNumber}} </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="contractStatus">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'CONTRACT_STATUS' | translate }}/<br/>
+                              {{'APPROVAL_STATUS' | translate}}
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              <span class="{{element?.contractStatus.replace(' ','')}}">{{element?.contractStatus}} <br />
+                                <br /> </span>
+                              <span
+                                class="{{element?.woApprovalStatus.replace(' ','')}}">{{element?.woApprovalStatus}}</span>
+                            </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="contractStartDtDisp">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'CONTRACT_START_DATE' | translate }}/ <br />
+                              {{ 'CONTRACT_END_DATE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element"> {{element?.contractStartDtDisp}} <br /> <br />
+                              {{element?.contractEndDtDisp}} </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="active">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTIVE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element">
+                              <mat-icon *ngIf=element.active style="color: #3f51b5">check_circle_outline</mat-icon>
+                              <mat-icon *ngIf=!element.active style="color: #3f51b5">highlight_off</mat-icon>
+                            </td>
+                          </ng-container>
+    
+                          <ng-container matColumnDef="Service">
+                            <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+                              {{ 'CONTRACT_INCLUDE_SR' | translate }}/<br />
+                              {{ 'CONTRACT_EXCLUDE_SR' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="text-align:center;">
+                              <span>{{element?.includedService}}</span> <br /> <br />
+                              <span>{{element?.excludedService}}</span>
+                            </td>
+                          </ng-container>
+    
+                          <tr mat-header-row *matHeaderRowDef="contractDisplayCol;sticky: true"></tr>
+                          <tr mat-row *matRowDef="let element; columns: contractDisplayCol;">
+                        </table>
+                        <mat-card class="no_records_found" *ngIf="contractLength=='0'" fxLayoutAlign="center center">
+                          {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                        </mat-card>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </mat-tab>
+
+              <mat-tab label="{{ 'DELIVERY_INSTALLATION' | translate }}">
+                <mat-card>
+
+                  <div fxFlex="100" fxLayout="row">
+                    <div fxLayout="column" fxFlex="25" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_RECEIVED_DT' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.receivedDtDisp.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_INVOICE_NO' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.doNo.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_INVOICE_DT' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.doDtDisp.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_INVOICE_VALUE' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.invoiceValue.value}}</div>
+                      </div>
+
+                    </div>
+                    <div fxLayout="column" fxFlex="25" class="create-table-form-table">
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'EXPECTED_INSTALLATION_DT' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.expectedInstallationDtDisp.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ASSET_ACTUAL_INSTALL_DATE' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.actualInstalledDtDisp.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;">
+                        <div class="title"> {{ 'ACTUAL_INSTALLATION_TYPE' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installationDoneBy.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;" *ngIf="!insExternalEnggInfo">
+                        <div class="title"> {{ 'INS_INT_ENGINEER_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installedInternalEngName.value}}</div>
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxFlex="25" class="create-table-form-table">
+
+                      <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                        <div class="title"> {{ 'INSTALLATION_PROVIDED_BY' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installationProvidedBy.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                        <div class="title"> {{ 'INSTALLATION_PROVIDER_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.installationProvidedByName.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                        <div class="title"> {{ 'INS_EXT_ENGINEER_NAME' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.insExternalEngineerName.value}}</div>
+                      </div>
+                      <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                        <div class="title"> {{ 'INS_EXT_ENGINEER_CONTACT_NO' | translate }} </div>
+                        <div class="value"> {{srBreakDownForm.controls.insExternalEngineerContactNo.value}}
+                        </div>
+                        <div style="margin-bottom: 10px;" *ngIf="insExternalEnggInfo">
+                          <div class="title"> {{ 'INS_EXT_ENGINEER_EMAIL_ID' | translate }} </div>
+                          <div class="value"> {{srBreakDownForm.controls.insExternalEngineerEmailId.value}}</div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25" class="create-table-form-table">
+                     
+                        <div class="title"> {{ 'INSTALLATION_REMARKS' | translate }} </div>
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <textarea matInput formControlName="installationRemarks" tabindex="2" [maxlength]="1000"
+                            rows="15" readonly style="height: 50px;"></textarea>
+                          <mat-hint align="end">
+                            {{srBreakDownForm.controls.installationRemarks.value?.length || 0}}/1000</mat-hint>
+                        </mat-form-field>
+                     
+                    </div>
+                  </div>
+                </mat-card>
+              </mat-tab>
+
+              <mat-tab label="{{ 'ASSET_SERVICE_DETAILS' | translate }}">
+                <mat-card class="card-style">
+                  <div class="example-container">
+                    <table fxFlex="100" mat-table [dataSource]="srServiceHistoryDataSource">
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srNo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_NO_DATE_TYPE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srNo}} <br />
+                          {{element.srOpenedDtDisp}} <br /> {{element.srType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srStatus">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_STATUS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srType}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="srAttribute3Name">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'SR_CAUSE_PROBLEM_GRID' | translate }}
+                          <br /> {{ 'SR_CAUSE_PROBLEM_OBSERVED' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srAttribute3Name}} <br />
+                          {{element.srAttribute4Name}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="assignedTo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'ASSIGNED_TO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.assignedTo}} <br />
+                          {{element.assignedToContactNo}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-icon-button matTooltipPosition="below"
+                            matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                            (click)="viewServiceRequestDtl(element.srId,'view')">
+                            <mat-icon color="primary"><a>visibility</a></mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedSRServiceHistoryColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedSRServiceHistoryColumns;">
+                    </table>
+                  </div>
+                </mat-card>
+
+                <mat-card class="no_records_found" *ngIf="srHistoryLength=='0' && !srHistoryLoader">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+                <mat-card class="no_records_found" *ngIf="srHistoryLoader" fxLayoutAlign="center center">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </mat-tab>
+
+            </mat-tab-group>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

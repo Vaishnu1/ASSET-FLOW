@@ -1,0 +1,10 @@
+<mat-icon class="close-icon-large" (click)="closeRegionModal()">highlight_off</mat-icon>
+<div class="pageDisplay">
+  <div class="hgt-150">
+    <div echarts class="demo-chart" [options]="option" (chartClick)="onChartClick($event)"></div>
+  </div>
+
+  <div class="hgt-150" *ngIf="customerBased">
+    <div echarts class="demo-chart" [options]="options" (chartClick)="onChartClick($event)"></div>
+  </div>
+</div>

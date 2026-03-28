@@ -1,0 +1,35 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}  
+  
+.example-full-width {
+   width: 90%;
+}
+
+.space{
+    margin-left: 10px;
+}     
+
+.space-near{    
+    margin-top: 15px;
+    margin-left: -50px;   
+}
+
+.edit-hirarchy-button {
+    justify-content: end;
+    display: grid;
+}
+.content_section{
+    background-color: #ffffff;
+    height: auto;
+    padding: 15px;
+}
+
+.create-exp-panel-form {
+    flex: auto !important;
+}
+.h-60-px{
+    height: 60px;
+}

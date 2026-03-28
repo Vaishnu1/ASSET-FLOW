@@ -1,0 +1,92 @@
+<div fxFlex="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'MENU_CURRENCY_CD' | translate }}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeCurrencyCodeModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="currencyCodeForm">
+
+    <div class="form-group">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_60 }}">
+        <mat-label class="input-label">{{ 'CURRENCY_NAME' | translate }}
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input matInput formControlName="curName" #curName tabindex="1" [maxlength]="60"
+          oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{currencyCodeForm.controls.curName.value?.length || 0}}/60</mat-hint>
+        <mat-error *ngIf="currencyCodeForm.controls.curName.invalid && currencyCodeForm.controls.curName.touched">
+          <div class="err-field" *ngIf="currencyCodeForm.controls.curName.errors.required">"{{ 'CURRENCY_NAME' | translate }}" Is Required</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group mt-10">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_20 }}">
+        <mat-label class="input-label">{{ 'CURRENCY_CD' | translate }}
+        <span class="mandatory-style">*</span>
+        </mat-label>
+        <input matInput formControlName="curCd" tabindex="2" (blur)="checkForCurrencyCodeExistence()"
+          [maxlength]="20" oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{currencyCodeForm.controls.curCd.value?.length || 0}}/20</mat-hint>
+        <mat-error *ngIf="currencyCodeForm.controls.curCd.errors && currencyCodeForm.controls.curCd.touched">
+          <div class="err-field" *ngIf="currencyCodeForm.controls.curCd.errors.required"> "{{ 'CURRENCY_CD' | translate }}" Is Required
+          </div>
+          <div class="err-field" *ngIf="currencyCodeForm.controls.curCd.errors.notUnique">{{ErrorMsg}}</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group mt-10">
+      <div class="example-full-width">
+        <span class="input-label">{{ 'COMMON_COUNTRY' | translate }} 
+          <span class="mandatory-style">*</span>
+        </span>
+        <ng-select  tabindex="3" formControlName="countryName" (search)="listOfCountry($event)"
+          (click)="listOfCountry({})" [items]="countryList" bindLabel="countryName" bindValue="countryName" class="input-field">
+        </ng-select>
+        <mat-error
+          *ngIf="currencyCodeForm.controls.countryName.invalid && currencyCodeForm.controls.countryName.touched">
+          <div class="err-field" *ngIf="currencyCodeForm.controls.countryName.errors.required"> Kindly Select The "{{
+            'COMMON_COUNTRY' | translate }}"</div>
+        </mat-error>
+      </div>
+    </div>
+
+    <div class="form-group mt-10">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+        <mat-label class="input-label"> {{ 'CURRENCY_PRECISION' | translate }} </mat-label>
+        <input matInput formControlName="precision" tabindex="4" class="input-field" (input)="inputValidation()">
+        <mat-error *ngIf="currencyCodeForm.controls.precision.invalid && currencyCodeForm.controls.precision.touched">
+          <div class="err-field" *ngIf="currencyCodeForm.controls.precision.errors.number">
+          "{{ 'CURRENCY_PRECISION' | translate }}" Should Be Numbers Only</div>
+          <div class="err-field" *ngIf="currencyCodeForm.controls.precision.errors.decimal">
+            "{{ 'CURRENCY_PRECISION' | translate }}" Should Be A Whole Number</div>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group mt-10">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+        <mat-label class="input-label"> {{ 'COMMON_REMARKS' | translate }} </mat-label>
+        <input matInput formControlName="remarks" tabindex="5" [maxlength]="500"
+          oninput="this.value = this.value.toUpperCase()" class="input-field">
+        <mat-hint align="end">{{currencyCodeForm.controls.remarks.value?.length || 0}}/500</mat-hint>
+        <mat-error *ngIf="currencyCodeForm.controls.remarks.errors && currencyCodeForm.controls.remarks.touched">
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutAlign="center center"  *ngIf="headingDisplay != 'View'">
+      <!-- <button mat-raised-button class="space col-md-3" (click)="closeCurrencyCodeModal()" tabindex="7" color="primary">{{ 'COMMON_BACK' | translate }}</button> -->
+      <button mat-raised-button color="primary" tabindex="6" (click)="saveCurrencyCode()"
+        [disabled]="currencyCodeForm.invalid || !currencyCodeForm.dirty || uploadCurrencyCodeFlag">
+        <span *ngIf="!uploadCurrencyCodeFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadCurrencyCodeFlag">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+  </form>
+</div>

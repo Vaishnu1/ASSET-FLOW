@@ -1,0 +1,22 @@
+.create-emp-button {
+    display: grid;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+
+.mat-radio-button {
+    margin-left: 0px;
+}
+
+.pdf-form {
+    margin-top: 10px;
+}
+
+.first-title{
+    margin-top: -2px;
+}
+
+.button2{
+    margin-top: 10px;
+}

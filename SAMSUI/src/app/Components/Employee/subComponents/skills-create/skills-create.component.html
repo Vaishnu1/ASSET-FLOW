@@ -1,0 +1,81 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="mb-10"> 
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header"> {{'EMPLOYEE_SKILL_HEADING' | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" fxLayoutAlign="end start"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+ 
+  <div fxLayout="row"> 
+    <form [formGroup]="empSkillForm" fxFlex="100">
+       
+      <div class="form-group">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+          <mat-label class="input-label"> {{'EMPLOYEE_SKILL_NAME' | translate}} </mat-label>
+          <input matInput class="input-field" #skillNameF formControlName="skillName" required [maxlength]="100">
+          <mat-hint align="end">{{empSkillForm.controls.skillName.value?.length || 0}}/100</mat-hint>
+          <mat-error *ngIf="empSkillForm.controls.skillName.invalid && empSkillForm.controls.skillName.touched">
+            <div *ngIf="empSkillForm.controls.skillName.errors.required"> {{'EMPLOYEE_SKILL_NAME' | translate}} is
+              Required </div>
+            <div *ngIf="empSkillForm.controls.skillName.errors.maxlength"> {{'EMPLOYEE_SKILL_NAME' | translate}} Maximum
+              length is 100</div>
+          </mat-error>
+        </mat-form-field>
+      </div> 
+
+    
+  
+  <div class="form-group">
+  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+    <mat-label class="input-label">{{ 'EMPLOYEE_NO_OF_YEARS' | translate }}</mat-label>
+    <input matInput class="input-field" formControlName="noOfYears" type="number" step="0.01" required>
+    <mat-error *ngIf="empSkillForm.controls.noOfYears.invalid && empSkillForm.controls.noOfYears.touched">
+      <div *ngIf="empSkillForm.controls.noOfYears.errors.required">
+        {{ 'EMPLOYEE_NO_OF_YEARS' | translate }} is Required
+      </div>
+      <div *ngIf="empSkillForm.controls.noOfYears.errors.pattern">
+        {{ 'EMPLOYEE_NO_OF_YEARS' | translate }} must be a valid number (up to 2 decimals)
+      </div>
+    </mat-error>
+  </mat-form-field>
+</div>
+
+      
+      <div class="form-group">
+        <span class="input-label"> {{'EMPLOYEE_LEVEL' | translate}} <span class="mandatory-style">*</span> </span>
+        <ng-select class="input-field SkillsCreateComponent-dialog-dropdown" [items]="level" bindLabel="levelName" bindValue="levelName" [virtualScroll]="true"
+          formControlName="level">
+        </ng-select> 
+ 
+        <mat-error *ngIf="empSkillForm.controls.level.invalid && empSkillForm.controls.level.touched">
+          <div *ngIf="empSkillForm.controls.level.errors.required"> {{'EMPLOYEE_LEVEL' | translate}} is
+            Required </div>
+        </mat-error>
+      </div>
+ 
+      <div class="form-group">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_500 }}">
+          <mat-label class="input-label"> {{'COMMON_REMARKS' | translate}} </mat-label>
+          <textarea matInput formControlName="remarks" [maxlength]="500"></textarea>
+          <mat-hint align="end">{{empSkillForm.controls.remarks.value?.length || 0}}/500</mat-hint>
+          <mat-error *ngIf="empSkillForm.controls.remarks.invalid && empSkillForm.controls.remarks.touched">
+            <div *ngIf="empSkillForm.controls.remarks.errors.maxlength"> {{'COMMON_REMARKS' | translate}} Maximum
+              length is 500</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" class="mt-15" fxLayoutAlign="center center"> 
+          <button mat-raised-button type="button" (click)="addEmpSkill()" color="primary"
+            [disabled]="empSkillForm.controls.skillName.invalid || !empSkillForm.controls.skillName.dirty || empSkillForm.controls.noOfYears.invalid || !empSkillForm.controls.noOfYears.dirty || 
+          empSkillForm.controls.level.invalid || !empSkillForm.controls.level.dirty">{{'COMMON_SUBMIT' | translate}}</button>
+      </div>
+ 
+    </form>
+  </div>
+ </div>
+</div>

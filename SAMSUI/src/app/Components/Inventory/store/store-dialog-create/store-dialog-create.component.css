@@ -1,0 +1,372 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 95%;
+  }
+  
+  .example-label{
+    font-size: 20px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color:#000000;
+  }
+  
+  .logo-style{
+    width:50%;
+    height:50%;
+    padding-top: 5px;
+  }
+  
+  .logoedit {
+    margin-top:15px;
+  }
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .mb-0 {
+    margin-bottom: 0px;
+  }
+  .spacing {
+    margin-bottom: 0% !important;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    font-size: 12px;
+    color: rgba(54, 54, 54, 0.83);
+  } 
+  
+  ::ng-deep .ng-select .ng-select-container  {            
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+  }
+  
+
+  
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked .ng-option-label {
+    font-weight: 100 !important;
+    font-size: 12px !important;
+  }
+  
+  table{
+    width:100%;
+  }
+  
+  .mat-table {
+    max-height: 500px;
+  }
+  
+  
+  .Footer {
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
+    padding: 0px 15px;
+    background-color: rgba(62, 59, 59, 0.13);
+    height: 45px;
+    text-align: right
+  }
+  
+  .action_icon {
+    cursor: pointer;
+  }
+  
+  /* Specific design */
+  
+  .font-style{
+    font-size: 17px;
+    color: #000000; 
+    text-align: center;
+  }
+  
+  .card-design{
+    margin-left: 1%;
+    border-radius: 0%;
+    box-shadow:1px 1px 10px #d4d4d4; 
+    width:100%;
+    margin-right: 1%;
+  }
+  
+  .content-style{
+    padding-top: 10px;
+  }
+  
+  .card-style{
+    border-radius: 0%;
+    min-height: 400px;
+    margin-bottom: 20px;
+    z-index:800;
+  }
+  ::ng-deep .mat-card:not([class*=mat-elevation-z])
+  {
+    box-shadow: none !important;
+  }
+  .breadcrumblink{
+    float: left;
+  }
+  .whitecolor {
+    color: #ffffff !important;
+  }
+  /* Default design for Table */
+  tr.mat-header-row {
+    height: 35px;
+  }
+  
+  .mat-header-cell {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .icon-Style{
+    cursor: pointer;
+    float: right !important;
+  }
+  
+  /* .margin-fix{
+    margin-top: 3%;
+  } */
+  
+
+  
+  /* .top-content {
+    width: 100%;
+    position: fixed !important;
+  } */
+  
+  .btmfooter{
+    padding-right: 1px;
+    position: fixed;
+    bottom: 0px;
+    background-color:#4a27271f;
+    width: 100%;
+    height: 45px;
+    z-index:1000;
+   }
+  .footer p {
+    font-size: 14px;
+    text-align: center;
+    padding-top:15px;
+    padding-bottom: 30px;
+  }
+  
+  button{
+    /* float: right; */
+    margin-top:0.5%;
+  }
+  
+  .space{
+    margin-right: 5px;
+  }
+  
+  
+  .btnfooter {
+    position: absolute;
+    bottom: 0;
+    overflow: hidden;
+  }
+  @media screen and (min-width: 768px) and (max-width:1024px) {
+    .card-design {
+      position: relative;
+      width:100%;
+      width:22%;
+      }
+    }
+  
+  .rightbutton
+  {
+  text-align: center;
+  padding-bottom: 10px;
+  padding-left: 10px !important;
+  }
+  
+  .mat-card-content {
+    padding: 2px !important;
+  }
+  
+  .rightbuttonFooter
+  {
+  text-align: right;
+  padding-bottom: 10px;
+  }
+  
+  ::ng-deep .mat-tab-body-content {
+    overflow: unset !important;
+  }
+  
+  .font-style-combo{  
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    font-weight: 480;
+    color: rgba(54, 54, 54, 0.83);
+  }
+  
+  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 2.25em;
+  }
+  
+  
+  .form-group{  
+    margin-bottom: 0rem !important;               
+    font-size: 15px !important;
+    margin-top:2%;
+    font-weight: 400;
+  }
+  
+  p {
+    margin-top: 0;
+    margin-bottom: 0rem;
+  }
+  
+  .panel-form{
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-right: 0px;      
+    margin-bottom: 10px;
+    background-color: #fafafa;
+  }
+  
+  .panel-form-po{
+    border-radius: 10px;
+    margin-left: 0px;
+    margin-right: 0px;     
+    margin-bottom: 5px;
+    background-color: #fafafa;
+  }
+  
+  h6{
+    font-size: 14px;
+    color: #31a7c7;
+    margin-top: 6px;
+  }
+  
+  ::ng-deep.mat-grid-tile .mat-figure {
+    top: 30px !important;
+    left: 15px !important;
+    right: 15px !important;
+    bottom: 10px !important;
+    position: absolute !important;
+    display: block !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  hr {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+    border-radius: 10px;
+    background-color: #768f7d;
+  }
+  
+  .mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding: 0.3075em 0;
+  }
+  
+  /* input[readonly] {
+    border-bottom: 2px solid green;           
+    border-style: solid;  
+    border-left: none;
+    border-top: none;
+    border-right: none;
+  }                               
+  
+  .mat-control-readonly-underline {
+    border: 5px solid green !important;
+    border-style: solid !important;
+    color: green !important;
+  }
+  
+  .mat-form-field-appearance-legacy.mat-form-field-readonly .mat-form-field-underline {
+    background-position: 0 !important;
+    background-color: transparent !important;
+    border: 1px solid green !important;
+  }  */
+  
+  .adjust-table {
+    width: 5%;
+    text-align: center;
+  }
+  
+  .mat-column-issueDt {
+    width: 10% !important;
+  }
+  
+  .customTable{
+    font-size: 12px;
+    font-weight: 400;
+  
+  }
+  
+  .example-card {
+   /* // max-width: 400px; */
+   background-color: #fafafa;
+   height: 85px;
+   font-size: 35px;
+   padding-top: 15px !important;
+  
+    
+  }
+  
+  .example-header-image {
+    /* background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg'); */
+    background-size: cover;
+  }
+  
+  
+  
+  .demo-chart { 
+    height: 400px; 
+  }
+  
+  .graph{
+    font-size: 20px !important;
+    text-align: left !important;
+    font-weight: 400 !important;
+    padding-left: 10px;
+  }
+  
+  .cardWidth{
+    width: 310px !important;
+  }
+  
+  .exampleIcon{
+    font-size: 45px !important;
+    padding-left: 30px;
+  }
+
+  .section_title {
+    font-size: 20px;
+    color: #445c8f;
+   
+}
+
+.pos-rel-t-5-px{
+  position: relative;
+  top: 5px;
+}
+
+.ng-select-disabled {
+  padding: 0px 3px;
+  }
+  
+.mat-input-element:disabled { 
+    padding: 0px 3px;
+  }  
+  
+  ::ng-deep .StoreDialogCreateComponent-dialog-dropdown .ng-dropdown-panel {
+    position: fixed !important;
+    width: 350px !important;
+  }
+  
+.ng-select {
+    width: 350px !important;
+  }

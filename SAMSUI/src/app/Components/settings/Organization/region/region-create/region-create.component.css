@@ -1,0 +1,15 @@
+.pad-1-per{
+    padding: 1%;
+  }
+
+  .mandatory-style {
+    color: crimson;
+  }
+
+  .link {
+    cursor: pointer;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }

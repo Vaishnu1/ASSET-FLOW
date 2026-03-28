@@ -1,0 +1,27 @@
+.no-record-found{
+    margin: 1% 0 0 50%;
+    text-align: center !important;
+    background-color: white !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: black;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+
+  
+.btnpadding{
+  padding: 0 10px !important;
+}
+
+.card-style{
+  border-radius: 0%; 
+  margin-bottom: 20px;
+  z-index:800;
+}
+
+.space{
+  margin-right: 5px;
+}

@@ -1,0 +1,106 @@
+
+ <div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{'SR_EMAIL' | translate}} </h4>
+      </div>
+      
+    <div fxFlex="5" class="first-title"> 
+      <mat-icon class="close-icon" (click)="close()">highlight_off</mat-icon>
+    </div>
+    </div>
+
+    <div fxLayout="column">
+      <div fxFlex="100"> 
+        <div fxLayout="row" class="email-notify-form-input"> 
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300}}">
+            <mat-label class=" input-label"> {{ 'SR_TO_EMAIL' | translate }} </mat-label>
+            <textarea matInput formControlName="messageTo" [maxlength]="300" required class="input-field"></textarea>
+            <mat-hint align="end">{{sendServiceRequestEmailForm.controls.messageTo.value?.length || 0}}/300
+            </mat-hint>
+            <mat-error *ngIf="sendServiceRequestEmailForm.controls.messageTo.invalid && sendServiceRequestEmailForm.controls.messageTo.touched">
+              <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.messageTo.errors.required">
+                {{ 'SR_ACTIVITY_TO_EMAIL' | translate }} is Required </div>
+              <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.messageTo.errors.maxlength">
+                {{ 'SR_ACTIVITY_TO_EMAIL' | translate }} Maximum Length is 300 </div>
+              <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.messageTo.errors.pattern">
+                {{ 'SR_ACTIVITY_TO_EMAIL' | translate }} contains invalid pattern </div>
+            </mat-error>
+          </mat-form-field> 
+        </div>
+ 
+        <div fxLayout="row"> 
+          <form [formGroup]="sendServiceRequestEmailForm" class="modalForm example-full-width">  
+            <div fxFlex="100"> 
+              <div fxLayout="row" class="email-notify-form-input"> 
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300}}">
+                  <mat-label class=" input-label"> {{ 'SR_CC_EMAIL' | translate }} </mat-label>
+                  <textarea matInput formControlName="msgDestinationCcEmailId" [maxlength]="300" class="input-field"></textarea>
+                  <mat-hint align="end">
+                    {{sendServiceRequestEmailForm.controls.msgDestinationCcEmailId.value?.length || 0}}/300</mat-hint>
+                  <mat-error *ngIf="sendServiceRequestEmailForm.controls.msgDestinationCcEmailId.invalid && sendServiceRequestEmailForm.controls.msgDestinationCcEmailId.touched">
+                    <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.msgDestinationCcEmailId.errors.maxlength">
+                      {{ 'SR_ACTIVITY_TO_EMAIL' | translate }} Maximum Length is 300 </div>
+                    <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.msgDestinationCcEmailId.errors.pattern">
+                      {{ 'SR_ACTIVITY_TO_EMAIL' | translate }} contains invalid pattern </div>
+                  </mat-error>
+                </mat-form-field>  
+              </div>
+              
+              <div fxLayout="row" class="email-notify-form-input"> 
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_250}}">
+                  <mat-label class=" input-label"> {{ 'SR_EMAIL_SUBJECT' | translate }} </mat-label>
+                  <textarea matInput formControlName="emailSubject" [maxlength]="250" required class="input-field"></textarea>
+                  <mat-hint align="end">{{sendServiceRequestEmailForm.controls.emailSubject.value?.length || 0}}/250
+                  </mat-hint>
+                  <mat-error *ngIf="sendServiceRequestEmailForm.controls.emailSubject.invalid && sendServiceRequestEmailForm.controls.emailSubject.touched">
+                    <div class="err-field"
+                      *ngIf="sendServiceRequestEmailForm.controls.emailSubject.errors.required">
+                      {{ 'SR_ACTIVITY_EMAIL_SUBJECT' | translate }} is Required </div>
+                    <div class="err-field"
+                      *ngIf="sendServiceRequestEmailForm.controls.emailSubject.errors.maxlength">
+                      {{ 'SR_ACTIVITY_EMAIL_SUBJECT' | translate }} Maximum Length is 250 </div>
+                  </mat-error>
+                </mat-form-field> 
+              </div>
+
+              <div fxLayout="row" class="email-notify-form-input"> 
+                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                  hintLabel="{{ CommonhintMsg.MAX_50000}}">
+                  <mat-label class=" input-label"> {{ 'SR_EMAIL_BODY' | translate }} </mat-label>
+                  <textarea rows="5" matInput formControlName="emailBody" [maxlength]="50000" required class="input-field" style="height: 50px;"></textarea>
+                  <mat-hint align="end">{{sendServiceRequestEmailForm.controls.emailBody.value?.length || 0}}/50000
+                  </mat-hint>
+                  <mat-error *ngIf="sendServiceRequestEmailForm.controls.emailBody.invalid && sendServiceRequestEmailForm.controls.emailBody.touched">
+                    <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.emailBody.errors.required">
+                      {{ 'SR_ACTIVITY_EMAIL_BODY' | translate }} is Required </div>
+                    <div class="err-field" *ngIf="sendServiceRequestEmailForm.controls.emailBody.errors.maxlength">
+                      {{ 'SR_ACTIVITY_EMAIL_BODY' | translate }} Maximum Length is 50000 </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+               
+            </div>
+          </form> 
+        </div>
+ 
+        <div style="display: block !important">   
+            <span class="input-label"> {{ 'SR_EMAIL_PDF_TYPE' | translate }} <span class="mandatory-style">*</span>
+            </span> 
+ 
+            <ng-select  formControlName="attachPDF" [items]="attachPDFFor" bindLabel="name"
+              bindValue="name" dropdownPosition="bottom" > 
+            </ng-select> 
+        </div>
+         
+        <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 10px;">   
+            <button mat-raised-button class="space" color="primary" [disabled]="sendServiceRequestEmailForm.invalid"
+              (click)="sendServiceRequestEmail()">
+              <span *ngIf="!uploadFlag"> {{'COMMON_SEND' | translate}} </span>
+              <span *ngIf="uploadFlag"> {{'COMMON_SENDING' | translate}} </span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div fxLayout="column">
+    <div fxLayout="row">
+      <div fxFlex="90" fxLayoutAlign="start start">
+        <h4 class="dialogue-box-header">{{'ITEM_BRANCH_MAPPING' | translate }}</h4>
+      </div>
+      <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeItemBranchMapping()">highlight_off
+      </mat-icon>
+    </div> 
+    </div>
+  
+    <div fxLayout="row" div fxFlex="100">
+        <table mat-table [dataSource]="branchList" matSort fxFlex="100">
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_S_NO' | translate }}</th>
+            <td mat-cell *matCellDef="let element; let i=index;" style="width:10%;"> {{i+1}} </td>
+          </ng-container>
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="width:35%;">
+              <mat-checkbox color="primary" [ngModelOptions]="{standalone: true}" class="example-margin float-right"
+                [(ngModel)]="selectAllFlag" (change)="selectAll(selectAllFlag)">{{'COMMON_SELECT_ALL' | translate }}
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element;let i = index;" style="width:35%;text-align:start;">
+              <mat-checkbox [(ngModel)]="element.active" [disabled]="element.activeValid" (click)="updateBtnflag()" [ngModelOptions]="{standalone: true}" color="primary"
+                class="example-margin">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="locationName">
+            <th mat-header-cell *matHeaderCellDef style="width:55%;">
+              {{ 'LOCATION_NAME' | translate }} </th>
+            <td mat-cell *matCellDef="let element" style="width:55%;"> {{element.locationName}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="branchColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: branchColumns;">
+        </table>
+      <div fxFlex="100" fxLayout="row" class="card-style" fxLayoutAlign="center center">
+        <button mat-raised-button type="button" color="primary" [disabled]="uploadBtnFlag"
+          (click)="saveOrUpdateItemBranchMapping()">{{'COMMON_SUBMIT' | translate}}</button>
+      </div>
+    </div>
+   
+  </div>

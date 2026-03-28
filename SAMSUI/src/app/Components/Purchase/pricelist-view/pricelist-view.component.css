@@ -1,0 +1,176 @@
+/* General class need to be import in all components */
+.form-group{
+    margin-bottom: 0.5rem !important;
+    font-size: 15px !important;
+    margin-left:7%;
+    font-weight: 400;
+  }
+  .example-full-width {
+    width: 95%;
+  }
+  .content-style {
+     margin-top:20px;
+     min-height: 253px;
+     overflow: hidden !important;
+  }
+  /* Static Drop Down */
+
+  
+  ::ng-deep .ng-select .ng-select-container  {            
+    min-height: 0px;
+    border: none !important;
+    border-bottom: 1px solid #6a6d70 !important;
+    border-radius: 0;
+  } 
+  
+  table{
+    width:100%;
+  }
+  
+  .mat-table {
+    max-height: 500px;
+  }
+  
+  
+  .Footer {
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
+    padding: 0px 15px;
+    background-color: rgba(62, 59, 59, 0.13);
+    height: 45px;
+    text-align: right
+  }
+.employeeinfo {
+  margin-bottom: 20px;
+}
+.subtitle {
+  font-size: 17px;
+  color:#5f5f5f;
+}
+.empimg {
+  margin-bottom: 20px;
+}  
+  /* Specific design */
+  
+  .font-style{
+    font-size: 16px;
+    font-weight: 600; 
+    line-height: 50px;
+    text-align: center;
+    margin-left: 16px;
+  }
+  
+  .card-design{
+    margin-left: 20px;
+    border-radius: 0%;
+    box-shadow:1px 1px 10px #d4d4d4; 
+    position: fixed;
+    width: 22%;
+  }
+  
+  .content-style{
+    padding-top: 10px;
+  }
+  
+  .card-style{
+    /* box-shadow:1px 1px 10px #d4d4d4; */
+    border-radius: 0%;
+    margin-bottom: 20px;
+  }
+
+  .breadcrumblink{
+    float: left;
+}
+.whitecolor {
+    color: #ffffff !important;
+}
+  /* Default design for Table */
+tr.mat-header-row {
+    height: 35px;
+}
+  
+.mat-header-cell {
+    font-size: 14px;
+    font-weight: 500;
+}
+.icon-Style{
+    cursor: pointer;
+    float: right !important;
+}  
+.margin-fix{
+    margin-top: 40px;
+}
+ 
+  
+.top-content {
+    width: 100%;
+}
+.footer{
+    padding-right: 35px;
+    position: fixed;
+    bottom: 0px;
+    background-color:#4a27271f;
+    width: 100%;
+    height: 45px;
+   }
+.footer p {
+    font-size: 14px;
+    text-align: center;
+    padding-top:15px;
+    padding-bottom: 30px;
+}
+  
+button{
+    float: right;
+    margin-top:0.5%;
+    color:white;
+}
+  
+.space{
+    margin-left: 10px;
+}
+  
+ input.mat-input-element {
+    margin-top: 0.70em !important;
+    font-size: 16px !important;
+} 
+.profileimg {
+    width: 90%;
+    height: 250px;
+    padding: 10px
+  }
+  .info {
+      padding:10px;
+  }
+  .mat-card {
+    margin-top: 10px !important;
+    padding:15px !important;
+  }
+::ng-deep .mat-tab-label-active {
+    border-bottom: 2px solid #153b80;
+    color: #153b80;
+    opacity: 1 !important;
+}
+
+.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none;
+}
+@media screen and (max-width: 600px) {
+  .card-design {
+    position: relative;
+    width:100%;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .card-design {
+    position: relative;
+    width:100%;
+  }
+}
+@media screen and (min-width: 768px) and (max-width:1024px) {
+  .col-md-4 {
+    max-width: 100% !important;
+    flex:100% !important;
+  }
+}

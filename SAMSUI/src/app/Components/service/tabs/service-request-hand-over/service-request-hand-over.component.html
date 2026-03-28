@@ -1,0 +1,82 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="mb-10"> 
+      <div fxFlex="95">
+        <h4 class="section_title">{{headingDisplay}} {{'HANDOVER' | translate}}</h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class=" close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div>
+ 
+    <div fxLayout="row" class="mb-10"> 
+      <form [formGroup]="srHandOverForm" class="modalForm" fxFlex="100"> 
+
+        <div fxLayout="row">  
+          <div class="form-group example-full-width">
+                <span class="input-label"> {{ 'HAND_OVER_ITEM_TYPE' | translate }} <span class="mandatory-style">*</span> </span>
+                <ng-select [items]="handOverItemsCombo" bindLabel="handOverItemType" bindValue="handOverItemType"
+                  (search)="listOfHandOverItemName($event)" (click)="listOfHandOverItemName($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfHandOverItemName({})" (keyup.backspace)="listOfHandOverItemName($event.target.value ? $event : 'back')" (clear)="listOfHandOverItemName('clear')"
+                  [loading]="scrollsyncHandOverItem" loadingText="Loading..." (change)="selectedHandOver($event)"
+                  formControlName="handOverItemType">
+                </ng-select>
+                <mat-error 
+                *ngIf="srHandOverForm.controls.handOverItemType.invalid && srHandOverForm.controls.handOverItemType.touched">
+                <div class="err-field" *ngIf="srHandOverForm.controls.handOverItemType.errors.required">
+                  {{'HAND_OVER_ITEM_TYPE' | translate}} is Required </div>
+                </mat-error>  
+            </div>
+          </div>
+
+          <div fxLayout="row"> 
+            <div class="form-group example-full-width">
+                <span class="input-label"> {{ 'EMPLOYEE_NAME' | translate }} <span class="mandatory-style">*</span> </span>
+                <ng-select [items]="employeeCombo" bindLabel="displayName" bindValue="displayName"
+                          (search)="listOfEmployeeName($event)" (click)="listOfEmployeeName($event)" [virtualScroll]="true"
+                          (scrollToEnd)="listOfEmployeeName({})" (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName('clear')" [loading]="scrollsyncEmployee" loadingText="Loading..."
+                          (change)="selectedEmployee($event)" formControlName="employeeNameDIsp">
+                </ng-select>
+                <mat-error *ngIf="srHandOverForm.controls.employeeNameDIsp.invalid && srHandOverForm.controls.employeeNameDIsp.touched">
+                    <div class="err-field" *ngIf="srHandOverForm.controls.employeeNameDIsp.errors.required">
+                      {{'EMPLOYEE_NAME' | translate}} is Required </div>
+                </mat-error> 
+            </div>
+          </div>
+
+          <div fxLayout="row"> 
+            <div class="form-group example-width">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class=" input-label">{{ 'HAND_OVER_DT' | translate}}</mat-label>
+                  <input matInput (click)="handOverDtDisp.open()" [matDatepicker]="handOverDtDisp" formControlName="handOverDtDisp" required>
+                  <mat-datepicker-toggle matSuffix [for]="handOverDtDisp"></mat-datepicker-toggle>
+                  <mat-datepicker #handOverDtDisp></mat-datepicker>
+                  <mat-error>
+                    {{ 'HAND_OVER_DT' | translate }} is required
+                  </mat-error>
+                </mat-form-field> 
+            </div>
+          </div>
+
+          <div fxLayout="row"> 
+            <div class="form-group example-width">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <mat-label class=" input-label">{{ 'HAND_OVER_REMARKS' | translate }}<span class="mandatory-style">*</span></mat-label>
+                <textarea rows="7" matInput formControlName="handOverRemarks" tabindex="2" [maxlength]="500"></textarea>
+                <mat-hint align="end">{{srHandOverForm.controls.handOverRemarks.value?.length || 0}}/500</mat-hint>
+              </mat-form-field>
+            </div> 
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="center center" > 
+        <button *ngIf="modeDisplay" [disabled]="srHandOverForm.invalid" mat-raised-button class="space col-md-3"
+          color="primary" (click)="saveUpdateSrHandOverInfoByCheckingConfirmation()">
+          <span *ngIf="!uploadFlag"> {{buttonDisplay}} </span>
+          <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button>
+      </div> 
+
+      </form>
+    </div>
+  </div>
+</div>

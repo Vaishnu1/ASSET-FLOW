@@ -1,0 +1,292 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row aria-label="breadcrumb" fxLayoutAlign="start center" fxFlex="50" fxFlex.sm="50" fxFlex.xs="50">
+      <mat-list fxLayoutAlign="start center">
+        <mat-list-item fxLayoutAlign="start center">
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item>{{ 'MENU_SETTING' | translate }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item><a (click)="backToInventoryMaster()" style="cursor: pointer;">{{'MENU_ORGANIZATION' |
+            translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item><a (click)="backToPreviousPage()" style="cursor: pointer;">{{'MENU_ITEM_MASTER'| translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item><a (click)="backToPreviousPage()" style="cursor: pointer;">{{'MENU_ITEM_MASTER'| translate}}</a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+    <div fxLayoutAlign="end center" fxFlex="50">
+      <button color="primary" mat-raised-button class="space" (click)="backToPreviousPage()">{{'COMMON_BACK' |
+        translate}}</button>
+      <button color="primary" mat-raised-button class="space" [disabled]="disableClearButton" (click)="clear()"
+        *ngIf="mode != 'view'">{{'COMMON_CLEAR' | translate}}</button>
+      <button color="primary" mat-raised-button class="space"
+        [disabled]="(itemMasterFormGroup.invalid || uploadItemMasterFlag ||!itemMasterFormGroup.dirty) && !enableUpdate"
+        *ngIf="mode != 'view'" (click)="saveOrUpdateItemMaster()">
+        <span *ngIf="!uploadItemMasterFlag">{{buttonDisplay}}</span>
+        <span *ngIf="uploadItemMasterFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="column">
+    <mat-card>
+      <div fxLayout="row" fxFlex="100">
+        <mat-card-content>
+          <form [formGroup]="itemMasterFormGroup" style="width: 100%;">
+            <div fxLayout="row" fxFlex="100">
+              <div fxLayout="column" fxFlex="25">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                    <span class="input-label">{{'ITEM_NAME' | translate }} <span class="mandatory-style">*</span></span>
+                    <input #focusSet matInput formControlName="itemMasterName" [maxlength]="50"
+                      (blur)="checkForItemNameExistence()" oninput="this.value = this.value.toUpperCase()"
+                      class="input-field">
+                    <mat-hint align="end">{{itemMasterFormGroup.controls.itemMasterName.value?.length ||
+                      0}}/50</mat-hint>
+                    <mat-error
+                      *ngIf="itemMasterFormGroup.controls.itemMasterName.errors && itemMasterFormGroup.controls.itemMasterName.touched">
+                      <div *ngIf="itemMasterFormGroup.controls.itemMasterName.errors.required">"{{'ITEM_NAME' |
+                        translate }}" Is Required</div>
+                      <div *ngIf="itemMasterFormGroup.controls.itemMasterName.errors.notUnique">{{ErrorMsg}}</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group check-box">
+                  <div class="example-full-width">
+                    <mat-checkbox class="example-margin" color="primary" formControlName="stockable">
+                      {{'ITEM_STOCKABLE' | translate }}
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <span class="input-label">{{'HSN_CODE' | translate }}</span>
+                    <input #focusSet matInput formControlName="hsnCode"
+                      class="input-field">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="25">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_500 }}">
+                    <span class="input-label">{{'ITEM_DESC' | translate }}</span>
+                    <input matInput formControlName="itemMasterDesc" [maxlength]="500"
+                      oninput="this.value = this.value.toUpperCase()" class="input-field">
+                    <mat-hint align="end">{{itemMasterFormGroup.controls.itemMasterDesc.value?.length ||
+                      0}}/500</mat-hint>
+                    <mat-error
+                      *ngIf="itemMasterFormGroup.controls.itemMasterDesc.invalid && itemMasterFormGroup.controls.itemMasterDesc.invalid">
+                      <div *ngIf="itemMasterFormGroup.controls.itemMasterDesc.errors.maxlength">{{'ITEM_DESC' |
+                        translate }} Maximum length is 500</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group check-box">
+                  <div class="example-full-width">
+                    <mat-checkbox class="example-margin" color="primary" formControlName="purchasable">
+                      {{'ITEM_PURCHASABLE' | translate }}
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <span class="input-label">{{'GL_ACC_CODE' | translate }}</span>
+                    <input #focusSet matInput formControlName="glAccCode"
+                      class="input-field">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="25">
+                <div class="form-group h-55-px">
+                  <div class="example-full-width">
+                    <span class="input-label  ">{{ 'ITEM_TYPE' | translate }} <span
+                        class="mandatory-style">*</span></span>
+                    <ng-select class="input-field" formControlName="itemTypeName" (search)="listofItemType($event)"
+                      required (click)="listofItemType({})" (change)="getItemTypeComboValue($event)" [items]="itemType"
+                      [virtualScroll]="true" (scrollToEnd)="listofItemType({})"
+                      (keyup.backspace)="listofItemType($event.target.value ? $event : 'back')"
+                      (clear)="listofItemType('clear')" [loading]="scrollItemTypesync" bindLabel="itemTypeName"
+                      bindValue="itemTypeName">
+                    </ng-select>
+                    <mat-error
+                      *ngIf="itemMasterFormGroup.controls.itemTypeName.invalid && itemMasterFormGroup.controls.itemTypeName.touched">
+                      <div class="err-field" *ngIf="itemMasterFormGroup.controls.itemTypeName.errors.required">
+                        Kindly Select The "{{'ITEM_TYPE' | translate }}" </div>
+                    </mat-error>
+                  </div>
+                </div>
+                <div class="form-group check-box">
+                  <div class="example-full-width">
+                    <mat-checkbox class="example-margin" color="primary" formControlName="active">
+                      {{'ITEM_ACTIVE' | translate }}
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <span class="input-label">{{'SL_ACC_CODE' | translate }}</span>
+                    <input #focusSet matInput formControlName="slAccCode"
+                      class="input-field">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="25">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <span class="input-label">{{'ITEM_CATEGORY' | translate }}</span>
+                    <input #focusSet matInput formControlName="itemCategoryName" readonly
+                      class="input-field">
+                  </mat-form-field>
+                </div>
+                <div class="form-group  h-55-px">
+                  <div class="example-full-width">
+                    <span class="input-label">{{ 'UOM_NAME' | translate }}<span class="mandatory-style"> *</span></span>
+                    <ng-select class="input-field" formControlName="masterUOMName" (search)="listOfUOM($event)"
+                      (click)="listOfUOM({})" (scrollToEnd)="listOfUOM({})"
+                      (keyup.backspace)="listOfUOM($event.target.value ? $event : 'back')" (clear)="listOfUOM('clear')"
+                      [items]="uom" bindLabel="uomCode" bindValue="uomCode" [virtualScroll]="true"
+                      [loading]="scrollUomsync" (change)="getUOMValue($event)">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+
+  <div fxLayout="row" fxFlex="100">
+    <mat-tab-group style="width: 100%;">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          {{'ITEM_MANUFACTURER' | translate }}
+        </ng-template>
+        <mat-card class="card-style">
+          <mat-card-content>
+            <div class="content-style">
+              <form [formGroup]="itemMasterManufacturerFormGroup" *ngIf="mode != 'view'">
+                <div fxFlex="25">
+                  <div class="form-group  h-55-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'MANUFACTURER' | translate }} </span>
+                      <ng-select class=" input-field" formControlName="itemManufacturerName"
+                        (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                        (change)="getManfacturerComboValue($event)" [items]="manufactuer" [virtualScroll]="true"
+                        appendTo="body" (scrollToEnd)="listOfManufacturer({})"
+                        (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')"
+                        (clear)="listOfManufacturer('clear')" [loading]="scrollItemNameSync"
+                        bindLabel="businessPartnerName" bindValue="businessPartnerName">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="25">
+                  <div class="form-group"
+                    *ngIf="itemMasterManufacturerFormGroup.controls.itemManufacturerName.value !=null">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                      hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                      <span class="input-label">{{'MANUFACTURER_PART_NUMBER' | translate }}</span>
+                      <input #focusSet matInput formControlName="itemManufacturerPartno" [maxlength]="100"
+                        oninput="this.value = this.value.toUpperCase()" class="input-field">
+                      <mat-hint
+                        align="end">{{itemMasterManufacturerFormGroup.controls.itemManufacturerPartno.value?.length ||
+                        0}}/100</mat-hint>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="25">
+                  <div class="form-group check-box"
+                    *ngIf="itemMasterManufacturerFormGroup.controls.itemManufacturerName.value !=null">
+                    <div class="example-full-width">
+                      <mat-checkbox class="example-margin" color="primary" formControlName="active">
+                        {{'ITEM_ACTIVE' | translate }}
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="5">
+                </div>
+                <div fxFlex="20" fxLayoutAlign="end center">
+                  <button mat-raised-button color="primary" class="space" *ngIf="itemMakebuttonDisplay==='Add'"
+                    [disabled]="disableButton || itemMasterManufacturerFormGroup.invalid || itemMasterFormGroup.invalid"
+                    (click)="addItemManufacturerToList('Add',itemMakeIndex)"> {{itemMakebuttonDisplay}} </button>
+
+                  <button mat-raised-button color="primary" class="space" *ngIf="itemMakebuttonDisplay==='Update'"
+                    [disabled]="disableButton || itemMasterManufacturerFormGroup.invalid || itemMasterFormGroup.invalid"
+                    (click)="addItemManufacturerToList('Update',itemMakeIndex)"> {{itemMakebuttonDisplay}} </button>
+
+                </div>
+              </form>
+              <div fxLayout="column" class="inventory-container-inner-table">
+                <table mat-table [dataSource]="itemMasterManufacturerListDataSource">
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:10%;">
+                      {{'COMMON_S_NO' | translate}}</th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:10%;">{{
+                      i+1 }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="itemManufacturerName">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:30%;">{{'MANUFACTURER' |
+                      translate}}</th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:30%;">{{
+                      element.itemManufacturerName }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="itemManufacturerPartno">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:30%;">
+                      {{'MANUFACTURER_PART_NUMBER' | translate}}</th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element; let i=index" style="width:30%;">{{
+                      element.itemManufacturerPartno }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="active">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:15%;">
+                      {{'MANUFACTURER_ACTIVE' | translate}}</th>
+                    <td mat-cell class="table-cell-data" *matCellDef="let element ; let i=index" style="width:15%;">
+                      <mat-icon class="activeicon" *ngIf="element.active">check_circle</mat-icon>
+                      <mat-icon class="inactiveicon" *ngIf="!element.active">cancel</mat-icon>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell class="table-head-data" *matHeaderCellDef style="width:15%;">{{'COMMON_ACTION' |
+                      translate}}</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="width:15%;">
+                      <mat-icon mat-button class="mat-icon-button" color="primary"
+                        matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                        (click)="editItemManufacturer(element,i)">edit</mat-icon>
+
+                      <mat-icon mat-button class="mat-icon-button" color="warn" matTooltip="Delete"
+                        *ngIf="element.itemMakeId === 0" (click)="deleteItemManufacturer(i)">delete</mat-icon>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+                </table>
+                <mat-card class="no_records_found" fxLayoutAlign="center center"
+                  *ngIf="length== 0 && !subLoaderItemManufacturer">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+                <mat-card *ngIf="subLoaderItemManufacturer" fxLayoutAlign="center center" class="no_records_found">
+                  <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

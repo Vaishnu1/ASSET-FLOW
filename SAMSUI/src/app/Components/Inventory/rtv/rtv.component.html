@@ -1,0 +1,423 @@
+<div fxLayout="column" fxFlexFill>
+    <div fxLayout="row" fxLayoutAlign="start center">
+
+        <mat-toolbar-row fxFlex="50" fxFlex.sm="40" fxFlex.xs="40" fxLayoutAlign="start center">
+            <mat-list aria-label="breadcrumb" fxLayoutAlign="end center">
+                <mat-list-item><a href="#" [routerLink]="['/home/dashboard']">
+                        <mat-icon class="small-icon">home</mat-icon>
+                        </a>
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+                    
+                </mat-list-item>
+
+                <mat-list-item>{{'MENU_INVENTORY' | translate}}
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+
+                <mat-list-item aria-current="page">{{'MENU_RETURN_TO_VENDOR' | translate}}
+                </mat-list-item>
+            </mat-list>
+        </mat-toolbar-row>
+
+    </div>
+     <!-- Mat Table Code -->
+  <div class="content_section_background">
+    <div fxLayout="column">
+      <div class="table_section ">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-header">
+              {{'COMMON_SEARCH'| translate}}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end end">
+              <mat-icon>search</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div fxFlex="100">
+            <form fxFlex="100" fxLayout="row" fxLayout.lt-md="column" fxFlex.lt-md="100">
+              <div fxLayout="row" fxFlex="75" fxLayout.lt-md="row" fxFlex.lt-md="100">
+                <div fxFlex="34">
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'LOCATION_NAME' | translate}} </span>
+                      <ng-select #focusLocationName class=" input-field" [(ngModel)]="rtvHdrModel.locationName"
+                        (search)="listofLocationName($event)" (click)="listofLocationName({})"
+                        (change)="setLocationNameComboValue($event)" [items]="locationCombo" [virtualScroll]="true"
+                        (scrollToEnd)="listofLocationName({})"
+                        (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                        (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                        bindValue="locDisplayField" tabindex="1" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                        appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 17px;">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} </span>
+                      <ng-select tabindex="3" [(ngModel)]="rtvHdrModel.supplierName" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfSupplier($event)" (click)="listOfSupplier({})"
+                        (change)="fetchIdOfSupplier($event)" (scrollToEnd)="listOfSupplier({})"
+                        (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"
+                        (clear)="listOfSupplier('clear')" [virtualScroll]="true" appendTo="body"
+                        [loading]="scrollSupplierNamesync" [items]="supplierList" bindLabel="businessPartnerName"
+                        bindValue="businessPartnerName">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 17px;">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'RTV_DELIVERY_NO' | translate }}</span>
+                      <ng-select tabindex="3" [(ngModel)]="rtvHdrModel.doNo" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfGrnDoNo($event)" (click)="listOfGrnDoNo({})"
+                        (change)="fetchIdOfGrnDoNo($event)" (scrollToEnd)="listOfGrnDoNo({})"
+                        (keyup.backspace)="listOfGrnDoNo($event.target.value ? $event : 'back')"
+                        (clear)="listOfGrnDoNo('clear')" [virtualScroll]="true" appendTo="body"
+                        [loading]="scrollDonosync" [items]="doNoList" bindLabel="doNo"
+                        bindValue="doNo">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'RTV_NO' | translate }} </span>
+                      <ng-select tabindex="1" [(ngModel)]="rtvHdrModel.rtvNo" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfRtvNo($event)" (click)="listOfRtvNo({})"
+                        (change)="fetchIdOfRtvNo($event)" (scrollToEnd)="listOfRtvNo({})"
+                        (keyup.backspace)="listOfRtvNo($event.target.value ? $event : 'back')"
+                        (clear)="listOfRtvNo('clear')" [virtualScroll]="true" appendTo="body"
+                        [loading]="scrollRtvsync" [items]="fetchRtvList" bindLabel="rtvNo"
+                        bindValue="rtvNo">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{ 'RTV_PO_NO' | translate }}</mat-label>
+                        <input matInput tabindex="5" [(ngModel)]="rtvHdrModel.searchPoNo" [ngModelOptions]="{standalone: true}"
+                          class="input-field">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-group" >
+                    <div class="example-full-width">
+                        <span class="input-label">{{'ITEM_TYPE' | translate}}</span>
+                        <ng-select class=" input-field" [(ngModel)]="rtvHdrModel.searchItemTypeName"
+                            (search)="listOfItemTypeCombo($event)" (click)="listOfItemTypeCombo({})"
+                            (change)="getItemTypeValue($event)" [items]="itemTypeList" [virtualScroll]="true"
+                            (scrollToEnd)="listOfItemTypeCombo({})"
+                            (keyup.backspace)="listOfItemTypeCombo($event.target.value ? $event : 'back')"
+                            (clear)="listOfItemTypeCombo('clear')" [loading]="scrollItemTypeNamesync" bindLabel="itemTypeName"
+                            bindValue="itemTypeName" loadingText="Loading..." [ngModelOptions]="{standalone: true}"
+                            appendTo="body">
+                        </ng-select>
+                    </div>
+                </div> 
+
+                 
+                </div>
+
+                <div fxFlex="33">
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'ITEM_NAME' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="rtvHdrModel.searchItemName"
+                        [ngModelOptions]="{standalone: true}" (search)="listOfItem($event)" (click)="listOfItem({})"
+                        (change)="selectedItemName($event)" [items]="itemCombo" [virtualScroll]="true"
+                        (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')" [loading]="scrollItemNamesync" 
+                        bindLabel="itemMasterName" bindValue="itemMasterName" appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group mt-20-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'RTV_GRN_NO' | translate }} </span>
+                      <ng-select tabindex="1" [(ngModel)]="rtvHdrModel.grnNo" [ngModelOptions]="{standalone: true}"
+                        (search)="listOfGrnNo($event)" (click)="listOfGrnNo({})"
+                        (change)="fetchIdOfGrnNo($event)" (scrollToEnd)="listOfGrnNo({})"
+                        (keyup.backspace)="listOfGrnNo($event.target.value ? $event : 'back')"
+                        (clear)="listOfGrnNo('clear')" [virtualScroll]="true" appendTo="body"
+                        [loading]="scrollgrnNosync" [items]="fetchGrnNoList" bindLabel="grnNo"
+                        bindValue="grnNo">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group " style="margin-top: 17px;">
+                    <div class="example-full-width">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                        <mat-label class=" input-label">{{'RTV_FROM_DATE' | translate }}</mat-label>
+                        <input matInput (click)="rtvDt.open()" tabindex="2" [matDatepicker]="rtvDt"
+                          [(ngModel)]="rtvHdrModel.fromDateDisp" [ngModelOptions]="{standalone: true}"
+                          class="input-field">
+                        <mat-datepicker-toggle matSuffix [for]="rtvDt"></mat-datepicker-toggle>
+                        <mat-datepicker #rtvDt></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                 
+
+
+                </div>
+                
+              </div>
+              <div fxLayout="column" fxFlex="25" fxLayout.lt-md="row" fxFlex.lt-md="100">
+
+                <div class="form-group mt-20-px" >
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class=" input-label">{{'RTV_TO_DATE' | translate }}</mat-label>
+                      <input matInput (click)="rtvToDt.open()" tabindex="2" [matDatepicker]="rtvToDt"
+                        [(ngModel)]="rtvHdrModel.toDateDisp" [ngModelOptions]="{standalone: true}"
+                        class="input-field">
+                      <mat-datepicker-toggle matSuffix [for]="rtvToDt"></mat-datepicker-toggle>
+                      <mat-datepicker #rtvToDt></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+
+                <div class="form-group mt-20-px" style="margin-top: 0px;">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'RTV_STATUS' | translate }} </span>
+                    <ng-select tabindex="4" [(ngModel)]="rtvHdrModel.rtvStatus"
+                      [ngModelOptions]="{standalone: true}" [items]="rtvStatus" appendTo="body"
+                      bindLabel="rtvStatus" bindValue="rtvStatus" (change)="setRtvStatus($event)">
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="form-group mt-30-px" fxFlex.lt-md="34" fxFlex="100" style="margin-top: 22px;">
+                  <div class="example-full-width">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class=" input-label">{{ 'COMMON_CREATED_BY' | translate }}</mat-label>
+                      <input matInput tabindex="1" [(ngModel)]="rtvHdrModel.createdBy"
+                        [ngModelOptions]="{standalone: true}" class="input-field">
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                <div fxLayoutAlign="end end" fxHide.lt-md class="mt-30-px">
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="7" (click)="searchGrn()">{{'COMMON_SEARCH' |
+                    translate}}</button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="8" (click)="clear()">{{'COMMON_CLEAR' |
+                    translate}}</button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}" (click)="generateReport()"
+                   [matTooltipPosition]="'below'" tabindex="10">{{'REPORT_EXPORT' | translate}}</button>
+                </div>
+                <div fxLayoutAlign="end end" fxFlex.lt-md="66" fxHide.md fxHide.gt-md>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="7"
+                    ><mat-icon>search</mat-icon></button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                    [matTooltipPosition]="'below'" tabindex="8"
+                    ><mat-icon>clear_all</mat-icon></button>
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}" (click)="generateReport()"
+                   [matTooltipPosition]="'below'" tabindex="10">{{'REPORT_EXPORT' | translate}}<mat-icon>file_download</mat-icon></button>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+
+        </mat-expansion-panel>
+
+        <hr />
+
+        <mat-toolbar>
+          <span class="example-spacer"></span>
+
+          <mat-paginator #paginatorUsers [pageSizeOptions]="[5 ,10 , 25, 50, 100]" [length]="length"
+            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)">
+          </mat-paginator>
+          <span class="example-spacer"></span>
+
+          <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+            <mat-icon>view_week</mat-icon>
+          </button>
+    
+          <div class="custom-dialog" *ngIf="showManageColumns">
+            <div>
+              <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+            </div>
+            <hr>
+            <div class="custom-dialog-body" *ngIf="showManageColumns">
+              <div id="column1">        
+                <input type="checkbox" [checked]="displayedColumns.includes('rtvNo')"(change)="toggleColumn('rtvNo')">
+                <span>{{'RTV_NO' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('rtvDate')"(change)="toggleColumn('rtvDate')">
+                <span>{{'RTV_DATE' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('supplierName')" (change)="toggleColumn('supplierName')">
+                <span>{{'SUPPLIER_NAME' | translate}}</span>
+                <br>
+                
+                <input type="checkbox" [checked]="displayedColumns.includes('doNo')" (change)="toggleColumn('doNo')">
+                <span>{{'RTV_DELIVERY_NO' | translate}}</span>
+                <br>
+              </div>
+        
+              <div id="column2">
+                <input type="checkbox" (change)="toggleColumn('grnNo')" [checked]="displayedColumns.includes('grnNo')">
+                <span>{{'RTV_GRN_NO' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('rtvStatus')" [checked]="displayedColumns.includes('rtvStatus')">
+                <span>{{'RTV_STATUS' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('approvalStatus')" [checked]="displayedColumns.includes('approvalStatus')">
+                <span>{{'APPROVAL_STATUS' | translate}}</span> <br>
+        
+                <input type="checkbox" (change)="toggleColumn('createdBy')" [checked]="displayedColumns.includes('createdBy')">
+                <span>{{'COMMON_CREATED_BY_DT' | translate}}</span> <br>
+              </div>
+        
+              <!-- <div id="column3">
+                <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+                <span>{{'COMMON_UPDATED_DT' | translate}}</span>
+              </div> -->
+            </div>
+        
+            <hr>
+            
+            <div fxLayoutAlign="end end">
+              <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+                {{'COMMON_OK' | translate}}
+              </button>
+              <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+                {{'COMMON_RESET' | translate}}
+              </button>
+            </div>
+            
+          </div>
+
+          <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay" class="space sqr-btn"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            (click)="createRtv('add')"><mat-icon>add</mat-icon></button>
+
+          <button [disabled]="enableActionBtn || checkApprovalValid() || enableActionBtnForCancel " mat-raised-button color="primary"
+            class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+            *ngIf="modelAccessModule.updateFlagDisplay " (click)="createRtv('Edit')">
+            <mat-icon>edit</mat-icon></button>
+
+          <button [disabled]="enableActionBtn" mat-raised-button color="primary" class="space sqr-btn"
+            *ngIf="modelAccessModule.readFlagDisplay" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+            (click)="createRtv('view')">
+            <mat-icon>visibility</mat-icon></button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="rtvWorkflowApproval(true)">
+          <mat-icon>spellcheck</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="rtvWorkflowReject()">
+          <mat-icon>cancel</mat-icon>
+          </button>
+
+            <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn" 
+            matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="rtvCancel()">
+            <mat-icon>clear</mat-icon>
+            </button>
+        </mat-toolbar>
+
+        <div class="example-container">
+          <table class="rtv-list-table" mat-table [dataSource]="rtvMainDataSource" matSort (matSortChange)="customSort($event)"
+            matSortActive="name" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="table-head-data"> {{ 'COMMON_SELECT' | translate }}</th>
+              <td mat-cell *matCellDef="let element;let i = index;">
+                <mat-checkbox color="primary" class="example-margin" (change)="selectRTV(element)"
+                  [checked]="compareValue(element)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+              <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+            </ng-container>
+            <ng-container matColumnDef="rtvNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'RTV_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectRTV(element)">
+                {{element.rtvNo}}</td>
+            </ng-container>
+            <ng-container matColumnDef="rtvDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'RTV_DATE' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectRTV(element)">
+                {{element.rtvDateDisp}}</td>
+            </ng-container>
+            <ng-container matColumnDef="supplierName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'SUPPLIER_NAME' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectRTV(element)">
+                {{element.supplierName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="doNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'RTV_DELIVERY_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" 
+                (click)="selectRTV(element)">{{element.doNo}}</td>
+            </ng-container>
+            <ng-container matColumnDef="grnNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'RTV_GRN_NO' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;"
+                 (click)="selectRTV(element)">
+                {{element.grnNo}}</td>
+            </ng-container>
+            <ng-container matColumnDef="rtvStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'RTV_STATUS' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;" (click)="selectRTV(element)" class="{{element?.rtvStatus}}">
+                {{element?.rtvStatus}}</td>
+            </ng-container>
+            <ng-container matColumnDef="approvalStatus">
+              <th mat-header-cell *matHeaderCellDef>{{'APPROVAL_STATUS' | translate}}</th>
+              <td mat-cell *matCellDef="let element" (click)="selectRTV(element)">
+                  <span class="{{element?.approvalStatus.replace(' ','')}}">
+                      {{ element?.approvalStatus }}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_BY_DT' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;"
+                 (click)="selectRTV(element)">
+                {{element?.createdBy}}/ {{element?.createdDtDisp}}</td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="createdDt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'COMMON_CREATED_DT' | translate }}</th>
+              <td mat-cell *matCellDef="let element; let i=index;"
+                 (click)="selectRTV(element)">
+                {{element?.createdDtDisp}}</td>
+            </ng-container> -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+          </table>
+          <mat-card class="no_records_found" fxLayoutAlign="center center"
+            *ngIf="length=='0' && !subLoaderRtvMain">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+          <mat-card class="no_records_found" *ngIf="subLoaderRtvMain" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

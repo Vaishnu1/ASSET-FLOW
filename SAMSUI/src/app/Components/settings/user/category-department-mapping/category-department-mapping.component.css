@@ -1,0 +1,52 @@
+.card-style{
+  background: #fff;
+  color: rgba(0,0,0,.87);
+  border-radius: 0%; 
+  padding: 20px;
+  position: fixed;
+    bottom: 10%;
+    left: 45%;
+}
+
+/* .dep_cat-container-table {
+  max-height: 62vh !important;
+  overflow: auto;
+} */
+
+.cat-dept-mapping-table-container{
+  width: 100%;
+  max-height: 62vh !important;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.dept-table,.cat-table{
+  min-width: 480px;
+  margin-top: 10px;
+}
+
+.cat-dept-mapping-table-container {
+  display: flex;
+  gap: 20px;
+  height: 400px; /* adjust based on your layout */
+}
+
+.dept-table, .cat-table {
+  flex: 1;
+  overflow: auto;
+  max-height: 100%;
+}
+
+/* Make table header sticky */
+table mat-header-row,
+table mat-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #e0f7fa; /* your header color */
+}
+
+table mat-header-row {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+

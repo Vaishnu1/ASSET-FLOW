@@ -1,0 +1,189 @@
+<div class="page-wrapper">
+
+<!-- ================= BREADCRUMB ================= -->
+
+<div class="breadcrumb-strip">
+  <div class="breadcrumb">
+    <mat-icon class="home-icon">home</mat-icon>
+    <span>Settings</span>
+    <mat-icon>keyboard_arrow_right</mat-icon>
+    <span class="active">Email Server Config</span>
+  </div>
+</div>
+
+
+<!-- ================= SEARCH PANEL ================= -->
+
+<mat-expansion-panel hideToggle class="search-panel">
+    <mat-expansion-panel-header>
+        <mat-panel-title>Search Email Server</mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end center">
+            <mat-icon>search</mat-icon>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <form [formGroup]="searchForm">
+    <div class="search-body">
+        <div class="search-row">
+            <!-- <div class="form-field">
+                <label>Organization</label>
+                <ng-select [items]="orgList" bindLabel="orgName" bindValue="orgId" formControlName="orgId" appendTo="body"></ng-select>
+            </div> -->
+            <!-- <div class="form-field">
+                <label>Entity</label>
+                <ng-select [items]="entityList"bindLabel="entityName"bindValue="entityId"formControlName="entityId"appendTo="body"></ng-select>
+            </div> -->
+            <div class="form-field">
+                <label>Email Name</label>
+                <ng-select [items]="emailNameList" bindLabel="fromEmailName" bindValue="fromEmailName" formControlName="emailName" appendTo="body"></ng-select>
+            </div>
+            <div class="form-field">
+                <label>Email Id</label>
+                <ng-select [items]="emailIdList" bindLabel="fromEmailId" bindValue="fromEmailId" formControlName="emailId" appendTo="body"></ng-select>
+            </div>
+            <div class="search-buttons">
+                <button mat-raised-button color="primary"(click)="onSearch()">Search</button>
+                <button mat-raised-button color="primary"(click)="onClearSearch()">Clear</button>
+            </div>
+        </div>
+    </div>
+    </form> 
+</mat-expansion-panel>
+<div class="divider"></div>
+
+    <!-- ================= LIST HEADER =================
+
+<div class="list-header">
+    <span class="list-title">Email Server Configuration List</span>
+     ================= PAGINATION ================= -->
+    <!-- <mat-paginator [length]="length" [pageSize]="pageSize"[pageSizeOptions]="[10,25,50]"(page)="onPageChange($event)"></mat-paginator>
+    <div class="toolbar-buttons">
+        <button mat-raised-button class="sqr-btn" (click)="openManageColumns()"><mat-icon style="color: white;" >view_column</mat-icon></button><button mat-raised-button color="primary" class="sqr-btn" (click)="onCreate()">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" class="sqr-btn" [disabled]="enableActionBtn" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-raised-button color="warn"[disabled]="enableActionBtn" class="sqr-btn"(click)="onView()">
+            <mat-icon>visibility</mat-icon>
+        </button>
+
+    </div> -->
+
+<!-- </div>  -->
+<!-- ============================= MANAGE COLUMNS POPUP ================= 
+<div *ngIf="showManageColumns" class="manage-columns-popup">
+
+  <h3>Manage Columns</h3>
+
+  <div class="column-grid">
+      <mat-checkbox *ngFor="let col of columns"
+                    [(ngModel)]="col.checked">
+          {{col.label}}
+      </mat-checkbox>
+  </div>
+
+  <div class="actions">
+      <button mat-raised-button color="primary" (click)="applyColumns()">Ok</button>
+      <button mat-raised-button color="warn" (click)="editManageColumns()">Reset</button>
+  </div>
+
+</div> -->
+
+
+<!-- ================= TABLE ================= -->
+
+<div class="table-card">
+    <!-- ================= LIST HEADER ================= -->
+
+<div class="list-header">
+    <span class="list-title">Email Server Configuration List</span>
+    <!-- ================= PAGINATION ================= -->
+    <mat-paginator [length]="length" [pageSize]="pageSize"[pageSizeOptions]="[10,25,50]"(page)="onPageChange($event)"></mat-paginator>
+    <div class="toolbar-buttons">
+        <button mat-raised-button class="sqr-btn" (click)="openManageColumns()"><mat-icon style="color: white;" >view_column</mat-icon></button><button mat-raised-button color="primary" class="sqr-btn" (click)="onCreate()">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" class="sqr-btn" [disabled]="enableActionBtn" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+        </button>
+         <button mat-raised-button color="warn" class="sqr-btn" [disabled]="enableActionBtn" (click)="onDelete()">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-raised-button color="warn"[disabled]="enableActionBtn" class="sqr-btn"(click)="onView()">
+            <mat-icon>visibility</mat-icon>
+        </button>
+
+    </div>
+
+</div>
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-checkbox (change)="selectRow(element, $event)"></mat-checkbox>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef>S.No</th>
+            <td mat-cell *matCellDef="let element;let i=index">{{i+1}}</td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="orgName">
+            <th mat-header-cell *matHeaderCellDef>Organization</th>
+            <td mat-cell *matCellDef="let element">{{element.orgName}}</td>
+        </ng-container> -->
+        <ng-container matColumnDef="fromEmailId">
+            <th mat-header-cell *matHeaderCellDef>Email ID</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.fromEmailId}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="fromEmailName">
+            <th mat-header-cell *matHeaderCellDef>Email Name</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.fromEmailName}}
+            </td>
+        </ng-container>
+         <ng-container matColumnDef="smtpUserName">
+            <th mat-header-cell *matHeaderCellDef>SMTP User Name</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.smtpUsername}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="smtpHost">
+            <th mat-header-cell *matHeaderCellDef>SMTP Host</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.smtpHost}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="smtpPort">
+            <th mat-header-cell *matHeaderCellDef>SMTP Port</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.smtpPortNumber}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="securityType">
+            <th mat-header-cell *matHeaderCellDef>Security Type</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.securityType}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="active">
+            <th mat-header-cell *matHeaderCellDef>Active</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.active ? 'Yes' : 'No'}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef>Created By / Date</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.createdBy}} / {{element.createdDt | date:'dd-MM-yyyy'}}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+

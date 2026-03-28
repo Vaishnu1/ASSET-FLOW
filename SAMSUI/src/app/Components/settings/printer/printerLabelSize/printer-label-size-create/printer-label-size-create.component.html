@@ -1,0 +1,64 @@
+<div fxLayout="column">
+
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h6 class="dialogue-box-header">{{ 'PRINTER_LABEL_SIZE' | translate }}</h6>
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" fxLayout="column" [formGroup]="printerLabelSizeForm">
+    <div style="margin-bottom: 10px;">
+      <span class="input-label">{{'PRINTER_MODEL' | translate}}<span class="mandatory-style">*</span></span>
+      <ng-select class="input-label" required formControlName="printerModel" (search)="listOfPrinterModel($event)"
+        (click)="listOfPrinterModel({})" (change)="setPrinterModel($event)" [items]="printerModelCombo"
+        [virtualScroll]="true" (scrollToEnd)="listOfPrinterModel({})" (keyup.backspace)="listOfPrinterModel($event.target.value ? $event : 'back')" (clear)="listOfPrinterModel('clear')" [loading]="scrollPrinterModelSync"
+        bindLabel="printerModel" bindValue="printerModel" tabindex="1">
+      </ng-select>
+      <mat-error
+        *ngIf="printerLabelSizeForm.controls.printerModel.invalid && printerLabelSizeForm.controls.printerModel.touched">
+        <div class="err-field" *ngIf="printerLabelSizeForm.controls.printerModel.errors.required">
+          Kindly Select The "{{'PRINTER_MODEL' | translate}}" </div>
+      </mat-error>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 3 Digits">
+        <mat-label class="input-label">{{ 'PRINTER_LABEL_SIZE' | translate }}
+          <span class="mandatory-style">*</span>
+        </mat-label>
+        <input matInput formControlName="labelSize" [maxlength]="3"
+          oninput="this.value = this.value.toUpperCase()" tabindex="2" (input)="uniqueValidation()">
+        <mat-hint align="end">{{printerLabelSizeForm.controls.labelSize.value?.length || 0}}/3</mat-hint>
+        <mat-error
+          *ngIf="printerLabelSizeForm.controls.labelSize.invalid && printerLabelSizeForm.controls.labelSize.touched">
+          <div class="err-field" *ngIf="printerLabelSizeForm.controls.labelSize.errors.required"> "{{ 'PRINTER_LABEL_SIZE' | translate
+          }}" Is Required</div>
+          <div class="err-field" *ngIf="printerLabelSizeForm.controls.labelSize.errors.pattern">{{'PRINTER_LABEL_SIZE' | translate }}
+            should be in digits </div>
+            <div class="err-field" *ngIf="printerLabelSizeForm.controls.labelSize.errors.notUnique">{{ErrorMsg}}</div>
+
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutAlign="start center">
+      <section class="example-section">
+        <mat-checkbox class="example-margin" color="primary" formControlName="active" tabindex="3">
+          <label>{{ 'COMMON_ACTIVE' | translate }}</label>
+        </mat-checkbox>
+      </section>
+    </div>
+
+    <div fxLayoutAlign="center center">
+      <button mat-raised-button class="space" color="primary" *ngIf="!isViewMode"
+        (click)="savePrinterlabelSize()"
+        [disabled]="printerLabelSizeForm.invalid || !printerLabelSizeForm.dirty || updateFlag">{{displayButton}}
+      </button>
+    </div>
+
+  </form>
+</div>

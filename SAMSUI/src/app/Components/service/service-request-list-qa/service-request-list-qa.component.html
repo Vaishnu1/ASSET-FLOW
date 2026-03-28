@@ -1,0 +1,278 @@
+<div class="top-content row">
+    <div class="col-md-8">
+        <mat-toolbar-row>
+            <nav aria-label="breadcrumb" class="breadcrumblink">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#" [routerLink]="['/home/dashboard']">
+                            <mat-icon class="breadcrumbicon">home</mat-icon>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">{{'MENU_SERVICE' | translate}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{'MENU_QA' | translate}}</li>
+                </ol>
+            </nav>
+            <span class="example-spacer"></span>
+        </mat-toolbar-row>
+    </div>
+    <div class="col-md-3">
+        <mat-paginator #paginatorUsers [pageSizeOptions]="[10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+            [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    </div>
+    <div class="col-md-1 rightbutton">
+        <button mat-raised-button color="primary"
+            (click)="createService('QA')">{{ 'COMMON_CREATE' | translate }}</button>
+    </div>
+</div>
+
+<div class="content_section_background">
+    <div class="row">
+        <div class="table_section col-md-12">
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{'COMMON_SEARCH'| translate}} {{'MENU_QA'| translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div fxFlex="100">
+                    <form flex fxLayout="row">
+                        <div fxFlex="20">
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                                    <ng-select [items]="locationCombo" bindLabel="locDisplayField" tabindex="1"
+                                        bindValue="locDisplayField" (search)="loadLocationComboData($event)"
+                                        (click)="loadLocationComboData($event)" [virtualScroll]="true"
+                                        (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                                        loadingText="Loading..." (change)="selectedLocationData($event)"
+                                        [(ngModel)]="serviceRequestModel.locationName"
+                                        [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label">{{ 'ASSET_CATEGORY' | translate }}</span>
+                                    <ng-select 
+                                        [(ngModel)]="serviceRequestModel.assetCategoryName"
+                                        [ngModelOptions]="{standalone: true}" tabindex="2"
+                                        (search)="listOfCategory($event)" (click)="listOfCategory({})"
+                                        (change)="getCategoryComboValue($event)" [virtualScroll]="true"
+                                        (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')" [loading]="scrollsyncAssetCategory"
+                                        loadingText="Loading..." [items]="assetCategoryName"
+                                        bindLabel="assetCategoryName" bindValue="assetCategoryName">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                                    <ng-select  [(ngModel)]="serviceRequestModel.subCategoryName"
+                                        [ngModelOptions]="{standalone: true}" tabindex="3"
+                                        (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})"
+                                        [virtualScroll]="true" (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')"
+                                        [loading]="scrollsyncAssetSubCategory" loadingText="Loading..."
+                                        (change)="getSubCategoryComboValue($event)" [items]="subCategoryName"
+                                        bindLabel="subCategoryName" bindValue="subCategoryName">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div fxFlex="20">
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                                    <ng-select  [(ngModel)]="serviceRequestModel.assetGroupName"
+                                        [ngModelOptions]="{standalone: true}" tabindex="4"
+                                        (click)="listOfAllAssetGroup({})" [virtualScroll]="true"
+                                        (search)="listOfAllAssetGroup($event)" (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')"
+                                        (change)="getAssetGroupComboValue($event)" [items]="assetGroup"
+                                        bindLabel="assetGroupName" bindValue="assetGroupName"
+                                        [loading]="scrollsyncAssetGroup" loadingText="Loading..." required>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'MODEL_NAME' | translate }} </span>
+                                    <ng-select  [(ngModel)]="serviceRequestModel.modelName"
+                                        [ngModelOptions]="{standalone: true}" tabindex="5" (click)="listOfAllModel({})"
+                                        [virtualScroll]="true" (search)="listOfAllModel($event)"
+                                        (scrollToEnd)="listOfAllModel({})" (keyup.backspace)="listOfAllModel($event.target.value ? $event : 'back')"(clear)="listOfAllModel('clear')" (change)="getModelComboValue($event)"
+                                        [items]="modelCombo" bindLabel="modelName" bindValue="modelName"
+                                        [loading]="scrollsyncModel" loadingText="Loading..." required>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="example-label input-label">{{ 'SR_NO' | translate }}</mat-label>
+                                    <input matInput tabindex="6" [(ngModel)]="serviceRequestModel.srNo"
+                                        [ngModelOptions]="{standalone: true}">
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div fxFlex="20">
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'SR_STATUS' | translate }} </span>
+                                    <ng-select  [(ngModel)]="serviceRequestModel.srStatus"
+                                        tabindex="7" [ngModelOptions]="{standalone: true}" [items]="srStatus"
+                                        bindLabel="name" bindValue="name">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="example-full-width">
+                                    <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }} </span>
+                                    <ng-select  [(ngModel)]="serviceRequestModel.functionality"
+                                        tabindex="8" [ngModelOptions]="{standalone: true}" [items]="functionalStatus"
+                                        bindLabel="name" bindValue="name">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div fxFlex="20">
+
+                            <div class="form-group">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="example-label input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+                                    <input matInput (click)="fromDt.open()" [matDatepicker]="fromDt"
+                                        [(ngModel)]="serviceRequestModel.fromDt" [ngModelOptions]="{standalone: true}"
+                                        (keypress)="dateValidationinstall($event)" tabindex="9">
+                                    <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+                                    <mat-datepicker #fromDt></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="example-label input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+                                    <input matInput (click)="endDt.open()" [matDatepicker]="endDt"
+                                        [(ngModel)]="serviceRequestModel.endDt" [ngModelOptions]="{standalone: true}"
+                                        (keypress)="dateValidationinstall($event)" tabindex="10">
+                                    <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                                    <mat-datepicker #endDt></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div fxFlex="20">
+                            <button mat-raised-button class="space-button-left" color="primary"
+                                matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                                tabindex="11" (click)="searchSR()">{{'COMMON_SEARCH' | translate}}</button>
+                            <button mat-raised-button class="space" color="primary"
+                                matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" tabindex="12"
+                                (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </mat-expansion-panel>
+
+            <div class="example-container">
+
+                <table mat-table [dataSource]="dataSource" matSort (matSortChange)="customSort($event)"
+                    matSortActive="name" matSortDirection="asc" matSortDisableClear>
+                    <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element; let i=index;"> {{getIndexValue(i+1)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="locationName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' | translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element?.locationName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="srNo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'SR_NO' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srNo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="createdDt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'SR_DATE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdDtDisp}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="assetCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ASSET_CODE' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element?.assetCode }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="assetGroupName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ASSET_GROUP' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element?.assetGroupName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="functionality">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'SR_FUNCTIONALITY' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.functionality}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="srStatus">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'SR_STATUS' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srStatus}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="assignedTo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{ 'ASSET_SERVICE_ENGINEER_1' | translate }} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.assignedTo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="updatedBy">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_BY' | translate}}</th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                    </ng-container>      
+                    <ng-container matColumnDef="updatedDt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_DT' | translate}}</th>
+                        <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button (click)="viewServiceRequestDtl(element.srId,'view')"
+                                matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                                <mat-icon color="primary"><a>visibility</a></mat-icon>
+                            </button>
+                            <button mat-icon-button *ngIf="element.srStatus != 'CLOSED'"
+                                (click)="viewServiceRequestDtl(element.srId,'edit')"
+                                matTooltip="{{ 'COMMON_EDIT' | translate }}">
+                                <mat-icon color="primary"><a>edit</a></mat-icon>
+                            </button>
+                            <button mat-icon-button class="mat-icon-button" matTooltip="{{ 'COMMON_PDF' | translate }}"
+                                (click)="generateSRPDF(element?.srId)">
+                                <mat-icon color="primary">picture_as_pdf</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                </table>
+                <mat-card class="no_records_found" *ngIf="length=='0' && !subloader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+                <mat-card class="no_records_found" *ngIf="subloader" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                </mat-card>
+
+            </div>
+
+        </div>
+    </div>
+</div>

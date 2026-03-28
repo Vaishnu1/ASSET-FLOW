@@ -1,0 +1,107 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'BUILDING_ROOM' | translate }}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeRoomModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="buildingRoomCreateForm">
+
+
+    <div fxLayout="column">
+      <div class="form-group">
+        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select #locationName class="input-field" [items]="locationCombo" bindLabel="locDisplayField"
+          bindValue="locDisplayField" (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)"
+          [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+          loadingText="Loading..." (change)="selectedLocationData($event)" formControlName="locationName" required>
+        </ng-select>
+        <mat-error
+          *ngIf="buildingRoomCreateForm.controls.locationName.invalid && buildingRoomCreateForm.controls.locationName.touched">
+          <div class="err-field" *ngIf="buildingRoomCreateForm.controls.locationName.errors.required">
+            Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <span class="input-label"> {{ 'BLOCK_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select  required [items]="blockComboList" bindLabel="blockName"
+          (search)="getBlockNameComboData($event)" (click)="getBlockNameComboData({})"
+          (scrollToEnd)="getBlockNameComboData({})"  (keyup.backspace)="getBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="getBlockNameComboData('clear')" (change)="selectedBlockName($event)" [virtualScroll]="true"
+          [loading]="blockScrollSync" bindValue="blockName" formControlName="blockName" class="input-field">
+        </ng-select>
+        <mat-error
+          *ngIf="buildingRoomCreateForm.controls.blockName.invalid && buildingRoomCreateForm.controls.blockName.touched">
+          <div class="err-field" *ngIf="buildingRoomCreateForm.controls.blockName.errors.required">
+             Kindly Select The "{{'BLOCK_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <span class="input-label"> {{ 'FLOOR_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select class="input-field" required [items]="floorComboList" bindLabel="floorName"
+          (search)="getFloorNameComboData($event)" (click)="getFloorNameComboData({})"
+          (scrollToEnd)="getFloorNameComboData({})" (keyup.backspace)="getFloorNameComboData($event.target.value ? $event : 'back')" (clear)="getFloorNameComboData('clear')" (change)="selectedFloorName($event)" [virtualScroll]="true"
+          [loading]="floorSrcollSync" bindValue="floorName" formControlName="floorName">
+        </ng-select>
+        <mat-error
+          *ngIf="buildingRoomCreateForm.controls.floorName.invalid && buildingRoomCreateForm.controls.floorName.touched">
+          <div class="err-field" *ngIf="buildingRoomCreateForm.controls.floorName.errors.required">
+          Kindly Select The "{{'FLOOR_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_50 }}">
+          <mat-label class="example-label input-label"> {{ 'ROOM_NAME' | translate }} 
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <input matInput formControlName="roomName" (blur)="checkForRoomNameExistence()" [maxlength]="50"  class=" input-field"
+            oninput="this.value = this.value.toUpperCase()">
+          <mat-hint align="end">{{buildingRoomCreateForm.controls.roomName.value?.length || 0}}/50</mat-hint>
+          <mat-error
+            *ngIf="buildingRoomCreateForm.controls.roomName.errors && buildingRoomCreateForm.controls.roomName.touched">
+            <div class="err-field" *ngIf="buildingRoomCreateForm.controls.roomName.errors.required">"{{ 'ROOM_NAME' | translate }}" Is Required</div>
+            <div class="err-field" *ngIf="buildingRoomCreateForm.controls.roomName.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_300 }}">
+          <mat-label class="example-label input-label"> {{ 'COMMON_DESC' | translate }} </mat-label>
+          <textarea matInput formControlName="roomDesc" [maxlength]="300" class=" input-field"
+            oninput="this.value = this.value.toUpperCase()"></textarea>
+          <mat-hint align="end">{{buildingRoomCreateForm.controls.roomDesc.value?.length || 0}}/300</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <span class="input-label"> {{ 'SEGMENT_NAME' | translate }}
+        </span>
+        <ng-select class="input-field"  [items]="segmentComboList" bindLabel="segmentName"
+          (search)="getSegmentNameComboData($event)" (click)="getSegmentNameComboData({})"
+          (scrollToEnd)="getSegmentNameComboData({})" (keyup.backspace)="getSegmentNameComboData($event.target.value ? $event : 'back')" (clear)="getSegmentNameComboData('clear')" (change)="selectedSegmentName($event)" [virtualScroll]="true"
+          [loading]="segmentSrcollSync" bindValue="segmentName" formControlName="segmentName">
+        </ng-select>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <mat-checkbox color="primary" formControlName="active">
+          {{'COMMON_ACTIVE' | translate}}
+        </mat-checkbox>
+      </div>
+
+      <div fxLayoutAlign="center center" *ngIf="headingDisplay!='View'">
+        <button mat-raised-button class="space" color="primary" (click)="submitRoom()"
+          [disabled]="buildingRoomCreateForm.invalid || !buildingRoomCreateForm.dirty || uploadRoomFlag">
+          <span *ngIf="!uploadRoomFlag">{{buttonDisplay}}</span>
+          <span *ngIf="uploadRoomFlag">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

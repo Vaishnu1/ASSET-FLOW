@@ -1,0 +1,51 @@
+
+<div fxFlex="100"> 
+  <div fxLayout="row"> 
+
+    <div fxFlex="95">
+      <h4 class="section_title"> {{'ALERT_AND_NOTIFICATIONS_DETAILS' | translate}} </h4>
+    </div>
+    
+    <div fxFlex="5" class="first-title" fxLayoutAlign="end start"> 
+      <mat-icon class="close-icon" (click)="closeModel()">highlight_off</mat-icon>
+    </div>
+
+  </div> 
+ 
+    <div fxLayout="row">  
+      
+    <table>
+      <tr>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td width="20%" valign="top"><span class="headerTable">{{'ALERT_AND_NOTIFICATIONS_TRIGGERED_BY' | translate}}</span></td>
+        <td width="2%">:</td>
+        <td><span class="emailBody">{{ this.emailMessageModel.createdBy }}</span></td>
+      </tr>
+      <tr>
+        <td width="20%" valign="top"><span class="headerTable">{{'ALERT_AND_NOTIFICATIONS_TRIGGERED_DATE' | translate}}</span></td>
+        <td width="2%" valign="top">:</td>
+        <td><span class="emailBody">{{ this.emailMessageModel.createdDtDisp }}</span></td>
+      </tr>
+      <tr>
+        <td width="20%" valign="top"><span class="headerTable">{{'ALERT_AND_NOTIFICATIONS_EMAIL_TO' | translate}}</span></td>
+        <td width="2%" valign="top">:</td>
+        <td><span class="emailBody">{{ this.emailMessageModel.msgDestinationEmailId }}</span></td>
+      </tr>
+      <tr>
+        <td width="20%" valign="top"><span class="headerTable">{{'ALERT_AND_NOTIFICATIONS_EMAIL_SUBJECT' | translate}}</span></td>
+        <td width="2%" valign="top">:</td>
+        <td><span class="emailBody">{{ this.emailMessageModel.emailSubject }}</span></td>
+      </tr>
+      <tr>
+        <td width="20%" valign="top"><span class="headerTable">{{'ALERT_AND_NOTIFICATIONS_EMAIL_BODY' | translate}}</span></td>
+        <td width="2%" valign="top">:</td>
+        <td><span class="emailBody">{{ this.emailMessageModel.emailBody }}</span></td>
+      </tr>
+      
+    </table> 
+  </div>
+
+</div> 

@@ -1,0 +1,202 @@
+<div fxLayout="column">
+  
+    <div fxLayout="row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{headingDisplay}} {{'EXTERNAL_SR_COST' | translate}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div>
+
+
+    <div fxLayout="column"> 
+      <form [formGroup]="srActivitySRCostForm" fxLayout="column">
+        <mat-card style="margin-bottom: 5% !important" fxLayout="column"> 
+
+          <div fxLayout="row">
+            <div fxFlex="45"> 
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label">{{'SERVICE_TYPE' | translate}}<span
+                      class="mandatory-style">*</span></span>
+                  <ng-select #serviceTypeFocus  formControlName="serviceType" tabindex="2"
+                    [items]="serviceTypeList" tabindex="1" bindLabel="name" bindValue="name"
+                    (change)="selectedServiceType($event)" required>
+                  </ng-select>
+                  <mat-error *ngIf="srActivitySRCostForm.controls.serviceType.invalid && srActivitySRCostForm.controls.serviceType.touched">
+                    <div class="err-field" *ngIf="srActivitySRCostForm.controls.serviceType.errors.required">
+                      {{'SERVICE_TYPE' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="enableItemCombo && srActivitySRCostForm.controls.serviceType.value === 'SPARE PARTS'">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'SERVICE_SPARE' | translate }} </span>
+                  <ng-select [items]="itemList" bindLabel="itemName" bindValue="itemName" (search)="listOfItem($event)"
+                    (click)="listOfItem($event)" [virtualScroll]="true" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')"
+                    [loading]="scrollItemNameSync" loadingText="Loading..." (change)="selectedItem($event)"
+                    formControlName="itemName">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="enableItemSerialNo">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label">{{ 'ITEM_SERIAL_NO' | translate }}</mat-label>
+                  <input matInput [maxlength]="50" formControlName="itemSerialNo"  class="input-field">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                <div class="example-full-width-align">
+                  <span class="input-label"> {{ 'SERVICE_SPARE_DESC' | translate }} <span class="mandatory-style">*</span></span>
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <textarea matInput tabindex="2" formControlName="serviceSpareDesc" [maxlength]="200" required class="input-field">  </textarea>
+                  </mat-form-field>
+                  <mat-error *ngIf="srActivitySRCostForm.controls.serviceSpareDesc.invalid && srActivitySRCostForm.controls.serviceSpareDesc.touched">
+                    <div class="err-field" *ngIf="srActivitySRCostForm.controls.serviceSpareDesc.errors.required">
+                      {{'SERVICE_SPARE_DESC' | translate}} is Required </div>
+                  </mat-error>
+                </div>
+              </div>
+            </div> 
+            
+            <div fxFlex="5"> </div>
+
+            <div fxFlex="45">
+              <div class="form-group">
+                <div class="example-full-width">
+                  <div class="form-group">
+                    <span class="input-label"> {{ 'UOM' | translate }} </span>
+                    <ng-select  formControlName="uomCode" (search)="listOfUOM($event)"
+                      (click)="listOfUOM({})" (scrollToEnd)="listOfUOM({})" (keyup.backspace)="listOfUOM($event.target.value ? $event : 'back')" (clear)="listOfUOM('clear')" [items]="uom" bindLabel="uomCode" bindValue="uomCode"
+                      tabindex="3" [virtualScroll]="true" [loading]="scrollUomsync" (change)="getUOMValue($event)">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 32px;">
+                <div class="example-full-width-align">
+                  <div class="form-group">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{ 'UNIT_PRICE_RATE_HR' | translate }}</mat-label>
+                      <input matInput tabindex="4" style="text-align: right;" formControlName="unitPrice"
+                        (keyup)="calculateSRCCost()" (ngModelChange)="calculateSRCCost()" [maxlength]="10" class="input-field">
+                    </mat-form-field>
+                    <mat-error
+                      *ngIf="srActivitySRCostForm.controls.unitPrice.invalid && srActivitySRCostForm.controls.unitPrice.touched">
+                      <div *ngIf="srActivitySRCostForm.controls.unitPrice.errors.pattern">
+                        {{'UNIT_PRICE_RATE_HR' | translate}} contains only Numbers </div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 25px;">
+                <div class="example-full-width-align">
+                  <div class="form-group">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{ 'QTY_NO_OF_HOURS' | translate }}</mat-label>
+                      <input matInput tabindex="5" style="text-align: right;" formControlName="qty" [maxlength]="10"
+                        (keyup)="calculateSRCCost()" (ngModelChange)="calculateSRCCost()" class="input-field">
+                    </mat-form-field>
+                    <mat-error *ngIf="srActivitySRCostForm.controls.qty.invalid && srActivitySRCostForm.controls.qty.touched">
+                      <div *ngIf="srActivitySRCostForm.controls.qty.errors.pattern">
+                        {{'QTY_NO_OF_HOURS' | translate}} contains only Numbers </div>
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 20px;">
+                <div class="example-full-width-align">
+                  <div class="form-group">
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="example-label input-label">{{ 'TOTAL_COST' | translate }}</mat-label>
+                      <input style="text-align: right;" matInput formControlName="totalCost" readonly class="input-field">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div fxLayout="row" class="submit-button"> 
+              <button *ngIf="modeDisplay" mat-raised-button  color="primary"
+                [disabled]="srActivitySRCostForm.invalid" (click)="saveUpdateSRCost()">
+                <span *ngIf="!uploadFlag"> {{buttonDisplay}} </span>
+                <span *ngIf="uploadFlag"> {{'COMMON_LOADING' | translate}} </span></button> 
+          </div> 
+
+          <div fxLayout="row">
+      
+            <mat-card-content fxFlex="100">
+              <div class="example-container">
+                <table mat-table [dataSource]="srActivitySRCostList">
+                  <ng-container matColumnDef="sNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_S_NO' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="serviceType">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'SERVICE_TYPE' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.serviceType}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="itemName">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'ITEM_NAME' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.itemName}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="itemSerialNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'ITEM_SERIAL_NO' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.itemSerialNo}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="serviceSpareDesc">
+                    <th mat-header-cell *matHeaderCellDef style="width:25%;"> {{'SERVICE_SPARE_DESC' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:25%;"> {{element.serviceSpareDesc}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="uomCode">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'UOM' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.uomCode}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="unitPrice">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%">
+                      {{'UNIT_PRICE_RATE_HR' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%"> {{element.unitPrice}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="qty">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%">
+                      {{'QTY_NO_OF_HOURS' | translate}} </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%"> {{element.qty}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="totalCost">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%"> {{'TOTAL_COST' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%"> {{element.totalCost}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%"> {{'COMMON_ACTION' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%">
+                      <button mat-button class="mat-icon-button" (click)="srCostDelete(element.srActServiceCostId,'delete')"
+                        matTooltip="{{ 'COMMON_DELETE' | translate }}">
+                        <mat-icon color="primary">delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displaySRCostColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displaySRCostColumns;">
+                  </tr>
+                </table>
+              </div>
+            </mat-card-content>
+          </div>
+
+        </mat-card>
+      </form>
+    </div>
+ 
+</div>

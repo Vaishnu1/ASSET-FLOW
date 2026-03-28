@@ -1,0 +1,272 @@
+<div fxLayout="column" fxFlex="100%">
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <div fxFlex="20">
+      <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+        <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']"><mat-icon class="small-icon">home</mat-icon></a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center">{{'MENU_HR'| translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="breadcrumb-padding-0" fxLayoutAlign="start center" aria-current="page">
+            {{'MENU_EMPLOYEE'| translate}}
+          </mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+
+    <div fxFlex="33" style="text-align: end;">
+      <span class="panel-header">Total No.of Employee : {{length}}</span>
+    </div>
+
+  </div>
+
+  <div fxLayout="row" >
+  
+          <mat-expansion-panel fxFlex="100" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="panel-header">
+                {{'COMMON_SEARCH'| translate}} {{'MENU_EMPLOYEE'| translate}}
+              </mat-panel-title>
+              <mat-panel-description fxLayoutAlign="end end">
+                <mat-icon>search</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div fxFlex="100" id="expansions">
+              <form fxLayout="row">
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo" bindLabel="locDisplayField" bindValue="locDisplayField"
+                        (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)" appendTo="body"
+                        [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" 
+                        (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                        loadingText="Loading..." (change)="selectedLocationData($event)" [(ngModel)]="employeeModel.accessLocName"
+                        [ngModelOptions]="{standalone: true}" class="input-field"></ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'EMPLOYEE_NAME' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="employeeModel.displayName"
+                        [ngModelOptions]="{standalone: true}" (click)="listOfEmployeeName({})" [virtualScroll]="true"
+                        (search)="listOfEmployeeName($event)" (scrollToEnd)="listOfEmployeeName({})" (keyup.backspace)="listOfEmployeeName($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName('clear')" appendTo="body"
+                        (change)="getEmployeeNameComboValue($event)" [items]="employeeFirstName" bindLabel="displayName"
+                        bindValue="displayName" [loading]="scrollsyncFirstName" loadingText="Loading..." required>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'EMPLOYEE_CODE' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="employeeModel.employeeCode"
+                        [ngModelOptions]="{standalone: true}" (click)="listOfEmployeeCode({})" [virtualScroll]="true"
+                        (search)="listOfEmployeeCode($event)" (scrollToEnd)="listOfEmployeeCode({})" (keyup.backspace)="listOfEmployeeCode($event.target.value ? $event : 'back')" (clear)="listOfEmployeeCode('clear')" appendTo="body"
+                        (change)="getEmployeeCodeComboValue($event)" [items]="employeeCode" bindLabel="employeeCode"
+                        bindValue="employeeCode" [loading]="scrollsyncCode" loadingText="Loading..." required>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="employeeModel.departmentName"
+                        [ngModelOptions]="{standalone: true}" (click)="listOfDepartmentName({})" [virtualScroll]="true"
+                        (search)="listOfDepartmentName($event)" (scrollToEnd)="listOfDepartmentName({})" (keyup.backspace)="listOfDepartmentName($event.target.value ? $event : 'back')" (clear)="listOfDepartmentName('clear')" appendTo="body"
+                        (change)="getDepartmentNameComboValue($event)" [items]="departmentName"
+                        bindLabel="departmentName" bindValue="departmentName" [loading]="scrollsyncDepartmentName"
+                        loadingText="Loading..." required>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'EMPLOYEE_STATUS' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="employeeModel.employeeStatus"
+                        [ngModelOptions]="{standalone: true}" (change)="getEmployeeStatusComboValue($event)"
+                        [items]="employeeStatus" bindLabel="name" bindValue="name" appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <div class="activeStatus">
+                        <span class="input-label"> Status </span>
+                        <ng-select class=" input-field bg-transparant"
+                          [(ngModel)]="employeeModel.activeDisplay" [ngModelOptions]="{standalone: true}"
+                          [items]="empStatusList" bindLabel="name" bindValue="name" (search)="changeempStatus($event)"
+                          (change)="changeempStatus($event)" appendTo="body">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="25">
+                  <div class="form-group">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'DESIGNATION_NAME' | translate }} </span>
+                      <ng-select class=" input-field" [(ngModel)]="employeeModel.designationName"
+                        [ngModelOptions]="{standalone: true}" (click)="listOfDesignationName({})" [virtualScroll]="true"
+                        (search)="listOfDesignationName($event)" (scrollToEnd)="listOfDesignationName({})" (keyup.backspace)="listOfDesignationName($event.target.value ? $event : 'back')" (clear)="listOfDesignationName('clear')"
+                        appendTo="body" (change)="getDesignationNameComboValue($event)" [items]="designationName"
+                        bindLabel="designationName" bindValue="designationName" [loading]="scrollsyncDesignationName"
+                        loadingText="Loading..." required>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div  fxLayoutAlign="end end" style="margin-top: 20px;">
+                      <button mat-raised-button color="primary" class="space for-desktop" (click)="onSearchChange()">{{
+                        'COMMON_SEARCH' | translate }}</button>
+    
+                      <button mat-raised-button class="space for-mobile" color="primary"
+                        matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'"
+                        (click)="onSearchChange()">
+                        <mat-icon>search</mat-icon></button>
+    
+                      <button mat-raised-button color="primary" class="space for-desktop" (click)="clearSearch()">{{
+                        'COMMON_CLEAR' | translate }}</button>
+    
+                      <button mat-raised-button class="space  for-mobile" color="primary"
+                        matTooltip="{{'COMMON_CLEAR' | translate}}" [matTooltipPosition]="'below'" (click)="clearSearch()">
+                        <mat-icon>clear_all</mat-icon></button>
+    
+                      <button mat-raised-button color="primary" class="space for-desktop"
+                        (click)="generateReportOfEmployee()" [disabled]="length=='0' && !empListLoader">Export</button>
+    
+                      <button mat-raised-button class="space for-mobile" color="primary" matTooltip="Export"
+                        [matTooltipPosition]="'below'" (click)="generateReportOfEmployee()"
+                        [disabled]="length=='0' && !empListLoader">
+                        <mat-icon>file_download</mat-icon></button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </mat-expansion-panel>  
+  </div>
+
+  <hr />
+
+  <mat-toolbar>
+    <span>{{'MENU_EMPLOYEE'| translate}} List</span>
+    <span class="example-spacer"></span>
+
+    <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+    [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+    <span class="example-spacer"></span>
+
+    <button *ngIf="moduleAccessModel.createFlagDisplay" id="button" mat-raised-button color="primary" class="space sqr-btn"
+    matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'" (click)="createEmployee(0)">
+    <mat-icon>add</mat-icon></button>
+    
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="moduleAccessModel.updateFlagDisplay"
+    (click)="createEmployee(selectedItem)" matTooltip="{{'COMMON_EDIT' | translate}}" [matTooltipPosition]="'below'">
+    <mat-icon >edit</mat-icon></button>
+
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="moduleAccessModel.readFlagDisplay"
+    matTooltip="{{'COMMON_VIEW' | translate}}" [matTooltipPosition]="'below'" (click)="viewEmployee(selectedItem)">
+    <mat-icon >visibility</mat-icon></button>
+
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="isEmpActive"
+    matTooltip="Make {{'EMPLOYEE_INACTIVE' | translate}}" [matTooltipPosition]="'below'" (click)="empinActive(selectedItem, 1)">
+      <mat-slide-toggle [disabled]=" selectedItem == 0" [(ngModel)]="isEmpActive" ></mat-slide-toggle>
+    </button>
+
+    <button [disabled]=" selectedItem == 0" mat-raised-button color="primary" class="space sqr-btn" *ngIf="!isEmpActive"
+    matTooltip="Make {{'EMPLOYEE_ACTIVE' | translate}}" [matTooltipPosition]="'below'" (click)="empinActive(selectedItem, 2)">
+      <mat-slide-toggle [disabled]=" selectedItem == 0" [(ngModel)]="isEmpActive"></mat-slide-toggle>
+    </button>
+
+  </mat-toolbar>
+
+<div class="emp-list-table">
+  <div class="emp-list-table-x">
+    <div fxLayout="row" style="position: sticky;">
+      <div fxFlex="100%" class="tabel-header">
+        <span fxFlex="5" fxLayoutAlign="center center"> Select</span>
+        <span fxFlex="10" fxLayoutAlign="center center"> {{ 'MENU_PROFILE' | translate }} </span>
+        <span fxFlex="10" fxLayoutAlign="center center"> {{ 'EMPLOYEE_NAME' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'EMPLOYEE_CODE' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'DEFAULT_BRANCH' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'DEPARTMENT_NAME' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'DESIGNATION_NAME' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'CONTRACT_PHONE_NUMBER' | translate }} </span>
+        <span fxFlex="16" fxLayoutAlign="center center"> {{ 'COMMON_EMAIL_ID' | translate }} </span>
+        <span fxFlex="5" fxLayoutAlign="center center">{{ 'COMMON_ACTIVE_INACTIVE' | translate }}</span>
+        <span fxFlex="10" fxLayoutAlign="center center">{{ 'EMPLOYEE_STATUS' | translate }}</span>
+      </div> 
+    </div>
+  <div class="emp-list-table-y">
+    <div class="emp-each-item" *ngFor="let emplist of employeeList; let i=index">
+      <div fxLayout="row" class="input-field" *ngIf="(emplist.employeeId>0)">
+        <div fxFlex="100%">
+  
+          <div fxFlex="5" class="emp_list_column" fxLayoutAlign="start center">
+              <mat-checkbox color="primary" class="example-margin" (change)="selectEmployee(emplist)"
+               [checked]="selectedItem == emplist?.employeeId">
+              </mat-checkbox>
+          </div>
+          
+        <div fxFlex="10" fxLayoutAlign="start center" class="emp_list_column" (click)="selectEmployee(emplist)">
+          <div>
+            <mat-icon class="account-icon"  *ngIf="!emplist.imagePath" fxLayoutAlign="start start">account_circle</mat-icon>
+            <img mat-card-image *ngIf="emplist.imagePath" src="{{empUrl}}{{emplist.imagePath}}" class="emp_profile"
+            alt="{{emplist.employeeFirstName}}">
+          </div>
+        </div> 
+          
+        <div fxFlex="10" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          <div>
+            <a [routerLink]="['../employeeView', emplist.employeeId]"
+            routerLinkActive="router-link-active" class="text_underline">{{emplist.employeeFirstName}}</a>
+          </div>  
+        </div>
+  
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.employeeCode}}</div>
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.locationName}}</div>
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.departmentName}}</div>
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.designationName}}</div>
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.officeContactNo}}</div>
+        <div fxFlex="16" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.officeEmailId}}</div>
+        <div fxFlex="5" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          <mat-icon class="activeicon" *ngIf="emplist.active">check_circle</mat-icon>
+          <mat-icon class="inactiveicon" *ngIf="!emplist.active">cancel</mat-icon>
+        </div>
+        <div fxFlex="10" class="emp_list_column" fxLayoutAlign="start center" (click)="selectEmployee(emplist)">
+          {{emplist.employeeStatus}}</div>
+  
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <mat-card class="no_records_found" *ngIf="length=='0' && !empListLoader" fxLayoutAlign="center center">
+    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+  </mat-card>
+  
+  <mat-card *ngIf="empListLoader" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40"></mat-spinner>
+  </mat-card>
+
+</div>

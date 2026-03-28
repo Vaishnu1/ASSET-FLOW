@@ -1,0 +1,506 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb" fxLayoutAlign="start center"
+      fxFlex="40">
+      <mat-list fxLayoutAlign="start center">
+        <mat-list-item fxLayoutAlign="start center">
+          <a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+          </a>
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item (click)="backToMasterScreen()" style="cursor: pointer;">{{ menu }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item (click)="backToPreviousPage()" style="cursor: pointer;">{{ screen }}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+
+    <div fxLayoutAlign="end center" fxFlex="60">
+      <!-- <button mat-raised-button color="primary" class="space" *ngIf="approveButtonDisplay()" [disabled]="isApproved()"
+          (click)="approveManufacturer()">{{ 'COMMON_APPROVE' | translate }}</button> -->
+      <button mat-raised-button color="primary" class="space" (click)="closeModal()">{{ 'COMMON_BACK' | translate
+        }}</button>
+      <button mat-raised-button class="space" color="primary" (click)="submit()"
+        [disabled]="assetManufacturerForm.invalid" *ngIf="!modeDisplay">
+        <span *ngIf="!upLoadFlag">{{buttonDisplay}}</span>
+        <span *ngIf="upLoadFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+      <form [formGroup]="assetManufacturerForm" style="width: 100%;">
+        <mat-card-content style="width: 100%;">
+          <div fxLayout="row" fxFlex="100" fxLayout.lt-md="row" fxFlex.lt-md="100" style="margin-top: 10px;">
+            <div fxLayout="row" fxFlex="37.5" fxLayout.lt-md="column" fxFlex.lt-md="37.5">
+              <div fxFlex="50">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                  hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                  <mat-label class="input-label"> {{'MANUFACTURER_CODE' | translate }} </mat-label>
+                  <input matInput class="input-field h-26px" formControlName="manufacturerCode" [maxlength]="50"
+                    oninput="this.value = this.value.toUpperCase()">
+                  <mat-hint align="end">{{assetManufacturerForm.controls.manufacturerCode.value?.length || 0}}/50
+                  </mat-hint>
+                  <mat-error 
+                    *ngIf="assetManufacturerForm.controls.manufacturerCode.errors && assetManufacturerForm.controls.manufacturerCode.touched">
+                    <div class="err-field" *ngIf="assetManufacturerForm.controls.manufacturerCode.errors.required">
+                      "{{'MANUFACTURER_CODE' | translate }}" Is Required </div>
+                    <div class="err-field" *ngIf="assetManufacturerForm.controls.manufacturerCode.errors.notUnique">{{ErrorMsg}}</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="50">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                  hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                  <mat-label class="input-label"> {{'MANUFACTURER'| translate}}
+                    <span class="mandatory-style">*</span></mat-label>
+                  <input matInput class="input-field h-26px" #manufacturerFocus
+                    formControlName="manufacturerName" [maxlength]="100"
+                    oninput="this.value = this.value.toUpperCase()" (change)="disableMethord()" (input)="checkFormFields('manufacturerName')" (keyup)="checkFormFieldSpecialCharValidation('manufacturerName')">
+                  <mat-hint align="end">{{assetManufacturerForm.controls.manufacturerName.value?.length || 0}}/100
+                  </mat-hint>
+                  <mat-error
+                    *ngIf="assetManufacturerForm.controls.manufacturerName.invalid && assetManufacturerForm.controls.manufacturerName.touched">
+                    <div class="err-field"
+                      *ngIf="assetManufacturerForm.controls.manufacturerName.errors.required">
+                      "{{'MANUFACTURER'| translate}}" Is Required </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxLayout="row" fxFlex="37.5" fxLayout.lt-md="column" fxFlex.lt-md="37.5">
+              <div fxFlex="50">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                  hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                  <mat-label class="input-label"> {{ 'COMMON_ADDRESS' | translate}}
+                  </mat-label>
+                  <input matInput class="input-field h-26px" 
+                  formControlName="address" [maxlength]="100"
+                  oninput="this.value = this.value.toUpperCase()" (input)="checkFormFields('address')" (keyup)="checkFormFieldSpecialCharValidation('address')">
+                  <!-- <textarea matInput class="input-field h-30-px-mb-2-px" formControlName="address" [maxlength]="100"
+                    oninput="this.value = this.value.toUpperCase()" style="height: 30px;" (input)="checkFormFields('address')" (keyup)="checkFormFieldSpecialCharValidation('address')"></textarea> -->
+                   
+                    <mat-hint align="end">{{assetManufacturerForm.controls.address.value?.length || 0}}/100</mat-hint>
+                  <mat-error
+                    *ngIf="assetManufacturerForm.controls.address.invalid && assetManufacturerForm.controls.address.invalid">
+                      <div class="err-field" *ngIf="assetManufacturerForm.controls.address.errors?.address">   
+                        Please Enter the Valid Address
+                     </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="50">
+                <div class="example-full-width mt-top-12px">
+                  <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}<span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select class=" input-field " formControlName="locCountry" [items]="countries"
+                    (search)="getCountryData($event)" (click)="getCountryData({})" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                    (change)="formOneValidation();getCountryList($event)" bindLabel="countryName" [loading]="countryScrollsync"
+                    bindValue="countryName" loadingText="Loading..." required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="assetManufacturerForm.controls.locCountry.invalid && assetManufacturerForm.controls.locCountry.touched">
+                    <div class="err-field" *ngIf="assetManufacturerForm.controls.locCountry.errors.required">
+                      Kindly Select The "{{ 'COMMON_COUNTRY' | translate }}" </div>
+                  </mat-error>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="row" fxFlex="25" fxLayout.lt-md="column" fxFlex.lt-md="25">
+              <div fxFlex="75">
+                <div class="example-full-width mt-top-12px">
+                  <span class="input-label">{{ 'COMMON_STATE' | translate }}
+                  </span>
+                  <ng-select class=" input-field" formControlName="locState" [items]="states"
+                    bindLabel="stateName" (search)="getStateData($event)" (click)="getStateData({})"
+                    [virtualScroll]="true" (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [loading]="stateScrollsync" loadingText="Loading..."
+                    (change)="getStateList($event); formOneValidation()" bindValue="stateName">
+                  </ng-select>
+                  <mat-error
+                        *ngIf="assetManufacturerForm.controls.locState.invalid && assetManufacturerForm.controls.locState.touched">
+                        <div class="err-field" *ngIf="assetManufacturerForm.controls.locState.touched">
+                          Please select {{ 'COMMON_COUNTRY' | translate }}</div>
+                  </mat-error>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </form>
+    </div>
+
+    <div fxLayout="row" fxFlex="100" [@.disabled]="true">
+      <mat-tab-group class="border" style="width: 100%;">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            {{ 'MENU_SUPPLIER' | translate }}
+          </ng-template>
+          <mat-card>
+            <mat-card-content>
+              <form [formGroup]="supplierDetailFormGroup">
+                <div fxFlex="100" fxLayoutAlign="space-between center">
+
+                  <div fxFlex="30">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'SUPPLIER_NAME' | translate }}</span>
+                      <ng-select class=" input-field" formControlName="supplierName"
+                        (search)="listOfSupplier($event)" (click)="listOfSupplier({})" [virtualScroll]="true"
+                        (scrollToEnd)="listOfSupplier({})" (keyup.backspace)="listOfSupplier($event.target.value ? $event : 'back')"  (clear)="listOfSupplier('clear')" [loading]="scrollSupplierNamesync"
+                        loadingText="Loading..." (change)="fetchIdOfSupplier($event)" [items]="supplierList"
+                        bindLabel="supplierName" bindValue="supplierName" appendTo="body">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div fxFlex="30">
+                    <div class="example-full-width">
+                      <span class="input-label">{{'SUPPLIER_SITE_NAME' | translate }} </span>
+                      <ng-select class=" input-field" formControlName="supplierSiteName"
+                        (search)="listOfSupplierApproved($event)" (click)="listOfSupplierApproved({})"
+                        [virtualScroll]="true" (scrollToEnd)="listOfSupplierApproved({})" (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')" (clear)="listOfSupplierApproved('clear')"
+                        [loading]="scrollApprovedSuppliersync" loadingText="Loading..."
+                        (change)="fetchIdOfSupplierApproved($event)" [items]="supplierLocationList"
+                        bindLabel="supplierSiteName" bindValue="supplierSiteName">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div fxFlex="20">
+
+                    <button mat-raised-button color="primary" [disabled]="supplierDetailFormGroup.controls.supplierName.value == '' || supplierDetailFormGroup.controls.supplierSiteName.value == '' || supplierDetailFormGroup.controls.supplierSiteName.invalid || supplierDetailFormGroup.controls.supplierName.invalid" *ngIf="modeBtnStatus"
+                      (click)="addManufacturerSupplier(supplierDetailFormGroup.controls.supplierId.value, 
+                                  supplierDetailFormGroup.controls.supplierSiteId.value,supplierDetailFormGroup.controls.address.value)">
+                      Add Supplier
+                    </button>
+                  </div>
+                  <div fxFlex="20">
+                    <button mat-raised-button *ngIf="modeBtnStatus" class="space" color="primary" (click)="createSupplier(0,'add')">
+                      New Supplier
+                    </button>
+                  </div>
+
+
+
+                </div>
+              </form>
+
+              <div class="example-container" style="margin-top: 20px;">
+                <table mat-table #manufacturerSupplier [dataSource]="assetmanufacturerSupplierList" matSort
+                  style="width: 100%;">
+
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="supplierName">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'SUPPLIER_NAME' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%; ">
+                      {{element.supplierName}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="supplierSiteName">
+                    <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'SUPPLIER_SITE_NAME' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="width:10%;">
+                      {{element.supplierSiteName}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="address">
+                    <th mat-header-cell *matHeaderCellDef style="width:15%;"> {{'COMMON_ADDRESS' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:15%;"> {{element.address}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_STATE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.locState}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="country">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_COUNTRY' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%;"> {{element.locCountry}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="pinCode">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_ZIP_CODE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%;"> {{element.zipCode}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="emailId">
+                    <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_EMAIL_ID' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.emailId}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="phoneNo">
+                    <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_PHONE_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.contactPhoneNo}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="isServiceCenter">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{ 'SUPPLIER_IS_SERVICE_CENTER' | translate
+                      }} </th>
+                    <td mat-cell *matCellDef="let element" style="width:5%">
+                      <mat-icon *ngIf=element.isServiceCenter style="color: #3f51b5">check_circle_outline</mat-icon>
+                      <mat-icon *ngIf=!element.isServiceCenter style="color: #3f51b5">highlight_off</mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_ACTION' | translate}} </th>
+                    <td mat-cell *matCellDef="let element; let i = index;" style="width:5%;">
+                      <mat-icon class="close-icon"
+                        (click)="DeleteSupplier(element.manufacturerSupplierId,i,element.supplierSiteId)"
+                        *ngIf="!modeDisplay" matTooltip="Delete">delete
+                      </mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayColmns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayColmns;">
+                </table>
+
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab *ngIf="assetManufacturerForm.controls.manufacturerChangeOccurred.value">
+          <ng-template mat-tab-label>
+            {{ 'MANUFACTURER_CHANGE' | translate }}
+          </ng-template>
+          <mat-card class="card-style">
+            <mat-card-content>
+              <form [formGroup]="manufacturerChangeFormGroup">
+                <div class="content-style">
+                  <div fxLayout="row">
+                    <div fxFlex="30" fxLayoutAlign="start center">
+                      <div style="width: 100%;">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'MANUFACTURER' | translate }} </span>
+                          <ng-select  formControlName="manufacturerName"
+                            (search)="listOfManufacturerName($event)" (click)="listOfManufacturerName({})"
+                            (change)="getManufacturerNameComboValue($event)" [virtualScroll]="true"
+                            (scrollToEnd)="listOfManufacturerName({})" (keyup.backspace)="listOfManufacturerName($event.target.value ? $event : 'back')" (clear)="listOfManufacturerName('clear')" [loading]="manufacturerNameScrollSync"
+                            loadingText="Loading..." [items]="manufacturerNameList" bindLabel="manufacturerName"
+                            bindValue="manufacturerName">
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div fxFlex="20">
+                      <button mat-raised-button color="primary" [disabled]="addSupplierBtnDisp === false"
+                        (click)="fetchManufacturerSupplier()">Add Supplier</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-container">
+                  <table mat-table #manufacturerChangeTable [dataSource]="manufacturerChangeList">
+
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_S_NO' | translate }} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="manufacturerName">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'MANUFACTURER' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%; ">
+                        {{ element.acquiredManufacturerName }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="supplierName">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'SUPPLIER_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%; ">
+                        {{element.supplierName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="supplierSiteName">
+                      <th mat-header-cell *matHeaderCellDef style="width:15%;"> {{'SUPPLIER_SITE_NAME' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:15%; text-align: justify">
+                        {{element.supplierSiteName}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="address">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_ADDRESS' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.address}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="state">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_STATE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.locState}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="country">
+                      <th mat-header-cell *matHeaderCellDef style="width:6%;"> {{'COMMON_COUNTRY' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:6%;"> {{element.locCountry}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pinCode">
+                      <th mat-header-cell *matHeaderCellDef style="width:6%;"> {{'COMMON_ZIP_CODE' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:6%;"> {{element.zipCode}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="emailId">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_EMAIL_ID' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.emailId}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="phoneNo">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_PHONE_NO' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;"> {{element.contactPhoneNo}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="manufacturerChangeDisplayColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: manufacturerChangeDisplayColumns;">
+                  </table>
+
+                </div>
+              </form>
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab>
+
+          <ng-template mat-tab-label>
+            {{ 'MANUFACTURER_SERVICE_CENTER_TAB' | translate }}
+          </ng-template>
+
+          <mat-card *ngIf=true>
+            <mat-card-content>
+
+              <div fcLayout="column" style="margin-top: 10px;">
+
+                <div>
+                  <div fxLayoutAlign="end center">
+
+                    <div class="mr-10px">
+                      <button color="primary" (click)="openServiceCenterCreateOrEdit(0, 'create', -1)"
+                        *ngIf=" !modeDisplay" mat-raised-button [disabled]="assetManufacturerForm.invalid">
+                        {{ 'COMMON_ADD' | translate }}
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="example-container" style="margin-top: 10px;">
+
+                  <table mat-table [dataSource]="assetManufacturerServiceCenterList" style="width: 100%;">
+
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{'COMMON_S_NO' | translate }} </th>
+                      <td mat-cell *matCellDef="let element; let i=index;" style="width:5%;"> {{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceLocationName">
+                      <th mat-header-cell *matHeaderCellDef style="width:15%;">
+                        {{'MANUFACTURER_SERVICE_CENTER_NAME' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:15%; ">
+                        {{element.serviceLocationName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="address1">
+                      <th mat-header-cell *matHeaderCellDef style="width:15%;">
+                        {{'COMMON_ADDRESS' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:15%; text-align: justify">
+                        {{element.address1}}  <br> {{element.address2}} <br>
+                        {{element.city}} - {{element.postalCode}} <br>
+                        {{element.state}} , {{element.country}}
+                      </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="contactPersonName">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                        {{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON' | translate }} <br>
+                        {{'MANUFACTURER_SERVICE_CENTER_CONTACT_LAND_LINE_NO' | translate }} <br>
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:10%;">
+                        {{element.contactPersonName}} <br>
+                        {{element.contactPersonLandLineNo}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="phoneNo">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                        {{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_PHONE_NO' | translate }} <br>
+                        {{'MANUFACTURER_SERVICE_CENTER_CONTACT_PERSON_EMAIL_ID' | translate }}
+                      </th>
+                      <td mat-cell *matCellDef="let element" style="width:10%;">
+                        {{element.contactPersonPhoneNo}} <br>
+                        {{element.contactPersonEmailId}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="active">
+                      <th mat-header-cell *matHeaderCellDef style="width:7%;"> {{'COMMON_ACTIVE' | translate }} </th>
+                      <td mat-cell *matCellDef="let element" style="width:7%;">
+                        <span *ngIf="element.active"> YES </span>
+                        <span *ngIf="!element.active"> NO </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{'COMMON_ACTION' | translate}} </th>
+                      <td mat-cell *matCellDef="let element; let i = index;" style="width:10%;">
+                        <button color="primary" mat-button class="mat-icon-button"
+                          (click)="openServiceCenterCreateOrEdit(element, 'view', i)"
+                          matTooltip="{{ 'COMMON_VIEW' | translate }}">
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button color="primary" mat-button class="mat-icon-button" *ngIf="!modeDisplay"
+                          (click)="openServiceCenterCreateOrEdit(element, 'edit', i)"
+                          matTooltip="{{ 'COMMON_EDIT' | translate }}">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-button class="mat-icon-button"                    
+                          *ngIf="!modeDisplay">
+                          <mat-icon class="close-icon" (click)="deleteManufactureServiceCenter(element.manufacturerServiceLocId,i)" matTooltip="Delete">delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayColsForServiceCenter;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayColsForServiceCenter"></tr>
+                  </table>
+
+                  <mat-card class="no-record-found" *ngIf="serviceLocListLength== 0 && !subLoader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+
+                  <mat-card *ngIf="subLoader" fxLayoutAlign="center center" class="no_records_found">
+                    <mat-spinner style="margin:0px auto !important; width:100%;" [diameter]="40"></mat-spinner>
+                  </mat-card>
+
+                </div>
+
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+
+  </div>
+
+</div>

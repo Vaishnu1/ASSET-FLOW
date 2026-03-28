@@ -1,0 +1,19 @@
+<div class="pdfViwerStyle">
+
+
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h4 class="dialogue-box-header"> PDF Viewer </h4>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon (click)="exit()" class="close-icon">highlight_off</mat-icon>
+        </div>
+    </div>
+<hr>
+    <div>
+        <iframe [src]="fileName" *ngIf="loadNow" type="application/pdf"
+            style="width:780px; height:550px;overflow: scroll;">
+        </iframe>
+    </div>
+
+</div>

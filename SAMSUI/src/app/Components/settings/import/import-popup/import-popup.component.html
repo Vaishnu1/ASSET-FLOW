@@ -1,0 +1,76 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="50">
+      <h4 class="section_title"> {{this.data.screenName}} Import </h4>
+    </div>
+    <div fxFlex="40" fxLayout="row" fxLayoutAlign="start center">
+          <button color="grey" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab
+            matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+            <mat-icon>attachment</mat-icon>
+          </button>
+          <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+
+
+            <input style="display:none" id="imgModelupload" type="file" name="organizFile"
+            (change)="handleFileInput($event.target.files)" />
+
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="end start">
+          <div fxLayout="row" class="popup-modal-close-button">
+            <mat-icon class="close-icon" (click)="close()">highlight_off</mat-icon>
+          </div>
+    </div> 
+      
+  </div>
+ 
+  <div fxLayout="row" style="padding-top: 20px;">
+    <div fxFlex="50">
+      <button mat-raised-button (click)="downloadSampleFile()" class="space" color="primary">
+        <mat-icon>download</mat-icon>&nbsp;&nbsp;{{'COMMON_DOWNLOAD_SAMPLE' | translate}}
+      </button>
+    </div>
+    <div fxFlex="40" fxLayoutAlign="start center">
+      <button mat-raised-button [disabled]="!fileUploadFlag" (click)="uploadImportFile()" class="space" color="primary">
+        <mat-icon>file_upload</mat-icon>&nbsp;&nbsp;{{'COMMON_UPLOAD' | translate}}
+      </button>
+    </div>
+    <div fxFlex="10"></div>
+  </div>
+</div>
+
+
+
+
+
+<!-- <div class="row closebutton">
+
+  <div class="col-md-6">
+
+    <h4 class="section_title">{{this.data.screenName}} Import</h4>
+
+    <br/>
+    <button mat-raised-button (click)="downloadSampleFile()" class="space" color="primary">
+      <i class="fa fa-download"></i>&nbsp;&nbsp;{{'COMMON_DOWNLOAD_SAMPLE' | translate}}               
+    </button> 
+
+  </div>
+
+  <div class="col-md-6">
+
+    <button color="grey" onclick="document.getElementById('imgModelupload').click()" mat-mini-fab 
+      matTooltip="{{'COMMON_ATTACH_FILE' | translate}}" [matTooltipPosition]="'below'">
+      <mat-icon>attachment</mat-icon>
+    </button>
+    <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">{{this.fileName}}</div>
+
+    <input style="display:none" id="imgModelupload" type="file" name="organizFile" 
+    (change)="handleFileInput($event.target.files)"/>
+
+    <button mat-raised-button [disabled]="!fileUploadFlag" (click)="uploadImportFile()" class="space" color="primary">
+      <i class="fa fa-upload"></i>&nbsp;&nbsp;{{'COMMON_UPLOAD' | translate}}  
+    </button>
+
+  </div>
+
+</div> -->

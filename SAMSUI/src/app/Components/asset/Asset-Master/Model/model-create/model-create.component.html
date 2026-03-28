@@ -1,0 +1,1552 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="40">
+      <mat-toolbar-row aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon>home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item fxLayoutAlign="start center" class="bread-crumb-content">{{'MENU_ASSET'| translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content" (click)="navigateToMaster()" style="cursor: pointer;">{{'MENU_MASTER'| translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a (click)="navigateToModel()" style="cursor: pointer;">{{'MENU_MODEL' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+
+    <div fxLayoutAlign="end start" fxFlex="60">
+      <button mat-raised-button color="primary" class="space" (click)="exit()">{{ 'COMMON_BACK' | translate }}</button>
+      <button *ngIf="!modeDisplay || !modeInActive" mat-raised-button color="primary" class="space" (click)="clear()"
+        [disabled]="disableClear" tabindex="50">{{ 'COMMON_CLEAR' | translate }}</button>
+
+      <button *ngIf="!modeDisplay || !modeInActive" mat-raised-button class="space" color="primary" (click)="submit()"
+        [disabled]="(modelForm.invalid || !modelForm.dirty || uniqueModelFlag) && !enableUpdate" tabindex="51">
+        <span *ngIf="!uploadModelFlag">{{displayButton}}</span>
+        <span *ngIf="uploadModelFlag">{{'COMMON_LOADING' | translate}}</span>
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="row" class="mb-5 mandatory-style" fxLayoutAlign="center center" fxFlex="25" *ngIf="editable_msg.length > 0">
+      {{editable_msg}}
+  </div>
+
+  <div fxLayout="row">
+    <form [formGroup]="modelForm" fxFlex="100">
+
+      <div fxLayout="row">
+        <mat-card fxFlex="100">
+          <mat-card-content>
+            <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center">
+              <div fxFlex="20">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="Max 100 Characters">
+                    <mat-label class="input-label"> {{'MODEL_NAME' | translate}}
+                      <span class="mandatory-style">*</span>
+                    </mat-label>
+                    <input #modelName1 matInput formControlName="modelName" [tabIndex]=1 [maxlength]="100"
+                      (blur)="uniqueValidation()" oninput="this.value = this.value.toUpperCase()" class="input-field">
+                    <mat-hint align="end">{{modelForm.controls.modelName.value?.length || 0}}/100</mat-hint>
+                    <mat-error *ngIf="modelForm.controls.modelName.invalid && modelForm.controls.modelName.invalid">
+                      <div class="err-field" *ngIf="modelForm.controls.modelName.errors.required">"{{'MODEL_NAME' | translate}}" Is Required
+                      </div>
+                        <div class="err-field" *ngIf="modelForm.controls.modelName.errors.notUnique">{{ErrorMsg}}</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxFlex="20">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                    <mat-label class="input-label"> {{'MODEL_NO' | translate}} </mat-label>
+                    <input matInput formControlName="modelNo" [tabIndex]=2 [maxlength]="50"
+                      oninput="this.value = this.value.toUpperCase()" class="input-field" (blur)="uniqueValidation()">
+                    <mat-hint align="end">{{modelForm.controls.modelNo.value?.length || 0}}/50</mat-hint>
+                    <mat-error *ngIf="modelForm.controls.modelNo.invalid && modelForm.controls.modelNo.invalid">
+                      <div class="err-field" *ngIf="modelForm.controls.modelNo.errors.required">"{{'MODEL_NO' | translate}}" Is Required
+                      </div>
+                        <div class="err-field" *ngIf="modelForm.controls.modelNo.errors.notUnique">{{ErrorMsg}}</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div fxFlex="20">
+                <div class="form-group" style="margin-top: -15px;">
+                  <span class="input-label">{{'MANUFACTURER' | translate}}<span class="mandatory-style">*</span>
+                  </span>
+                  <ng-select (blur)="uniqueValidation()" class=" input-field" formControlName="businessPartnerName"
+                    (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                    (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true" required
+                    (change)="getManfacturerComboValue($event)" [items]="manufactuer" bindLabel="businessPartnerName"
+                    bindValue="businessPartnerName" [tabIndex]=3 [loading]="manufacturerscrollSync" loadingText="Loading...">
+                  </ng-select>
+                  <mat-error
+                    *ngIf="modelForm.controls.businessPartnerName.invalid && modelForm.controls.businessPartnerName.touched">
+                    <div class="err-field" *ngIf="modelForm.controls.businessPartnerName.errors.required">
+                      Kindly Select The "{{'MANUFACTURER' | translate}}" </div>
+                  </mat-error>
+                </div>
+              </div>
+
+              <div class="button-align" fxFlex="2" fxLayoutAlign="center center">
+                <button mat-icon-button color="primary" [tabIndex]=4 [disabled]="disableClear" matTooltip="{{ 'COMMON_ADD' | translate }}
+                  {{ 'COMMON_NEW' | translate }} {{ 'MANUFACTURER' | translate }}" (click)="openManufactureCreateScreen()" class="pos-rel-rig-35-px">
+                <!-- <mat-icon>add_circle</mat-icon> -->
+                <div class="plus-icon add-circle-icon"></div>
+              </button>
+              </div>
+
+              <div fxFlex="5">
+                <mat-checkbox class="example-margin" color="primary" [tabIndex]=5 formControlName="active"> {{'ITEM_ACTIVE' | translate }} </mat-checkbox>
+              </div>
+              <div fxFlex="10">
+                <mat-checkbox color="primary" formControlName="volumeLicensePresent"
+                  class="input-label licence-check-box" [tabIndex]=6>{{ 'ASSET_VOLUME_LICENSE' | translate }}</mat-checkbox>
+              </div>
+              <div fxFlex="15">
+                <mat-checkbox color="primary" *ngIf="modelForm.controls.volumeLicensePresent.value" formControlName="trackIndividualLicense"
+                  class="input-label licence-check-box">Trackable License</mat-checkbox>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxLayout="column" flex="100">
+        <div style="margin-bottom:5%;">
+          <div fxLayout="column" [@.disabled]="true">
+
+            <mat-toolbar style="margin-top: 5px;">
+              <button class="menu-list-btn" mat-raised-button [matMenuTriggerFor]="menu1" color="primary"  xPosition="after">
+                <mat-icon class="menu-list-icon-btn">menu</mat-icon>
+              </button>
+            </mat-toolbar>
+
+            <nav mat-tab-nav-bar>
+              <!-- TAB-1 ASSET INFO -->
+  
+              <mat-menu #menu1="matMenu" [class]="'customize'" >
+  
+                <a  [ngClass]="(((data.name == 'model_basic_info') && !(modelForm.controls.modelId.value >= 0))
+                || ((data.name == 'model_image') && !(modelForm.controls.modelId.value >= 0))
+                || ((data.name == 'model_custom_fields') && !(customFieldLength > 0 && modelForm.controls.customFields.value))
+                || ((data.name == 'model_depreciation') && !(modelForm.controls.depreciation.value))
+                || ((data.name == 'asset_maintenance_scheduling') && !(modelForm.controls.maintenanceSchedule.value))
+                || ((data.name == 'child_model') && !(modelForm.controls.childModel.value))
+
+                || ((data.name == 'model_solution_bank') && !(modelForm.controls.solutionBank.value))
+                || ((data.name == 'model_items') && !(modelForm.controls.modelItems.value))
+                || ((data.name == 'model_document') && !(modelForm.controls.document.value))
+                || ((data.name == 'model_self_analysis') && !(modelForm.controls.selfAnalysis.value))
+                || ((data.name == 'model_additional_info') && !(modelForm.controls.additionalInfo.value))
+                || ((data.name == 'sr_check_points') && !(modelForm.controls.checkList.value))
+                || ((data.name == 'menu_inventory_module') && !(modelForm.controls.inventoryModule.value))
+                || ((data.name == 'technical_specelist') && !(modelForm.controls.technicalSpecelist.value))) ? 'tab-disble' : ''"
+  
+                [routerLink]="!(((data.name == 'model_basic_info') && !(modelForm.controls.modelId.value >= 0))
+                || ((data.name == 'model_image') && !(modelForm.controls.modelId.value >= 0))
+                || ((data.name == 'model_custom_fields') && !(customFieldLength > 0 && modelForm.controls.customFields.value))
+                || ((data.name == 'model_depreciation') && !(modelForm.controls.depreciation.value))
+                || ((data.name == 'asset_maintenance_scheduling') && !(modelForm.controls.maintenanceSchedule.value))
+                || ((data.name == 'child_model') && !(modelForm.controls.childModel.value))
+
+                || ((data.name == 'model_solution_bank') && !(modelForm.controls.solutionBank.value))
+                || ((data.name == 'model_items') && !(modelForm.controls.modelItems.value))
+                || ((data.name == 'model_document') && !(modelForm.controls.document.value))
+                || ((data.name == 'model_self_analysis') && !(modelForm.controls.selfAnalysis.value))
+                || ((data.name == 'model_additional_info') && !(modelForm.controls.additionalInfo.value))
+                || ((data.name == 'sr_check_points') && !(modelForm.controls.checkList.value))
+                || ((data.name == 'menu_inventory_module') && !(modelForm.controls.inventoryModule.value))
+                || ((data.name == 'technical_specelist') && !(modelForm.controls.technicalSpecelist.value))) ? 
+                    ['/home/assetmaster/modelCreate/', modelId, mode, data.name] : null" *ngFor="let data of tabsList; let k = index">
+                <li  mat-menu-item
+                [ngClass]="activetab == data.name ? 'tab-menu-item menu-active' : 'tab-menu-item' ">
+                {{data.lable | translate}} </li></a>
+              </mat-menu>
+  
+              <a mat-tab-link
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_basic_info']"
+              routerLinkActive #rla1="routerLinkActive"
+              [active]="rla1.isActive || (activetab == 'model_basic_info')">{{ 'COMMON_BASIC_INFORMATION' | translate }}
+              </a>
+  
+              <a mat-tab-link
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_image']"
+              routerLinkActive #rla2="routerLinkActive"
+              [active]="rla2.isActive || (activetab == 'model_image')">{{ 'MODEL_IMAGE' | translate }}
+              </a>
+  
+              <!-- TAB CUSTOM FIELDS -->
+              <a mat-tab-link *ngIf="modelForm.controls.customFields.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_custom_fields']"
+              routerLinkActive #rla3="routerLinkActive"
+              [active]="rla3.isActive ||  (activetab == 'model_custom_fields')">{{ 'MODEL_CUSTOM_FIELDS' | translate }}
+              </a>
+  
+              <!-- TAB-2 PURCHASE INFO -->
+              <a mat-tab-link *ngIf="modelForm.controls.depreciation.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_depreciation']" asset_pur
+              routerLinkActive #rla4="routerLinkActive"
+              [active]="rla4.isActive || (activetab == 'model_depreciation')">{{ 'MODEL_DEPRICIATION' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.maintenanceSchedule.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'asset_maintenance_scheduling']"
+              routerLinkActive #rla5="routerLinkActive"
+              [active]="rla5.isActive || (activetab == 'asset_maintenance_scheduling')">{{ 'ASSET_MAINTENANCE_SCHEDULING' | translate }}
+              </a>
+
+              <a mat-tab-link *ngIf="modelForm.controls.childModel.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'child_model']"
+              routerLinkActive #rla6="routerLinkActive"
+              [active]="rla6.isActive || (activetab == 'child_model')">{{ 'CHILD_MODEL' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.solutionBank.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_solution_bank']"
+              routerLinkActive #rla7="routerLinkActive"
+              [active]="rla7.isActive || (activetab == 'model_solution_bank')">{{ 'MODEL_SOLUTION_BANK' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.modelItems.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_items']"
+              routerLinkActive #rla8="routerLinkActive"
+              [active]="rla8.isActive  || (activetab == 'model_items')">{{ 'MODEL_ITEMS' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.document.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_document']"
+              routerLinkActive #rla9="routerLinkActive"
+              [active]="rla9.isActive  || (activetab == 'model_document')">{{ 'MODEL_DOCUMENT' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.selfAnalysis.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_self_analysis']"
+              routerLinkActive #rla10="routerLinkActive"
+              [active]="rla10.isActive  || (activetab == 'model_self_analysis')">{{ 'MODEL_SELF_ANALYSIS' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.additionalInfo.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'model_additional_info']"
+              routerLinkActive #rla11="routerLinkActive"
+              [active]="rla11.isActive || (activetab == 'model_additional_info')">{{ 'MODEL_ADDITIONAL_INFO' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.checkList.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'sr_check_points']"
+              routerLinkActive #rla12="routerLinkActive"
+              [active]="rla12.isActive || (activetab == 'sr_check_points')">{{ 'SR_CHECK_POINTS' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.inventoryModule.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'menu_inventory_module']"
+              routerLinkActive #rla13="routerLinkActive"
+              [active]="rla13.isActive || (activetab == 'menu_inventory_module')">{{ 'MENU_INVENTORY_MODULE' | translate }}
+              </a>
+  
+              <a mat-tab-link *ngIf="modelForm.controls.technicalSpecelist.value"
+              [routerLink]="['/home/assetmaster/modelCreate/', modelId, mode, 'technical_specelist']"
+              routerLinkActive #rla14="routerLinkActive"
+              [active]="rla14.isActive || (activetab == 'technical_specelist')">{{ 'TECHNICAL_SPECELIST' | translate }}
+              </a>  
+            </nav>
+
+
+            <div *ngIf="activetab  == 'model_basic_info'">
+              <mat-card class="ht-350px">
+                <mat-card-content fxLayout="row" fxFlex="100" fxLayoutAlign="space-evenly start" fxFlexFill>
+                  <div fxLayout="column" fxFlex="25" fxFlexFill>
+                    <div class="pad-1-per ht-50px">
+                      <div class="form-group">
+                        <span class="input-label">{{ 'ASSET_CATEGORY' | translate }} <span
+                            class="mandatory-style">*</span> </span>
+                        <ng-select  [tabIndex]=6 formControlName="assetCategoryName"
+                          (search)="listOfCategory($event)" (click)="listOfCategory({})"
+                          (change)="getCategoryComboValue($event)" [virtualScroll]="true"
+                          (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')" [loading]="categoryScrollsync" loadingText="Loading..."
+                          [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName"
+                          appendTo="body" required [clearable]="modelForm.controls.assetCategoryName.value === ''? false : true">
+                        </ng-select>
+                        <mat-error
+                          *ngIf="modelForm.controls.assetCategoryName.invalid && modelForm.controls.assetCategoryName.touched">
+                          <div class="err-field" *ngIf="modelForm.controls.assetCategoryName.errors.required">
+                            Kindly Select The "{{ 'ASSET_CATEGORY' | translate }}" </div>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="pad-1-per ht-50px">
+                      <div class="form-group">
+                        <span class="input-label">{{ 'ASSET_TYPE' | translate }}</span>
+                        <ng-select  [tabIndex]=8 formControlName="assetTypeName"
+                          (search)="listOfAssetType($event)" (click)="listOfAssetType({})"
+                          (change)="getAssetTypeComboValue($event)" [items]="assetTypeName" bindLabel="assetTypeName"
+                          [virtualScroll]="true" (scrollToEnd)="listOfAssetType({})" (keyup.backspace)="listOfAssetType($event.target.value ? $event : 'back')" (clear)="listOfAssetType('clear')" [loading]="typeScrollsync"
+                          loadingText="Loading..." bindValue="assetTypeName" appendTo="body" [clearable]="modelForm.controls.assetTypeName.value === ''? false : true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div fxLayout="column" fxFlex="25" fxFlexFill>
+                    <div class="pad-1-per ht-50px">
+                      <div class="form-group">
+                        <span class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }} <span
+                            class="mandatory-style">*</span> </span>
+                        <ng-select  [tabIndex]=7 formControlName="subCategoryName"
+                          (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" [virtualScroll]="true"
+                          (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" [loading]="subScrollsync" loadingText="Loading..."
+                          (change)="getSubCategoryComboValue($event)" [items]="subCategoryName"
+                          bindLabel="subCategoryName" bindValue="subCategoryName" appendTo="body" required [clearable]="modelForm.controls.subCategoryName.value === ''? false : true">
+                        </ng-select>
+                        <mat-error
+                          *ngIf="modelForm.controls.subCategoryName.invalid && modelForm.controls.subCategoryName.touched">
+                          <div class="err-field" *ngIf="modelForm.controls.subCategoryName.errors.required">
+                            Kindly Select The "{{ 'ASSET_SUB_CATEGORY' | translate }}" </div>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="pad-1-per ht-50px">
+                      <div class="form-group">
+                        <span class="input-label"> {{ 'ASSET_GROUP' | translate }}</span>
+                        <ng-select class="input-field" formControlName="assetGroupName"
+                          (click)="listOfAllAssetGroup({})" [virtualScroll]="true" (search)="listOfAllAssetGroup($event)"
+                          (scrollToEnd)="listOfAllAssetGroup({})" (keyup.backspace)="listOfAllAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroup('clear')" (change)="getAssetGroupComboValue($event);"
+                          [items]="assetGroup" bindLabel="assetGroupName" bindValue="assetGroupName" [tabIndex]=9
+                          appendTo="body" [loading]="assetGroupNamescrollSync" loadingText="Loading..." [clearable]="modelForm.controls.assetGroupName.value === ''? false : true">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div fxFlex="50" fxLayout="column">
+                    <div fxLayout="row" fxFlex="100" class="ht-58px">
+                      <!-- fxLayoutAlign="space-between center" -->
+                      <div fxFlex="30" class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label">{{'ASSET_FUNCTIONALITY' | translate}}</mat-label>
+                          <input matInput class="input-field" formControlName="functionalityName">
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="40" class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label">{{'ASSET_OFF_WARRANTY_MS' | translate}}</mat-label>
+                          <input matInput class="input-field" formControlName="offWarrantyMS">
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="30" class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label">{{'ASSET_QA_STRATEGY' | translate}}</mat-label>
+                          <input matInput class="input-field" formControlName="qaStrategy">
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    
+
+                     <div fxLayout="row" fxFlex="100" class="ht-58px" style="margin-top: -8px;">
+                      <div class="form-group" width="100%">
+                        <span class="input-label"> {{ 'ASSET_INSTALLATION_TYPE' | translate }}
+                        </span>
+                        <ng-select style="width: 210px !important;" formControlName="installationType" [tabIndex]=10
+                          (click)="listOfInstallationType({})" [virtualScroll]="true"
+                          (search)="listOfInstallationType($event)" (scrollToEnd)="listOfInstallationType({})" (keyup.backspace)="listOfInstallationType($event.target.value ? $event : 'back')" (clear)="listOfInstallationType('clear')"
+                          [items]="installationTypeCombo" bindLabel="installationType" bindValue="installationType"
+                          [loading]="scrollsyncInstallationType" loadingText="Loading..." appendTo="body" [clearable]="modelForm.controls.installationType.value === ''? false : true">
+                        </ng-select>
+                        <mat-error>
+                        </mat-error>
+                      </div>
+                    </div>
+  
+                    <!-- <div fxLayout="row" fxFlex="100" class="ht-58px">
+                      <div fxFlex="30" class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label">{{'DEVICE_CODE' | translate}}</mat-label>
+                          <input matInput class="input-field" formControlName="deviceCode">
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="70" class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label">{{'DEVICE_CONCEPT' | translate}}</mat-label>
+                          <textarea matInput matTextareaAutosize class="input-field" formControlName="deviceConcept"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                  </div>
+                  
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab  == 'model_image'">
+              <mat-card fxFlex="100">
+                <mat-card-content fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlex="100"
+                  fxLayoutAlign="start center" fxFlexFill>
+                  <div class="content-style" [formGroup]="modelForm" style="width: 100%;">
+  
+                    <div fxLayout="column">
+                      <div fxFlex="50">
+  
+                        <div fxLayoutAlign="start center" style="width: 100%;">
+                          <button *ngIf="this.count < 4" color="grey" type="button" (click)="triggerClickEvent()" mat-mini-fab
+                            matTooltip="{{'MODEL_ALLOWED_FORMATS_FOR_LOGO' | translate}}" [matTooltipPosition]="'below'">
+                            <mat-icon>attachment</mat-icon>
+                          </button>
+                          <div style="padding: 11px !important;font-size: 14px;color: rgb(48, 4, 131);">
+                            {{this.fileName}}
+                          </div>
+                          <input style="display:none" #imgupload type="file" name="organizFile"
+                            formControlName="modelImage" (change)="handleFileInput($event.target.files)" tabindex="9" multiple="multiple" accept="image/*"/>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center center" >
+                          <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngFor="let imageList of filesResultList| slice:0:4; let i = index;">
+  
+                            <div fxLayoutAlign="center center" fxFlex="100" fxLayout="column">
+  
+                              <div fxLayout="row" style="width: 100%;">
+                                <div fxFlex="40"></div>
+                                <div fxLayout="row" fxLayoutAlign="end center" fxFlex="20">
+                                  <mat-icon class="close-icon icon-pos" *ngIf="!modeDisplay"
+                                   (click)="deleteCreateImage(i)" > delete_forever</mat-icon>
+                                </div>
+                                <div fxFlex="40"></div>
+                              </div>
+  
+  
+                              <div fxLayout="row">
+                                <div fxFlex="40"></div>
+                                <div fxLayoutAlign="center center" fxFlex="20" style="width: 100%;">
+                                    <img  [src]="imageList" class="logo-style" alt="Not found" />
+                                </div>
+                                <div fxFlex="40"></div>
+                              </div>
+                              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="20" style="width: 100%;">
+                                <div style="text-align: center;font-size: 13px;font-weight:600;color: #494949;">
+                                  {{this.fileToUpload[i].name}}</div>
+                              </div>
+                              <div fxLayout="row" fxFlex="40">
+                              </div>
+  
+                            </div>
+                          </div>
+                          <form class="logoedit"> </form>
+                        </div>
+                      </div>
+                      <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" >
+                        <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngFor="let imageList of documentImageSource| slice:0:4; let i = index;">
+  
+                          <div fxLayoutAlign="center center" fxFlex="100" fxLayout="column">
+  
+                            <div fxLayout="row" style="width: 100%;">
+                              <div fxFlex="40"></div>
+                              <div fxLayout="row" fxLayoutAlign="end center" fxFlex="20">
+                                <mat-icon class="close-icon icon-pos" *ngIf="!modeDisplay"
+                                  (click)="deleteImage(imageList.modelImageId,i)"> delete_forever</mat-icon>
+                              </div>
+                              <div fxFlex="40"></div>
+                            </div>
+  
+  
+                            <div fxLayout="row">
+                              <div fxFlex="40"></div>
+                              <div fxLayoutAlign="center center" fxFlex="20" style="width: 100%;">
+                                <img class="logo-style" src="{{getImage(imageList.filePath)}}"
+                                  alt="Model Image">
+                              </div>
+                              <div fxFlex="40"></div>
+                            </div>
+  
+                            <div fxLayout="row" fxLayoutAlign="center center" fxFlex="20" style="width: 100%;">
+                              <div style="text-align: center;font-size: 13px;font-weight:600;color: #494949;">
+                                {{imageList.imageName}}</div>
+                            </div>
+  
+                            <div fxLayout="row" fxFlex="40">
+                            </div>
+  
+                          </div>
+                        </div>
+                      </div>
+  
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_custom_fields'">
+              <mat-card class="card-style white-bg">
+                <mat-card-content>
+                  <div class="content-style">
+                    <div *ngFor="let a of res">
+                      <h6>{{a}}</h6>
+                      <mat-grid-list cols="4" rowHeight="100px">
+                        <mat-grid-tile *ngFor="let b of getValueFromMainList(a); let k = index"
+                          [style.background]="b.color">
+                          <div *ngIf="b.inputType === 'TEXT'" class="example-width">
+                            <div>
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="Max {{ b.inputMaxLength }} Characters">
+                                <mat-label class="input-label">
+                                  {{b.labelName}}
+                                </mat-label>
+                                <input matInput [disabled]="b.basedOn == 'GROUP'" class="input-field" name="textValue" [(ngModel)]="b.value"
+                                  [ngModelOptions]="{standalone: true}" type="text" [maxlength]="b.inputMaxLength" (input)="updateBtnflag()">
+                                <mat-hint align="end">{{b.value?.length || 0}}/{{ b.inputMaxLength }}</mat-hint>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div *ngIf="b.inputType === 'DATE'" class="example-width">
+                            <div>
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                <mat-label class="input-label">
+                                  {{b.labelName}}
+                                </mat-label>
+                                <input matInput [disabled]="b.basedOn == 'GROUP'" class="input-field" (click)="date.open()" [matDatepicker]="date" [(ngModel)]="b.value1"
+                                  [ngModelOptions]="{standalone: true}" (keypress)="dateValidationinstall($event)"
+                                  (input)="dateConvert(b.value1,k,b.labelName,b.inputType)"
+                                  (dateChange)="dateConvert(b.value1,k,b.labelName,b.inputType);updateBtnflag()">
+                                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                <mat-datepicker #date></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div *ngIf="b.inputType === 'CHECKBOX'" class="example-width">
+                            <div>
+                              <section class="example-full-width">
+                                <mat-checkbox [disabled]="b.basedOn == 'GROUP'" [(ngModel)]="b.value1" [ngModelOptions]="{standalone: true}"
+                                  (change)="b.value=b.value1==true?'TRUE':'FALSE'; updateBtnflag()" class="input-label" >
+                                  {{b.labelName}}</mat-checkbox>
+                              </section>
+                            </div>
+                          </div>
+  
+                          <div *ngIf="b.inputType === 'NUMBER'" class="example-width">
+                            <div>
+                              <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                hintLabel="Max {{ b.inputMaxLength }} Digits">
+                                <mat-label class="input-label"> {{ b.labelName }} </mat-label>
+                                <input matInput [disabled]="b.basedOn == 'GROUP'" class="input-field" type="number" name="numberValue" [maxlength]="b.inputMaxLength" (input)="updateBtnflag()"
+                                  pattern="^([0-9]*$)" [(ngModel)]="b.value" [ngModelOptions]="{standalone: true}"
+                                  title="{{ b.labelName }} should only contain numbers">
+                                <mat-hint align="end">{{b.value?.toString().length || 0}}/{{ b.inputMaxLength }}
+                                </mat-hint>
+                              </mat-form-field>
+                            </div>
+                          </div>
+  
+                          <div *ngIf="b.inputType === 'DROP DOWN(TEXT LIST)'" class="example-width">
+                            <div>
+                              <span class="spacing">{{ b.labelName }} </span>
+  
+                              <ng-select [disabled]="b.basedOn == 'GROUP'" appendTo="body"  [items]="b.comboValues" bindLabel="combo" bindValue="combo" [(ngModel)]="b.value" [ngModelOptions]="{standalone: true}"  class="input-field" (change)="updateBtnflag()"></ng-select>
+  
+  
+                            </div>
+                            <hr />
+                          </div>
+                        </mat-grid-tile>
+                      </mat-grid-list>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_depreciation'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm">
+  
+                    <div fxLayout="row">
+                      <div fxLayout="column" fxFlex="40">
+                        <div class="form-group">
+                          <div class="example-full-width">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                <mat-label class="example-label input-label">{{ 'ASSET_EXPECTED_LIFE_IN_YEARS' | translate }}</mat-label>
+                                <input tabindex="19" matInput (input)="updateBtnflag()" formControlName="expectedLifeInYears" style="padding: 4px;" [maxlength]="4" appPercentageDirective>
+                            </mat-form-field>
+                            <mat-error
+                              *ngIf="modelForm.controls.expectedLifeInYears.invalid && modelForm.controls.expectedLifeInYears.touched">
+                              <div class="error_font" *ngIf="modelForm.controls.expectedLifeInYears.errors.pattern">
+                                {{'ASSET_EXPECTED_LIFE_IN_YEARS' | translate}} contains only Numbers </div>
+                            </mat-error>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="example-full-width">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="example-label input-label"> {{'MAINTAINCE_THRESHOLD_PER' | translate}} </mat-label>
+                                <input appPercentageDirective (input)="updateBtnflag()" matInput formControlName="maintainanceThresholdPer" [maxlength]="5" tabindex="24">
+                              <mat-error
+                                *ngIf="modelForm.controls.maintainanceThresholdPer.invalid && modelForm.controls.maintainanceThresholdPer.touched">
+                                <div class="error_font" *ngIf="modelForm.controls.maintainanceThresholdPer.errors.pattern">
+                                  {{'MAINTAINCE_THRESHOLD_PER' | translate}} contains only Numbers </div>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div fxLayout="column" fxFlex="40">
+                        <div class="form-group" style="height: 53px;">
+                          <div class="example-full-width" [floatLabel]="'always'">
+                            <span class="example-label input-label"> {{ 'ASSET_DEPRECIATION_METHOD' | translate }}</span>
+                            <ng-select class="example-full-width input-field" [items]="depreciationMethodCombo"
+                              bindLabel="assetDepreciationMethodName" bindValue="assetDepreciationMethodName"
+                              (search)="loadDepreciationMethodComboData($event)" loadingText="Loading..."
+                              (click)="loadDepreciationMethodComboData($event)" [virtualScroll]="true" tabindex="21"
+                              (scrollToEnd)="loadDepreciationMethodComboData({})" (keyup.backspace)="loadDepreciationMethodComboData($event.target.value ? $event : 'back')" (clear)="loadDepreciationMethodComboData('clear')" [loading]="scrollsyncDepreciationMethod"
+                               (change)="selectedDepreciationMethodData($event);updateBtnflag()" formControlName="depreciationMethodName">
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="example-full-width">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="input-label"> {{'SCRAP_VALUE_PER' | translate}} </mat-label>
+                              <input appPercentageDirective (input)="updateBtnflag()" matInput class="input-field" formControlName="scrapValuePer" [maxlength]="5">
+                              <mat-error
+                              *ngIf="modelForm.controls.scrapValuePer.invalid && modelForm.controls.scrapValuePer.touched">
+                              <div class="error_font" *ngIf="modelForm.controls.scrapValuePer.errors.pattern">
+                                {{'SCRAP_VALUE_PER' | translate}} contains only Numbers </div>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="enableRateOfDepreciation">
+                          <div class="example-full-width">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <mat-label class="example-label input-label"> {{'ASSET_RATE_OF_DEPRECIATION' | translate}} </mat-label>
+                                <input appPercentageDirective matInput (input)="updateBtnflag()" formControlName="rateOfDepreciation" [maxlength]="5" tabindex="22" style="padding: 3px;">
+                                <mat-error *ngIf="modelForm.controls.rateOfDepreciation.invalid">
+                                <div class="error_font" *ngIf="modelForm.controls.rateOfDepreciation.errors.pattern">
+                                  {{'ASSET_RATE_OF_DEPRECIATION' | translate}} contains only Numbers</div>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'asset_maintenance_scheduling'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div>
+                    <table mat-table [dataSource]="maintenanceScheduleList">
+  
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'COMMON_S_NO' | translate}} </th>
+                        <td mat-cell *matCellDef="let element let i=index;" style="width: 7%;"> {{(i+1)}} </td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="maintenanceScheduleTypeName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%;">{{'MAINTENANCE_SCHEDULE_TYPE' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element?.maintenanceScheduleTypeName}}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="maintenanceScheduleFrequencyName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'MAINTENANCE_SCHEDULE_FREQUENCY' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">{{element?.maintenanceScheduleFrequencyName}}
+                        </td>
+                      </ng-container>
+  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsMaintSchedule;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumnsMaintSchedule;">
+                      </tr>
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="maintenanceScheduleListLength== 0 && !subLoader">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+  
+                    <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                      <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'child_model'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+
+                  <form fxLayout="row" [formGroup]="childModelForm" *ngIf="!modeDisplay">
+                    <!-- <div  fxFlex="30">
+                      <div class="form-group">
+                        <span class="input-label">{{'MANUFACTURER' | translate}}</span>
+                        <ng-select  formControlName="businessPartnerName"
+                          (search)="listOfManufacturer($event)" (click)="listOfManufacturer({})"
+                          (scrollToEnd)="listOfManufacturer({})" (keyup.backspace)="listOfManufacturer($event.target.value ? $event : 'back')" (clear)="listOfManufacturer('clear')" [virtualScroll]="true"
+                          (change)="getManfacturerComboValueChild($event)" [items]="manufactuer" bindLabel="businessPartnerName"
+                          bindValue="businessPartnerName" loadingText="Loading..." [loading]="scrollsyncManufacturer">
+                        </ng-select>
+                      </div>
+                    </div> -->
+                    <div fxFlex="30">
+                      <div class="form-group">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'ASSET_GROUP' | translate }} </span>
+                          <ng-select  (search)="listOfAllAssetGroupForChild($event)"
+                            (click)="listOfAllAssetGroupForChild({})" (scrollToEnd)="listOfAllAssetGroupForChild({})" (keyup.backspace)="listOfAllAssetGroupForChild($event.target.value ? $event : 'back')" (clear)="listOfAllAssetGroupForChild('clear')" [virtualScroll]="true"
+                            [loading]="assetGroupScrollsync" loadingText="Loading..." appendTo="body"
+                            (change)="getAssetGroupComboValueForChildModel($event)" [items]="childAssetGroupNameCombo" bindLabel="assetGroupName" bindValue="assetGroupName" tabindex="6" formControlName="childAssetGroupName"
+                            [ngModelOptions]="{standalone: true}" required>
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div  fxFlex="2"></div>
+                    <div fxFlex="30">
+                      <div class="form-group">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'MODEL_NAME' | translate }}</span>
+                          <ng-select  (click)="listOfAllModelChild({})" [virtualScroll]="true"
+                            (search)="listOfAllModelChild($event)" (scrollToEnd)="listOfAllModelChild({})" (keyup.backspace)="listOfAllModelChild($event.target.value ? $event : 'back')" (clear)="listOfAllModelChild('clear')"
+                            (change)="getModelComboValueChild($event)" [items]="modelCombo" bindLabel="modelName"
+                            bindValue="modelName" [loading]="scrollsyncModelChild" loadingText="Loading..."
+                            formControlName="childModelName" required>
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div  fxFlex="2"></div>
+                    <div fxFlex="36" fxLayoutAlign="start center">
+                      <button mat-raised-button color="primary" [disabled]="childModelForm.invalid" (click)="addChildModel()">Add</button>
+                    </div>
+                  </form>
+
+
+                  <div>
+                    <table mat-table [dataSource]="childModelList">
+  
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'COMMON_S_NO' | translate}} </th>
+                        <td mat-cell *matCellDef="let element let i=index;" style="width: 7%;"> {{(i+1)}} </td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="childAssetGroupName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%;">{{'ASSET_GROUP' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element?.childAssetGroupName}}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="childModelName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'MODEL_NAME' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">{{element?.childModelName}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="businessPartnerName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'MANUFACTURER' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">{{element?.businessPartnerName}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'COMMON_ACTION' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">
+                          <button color="warn" mat-icon-button matTooltip="{{ 'COMMON_DELETE' | translate }}" 
+                          (click)="deleteChildModel(i, element)" [disabled]="modeDisplay">
+                          <mat-icon>delete</mat-icon> </button>
+                        </td>
+                      </ng-container>
+  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsChildModel;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumnsChildModel;">
+                      </tr>
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="childModelListLength== 0 && !subLoaderChildModel">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+  
+                    <mat-card *ngIf="subLoaderChildModel" class="no_records_found" fxLayoutAlign="center center">
+                      <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_solution_bank'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm" fxLayout="column">
+                    <div fxLayout="column" fxFlex="100">
+                      <div fxLayoutAlign="end center">
+                        <button *ngIf="!modeDisplay" mat-raised-button class="rightbutton" color="primary"
+                          (click)="solutionBank(0,'add')"> {{ 'COMMON_ADD' | translate }}</button>
+                      </div>
+                    </div>
+                    <div class="example-container" style="padding-top: 0.5%;">
+                      <table mat-table [dataSource]="solutionBankDataSource" matSort>
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DEFECT_NAME' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectTag">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DEFECT_TAG' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectTag}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectCause">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_ROOT_CAUSE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectCause}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectSolution">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_SOLUTION' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectSolution}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-icon class="action_icon" *ngIf="element.modelDefectId > 0 && !modeDisplay"
+                              color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                              (click)="solutionBank(element,'edit',i)">edit</mat-icon>
+                            <mat-icon class="action_icon" color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                              (click)="solutionBank(element,'view',i)">visibility</mat-icon>
+                            <mat-icon class="action_icon" *ngIf="element.modelDefectId == 0" color="primary"
+                              matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                              (click)="deleteSolutionBank(element.modelDefectId,i)">delete </mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="solutionBankDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: solutionBankDisCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_items'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm" fxLayout="column">
+                    <div fxLayout="row" fxFlex="100" *ngIf="!modeDisplay">
+                      <div fxLayout="column" fxFlex="25">
+                        <div fxFlex="100">
+                          <form [formGroup]="itemTypeForm">
+                            <div class="form-group">
+                              <div class="example-full-width">
+                                <span class="input-label  ">{{ 'ITEM_TYPE' | translate }}</span>
+                                <ng-select class="input-field" formControlName="itemTypeName" (search)="listofItemType($event)" required
+                                  (click)="listofItemType({})" (change)="selectedItemType($event)" [items]="itemTypeCombo"
+                                  [virtualScroll]="true" (scrollToEnd)="listofItemType({})" (keyup.backspace)="listofItemType($event.target.value ? $event : 'back')" (clear)="listofItemType('clear')" 
+                                  [loading]="scrollItemTypesync" bindLabel="itemTypeName" bindValue="itemTypeName">
+                                </ng-select>
+                              </div>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                      <div fxLayout="column" fxFlex="75">
+                        <div fxLayoutAlign="end center">
+                          <button mat-raised-button color="primary" [disabled]="itemTypeForm.controls.itemTypeId.value == 0"
+                            (click)="modelItemsAdd()"> {{ 'COMMON_ADD' | translate }}</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="example-container" style="padding-top: 0.5%;">
+                      <table #matSpareParts mat-table [dataSource]="modelItemsDataSource">
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 40px" mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemMasterName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_NAME' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.itemMasterName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemMasterDesc">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_DESC' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.itemMasterName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemTypeName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'ITEM_TYPE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.itemTypeName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="masterUOMName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'UOM_CODE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.masterUOMName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="active">
+                          <th mat-header-cell *matHeaderCellDef>{{'COMMON_ACTIVE' | translate}}</th>
+                          <td mat-cell *matCellDef="let element ; let i=index">
+                            <mat-icon class="activeicon" *ngIf="element.itemActive">check_circle</mat-icon>
+                            <mat-icon class="inactiveicon" *ngIf="!element.itemActive">cancel</mat-icon></td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-icon class="action_icon" color="warn"
+                              matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                              (click)="DeleteModelItems(element.modelItemId,i)">delete</mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="modelItemsDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: modelItemsDisCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_document'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm">
+  
+                    <div>
+                      <div fxLayoutAlign="end center">
+                        <button *ngIf="!modeDisplay" mat-raised-button class="rightbutton" color="primary"
+                          (click)="documentAddEdit()"> {{ 'COMMON_ADD' | translate }}</button>
+                      </div>
+                    </div>
+                    <div class="example-container" style="padding-top: 0.5%;">
+                      <table mat-table #matAddModel [dataSource]="documentDataSource" matSort>
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="docName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DOCUMENT_NAME' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element?.docName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="docType">
+                          <th mat-header-cell *matHeaderCellDef>{{ 'MODEL_DOCUMENT_TYPE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element?.docType}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdBy">
+                          <th mat-header-cell *matHeaderCellDef>{{ 'MODEL_UPLOADED_BY' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdDtDisp">
+                          <th mat-header-cell *matHeaderCellDef>{{ 'MODEL_UPLOADED_DATE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-icon color="primary" [disabled]="element.modelDocId == 0" [color]="element.modelDocId == 0 ? 'auto' : 'primary'" (click)="downloadDocument(element?.filePath,element?.contentType)"
+                              matTooltip="{{ 'COMMON_DOWNLOAD' | translate }}" class="actionicon">cloud_download
+                            </mat-icon>
+                            <mat-icon class="action_icon" *ngIf="!modeDisplay" color="primary"
+                              matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                              (click)="deleteDocument(element.modelDocId,element.docName,i)">delete </mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="documentDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: documentDisCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_self_analysis'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm">
+  
+                    <div fxLayoutAlign="end center">
+                      <button *ngIf="!modeDisplay" mat-raised-button class="rightbutton" color="primary"
+                        (click)="selfAnalysis(0,'add')"> {{ 'COMMON_ADD' | translate }}</button>
+                    </div>
+                    <div class="example-container" style="padding-top: 0.5%;">
+                      <table mat-table [dataSource]="selfAnalysisDataSource" matSort>
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectType">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DEFECT_TYPE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectType}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectTag">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DEFECT_TAG' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectTag}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="defectQuestion">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_QUESTION' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.defectQuestion}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-icon *ngIf="element.modelSelfCheckId > 0 && !modeDisplay" class="action_icon"
+                              color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                              (click)="selfAnalysis(element,'edit',i)">edit</mat-icon>
+                            <mat-icon class="action_icon" color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                              (click)="selfAnalysis(element,'view',i)">visibility</mat-icon>
+                            <mat-icon class="action_icon" *ngIf="element.modelSelfCheckId == 0" color="primary"
+                              matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                              (click)="deleteSelfAnalysis(element.modelSelfCheckId,i)">delete </mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="selfAnalysisDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: selfAnalysisDisCol;">
+                      </table>
+                    </div>
+                  </div>
+  
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'model_additional_info'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div class="content-style" [formGroup]="modelForm">
+  
+                    <div>
+                      <div fxLayoutAlign="end center">
+                        <button *ngIf="!modeDisplay" mat-raised-button class="rightbutton" color="primary"
+                          (click)="additionalInfo(0,'add')"> {{ 'COMMON_ADD' | translate }}</button>
+                      </div>
+                    </div>
+                    <div class="example-container" style="padding-top: 0.5%;">
+                      <table mat-table [dataSource]="additionalInfoDataSource" matSort>
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="infoName">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_NAME' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.infoName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="infoLabel">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_LABEL' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.infoLabel}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="infoTitle">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_TITLE' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.infoTitle}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="infoDetails">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'MODEL_DETAILS' | translate }} </th>
+                          <td style="word-wrap: break-word !important;width: 250px" mat-cell *matCellDef="let element"> {{element.infoDetails}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> {{ 'COMMON_ACTION' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-icon class="action_icon" *ngIf="element.modelOtherInfoId > 0 && !modeDisplay "
+                              color="primary" matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                              (click)="additionalInfo(element,'edit',i)">edit</mat-icon>
+                            <mat-icon class="action_icon" color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                              (click)="additionalInfo(element,'view',i)">visibility</mat-icon>
+                            <mat-icon class="action_icon" *ngIf="element.modelOtherInfoId == 0" color="primary"
+                              matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                              (click)="deleteAdditionalInfo(element.modelSelfCheckId,i)">delete </mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="additionalInfoDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: additionalInfoDisCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'sr_check_points'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+                  <div fxLayout="column" class="content-style" [formGroup]="checkPointsModelForm">
+                    <div fxLayout="row" fxFlex="100" style="padding: 0px 10px;">
+                      <div fxFlex="25">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'SR_PARAMETER_TYPE' | translate }} <span
+                              class="mandatory-style">*</span> </span>
+                          <ng-select class=" input-field" formControlName="parameterTypeName"
+                            (search)="listOfParameterType($event)" (click)="listOfParameterType({})"
+                            [virtualScroll]="true" (scrollToEnd)="listOfParameterType({})" (keyup.backspace)="listOfParameterType($event.target.value ? $event : 'back')" (clear)="listOfParameterType('clear')"
+                            [loading]="scrollsyncParameterType" loadingText="Loading..."
+                            (change)="fetchIdOfParameterType($event)" [items]="parameterTypeCombo"
+                            bindLabel="parameterTypeNameDisp" bindValue="parameterTypeName" appendTo="body" required>
+                          </ng-select>
+                          <mat-error
+                            *ngIf="checkPointsModelForm.controls.parameterTypeName.invalid && checkPointsModelForm.controls.parameterTypeName.touched">
+                            <div class="err-field"
+                              *ngIf="checkPointsModelForm.controls.parameterTypeName.errors.required">
+                              Kindly Select The "{{'SR_PARAMETER_TYPE' | translate }}" </div>
+                          </mat-error>
+                        </div>
+                      </div>
+                      <div fxFlex="25">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'SR_PARAMETER_GROUP' | translate }} </span>
+                          <ng-select class=" input-field" formControlName="parameterGroupName" (search)="listOfParameterGroup($event)"
+                            (click)="listOfParameterGroup({})" [virtualScroll]="true" (scrollToEnd)="listOfParameterGroup({})"
+                            (keyup.backspace)="listOfParameterGroup($event.target.value ? $event : 'back')"
+                            (clear)="listOfParameterGroup('clear')" [loading]="scrollsyncParameterGroup" loadingText="Loading..."
+                            (change)="fetchIdOfParameterGroup($event)" [items]="parameterGroupCombo" bindLabel="parameterGroupName"
+                            bindValue="parameterGroupName" appendTo="body">
+                          </ng-select>
+                        </div>
+                      </div>
+  
+  
+  
+                      <div fxFlex="25">
+                        <div class="example-full-width">
+                          <span class="input-label"> {{ 'SR_PARAMETER' | translate }} <span
+                              class="mandatory-style">*</span> </span>
+                          <ng-select class=" input-field" formControlName="parameterName"
+                            (search)="listOfParameterName($event)" (click)="listOfParameterName({})"
+                            [virtualScroll]="true" (scrollToEnd)="listOfParameterName({})" (keyup.backspace)="listOfParameterName($event.target.value ? $event : 'back')" (clear)="listOfParameterName('clear')"
+                            [loading]="scrollsyncParameterName" loadingText="Loading..."
+                            (change)="fetchIdOfParameterName($event)" [items]="parameterNameCombo"
+                            bindLabel="parameterName" bindValue="parameterName" appendTo="body" required>
+                          </ng-select>
+                          <mat-error
+                            *ngIf="checkPointsModelForm.controls.parameterName.invalid && checkPointsModelForm.controls.parameterTypeName.touched">
+                            <div class="err-field"
+                              *ngIf="checkPointsModelForm.controls.parameterName.errors.required">
+                              Kindly Select The "{{'SR_PARAMETER' | translate }}" </div>
+                          </mat-error>
+                        </div>
+                      </div>
+                      <div fxFlex="10">
+                          <button mat-raised-button color="primary" [disabled]="checkPointsModelForm.invalid || !checkPointsModelForm.dirty || headingDisplay == 'View'"
+                          (click)="addCheckPointParameter()">Add</button>
+                      </div>
+                      <div fxFlex="40"></div>
+                    </div>
+
+                    <div class="logoedit">
+                      <mat-toolbar>
+                        <span class="example-spacer"></span>
+                        <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="checkListlength"
+                            [pageIndex]="pageIndex" [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+                        <span class="example-spacer"></span>
+                      </mat-toolbar>
+                    </div>
+                    
+  
+                    <div class="example-container" style="margin-top: 10px;">
+                      <table #matCheckList mat-table [dataSource]="addCheckPointsDataSource">
+                        <ng-container matColumnDef="sno">
+                          <th mat-header-cell *matHeaderCellDef style="width:5%;"> {{ 'COMMON_S_NO' | translate }} </th>
+                          <td mat-cell *matCellDef="let element; let i=index; " style="width:5%;">
+                            {{i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="parameterName">
+                          <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                            {{ 'MODEL_PARAMETER_NAME' | translate }}</th>
+                          <td mat-cell *matCellDef="let element" style="width:10%;">
+                            {{ (element?.parameterName.length>30) ? (element?.parameterName | slice:0:30)+'...' :
+                            (element?.parameterName) }}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="parameterTypeName">
+                          <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;">
+                            {{ 'MODEL_PARAMETER_TYPE_NAME' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:10%; text-align: center;">
+                            {{ (element?.parameterTypeNameDisp.length>30) ? (element?.parameterTypeNameDisp | slice:0:30)+'...'
+                            : (element?.parameterTypeNameDisp) }}
+                          </td>
+                        </ng-container>
+                        <!-- adding param group  -->
+  
+                        <ng-container matColumnDef="parameterGroupName">
+                          <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;">
+                            {{ 'MODEL_PARAMETER_GROUP_NAME' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:10%; text-align: center;">
+                            {{ (element?.parameterGroupName.length>30) ? (element?.parameterGroupName | slice:0:30)+'...'
+                            : (element?.parameterGroupName) }}
+                          </td>
+                        </ng-container>
+  
+                        <!-- <ng-container matColumnDef="startValue">
+                          <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;">
+                            {{ 'MODEL_START_VALUE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:10%;">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <input matInput [(ngModel)]="element.startValue" name="startValue" class="form-control"
+                                type="number" id="startValue" [ngModelOptions]="{standalone: true}">
+                            </mat-form-field>
+  
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="endValue">
+                          <th mat-header-cell *matHeaderCellDef style="width:10%; text-align: center;">
+                            {{ 'MODEL_END_VALUE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:10%;">
+                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                              <input matInput [(ngModel)]="element.endValue" name="endValue" class="form-control"
+                                type="number" id="endValue" [ngModelOptions]="{standalone: true}">
+                            </mat-form-field>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="uom">
+                          <th mat-header-cell *matHeaderCellDef style="width:15%; text-align: center;">
+                            {{ 'UOM_NAME' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:15%; ">
+                            <ng-select class=" input-field" (search)="listOfUOM($event)"
+                              (click)="listOfUOM({})" [items]="uom" bindLabel="uomCode" bindValue="uomCode"
+                              [(ngModel)]="element.uom" [ngModelOptions]="{standalone: true}" appendTo="body">
+                            </ng-select>
+                          </td>
+                        </ng-container> -->
+                        <ng-container matColumnDef="uom">
+                          <th mat-header-cell *matHeaderCellDef style="width:6%; text-align: center;">
+                            {{ 'UOM' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:6%; text-align: center;">
+                            {{ (element?.uomCd)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="inputType">
+                          <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+                            {{ 'INPUT_TYPE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+                            {{ (element?.inputType)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="defalutValue">
+                          <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+                            {{ 'DEFAULT_VALUE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+                            {{ (element?.defaultValue)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="minAllowedValue">
+                          <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+                            {{ 'MIN_ALLOWED_VALUE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+                            {{ (element?.minAllowedValue)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="maxAllowedValue">
+                          <th mat-header-cell *matHeaderCellDef style="width:7%; text-align: center;">
+                            {{ 'MAX_ALLOWED_VALUE' | translate }} </th>
+                          <td mat-cell *matCellDef="let element" style="width:7%; text-align: center;">
+                            {{ (element?.maxAllowedValue)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef style="width:7%;">
+                            {{ 'COMMON_ACTION' | translate }}</th>
+                          <td mat-cell *matCellDef="let element;let j = index;" style="width:7%;">
+                            <mat-icon color="primary" matTooltip="{{ 'COMMON_DELETE' | translate }}" class="action_icon"
+                              (click)="deleteCheckPoints(element.modelCheckPtsId,i)"
+                              style="cursor: pointer;font-size: 17px !important;color: red;">delete</mat-icon>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="checkPointsDisCol;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: checkPointsDisCol;">
+                      </table>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'menu_inventory_module'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+  
+                  <form [formGroup]="itemModuleFormGroup">
+                    <div fxLayout="column" *ngIf="headingDisplay != 'View'">
+  
+                      <div fxLayout="row" fxFlex="100">
+                        <div fxLayout="column" fxFlex="30" fxLayoutAlign="center start"
+                          style="width:100%; margin-left: 3%;" class="form-group">
+  
+                          <span class="input-label" style="width:100% ;"> {{ 'INVENTORY_MODULE_NAME' | translate }}
+                          </span>
+                          <ng-select class=" input-field" formControlName="itemModuleName"
+                            (search)="listOfModuleItem($event)" (click)="listOfModuleItem({})"
+                            (change)="selectedModuleItemName($event)" [items]="itemModuleCombo" [virtualScroll]="true"
+                            (scrollToEnd)="listOfModuleItem({})" (keyup.backspace)="listOfModuleItem($event.target.value ? $event : 'back')" (clear)="listOfModuleItem('clear')" [loading]="scrollModuleItemNameSync" loadingText="Loading..."
+                            bindLabel="itemModuleName" bindValue="itemModuleName" style="width:100% ;" appendTo="body" required>
+                          </ng-select>
+                          <mat-error>
+                            <div
+                              *ngIf="itemModuleFormGroup.controls.itemModuleName.touched && itemModuleFormGroup.controls.itemModuleName.invalid">
+                              <div class="err-field"
+                                *ngIf="itemModuleFormGroup.controls.itemModuleName.errors.required">
+                                Kindly Select The "{{ 'INVENTORY_MODULE_NAME' | translate }}"
+                              </div>
+                            </div>
+                          </mat-error>
+  
+                        </div>
+  
+  
+                        <div fxFlex="20" fxLayoutAlign="center center">
+                          <button mat-raised-button color="primary" (click)="addItemModuleToList()"
+                          [disabled]="itemModuleFormGroup.controls.itemModuleName.value == null">{{ 'COMMON_ADD' | translate}}</button>
+                        </div>
+                        <div fxFlex="50"></div>
+                      </div>
+  
+                    </div>
+                  </form>
+  
+                  <div fxLayout="column" class="model-module-inner-table">
+  
+                    <table mat-table [dataSource]="itemModuleList" multiTemplateDataRows>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef>{{'COMMON_S_NO' | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let i=dataIndex" (click)="toggleRow(element)">{{ i+1 }}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="itemModuleName">
+                        <th mat-header-cell *matHeaderCellDef>{{'INVENTORY_MODULE_NAME' | translate}}</th>
+                        <td style="word-wrap: break-word !important;" mat-cell *matCellDef="let element" (click)="toggleRow(element)">{{ element.itemModuleName }}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="itemCount">
+                        <th mat-header-cell *matHeaderCellDef>{{'ITEM_COUNT' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" (click)="toggleRow(element)">{{ element.itemModuleList.length }} 
+                          <button mat-icon-button aria-label="expand row">
+                            <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="active">
+                        <th mat-header-cell *matHeaderCellDef>{{'COMMON_ACTIVE' | translate}}</th>
+                        <td mat-cell *matCellDef="let element ; let i=index">
+                          <mat-icon class="activeicon" *ngIf="element.active">check_circle</mat-icon>
+                          <mat-icon class="inactiveicon" *ngIf="!element.active">cancel</mat-icon></td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>{{'COMMON_ACTION' | translate}}</th>
+                        <td mat-cell *matCellDef="let element; let i=dataIndex" (click)="toggleRow(element)"> 
+                          <mat-icon  mat-button class="mat-icon-button" color="warn" matTooltip="Delete"
+                          (click)="deleteModuleForModel(element.modelItemId,i)" *ngIf="!modeDisplay">delete</mat-icon>
+                        </td>
+                      </ng-container>
+                   
+                    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                    <ng-container matColumnDef="expandedDetail">
+                      <td mat-cell *matCellDef="let element; let k = dataIndex;" [attr.colspan]="displayedColumns.length" class="border-wd">
+                        <div class="example-element-detail"
+                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="inner-table">
+                          <table mat-table [dataSource]="element.itemModuleList">
+                            <ng-container matColumnDef="sno">
+                              <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}} </th>
+                              <td mat-cell *matCellDef="let innerElement; let j=index;"> {{j+1}} </td>
+                            </ng-container>
+  
+                            <ng-container matColumnDef="itemName">
+                              <th mat-header-cell *matHeaderCellDef>{{'ITEM_NAME' | translate}}</th>
+                              <td mat-cell *matCellDef="let innerElement">{{ innerElement.itemMasterName }}</td>
+                            </ng-container>
+  
+                            <ng-container matColumnDef="itemDesc">
+                              <th mat-header-cell *matHeaderCellDef>{{'ITEM_DESC' | translate}}</th>
+                              <td mat-cell *matCellDef="let innerElement">{{ innerElement.itemMasterDesc }}</td>
+                            </ng-container>
+  
+                            <ng-container matColumnDef="itemTypeName">
+                              <th mat-header-cell *matHeaderCellDef>{{'ITEM_TYPE' | translate}}</th>
+                              <td mat-cell *matCellDef="let innerElement">{{ innerElement.itemTypeName }}</td>
+                            </ng-container>
+  
+                            <ng-container matColumnDef="uomCode">
+                              <th mat-header-cell *matHeaderCellDef>{{'ITEM_UOM_CODE' | translate}}</th>
+                              <td mat-cell *matCellDef="let innerElement">{{ innerElement.masterUOMName }}</td>
+                            </ng-container>
+  
+                            <ng-container matColumnDef="active">
+                              <th mat-header-cell *matHeaderCellDef style="width:5%;">{{'COMMON_ACTIVE' | translate}}</th>
+                              <td mat-cell *matCellDef="let element ; let i=index" style="width:5%;">
+                                <mat-icon class="activeicon" *ngIf="element.active">check_circle</mat-icon>
+                                <mat-icon class="inactiveicon" *ngIf="!element.active">cancel</mat-icon></td>
+                            </ng-container>
+  
+                            <tr mat-header-row *matHeaderRowDef="innerDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: innerDisplayedColumns;"></tr>
+                          </table>
+                        </div>
+                        </div>
+                      </td>
+                    </ng-container>
+  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                      [class.example-expanded-row]="expandedElement === element"></tr>
+                      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                    </table>
+                    <mat-card class="no_records_found" *ngIf="length== 0 && !subLoaderItemModule">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+  
+                    <mat-card *ngIf="subLoaderItemModule" fxLayoutAlign="center center" class="no_records_found">
+                      <mat-spinner style="margin:0px auto !important; width:100%;" [diameter]="40"></mat-spinner>
+                    </mat-card>
+  
+                  </div>
+  
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div *ngIf="activetab == 'technical_specelist'">
+              <mat-card fxFlex="100">
+                <mat-card-content>
+  
+                  <form [formGroup]="itemModuleFormGroup">
+                    <div fxLayout="column">
+                      <div fxLayoutAlign="end center">
+                        <button mat-raised-button class="rightbutton" color="primary"
+                          (click)="addOeEditSpecialist(0,'create',0)" [disabled]="modeDisplay">{{'COMMON_ADD'|translate}}
+                        </button>
+                      </div>
+                      <div class="example-container" style="padding-top: 0.5%;">
+                        <table mat-table #specialist [dataSource]="specialistDataSource" matSort>
+                          <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="orgType">
+                            <th mat-header-cell *matHeaderCellDef> {{'ORG_TYPE' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element"> {{element.specialistOrgType}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="orgName">
+                            <th mat-header-cell *matHeaderCellDef> {{'ORG_NAME' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element"> {{element.extEngineerOrgName}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="specialistName">
+                            <th mat-header-cell *matHeaderCellDef> {{'SPECIALIST_NAME' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element"> {{element.specialistName}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="contactNo">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_PHONE_NO' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element"> {{element.extEngineerContactNo}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="emailId">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_EMAIL_ID' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element"> {{element.extEngineerEmailId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate }} </th>
+                            <td style="word-wrap: break-word !important;width: 150px" mat-cell *matCellDef="let element; let i=index;">
+                              <button *ngIf="!modeDisplay" mat-button class="mat-icon-button"
+                                matTooltip="{{ 'COMMON_EDIT' | translate }}"
+                                (click)="addOeEditSpecialist(element,'edit',i)" style="text-align: center">
+                                <mat-icon color="primary">edit</mat-icon>
+                              </button>
+                              <button *ngIf="modeDisplay || !specilaistView" mat-button class="mat-icon-button"
+                                matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                                (click)="addOeEditSpecialist(element,'view',i)">
+                                <mat-icon color="primary">visibility</mat-icon>
+                              </button>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="specialistDispColumn;sticky: true"></tr>
+                          <tr mat-row *matRowDef="let element; columns: specialistDispColumn;">
+                        </table>
+                      </div>
+                    </div>
+                  </form>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <!-- <mat-tab-group [selectedIndex]="selectedIndex" fxFlex="100">
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  {{ 'COMMON_BASIC_INFORMATION' | translate }}
+                  <div *ngIf="!validateBasicInfo">
+                    <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+                  </div>
+                </ng-template>
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_IMAGE' | translate}}">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_CUSTOM_FIELDS' | translate }}" *ngIf="customFieldLength > 0 && modelForm.controls.customFields.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_DEPRICIATION' | translate }}" *ngIf="modelForm.controls.depreciation.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'ASSET_MAINTENANCE_SCHEDULING' | translate }}" *ngIf="modelForm.controls.maintenanceSchedule.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_SOLUTION_BANK' | translate }}" *ngIf="modelForm.controls.solutionBank.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_ITEMS' | translate }}" *ngIf="modelForm.controls.modelItems.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_DOCUMENT' | translate }}"
+                *ngIf="modelForm.controls.document.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_SELF_ANALYSIS' | translate }}" *ngIf="modelForm.controls.selfAnalysis.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MODEL_ADDITIONAL_INFO' | translate }}" *ngIf="modelForm.controls.additionalInfo.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'SR_CHECK_POINTS' | translate }}"
+                *ngIf="modelForm.controls.checkList.value">
+                
+              </mat-tab>
+    
+              <mat-tab label="{{ 'MENU_INVENTORY_MODULE' | translate }}" *ngIf="modelForm.controls.inventoryModule.value">
+                
+              </mat-tab>
+    
+              <mat-tab *ngIf="modelForm.controls.technicalSpecelist.value">
+                <ng-template mat-tab-label>
+                  {{ 'TECHNICAL_SPECELIST' | translate }}
+                </ng-template>
+    
+                
+              </mat-tab>
+    
+    
+            </mat-tab-group> -->
+    
+          </div>
+        </div>
+
+      </div>
+      
+    </form>
+
+  </div>
+
+</div>

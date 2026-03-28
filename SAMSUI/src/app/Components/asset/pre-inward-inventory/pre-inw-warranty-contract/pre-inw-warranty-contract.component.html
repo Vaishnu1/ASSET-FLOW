@@ -1,0 +1,163 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="75">
+      <h4 class="dialogue-box-header"> {{ 'ASSET_CONTRACT_DETAILS' | translate }} </h4>
+    </div>
+    <div fxFlex="15" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" class="rightbutton" [disabled]="warrantyContractFormGroup.invalid || isViewMode"
+        (click)="addWarrantyContractInfo()">{{'COMMON_SUBMIT' | translate}}</button>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <button mat-raised-button color="primary" class="rightbutton" (click)="exit()">
+        {{'COMMON_BACK' | translate}}</button>
+    </div>
+  </div>
+
+  <form [formGroup]="warrantyContractFormGroup" class="mt-10">
+    <div fxLayout="row">
+      <div fxLayout="column" fxFlex="45">
+        <div class="form-group">
+          <span class="input-label">{{ 'CONTRACT_COVERAGE_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+          <ng-select class=" input-field" required formControlName="coverageType"
+            (search)="listOfCoverageType($event)" (click)="listOfCoverageType({})"
+            (change)="setCoverageType($event)" [virtualScroll]="true"
+            (scrollToEnd)="listOfCoverageType({})" (keyup.backspace)="listOfCoverageType($event.target.value ? $event : 'back')" (clear)="listOfCoverageType('clear')" [loading]="scrollCoverageTypeSync"
+            [items]="coverageTypeList" bindLabel="coverageTypeName" bindValue="coverageTypeName">
+          </ng-select>
+          <mat-error *ngIf="warrantyContractFormGroup.controls.coverageType.invalid && warrantyContractFormGroup.controls.coverageType.touched">
+            <div class="err-field" *ngIf="warrantyContractFormGroup.controls.coverageType.errors.required">
+              Kindly Select The "{{'CONTRACT_COVERAGE_TYPE' | translate}}" </div>
+          </mat-error>
+        </div>
+
+        <div class="form-group mt-10" *ngIf="warrantyContractFormGroup.controls.coverageType.value=='CONTRACT'">
+          <span class="input-label">{{ 'CONTRACT_TYPE' | translate }} <span class="mandatory-style">*</span></span>
+          <ng-select class=" input-field" formControlName="contractType"
+            (search)="listOfContractType($event)" (click)="listOfContractType({})"
+            (change)="setContractType($event)" [virtualScroll]="true"
+            (scrollToEnd)="listOfContractType({})" (keyup.backspace)="listOfContractType($event.target.value ? $event : 'back')" (clear)="listOfContractType('clear')" [loading]="scrollContractTypeSync"
+            [items]="contractTypeList" bindLabel="contractTypeName" bindValue="contractTypeName">
+          </ng-select>
+          <mat-error *ngIf="warrantyContractFormGroup.controls.contractType.invalid && warrantyContractFormGroup.controls.contractType.touched">
+            <div class="err-field" *ngIf="warrantyContractFormGroup.controls.contractType.errors.required">
+              Kindly Select The "{{'CONTRACT_TYPE' | translate}}" </div>
+          </mat-error>
+        </div>
+
+        <div class="form-group  mt-10" *ngIf="warrantyContractFormGroup.controls.coverageType.value!='CONTRACT'">
+          <span class="input-label">{{ 'PI_COVERAGE_STARTING_FROM' | translate }} <span class="mandatory-style">*</span></span>
+          <ng-select class=" input-field" formControlName="coverageStartingFrom"
+            [items]="coverageStartingFrom" bindLabel="name" bindValue="name">
+          </ng-select>
+          <mat-error *ngIf="warrantyContractFormGroup.controls.coverageStartingFrom.invalid && warrantyContractFormGroup.controls.coverageStartingFrom.touched">
+            <div class="err-field" *ngIf="warrantyContractFormGroup.controls.coverageStartingFrom.errors.required">
+              Kindly Select The "{{'PI_COVERAGE_STARTING_FROM' | translate}}" </div>
+          </mat-error>
+        </div>
+
+        <div class="form-group mt-10">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" class="mt-10">
+            <mat-label class="input-label"> {{'PERIOD_IN_YRS' | translate}} <span
+              class="mandatory-style">*</span></mat-label>
+            <input matInput formControlName="periodInYears"
+              oninput="this.value = this.value.toUpperCase()" class="input-field">
+              <mat-error *ngIf="warrantyContractFormGroup.controls.periodInYears.invalid && warrantyContractFormGroup.controls.periodInYears.touched">
+                <div class="err-field" *ngIf="warrantyContractFormGroup.controls.periodInYears.errors.required">
+                  Kindly Select The "{{'PERIOD_IN_YRS' | translate}}" </div>
+              </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" class="mt-10">
+            <mat-label class="input-label"> {{'PERIOD_IN_MONTHS' | translate}} </mat-label>
+            <input matInput formControlName="periodInMonths" [maxlength]="15"
+              oninput="this.value = this.value.toUpperCase()" class="input-field">
+
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div fxFlex="10"></div>
+      <div fxLayout="column" fxFlex="45">
+
+        <div>
+          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+            <mat-label class="input-label"> {{ 'PI_PO_VALUE_BEFORE_TAX' | translate }} </mat-label>
+            <input matInput formControlName="originalUnitPrice" readonly class="input-field">
+          </mat-form-field>
+        </div>
+
+        <div>
+          <div>
+            <h6 class="dialogue-box-header">{{ 'CONTRACT_SERVICES' | translate}}</h6>
+          </div>
+
+          <div>
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{ 'CONTRACT_INCLUDE_SR' | translate }} </mat-label>
+              <textarea formControlName="includedService" matInput class="input-field" ></textarea>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{ 'CONTRACT_EXCLUDE_SR' | translate }} </mat-label>
+              <textarea formControlName="excludedService" matInput class="input-field"></textarea>
+            </mat-form-field>
+          </div>
+
+        </div>
+        <div *ngIf="warrantyContractFormGroup.controls.contractType.value=='AMC'">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_AMC_PERCENT' | translate}} </mat-label>
+              <input matInput appPercentageDirective formControlName="amcCmcPercentage" (keyup)="totCallAmnt()" class="input-field">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_AMC_VALUE' | translate}} </mat-label>
+              <input matInput formControlName="amcCmcValue" class="input-field">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_AMC_ESCALATION_PER' | translate}} </mat-label>
+              <input matInput formControlName="nextAmcCmcEscalationPer" class="input-field">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="warrantyContractFormGroup.controls.contractType.value=='CMC'">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_CMC_PERCENT' | translate}} </mat-label>
+              <input matInput formControlName="amcCmcPercentage" (keyup)="totCallAmnt()" class="input-field">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_CMC_VALUE' | translate}} </mat-label>
+              <input matInput formControlName="amcCmcValue" class="input-field">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+              <mat-label class="input-label"> {{'ASSET_CMC_ESCALATION_PER' | translate}} </mat-label>
+              <input matInput formControlName="nextAmcCmcEscalationPer" (keyup)="totCallAmnt()" class="input-field">
+            </mat-form-field>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </form>
+</div>

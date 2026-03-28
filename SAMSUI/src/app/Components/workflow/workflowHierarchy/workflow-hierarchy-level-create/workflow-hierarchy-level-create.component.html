@@ -1,0 +1,193 @@
+<div fxLayout="column"  fxFlex="100">
+ 
+    <div fxLayout="row"> 
+        <div fxFlex="95">
+          <h4 class="section_title"> {{'WORKFLOW_LEVEL' | translate}} </h4>
+        </div>
+        
+      <div fxFlex="5" class="first-title" fxLayoutAlign="end start"> 
+        <mat-icon class="close-icon-large close-icon" (click)="exit()">highlight_off</mat-icon>
+      </div>
+    </div>
+ 
+   <div fxLayout="row" style="margin-top: 10px;"> 
+    <form [formGroup]="workflowHierarchyDtlForm"  fxFlex="100">
+      <div fxLayout="row"> 
+        <!-- <div fxFlex="30">
+          <span class="input-label"> {{ 'WORKFLOW_LEVEL_NAME' | translate }} <span class="mandatory-style">*</span> </span>
+          <ng-select  formControlName="levelName" [items]="level"
+            bindLabel="name" bindValue="name" required>
+          </ng-select>
+        </div> -->
+        <div fxFlex="30" class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_20 }}">
+            <mat-label class="input-label"> {{'WORKFLOW_LEVEL_NAME' | translate}} <span class="mandatory-style"> *</span></mat-label>
+            <input matInput class="input-field" formControlName="levelName" type="text" maxlength="20"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{workflowHierarchyDtlForm.controls.levelName.value?.length || 0}}/20</mat-hint>
+          </mat-form-field>
+        </div>
+        <div fxFlex="5"></div>
+        <!-- <div fxFlex="30" class="form-group">
+          <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+            <mat-label class="input-label"> {{'PROCESS_STATUS' | translate}} </mat-label>
+            <input matInput class="input-field" formControlName="processStatus" type="text" maxlength="100"
+              oninput="this.value = this.value.toUpperCase()">
+            <mat-hint align="end">{{workflowHierarchyDtlForm.controls.processStatus.value?.length || 0}}/100</mat-hint>
+          </mat-form-field>
+        </div> -->
+        <div fxFlex="30" class="form-group">
+          <span class="input-label"> {{ 'PROCESS_STATUS' | translate }} </span>
+          <ng-select  formControlName="processStatus"
+            (click)="listOfProcessStatus({})" [virtualScroll]="true"
+            (search)="listOfProcessStatus($event)" (scrollToEnd)="listOfProcessStatus({})" (keyup.backspace)="listOfProcessStatus($event.target.value ? $event : 'back')" (clear)="listOfProcessStatus('clear')"
+            (change)="setProcessStatus($event)" [items]="processStatusCombo1" bindLabel="processName"
+            bindValue="processName" [loading]="scrollSyncProcessStatus" loadingText="Loading...">
+          </ng-select>
+        </div>
+        <div fxFlex="5"></div>
+      
+
+        <div fxFlex="30">
+        <div fxLayout="column"  fxFlex="100" style="margin-top: -25px !important;">
+
+          <section class="example-section check-box-style">
+            <mat-checkbox [checked]="true" color="primary" class="example-margin" formControlName="active">
+              <label>{{ 'COMMON_ACTIVE' | translate }}</label></mat-checkbox>
+          </section>
+          
+       
+          <section class="example-section check-box-style">
+            <mat-checkbox [checked]="true" color="primary" class="example-margin" formControlName="prWithoutUnitPrice">
+              <label>{{ 'APPROVE_WITH_UNIT_PRICE' | translate }}</label></mat-checkbox>
+          </section>
+        
+
+          <section class="example-section check-box-style">
+            <mat-checkbox [checked]="true" color="primary" class="example-margin" formControlName="prWithoutSupplier">
+              <label>{{ 'APPROVE_WITH_SUPPLIER' | translate }}</label></mat-checkbox>
+          </section>
+        
+      </div>
+      </div>
+
+      </div>
+
+      <div fxLayout="row"> 
+        <h6>{{ 'WORKFLOW_EMPLOYEE_INFO_1' | translate}}</h6>
+      </div>
+
+      <div fxLayout="row">
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'DESIGNATION_NAME' | translate }} </span>
+          <ng-select  formControlName="empDesignationName1"
+            (click)="listOfEmployeeDesignation1({})" [virtualScroll]="true"
+            (search)="listOfEmployeeDesignation1($event)" (scrollToEnd)="listOfEmployeeDesignation1({})" (keyup.backspace)="listOfEmployeeDesignation1($event.target.value ? $event : 'back')" (clear)="listOfEmployeeDesignation1('clear')"
+            (change)="setEmployeeDesignation1($event)" [items]="empDesignationCombo1" bindLabel="designationName"
+            bindValue="designationName" [loading]="scrollSyncEmpDesignation1" loadingText="Loading...">
+          </ng-select>
+        </div>
+        <div fxFlex="5"></div>
+
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'WORKFLOW_EMP_1' | translate }} <span class="mandatory-style">*</span> </span>
+          <ng-select  formControlName="employeeName1"
+            (click)="listOfEmployeeName1({})" [virtualScroll]="true"
+            (search)="listOfEmployeeName1($event)" (scrollToEnd)="listOfEmployeeName1({})" (keyup.backspace)="listOfEmployeeName1($event.target.value ? $event : 'back')"  (clear)="listOfEmployeeName1('clear')"
+            (change)="setEmployeeNameCombo1($event)" [items]="employeeCombo1" bindLabel="employeeFirstName"
+            bindValue="employeeFirstName" [loading]="scrollSyncEmployeeCombo1" loadingText="Loading..." required>
+          </ng-select>
+          <mat-error *ngIf="workflowHierarchyDtlForm.controls.employeeName1.invalid && workflowHierarchyDtlForm.controls.employeeName1.touched">
+            <div class="err-field" *ngIf="workflowHierarchyDtlForm.controls.employeeName1.errors.required">
+              {{'WORKFLOW_EMP_1' | translate}} is Required </div>
+          </mat-error>
+        </div>
+        <div fxFlex="5"></div>
+
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'WORKFLOW_CONDITION_1' | translate }}</span>
+          <ng-select  formControlName="condition1"
+            (click)="listOfConditionCombo1({})" [virtualScroll]="true"
+            (search)="listOfConditionCombo1($event)" (scrollToEnd)="listOfConditionCombo1({})" (keyup.backspace)="listOfConditionCombo1($event.target.value ? $event : 'back')" (clear)="listOfConditionCombo1({})"
+            (change)="setConditionCombo1($event)" [items]="conditionCombo1" bindLabel="workflowConditionName"
+            bindValue="workflowConditionName" [loading]="scrollSyncConditionCombo1" loadingText="Loading...">
+          </ng-select>
+        </div>
+      </div>
+
+      <div fxLayout="row">
+        <h6>{{ 'WORKFLOW_EMPLOYEE_INFO_2' | translate}}</h6>
+      </div>
+
+      <div fxLayout="row">
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'DESIGNATION_NAME' | translate }} </span>
+          <ng-select  formControlName="empDesignationName2"
+            (click)="listOfEmployeeDesignation2({})" [virtualScroll]="true"
+            (search)="listOfEmployeeDesignation2($event)" (scrollToEnd)="listOfEmployeeDesignation2({})" (keyup.backspace)="listOfEmployeeDesignation2($event.target.value ? $event : 'back')" (clear)="listOfEmployeeDesignation2('clear')"
+            (change)="setEmployeeDesignation2($event)" [items]="empDesignationCombo2" bindLabel="designationName"
+            bindValue="designationName" [loading]="scrollSyncEmpDesignation2" loadingText="Loading...">
+          </ng-select>
+        </div>
+        <div fxFlex="5"></div>
+
+        <div fxFlex="30"> 
+          <span class="input-label"> {{ 'WORKFLOW_EMP_2' | translate }}<span class="mandatory-style">{{employee2Mandatory}}</span> </span>
+          <ng-select  formControlName="employeeName2"
+            (click)="listOfEmployeeName2({})" [virtualScroll]="true"
+            (search)="listOfEmployeeName2($event)" (scrollToEnd)="listOfEmployeeName2({})" (keyup.backspace)="listOfEmployeeName2($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName2('clear')"
+            (change)="setEmployeeNameCombo2($event)" [items]="employeeCombo2" bindLabel="employeeFirstName"
+            bindValue="employeeFirstName" [loading]="scrollSyncEmployeeCombo2" loadingText="Loading...">
+          </ng-select>
+        </div>
+        <div fxFlex="5"></div>
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'WORKFLOW_CONDITION_2' | translate }} </span>
+          <ng-select  formControlName="condition2"
+            (click)="listOfConditionCombo2({})" [virtualScroll]="true"
+            (search)="listOfConditionCombo2($event)" (scrollToEnd)="listOfConditionCombo2({})" (keyup.backspace)="listOfConditionCombo2($event.target.value ? $event : 'back')" (clear)="listOfConditionCombo2('clear')"
+            (change)="setConditionCombo2($event)" [items]="conditionCombo2" bindLabel="workflowConditionName"
+            bindValue="workflowConditionName" [loading]="scrollSyncConditionCombo2" loadingText="Loading...">
+          </ng-select>
+        </div>
+      </div>
+
+      <div fxLayout="row">
+        <h6>{{ 'WORKFLOW_EMPLOYEE_INFO_3' | translate}}</h6>
+      </div>
+
+      <div fxLayout="row">
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'DESIGNATION_NAME' | translate }} </span>
+          <ng-select  formControlName="empDesignationName3"
+            (click)="listOfEmployeeDesignation3({})" [virtualScroll]="true"
+            (search)="listOfEmployeeDesignation3($event)" (scrollToEnd)="listOfEmployeeDesignation3({})" (keyup.backspace)="listOfEmployeeDesignation3($event.target.value ? $event : 'back')" (clear)="listOfEmployeeDesignation3('clear')"
+            (change)="setEmployeeDesignation3($event)" [items]="empDesignationCombo3" bindLabel="designationName"
+            bindValue="designationName" [loading]="scrollSyncEmpDesignation3" loadingText="Loading...">
+          </ng-select>
+        </div>
+        <div fxFlex="5"></div>
+        <div fxFlex="30">
+          <span class="input-label"> {{ 'WORKFLOW_EMP_3' | translate }} <span class="mandatory-style">{{employee3Mandatory}}</span> </span>
+          <ng-select  formControlName="employeeName3"
+            (click)="listOfEmployeeName3({})" [virtualScroll]="true"
+            (search)="listOfEmployeeName3($event)" (scrollToEnd)="listOfEmployeeName3({})" (keyup.backspace)="listOfEmployeeName3($event.target.value ? $event : 'back')" (clear)="listOfEmployeeName3('clear')"
+            (change)="setEmployeeNameCombo3($event)" [items]="employeeCombo3" bindLabel="employeeFirstName"
+            bindValue="employeeFirstName" [loading]="scrollSyncEmployeeCombo3" loadingText="Loading...">
+          </ng-select>
+        </div>
+      </div> 
+      </form> 
+    </div>
+ 
+    <div fxLayout="row"> 
+      <div fxFlex="100" class="create-hirarchy-button" style="margin-top: 50px;">
+        <button mat-raised-button color="primary" *ngIf="!isViewMode" (click)="saveWorkflowHierarchyDtl()"
+          [disabled]="workflowHierarchyDtlForm.invalid">{{displayButton}}  
+        </button>
+      </div>
+    </div>
+  
+</div>
+ 
+

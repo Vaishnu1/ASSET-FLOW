@@ -1,0 +1,26 @@
+.title {
+  font-size: 13px !important;
+  font-style: Aleo;
+  color: rgb(20, 117, 110);
+  font-weight: 500;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.value {
+  font-size: 12px !important;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  font-weight: 400;
+}
+
+.currency:after{ content: '.00'; }
+
+.info-field {
+  margin-bottom: 10px;
+}
+
+table, th, td{
+  border: 1px solid gray;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: left;
+}

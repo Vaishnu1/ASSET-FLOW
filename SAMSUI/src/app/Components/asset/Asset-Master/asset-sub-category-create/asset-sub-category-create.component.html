@@ -1,0 +1,135 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="section_title">{{headingDisplay}} {{'MENU_ASSET_SUB_CATEGORY' | translate}}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form class="modalform" [formGroup]="assetSubCategoryForm">
+
+    <div fxLayout="column" fxFlex="100" >
+
+      <div >
+        <span class="input-label"> {{'ASSET_CATEGORY' | translate}} <span
+            class="mandatory-style">*</span> </span>
+        <ng-select class=" input-field" #assetsubcategoryFocus formControlName="categoryName"
+          (search)="listOfCategory($event)" (click)="listOfCategory({})" (change)="getCategoryComboValue($event)"
+          [items]="assetCategoryName" bindLabel="assetCategoryName" bindValue="assetCategoryName"
+          [loading]="categoryScrollsync" loadingText="Loading..." (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')">
+        </ng-select>
+        <mat-error
+        *ngIf="assetSubCategoryForm.controls.categoryName.errors && assetSubCategoryForm.controls.categoryName.touched">
+        <div class="err-field"
+                  *ngIf="assetSubCategoryForm.controls.categoryName.errors.required">
+                  Kindly Select The "{{ 'ASSET_CATEGORY' | translate }}" </div>
+      </mat-error>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <mat-form-field  [floatLabel]="'always'" hintLabel="Max 100 Character" style="width: 100%;">
+          <mat-label class="input-label"> {{ 'ASSET_SUB_CATEGORY' | translate }}
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <input class="input-field" matInput formControlName="subCategoryName" (keypress)="lengthMaximumCharacter()"
+            (input)="checkForAssetSubCategoryNameExistence()" oninput="this.value = this.value.toUpperCase()" [maxlength]="100">
+          <mat-hint align="end">{{assetSubCategoryForm.controls.subCategoryName.value?.length || 0}}/100</mat-hint>
+          <mat-error
+            *ngIf="assetSubCategoryForm.controls.subCategoryName.errors && assetSubCategoryForm.controls.subCategoryName.touched">
+            <div class="err-field" *ngIf="assetSubCategoryForm.controls.subCategoryName.errors.required">
+              "{{ 'ASSET_SUB_CATEGORY' | translate }}" Is Required </div>
+            <div class="err-field" *ngIf="assetSubCategoryForm.controls.subCategoryName.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'" hintLabel="Max 5 Character">
+          <mat-label class="example-label  input-label"> {{ 'ASSET_SUB_CATEGORY_CODE' | translate }}
+          </mat-label>
+          <input #assetSubCategoryCode matInput formControlName="assetSubCategoryCode" [maxlength]="5"
+            oninput="this.value = this.value.toUpperCase()" class="input-field" (input)="checkForAssetSubCategoryCodeExistence()">
+          <mat-hint align="end">{{assetSubCategoryForm.controls.assetSubCategoryCode.value?.length || 0}}/5
+          </mat-hint>
+          <mat-error *ngIf="assetSubCategoryForm.controls.assetSubCategoryCode.errors && assetSubCategoryForm.controls.assetSubCategoryCode.touched">
+            <div class="err-field" *ngIf="assetSubCategoryForm.controls.assetSubCategoryCode.errors.notUnique">{{ErrorMsgCode}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+   
+      <!-- <div class="form-group" style="margin-top: 4px;">
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+          <mat-label class="input-label">{{ 'ASSET_EXPECTED_LIFE_IN_YEARS' | translate }}</mat-label>
+          <input matInput class="input-field" formControlName="expectedLifeInYears"  [maxlength]="4" appPercentageDirective>
+        </mat-form-field>
+        <mat-error
+        *ngIf="assetSubCategoryForm.controls.expectedLifeInYears.invalid && assetSubCategoryForm.controls.expectedLifeInYears.touched">
+        <div class="error_font" *ngIf="assetSubCategoryForm.controls.expectedLifeInYears.errors.pattern">
+          {{'ASSET_EXPECTED_LIFE_IN_YEARS' | translate}} contains only Numbers </div>
+      </mat-error>
+      </div>
+
+      
+      <div class="form-group">
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+          <mat-label class="input-label"> {{'MAINTAINCE_THRESHOLD_PER' | translate}} </mat-label>
+          <input matInput class="input-field" appPercentageDirective formControlName="maintainanceThresholdPer" [maxlength]="5">
+          <mat-error
+          *ngIf="assetSubCategoryForm.controls.maintainanceThresholdPer.invalid && assetSubCategoryForm.controls.maintainanceThresholdPer.touched">
+          <div class="error_font" *ngIf="assetSubCategoryForm.controls.maintainanceThresholdPer.errors.pattern">
+            {{'MAINTAINCE_THRESHOLD_PER' | translate}} contains only Numbers </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+     
+      <div class="form-group">
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+          <mat-label class="input-label"> {{'SCRAP_VALUE_PER' | translate}} </mat-label>
+          <input matInput appPercentageDirective class="input-field" formControlName="scrapValuePer" [maxlength]="5" (keyup)="validatePer($event)">
+          <mat-error
+          *ngIf="assetSubCategoryForm.controls.scrapValuePer.invalid && assetSubCategoryForm.controls.scrapValuePer.touched">
+          <div class="error_font" *ngIf="assetSubCategoryForm.controls.scrapValuePer.errors.pattern">
+            {{'SCRAP_VALUE_PER' | translate}} contains only Numbers </div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      
+      <div class="form-group" style="margin-top: -10px;">
+        <span class="input-label"> {{ 'ASSET_DEPRECIATION_METHOD' | translate }}</span>
+        <ng-select class="example-full-width input-field depr-mtd" [items]="depreciationMethodCombo"
+          bindLabel="assetDepreciationMethodName" bindValue="assetDepreciationMethodName"
+          (search)="loadDepreciationMethodComboData($event)"
+          (click)="loadDepreciationMethodComboData($event)" [virtualScroll]="true"
+          (scrollToEnd)="loadDepreciationMethodComboData({})" (keyup.backspace)="loadDepreciationMethodComboData($event.target.value ? $event : 'back')" (clear)="loadDepreciationMethodComboData('clear')" [loading]="scrollsyncDepreciationMethod"
+          loadingText="Loading..." (change)="selectedDepreciationMethodData($event)"
+          formControlName="depreciationMethodName"></ng-select>
+      </div>
+
+      
+      <div class="form-group" style="margin-top: 10px;" *ngIf="enableRateOfDepreciation">
+        <mat-form-field style="width: 100%;" [floatLabel]="'always'">
+          <mat-label class="input-label"> {{'ASSET_RATE_OF_DEPRECIATION' | translate}} </mat-label>
+          <input matInput appPercentageDirective class="input-field" formControlName="rateOfDepreciation" [maxlength]="5">
+          <mat-error *ngIf="assetSubCategoryForm.controls.rateOfDepreciation.invalid">
+          <div class="error_font" *ngIf="assetSubCategoryForm.controls.rateOfDepreciation.errors.pattern">
+            {{'ASSET_RATE_OF_DEPRECIATION' | translate}} contains only Numbers</div>
+        </mat-error>
+        </mat-form-field>
+      </div> -->
+
+
+      <div fxLayoutAlign="center center" style="margin-top:20px;">
+          <button mat-raised-button class="space" color="primary" (click)="submit()" [style.visibility]="headingDisplay=='View' ? 'hidden': 'visible'"
+            [disabled]="assetSubCategoryForm.invalid || !assetSubCategoryForm.dirty || uploadFlagAssetSubCategory">
+            <span *ngIf="!uploadFlagAssetSubCategory">{{displayButton}}</span>
+            <span *ngIf="uploadFlagAssetSubCategory">{{'COMMON_LOADING' | translate}} </span>
+          </button>
+      </div>
+    </div>
+  </form>
+</div>

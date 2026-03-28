@@ -1,0 +1,270 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="form-row"> 
+      <div fxFlex="95">
+        <h4 class="section_title"> {{headingDisplay}} </h4>
+      </div>
+      
+      <div fxFlex="5" class="first-title"> 
+        <mat-icon class="close-icon-large close-icon" (click)="close()">highlight_off</mat-icon>
+      </div>
+    </div> 
+
+    <div fxLayout="row" class="form-row"> 
+      <form [formGroup]="assetCountReportFormGroup"  fxFlex="100"> 
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100">  
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_LOCATION' | translate}}</span>
+                <ng-select class="width-size" [items]="locationCombo" bindLabel="locDisplayField" (search)="loadLocationComboData($event)"
+                  (click)="loadLocationComboData($event)" (change)="selectedLocationData($event)"
+                  (clear)="selectedLocationData({'locationId':0,'locDisplayField':''})"
+                  [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollLocationsync"
+                  formControlName="locationName"  [tabIndex] = 1 >
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                 <span matLabel class="input-label">{{'REPORT_REGION' | translate}}</span>
+                   <ng-select class="width-size" formControlName="regionName" #regionFocus (change)="setRegionComboValue($event)" bindLabel="regionName"
+                    bindName="regionName" (search)="listOfRegion($event)" (click)="listOfRegion({})" 
+                    [virtualScroll]="true" (scrollToEnd)="listOfRegion({})" (keyup.backspace)="listOfRegion($event.target.value ? $event : 'back')" (clear)="listOfRegion('clear')" [loading]="scrollsyncRegion"
+                   [items]="regionlist " [tabIndex] = 8 required></ng-select>
+                 <mat-error
+                   *ngIf="assetCountReportFormGroup.controls.regionName.invalid && assetCountReportFormGroup.controls.regionName.touched">
+                   <div class="err-field" *ngIf="assetCountReportFormGroup.controls.regionName.errors.required">
+                     {{'REPORT_REGION' | translate}} is Required </div>
+                   <div class="err-field" *ngIf="assetCountReportFormGroup.controls.regionName.errors.maxlength">
+                     {{'REPORT_REGION' | translate}} Length is 50 </div>
+                 </mat-error>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_CHOOSE_REPORT' | translate}} <span class="mandatory-style"> {{mandatoryString}}</span></span>
+                <ng-select class="width-size"  [items]="reports" (change)="enabledReportsCondition($event)" 
+                bindLabel="reports" bindValue="reports" formControlName="reportType">
+                </ng-select>
+                <mat-error *ngIf="assetCountReportFormGroup.controls.reportType.errors && assetCountReportFormGroup.controls.reportType.touched">
+                    <div *ngIf="assetCountReportFormGroup.controls.reportType.errors.required">{{'REPORT_CHOOSE_REPORT' | translate}} is Required </div>
+                </mat-error>
+              </div>
+            </div> 
+
+            <div fxLayout="row" class="form-row" *ngIf ="enableFieldSet">
+              <div fxFlex="100">
+                <span id="example-radio-group-label" class="input-label">{{'REPORT_CHOOSE_CATEGORY' | translate}}</span>
+                <mat-radio-group formControlName="reportType" aria-labelledby="example-radio-group-label"
+                  class="example-radio-group"> 
+                  <div *ngFor="let adReportName of assetDtlReports; let i = index"> 
+                    <mat-checkbox color="primary" class="example-margin" *ngIf ="(adReportName==='Asset Contracts')" [disabled]="true"  (change)="onChange($event,i)" [value]="adReportName" class="input-field">{{adReportName}}
+                    </mat-checkbox>
+                    <mat-checkbox color="primary" class="example-margin" *ngIf ="(adReportName!='Asset Contracts')" [disabled]="false"  (change)="onChange($event,i)" [value]="adReportName" class="input-field">{{adReportName}}
+                    </mat-checkbox>
+                  </div>
+                </mat-radio-group>
+              </div>
+            </div>
+            
+            <div fxLayout="row" class="form-row"> 
+              <div fxFlex="100" style="margin-top: 6px;">
+                <div fxFlex="49">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="example-label input-label"> {{'FROM_DATE_DISP' | translate}}</mat-label>
+                    <input matInput (click)="picker.open()" [matDatepicker]="picker" (keypress)="dateValidation($event)"
+                      formControlName="fromDtDisp"  (dateChange)="getFromDate($event)"  [max]="assetCountReportFormGroup.controls.toDtDisp.value">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="2"></div>  
+                <div fxFlex="49"> 
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="example-label input-label"> {{'TO_DATE_DISP' | translate}}</mat-label>
+                    <input matInput (click)="pickerTo.open()" [matDatepicker]="pickerTo" (keypress)="dateValidation1($event)"
+                      formControlName="toDtDisp" (dateChange)="getToDate($event)"  [min]="assetCountReportFormGroup.controls.fromDtDisp.value" [max]="currentDate">
+                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                  </mat-form-field>
+                </div> 
+              </div>
+            </div> 
+          </div>
+        </div>
+        
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100" style="margin-top: 5px;">
+                <span matLabel class="input-label"> {{ 'REPORT_ASSET_CODE' | translate }} </span>
+                <ng-select class="width-size" #locationFocus [items]="assetCodeCombo" bindLabel="assetCode" bindValue="assetCode"
+                  (search)="loadAssetCodeComboData($event)" (click)="loadAssetCodeComboData($event)" [virtualScroll]="true"
+                  (scrollToEnd)="loadAssetCodeComboData({})" (keyup.backspace)="loadAssetCodeComboData($event.target.value ? $event : 'back')" (clear)="loadAssetCodeComboData('clear')" [loading]="scrollAssetCodesync" loadingText="Loading..." [tabIndex] = 2
+                  (change)="selectedAssetCodeData($event)" formControlName="assetCode" ></ng-select>
+              </div>
+            </div> 
+
+            <div fxLayout="row" class="form-row">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_MODEL' | translate}}</span>
+                <ng-select class="width-size" [items]="modelComboData" bindLabel="modelName" (click)="loadModelNameComboData($event)"
+                  (search)="loadModelNameComboData($event)" (change)="selectedModelData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadModelNameComboData({})" (keyup.backspace)="loadModelNameComboData($event.target.value ? $event : 'back')" (clear)="loadModelNameComboData('clear')" [loading]="scrollModelsync"
+                   formControlName="modelName"  [tabIndex] = 5 dropdownPosition =top ></ng-select>
+              </div>
+            </div> 
+
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_CATEGORY' | translate}}</span>
+                <ng-select class="width-size" formControlName="assetCategoryName" (search)="listOfCategory($event)"
+                  (click)="listOfCategory({})" (change)="getCategoryComboValue($event)" [items]="assetCategoryName"
+                  [virtualScroll]="true" (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')" [loading]="scrollCategorysync"
+                  bindLabel="assetCategoryName" bindValue="assetCategoryName"   [tabIndex] = 6>
+                </ng-select> 
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'ASSET_SUB_CATEGORY' | translate}}</span>
+                <ng-select class="width-size" formControlName="subCategoryName" [tabIndex] = 7
+                  (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" [virtualScroll]="true"
+                  (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" [loading]="scrollsyncAssetSubCategory" loadingText="Loading..."
+                  (change)="getSubCategoryComboValue($event)" [items]="subCategoryName" bindLabel="subCategoryName"
+                  bindValue="subCategoryName">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100" style="margin-top: 5px;">
+                <span matLabel class="input-label">{{'REPORT_ASSET_GROUP' | translate}}</span>
+                <ng-select class="width-size" formControlName="assetGroupName" (search)="listOfAssetGroup($event)" 
+                  (click)="listOfAssetGroup({})" (change)="getAssetGroupComboValue($event)" [items]="assetGroup"
+                  bindLabel="assetGroupName" bindValue="assetGroupName" [virtualScroll]=true
+                  (scrollToEnd)="listOfAssetGroup({})" (keyup.backspace)="listOfAssetGroup($event.target.value ? $event : 'back')" (clear)="listOfAssetGroup('clear')" [loading]="scrollGroupsync" loadingText="Loading..."
+                  dropdownPosition =top  [tabIndex] = 4>
+                </ng-select> 
+                <mat-error
+                  *ngIf="assetCountReportFormGroup.controls.assetGroupName.invalid && assetCountReportFormGroup.controls.assetGroupName.touched">
+                  <div class="err-field" *ngIf="assetCountReportFormGroup.controls.assetGroupName.errors.required">
+                    {{'REPORT_ASSET_GROUP' | translate}} is Required </div>
+                </mat-error> 
+              </div> 
+            </div> 
+          </div>
+        </div>
+
+        <div fxLayout="column" fxFlex="2">
+
+        </div>
+
+        <div fxLayout="column" fxFlex="32">
+          <div fxFlex="100"> 
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100" class="mt-3px">
+                <span matLabel class="input-label">{{'REPORT_DEPARTMENT' | translate}}</span>
+                <ng-select class="width-size" [items]="departmentCombo" bindLabel="departmentName"
+                  (click)="loadDepartmentNameComboData($event)" (search)="loadDepartmentNameComboData($event)"
+                  (change)="selectedDeapartmentData($event)"
+                  (clear)="selectedDeapartmentData({'departmentId':0,'departmentName':''})"
+                  [virtualScroll]="true" (scrollToEnd)="loadDepartmentNameComboData({})" (keyup.backspace)="loadDepartmentNameComboData($event.target.value ? $event : 'back')" (clear)="loadDepartmentNameComboData('clear')" [loading]="scrollDepartmentsync"
+                  formControlName="departmentName"  [tabIndex] = 3 dropdownPosition =top>
+                </ng-select> 
+              </div> 
+            </div>
+            
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100">
+                <span matLabel class="input-label">{{'REPORT_ASSET_STATUS' | translate}}</span>
+                <ng-select class="width-size" formControlName="assetStatus" (search)="listOfAssetStatus($event)"
+                  (click)="listOfAssetStatus({})" (change)="getAssetStatusList($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfAssetStatus({})" (keyup.backspace)="listOfAssetStatus($event.target.value ? $event : 'back')" (clear)="listOfAssetStatus('clear')" [loading]="scrollAssetStatussync"
+                  bindLabel="assetStatus" bindValue="assetStatusName" loadingText="Loading..." [ngModelOptions]="{standalone: true}">
+                  <ng-option *ngFor="let assetStatus of assetStatusList" [value]="assetStatus">
+                    {{ assetStatus.assetStatusName | translate}}
+                  </ng-option>
+                </ng-select> 
+              </div>
+            </div> 
+
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100">
+                <span  matLabel class="input-label">{{'REPORT_FUNCTIONAL_STATUS' | translate}}</span>
+                <ng-select class="width-size" formControlName="functionalStatus" [items]="functionalStatus"
+                  bindLabel="name" bindValue="name"    dropdownPosition =top  [tabIndex] = 9>
+                </ng-select> 
+              </div>
+            </div> 
+
+            <div fxLayout="row" class="form-row" *ngIf="!updateFieldsForLoan">
+              <div fxFlex="100">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'ASSIGNED_TO' | translate }}</span>
+                <ng-select class="width-size" [items]="assignToPersonCombo"  bindLabel="displayName"
+                  bindValue="employeeFirstName" (search)="loadAssignToComboData($event)"
+                  (click)="loadAssignToComboData($event)" [virtualScroll]="true" (scrollToEnd)="loadAssignToComboData({})" 
+                  (keyup.backspace)="loadAssignToComboData($event.target.value ? $event : 'back')" 
+                  (clear)="loadAssignToComboData('clear')" [loading]="scrollsyncAssignToPerson"
+                  loadingText="Loading..." (change)="selectedAssignToPerson($event)"
+                  formControlName="assignTo" [ngModelOptions]="{standalone: true}" > </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row" *ngIf="updateFieldsForLoan">
+              <div fxFlex="100" class="mt-3px">
+                <span matLabel class="input-label">{{'REPORT_LOAN_NO' | translate}}</span>
+                <ng-select class="width-size" [items]="loanComboList" class="input-field" bindLabel="loanNo"
+                  (search)="loadLoanCodeComboData($event)" (click)="loadLoanCodeComboData($event)" tabindex="1"
+                  [virtualScroll]="true" (scrollToEnd)="loadLoanCodeComboData({})" (keyup.backspace)="loadLoanCodeComboData($event.target.value ? $event : 'back')" (clear)="loadLoanCodeComboData('clear')" (change)="getLoanCode($event)" [loading]="scrollsyncLoan"
+                  loadingText="Loading..." formControlName="loanNo" [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row" *ngIf="updateFieldsForLoan">
+              <div fxFlex="100">
+                <span class="input-label">{{ 'REPORT_LOAN_TYPE' | translate }}</span>
+                <ng-select class="width-size" class=" input-field" formControlName="loanType"
+                [ngModelOptions]="{standalone: true}" [items]="loanTypeList" bindLabel="name"
+                  bindValue="name">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxLayout="row" class="form-row" *ngIf="updateFieldsForLoan">
+              <div fxFlex="100">
+                <span class="input-label"> {{ 'REPORT_LOAN_TO' | translate }}</span>
+                <ng-select class="width-size" class=" input-field" bindLabel="name"
+                  [items]="loanToOptions" (change)="getLoanedTo($event)" formControlName="loanedTo" 
+                  [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+ 
+    <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 10px;"> 
+      <button mat-raised-button class="space" color="primary"
+        (click)="submit()" [disabled]="assetCountReportFormGroup.invalid">{{'COMMON_SUBMIT' | translate}}</button>
+      <button mat-raised-button class="space" (click)="clear()"
+        color="primary">{{'COMMON_CLEAR' | translate}}</button> 
+    </div> 
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="50">
+      <h4 class="dialogue-box-header"> {{'MODEL_ACCESSORIES' | translate}}</h4>
+    </div>
+    <div fxFlex="45" fxLayoutAlign="center center">
+      <button mat-raised-button class="space" color="primary" (click)="openItemScreen(0)">
+        {{ 'MODEL_ADD_ITEM' | translate }}</button>
+    </div>
+    <div fxFlex="5" fxLayoutAlign="end start">
+      <mat-icon (click)="closeModal()" class="close-icon">highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="modelAccessoriesForm">
+
+    <div fxLayout="column">
+      <div style="margin: 5px 0px;">
+        <span class="input-label">{{ 'ITEM_NAME' | translate }}<span class="mandatory-style">*</span></span>
+        <ng-select #accessoriesItemNameF  formControlName="itemName"
+          (search)="listOfItem($event)" [virtualScroll]="true" (click)="listOfItem({})" (scrollToEnd)="listOfItem({})" (keyup.backspace)="listOfItem($event.target.value ? $event : 'back')" (clear)="listOfItem('clear')"
+          loadingText="Loading..." (change)="getAccessoriesComboValue($event)" [items]="accessoriesList"
+          bindLabel="itemNameConcat" bindValue="itemNameConcat">
+        </ng-select>
+        <mat-error
+          *ngIf="modelAccessoriesForm.controls.itemName.invalid && modelAccessoriesForm.controls.itemName.touched">
+          <div class="err-field" *ngIf="modelAccessoriesForm.controls.itemName.errors.required">
+            Kindly Select The "{{ 'ITEM_NAME' | translate }}"</div>
+        </mat-error>
+      </div>
+
+      <div style="margin: 5px 0px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" style="width: 100%; margin-top: 10px;">
+          <mat-label class="input-label">{{ 'COMMON_DESC' | translate }} </mat-label>
+          <input matInput formControlName="itemDesc" readonly>
+        </mat-form-field>
+      </div>
+
+      <div style="margin: 5px 0px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" style="width: 100%;">
+          <mat-label class="input-label"> {{ 'MANUFACTURER' | translate }} </mat-label>
+          <input matInput formControlName="manufacturerName" readonly>
+        </mat-form-field>
+      </div>
+
+      <div style="margin: 5px 0px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" style="width: 100%;">
+          <mat-label class="input-label"> {{ 'UOM_CODE' | translate }} </mat-label>
+          <input matInput formControlName="uomCode" readonly>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-checkbox type="checkbox" color="primary" formControlName="active" class="input-label">{{ 'COMMON_ACTIVE' | translate}}
+        </mat-checkbox>
+      </div>
+
+
+
+      <div fxLayoutAlign="center center">
+        <button *ngIf="buttonShowOnEdit" mat-raised-button type="button" class="space " (click)="addAccessoriesModel()"
+          color="primary" [disabled]="modelAccessoriesForm.invalid || !modelAccessoriesForm.dirty">{{ 'COMMON_SUBMIT' |
+          translate }}</button>
+      </div>
+    </div>
+  </form>
+</div>

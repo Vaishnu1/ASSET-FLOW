@@ -1,0 +1,24 @@
+<div fxLayout="column">
+
+    <div style="margin-bottom:5%;" [@.disabled]="true" >
+      <mat-tab-group dynamicHeight [selectedIndex]="selectedTabIndex">
+
+        <mat-tab> 
+          <ng-template mat-tab-label>
+            {{ 'MENU_PURHCASE_PARAMETER' | translate }}
+          </ng-template>
+          <div style="margin-top: 0.5%;"></div>
+          <app-parameter-list></app-parameter-list>
+        </mat-tab>
+
+        <mat-tab> 
+          <ng-template mat-tab-label>
+            {{ 'MENU_PURHCASE_TERMS_TEMPLATE' | translate }}
+          </ng-template>
+          <div style="margin-top: 0.5%;"></div>
+          <app-template-list></app-template-list>
+        </mat-tab>
+      
+      </mat-tab-group>
+    </div>
+  </div>

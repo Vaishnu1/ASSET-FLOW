@@ -1,0 +1,74 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h4 class="dialogue-box-header">{{headingDisplay}} {{ 'BUILDING_FLOOR' | translate }}</h4>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeFloorModal()">highlight_off</mat-icon>
+    </div>
+  </div>
+  <form class="modalform" fxLayout="column" [formGroup]="buildingFloorCreateForm">
+
+    <div fxLayout="column">
+      <div>
+        <span class="input-label"> {{ 'LOCATION_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select #locationName class="input-field" [items]="locationCombo" bindLabel="locDisplayField"
+          bindValue="locDisplayField" (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)"
+          [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+          loadingText="Loading..." (change)="selectedLocationData($event)" formControlName="locationName" required>
+        </ng-select>
+        <mat-error
+          *ngIf="buildingFloorCreateForm.controls.locationName.invalid && buildingFloorCreateForm.controls.locationName.touched">
+          <div class="err-field" *ngIf="buildingFloorCreateForm.controls.locationName.errors.required">
+            Kindly Select The "{{'LOCATION_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <span class="input-label"> {{ 'BLOCK_NAME' | translate }} <span class="mandatory-style">*</span></span>
+        <ng-select class="input-field buildingFloorCreate-dialog-dropdown" [items]="blockComboList" bindLabel="blockName"
+          (search)="getBlockNameComboData($event)" (click)="getBlockNameComboData({})"
+          (scrollToEnd)="getBlockNameComboData({})"  (keyup.backspace)="getBlockNameComboData($event.target.value ? $event : 'back')"  (clear)="getBlockNameComboData('clear')" (change)="selectedBlockName($event)" [virtualScroll]="true"
+          [loading]="blockScrollSync" bindValue="blockName" formControlName="blockName" required>
+        </ng-select>
+        <mat-error
+          *ngIf="buildingFloorCreateForm.controls.blockName.invalid && buildingFloorCreateForm.controls.blockName.touched">
+          <div class="err-field" *ngIf="buildingFloorCreateForm.controls.blockName.errors.required">
+           Kindly Select The "{{'BLOCK_NAME' | translate}}"</div>
+        </mat-error>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_15 }}">
+          <mat-label class="example-label input-label"> {{ 'FLOOR_NAME' | translate }} 
+            <span class="mandatory-style">*</span>
+          </mat-label>
+          <input matInput formControlName="floorName" (blur)="checkForFloorkNameExistence()" [maxlength]="15"  class=" input-field"
+            oninput="this.value = this.value.toUpperCase()">
+          <mat-hint align="end">{{buildingFloorCreateForm.controls.floorName.value?.length || 0}}/15</mat-hint>
+          <mat-error 
+            *ngIf="buildingFloorCreateForm.controls.floorName.errors && buildingFloorCreateForm.controls.floorName.touched">
+            <div class="err-field" *ngIf="buildingFloorCreateForm.controls.floorName.errors.required"> "{{ 'FLOOR_NAME' | translate }}" Is Required </div>
+            <div class="err-field" *ngIf="buildingFloorCreateForm.controls.floorName.errors.notUnique">{{ErrorMsg}}</div>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-checkbox color="primary" formControlName="active">
+          {{'COMMON_ACTIVE' | translate}}
+        </mat-checkbox>
+      </div>
+
+
+
+      <div fxLayoutAlign="center center" *ngIf="headingDisplay!='View'">
+        <button mat-raised-button class="space" color="primary" (click)="submitBlock()"
+          [disabled]="buildingFloorCreateForm.invalid || !buildingFloorCreateForm.dirty || uploadFloorFlag">
+          <span *ngIf="!uploadFloorFlag">{{buttonDisplay}}</span>
+          <span *ngIf="uploadFloorFlag">{{'COMMON_LOADING' | translate}} </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

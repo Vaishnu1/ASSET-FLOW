@@ -1,0 +1,256 @@
+<!-- ===== BREADCRUMB ===== -->
+<div class="page-wrapper">
+  <div class="breadcrumb-strip" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <!-- LEFT : Breadcrumb -->
+    <div class="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon class="home-icon">home</mat-icon>
+      <span class="crumb">Notification</span>
+      <mat-icon>keyboard_arrow_right</mat-icon>
+      <span class="crumb active">Email Notification</span>
+    </div>
+
+     <!-- RIGHT : Buttons -->
+    <div class="top-right-actions">
+      <button mat-raised-button color="primary" (click)="goBack()">Back</button>
+      <button *ngIf="mode == 'view'"  mat-raised-button color="primary" (click)="goToNotificationType()">Next</button>
+
+
+      <button *ngIf="mode !== 'view'" mat-raised-button color="primary" class="ml-10" (click)="clear()">Clear</button>
+
+      <button *ngIf="mode !== 'view'" mat-raised-button color="primary" [disabled]="templateForm.invalid" class="ml-10" (click)="onSubmit()">
+        {{ mode === 'create' ? 'Add to Templates' : 'Update Template' }}
+      </button>
+
+     </div>
+
+  </div>
+
+
+
+  <!-- =====  HEADER TABS WITH SETTINGS ===== -->
+   <div class="asset-header-tabs">
+    <div class="tab-group">
+      <div class="left-group">
+        <span class="tab active">Template</span>
+
+        <!-- SETTINGS WITH DROPDOWN -->
+        <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+      <span class="tab" (click)="goToNotificationType()">Notification Configuration</span>
+      <span class="tab" (click)="goToScheduler()">Scheduler</span>
+    </div>
+    <mat-menu #settingsMenu="matMenu">
+      <button mat-menu-item (click)="deleteTemplate()" *ngIf="mode !== 'view'">
+        <mat-icon color="warn">delete</mat-icon>
+        Delete
+      </button>
+    </mat-menu>
+
+  </div>
+
+  <!-- ===== FORM BODY  ===== -->
+  <div class="form-card">
+    <form [formGroup]="templateForm"  [class.view-mode]="mode === 'view'">
+      <!-- TWO ROWS IN SAME FLEX GRID -->
+      <div fxLayout="row" fxLayoutGap="30px" >
+
+        <!-- COLUMN 1 -->
+        <div fxFlex="33" fxLayout="column" fxLayoutGap="20px" class="tworow">
+          <div>
+            <label class="input-label">Template Name <span class="req">*</span></label>
+            <input type="text" class="plain-input" formControlName="templateName" maxlength="150">
+            <div class="char-count">Max 150 Characters</div>
+          </div>
+
+          <div>
+            <label class="input-label">Subject <span class="req">*</span></label>
+            <input type="text" class="plain-input" formControlName="subject" maxlength="255">
+            <div class="char-count">Max 255 Characters</div>
+          </div>
+ 
+           
+
+        <!-- <div>
+          <label class="input-label">Recipients Cc </label>
+         <ng-select
+            class="input-field"
+            formControlName="recipientsCc"
+            [items]="emailUserList"
+            bindLabel="emailId"
+            bindValue="emailId"
+            
+            [multiple]="true"
+            (search)="listOfEmailUsers($event)"
+            (click)="listOfEmailUsers({})"
+            [loading]="scrollsyncEmailUser"
+            loadingText="Loading...">
+          </ng-select>
+
+        </div> -->
+          
+
+        </div>
+
+        <!-- COLUMN 2 -->
+        <div fxFlex="33" fxLayout="column" fxLayoutGap="20px">
+          <div>
+            <label class="input-label">Process <span class="req">*</span></label>
+
+           <ng-select class="input-field" formControlName="module"(search)="listOfEmailModule($event)"(click)="listOfEmailModule({})"(change)="onModuleChange($event)"
+              [virtualScroll]="true" (scrollToEnd)="listOfEmailModule({})" (keyup.backspace)="listOfEmailModule($event.target.value ? $event : 'back')" (clear)="listOfEmailModule('clear')"
+              [loading]="scrollsyncEmailModule" loadingText="Loading..." [items]="emailModuleList" bindLabel="moduleName" bindValue="moduleId" required>
+           </ng-select>
+            <!-- <div class="char-count1"  *ngIf="templateForm.get('module')?.invalid ">
+              Process is Required
+            </div> -->
+
+            <div class="char-count1">
+            <p *ngIf="templateForm.get('module')?.invalid"
+              style="color:red;">
+              Process is Required
+            </p>
+            </div>
+          </div>
+
+           <div>
+            <label class="input-label">From<span class="req">*</span></label>
+
+            <ng-select
+              class="input-field"
+              [items]="emailServerList"
+              bindLabel="emailid"
+              bindValue="emailid"
+              formControlName="emailid"  required
+              >
+            </ng-select>
+
+          </div>
+
+          <!-- <div fxFlex="50">
+          <label class="input-label">Recipients Bcc </label>
+          <ng-select
+            class="input-field"
+            formControlName="recipientsBcc"
+            [items]="emailUserList"
+            bindLabel="emailId"
+            bindValue="emailId"
+            [multiple]="true"
+            (search)="listOfEmailUsers($event)"
+            (click)="listOfEmailUsers({})"
+            [loading]="scrollsyncEmailUser"
+            loadingText="Loading...">
+         </ng-select>
+
+        </div> -->
+           
+
+        </div>
+
+        <!-- COLUMN 3 -->
+        <div fxFlex="33" fxLayout="column" fxLayoutGap="20px" class="lastrow">
+
+          <div>
+            <label class="input-label">Status <span class="req">*</span></label>
+
+            <ng-select class="input-field" formControlName="process"  (search)="listOfEmailProcess($event)"(click)="listOfEmailProcess({})" [virtualScroll]="true"
+              (scrollToEnd)="listOfEmailProcess({})"(keyup.backspace)="listOfEmailProcess($event.target.value ? $event : 'back')" (clear)="listOfEmailProcess('clear')" [loading]="scrollsyncEmailProcess"
+              loadingText="Loading..." [items]="emailProcessList" bindLabel="processName"bindValue="processId"required>
+            </ng-select>
+ 
+            <!-- <div class="char-count1">
+             <p *ngIf="templateForm.get('process')?.invalid && (templateForm.get('process')?.touched || templateForm.get('process')?.dirty)" style="color: white;"> Status is Required </p>
+            </div>   -->
+
+            <div class="char-count1">
+              <p *ngIf="templateForm.get('process')?.invalid"
+                style="color:red;">
+                Status is Required
+              </p>
+            </div>
+          </div>
+          <div>
+            <label class="input-label">Recipients To<span class="req">*</span></label>
+
+            <ng-select
+              class="input-field"
+              formControlName="recipientsTo"
+              [items]="emailUserList"
+              bindLabel="emailId"
+              bindValue="emailId"
+              [multiple]="true"
+              (search)="listOfEmailUsers($event)"
+              (click)="listOfEmailUsers({})"
+              [loading]="scrollsyncEmailUser"
+              loadingText="Loading...">
+            </ng-select>
+
+          </div>
+
+          <!-- <div fxLayoutAlign="start center" style="height:40px;">
+            <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+          </div> -->
+
+          
+
+        </div>
+
+      </div>
+
+      <!-- ROW 3 -->
+      <div fxLayout="row" fxLayoutGap="30px" class="mt-20">
+
+  <!-- CC -->
+  <div fxFlex="32">
+    <label class="input-label">Recipients Cc</label>
+    <ng-select
+      class="input-field"
+      formControlName="recipientsCc"
+      [items]="emailUserList"
+      bindLabel="emailId"
+      bindValue="emailId"
+      [multiple]="true"
+      (search)="listOfEmailUsers($event)"
+      (click)="listOfEmailUsers({})"
+      [loading]="scrollsyncEmailUser"
+      loadingText="Loading...">
+
+      
+    </ng-select>
+  </div>
+
+  <!-- BCC -->
+  <div fxFlex="33">
+    <label class="input-label">Recipients Bcc</label>
+    <ng-select
+      class="input-field"
+      formControlName="recipientsBcc"
+      [items]="emailUserList"
+      bindLabel="emailId"
+      bindValue="emailId"
+      [multiple]="true"
+      (search)="listOfEmailUsers($event)"
+      (click)="listOfEmailUsers({})"
+      [loading]="scrollsyncEmailUser"
+      loadingText="Loading...">
+    </ng-select>
+  </div>
+
+  <!-- ACTIVE -->
+  <div fxFlex="20" fxLayoutAlign="start end">
+    <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+  </div>
+
+</div>
+      <!-- EMAIL BODY -->
+      <div class="mt-25">
+        <label class="input-label editor-label">Email Body<span class="req">*</span></label>
+        <angular-editor formControlName="emailBody" [config]="editorConfig" class="editor"></angular-editor>
+      </div>
+
+    </form>
+
+  </div>
+</div>

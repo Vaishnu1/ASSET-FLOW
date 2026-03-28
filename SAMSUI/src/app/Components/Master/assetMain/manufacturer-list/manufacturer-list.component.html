@@ -1,0 +1,296 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="35">
+      <mat-toolbar-row aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon>home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a>{{'MENU_PURCHASE' | translate}}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{'MENU_MANUFACTURER' | translate}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+  </div>
+      
+  <div>
+
+    <mat-expansion-panel hideToggle>
+
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-header">
+          {{'COMMON_SEARCH'| translate}} {{'MENU_MANUFACTURER'| translate}}
+        </mat-panel-title>
+        <mat-panel-description fxLayoutAlign="end end">
+          <mat-icon>search</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header> 
+
+      <div fxFlex="100">
+        <form flex fxLayout="column" #searchSet>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+
+            <div class="form-group" fxFlex="30">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'MANUFACTURER' | translate }} </span>
+                <ng-select  (search)="listOfManufacturerName($event)" 
+                  (click)="listOfManufacturerName({})" (change)="getManufacturerNameComboValue($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listOfManufacturerName({})" (keyup.backspace)="listOfManufacturerName($event.target.value ? $event : 'back')" (clear)="listOfManufacturerName('clear')" class="mat-body-1"
+                  [loading]="manufacturerNameScrollSync" loadingText="Loading..." [items]="manufacturerNameList"
+                  bindLabel="manufacturerName" bindValue="manufacturerName"
+                  [(ngModel)]="manufacturerModel.manufacturerName" [ngModelOptions]="{standalone: true}"
+                  appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group" fxFlex="30">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'MANUFACTURER_CODE' | translate }} </span>
+                <ng-select class="mat-body-1" (click)="listOfManufacturerCode({})" [virtualScroll]="true"
+                  (search)="listOfManufacturerCode($event)" (scrollToEnd)="listOfManufacturerCode({})" (keyup.backspace)="listOfManufacturerCode($event.target.value ? $event : 'back')" (clear)="listOfManufacturerCode('clear')"
+                  (change)="getManufacturerCodeComboValue($event)" [items]="manufacturerCodeList"
+                  bindLabel="manufacturerCode" bindValue="manufacturerCode" [loading]="manufacturerCodeScrollSync"
+                  loadingText="Loading..." appendTo="body" [(ngModel)]="manufacturerModel.manufacturerCode"
+                  [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group" fxFlex="30">
+              <div class="example-full-width">
+                <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}
+                </span>
+                <ng-select class="mat-body-1" [items]="countries" (search)="getCountryData($event)"
+                  (click)="getCountryData({})" (change)="getCountryList($event)" bindLabel="countryName" appendTo="body"
+                  bindValue="countryName" [(ngModel)]="manufacturerModel.locCountry" (scrollToEnd)="getCountryData({})" (keyup.backspace)="getCountryData($event.target.value ? $event : 'back')" (clear)="getCountryData('clear')"
+                  [loading]="countryScrollsync" loadingText="Loading..."
+                  [ngModelOptions]="{standalone: true}">
+                </ng-select>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div fxLayout="row">
+            <div class="form-group" fxFlex="30">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'COMMON_STATE' | translate }} </span>
+                <ng-select class="mat-body-1" (search)="getStateData($event)" (click)="getStateData({})"
+                  (scrollToEnd)="getStateData({})" (keyup.backspace)="getStateData($event.target.value ? $event : 'back')" (clear)="getStateData('clear')" [virtualScroll]="true" [loading]="stateScrollsync"
+                  loadingText="Loading..." (change)="selectedManufacturerStateComboValue($event)" [items]="statesList"
+                  bindLabel="stateName" bindValue="stateName" appendTo="body" [(ngModel)]="manufacturerModel.locState"
+                  [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+            </div>
+
+            <div fxFlex="30"></div>
+
+            <div fxFlex="40" fxLayoutAlign="end end">
+              <button mat-raised-button class="space" color="primary" (click)="searchManufacturer()" fxHide.sm
+                fxHide.xs>{{'COMMON_SEARCH' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                [matTooltipPosition]="'below'" (click)="searchManufacturer()" fxHide.gt-sm>
+                <mat-icon>search</mat-icon>
+              </button>
+  
+              <button mat-raised-button class="space" color="primary" (click)="clear()" fxHide.sm
+                fxHide.xs>{{'COMMON_CLEAR' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                [matTooltipPosition]="'below'" (click)="clear()" fxHide.gt-sm>
+                <mat-icon>clear_all</mat-icon>
+              </button>
+  
+              <button mat-raised-button class="space" color="primary" (click)="generateManufacturerReportExport()"
+                fxHide.sm fxHide.xs>{{'REPORT_EXPORT' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                [matTooltipPosition]="'below'" (click)="generateManufacturerReportExport()" fxHide.gt-sm>
+                <mat-icon>file_download</mat-icon>
+              </button>
+  
+            </div>
+
+          </div> 
+
+        </form>
+      </div>
+
+    </mat-expansion-panel>
+
+    <hr>
+
+    <mat-toolbar>
+      <span>{{'MENU_MANUFACTURER'| translate}} List</span>
+      <span class="example-spacer"></span>
+
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+      [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button color="primary" *ngIf="modelAccessModule.createFlagDisplay"  class="space sqr-btn"
+      matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+      (click)="createManufacturerSupplier(0,'add')"><mat-icon>add</mat-icon></button>
+
+      <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+      matTooltip="{{ 'COMMON_EDIT' | translate }}"  *ngIf="modelAccessModule.updateFlagDisplay"
+      (click)="createManufacturerSupplier(selectedItem,'edit')">
+      <mat-icon>edit</mat-icon></button>
+
+      <button [disabled]=" selectedItem == 0"  mat-raised-button color="primary" class="space sqr-btn"
+      *ngIf="modelAccessModule.readFlagDisplay"  matTooltip="{{ 'COMMON_VIEW' | translate }}"
+      (click)="createManufacturerSupplier( selectedItem,'view')">
+      <mat-icon>visibility</mat-icon></button>
+
+    </mat-toolbar>
+
+    <div fxLayout="row"  class="example-container">
+      <table mat-table [dataSource]="manufacturerdataSource" matSort (matSortChange)="customSort($event)"
+        matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlex="100">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data"><span>Select</span></th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectManufacturer(element)"
+                     [checked]="selectedItem.manufacturerId == element.manufacturerId">
+                    </mat-checkbox>
+                  </td>
+        </ng-container>
+        <ng-container matColumnDef="manufacturerCode">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'MANUFACTURER_CODE' | translate }} </th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.manufacturerCode}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="manufacturerName">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'MANUFACTURER' | translate }} </th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.manufacturerName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="manufacturerStatus">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'MANUFACTURER_STATUS' | translate }} </th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.manufacturerStatus}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="locState">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'COMMON_STATE' | translate }} </th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.locState}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="locCountry">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'COMMON_COUNTRY' | translate }} </th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.locCountry}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'COMMON_CREATED_BY' | translate }}</th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.createdBy}}</td>
+        </ng-container>
+        <ng-container matColumnDef="createdDt">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'COMMON_CREATED_DT' | translate }}</th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.createdDtDisp}}</td>
+        </ng-container>
+        <ng-container matColumnDef="updatedBy">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header>{{ 'COMMON_UPDATED_BY' | translate }}</th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.updatedBy}}</td>
+        </ng-container>
+        <ng-container matColumnDef="updatedDt">
+          <th mat-header-cell *matHeaderCellDef class="table-head-data" mat-sort-header> {{ 'COMMON_UPDATED_DT' | translate }}</th>
+          <td mat-cell class="table-cell-data" *matCellDef="let element" (click)="selectManufacturer(element)"> {{element.updatedDtDisp}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+        </tr>
+      </table>
+    </div>
+
+    
+    <div fxLayout="row">
+      <mat-card class="no_records_found" *ngIf="length=='0' && !subLoaderManufacturer">
+        {{'COMMON_NO_RECORDS_FOUND' | translate}}</mat-card>
+      <mat-card class="no_records_found" fxFlex="100" *ngIf="subLoaderManufacturer" fxLayoutAlign="center center">
+        <mat-spinner [diameter]="40"></mat-spinner>
+      </mat-card>
+    </div>
+
+  </div>
+
+  <!-- Manufacturer View -->
+  <ng-template #viewDialog>
+    <h2 matDialogTitle>View {{'MENU_MANUFACTURER' | translate}}</h2>
+    <mat-dialog-content>
+      <table class="model-table">
+        <tr>
+          <th>{{'MANUFACTURER' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.manufacturerName}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_AREA' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.area}}</td>
+        </tr>
+        <tr>
+          <th>{{ 'COMMON_COUNTRY' | translate }}</th>
+          <td>:</td>
+          <td>{{tempViewData?.locCountry}}</td>
+        </tr>
+        <tr>
+          <th>{{ 'COMMON_STATE' | translate }}</th>
+          <td>:</td>
+          <td>{{tempViewData?.locState}}</td>
+        </tr>
+        <tr>
+          <th>{{ 'COMMON_CITY' | translate }}</th>
+          <td>:</td>
+          <td>{{tempViewData?.locCity}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+        <tr>
+          <th>{{'COMMON_ADDRESS' | translate}}</th>
+          <td>:</td>
+          <td>{{tempViewData?.address}}</td>
+        </tr>
+      </table>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-raised-button mat-dialog-close (click)="cancel()"
+        color="primary">{{ 'COMMON_BACK' | translate }}</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+</div>

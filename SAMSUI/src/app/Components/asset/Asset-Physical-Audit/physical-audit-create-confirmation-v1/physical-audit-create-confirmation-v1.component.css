@@ -1,0 +1,88 @@
+
+/* .ceid-radio-group {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  margin-top: -15px;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.dialog-description {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.ceid-dialog-container {
+  padding: 24px;
+  overflow: hidden;
+  max-height: none;
+}
+
+.ceid-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.mat-header-cell {
+  background-color: #e0f7fa;
+  font-weight: 600;
+  color: #004d40;
+}
+
+.mat-cell, .mat-header-cell {
+  padding: 12px;
+  font-size: 13px;
+} */
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  margin-top: -1px;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.dialog-description {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+}
+
+.ceid-dialog-container {
+  max-height: 80vh;
+  overflow: hidden; 
+}
+
+.table-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  border: 1px solid #ddd;
+}
+
+.ceid-table {
+  width: 100%;
+  min-width: 100%;
+}
+
+.radio-group-wrapper {
+  margin-top: 1.5rem;
+}
+
+.ceid-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

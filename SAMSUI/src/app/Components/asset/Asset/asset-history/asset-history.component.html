@@ -1,0 +1,328 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row">
+    <div fxFlex="80" style="margin-left: 5px;">
+      <h6 class="dialogue-box-header">{{ 'COMMON_HISTORY' | translate}}</h6>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end start">
+      <!-- <button mat-raised-button class="space" color="primary" (click)="generateReport()">{{'REPORT_EXPORT' | translate}}</button> -->
+      <button mat-raised-button class="space" color="primary" (click)="exit()">{{'COMMON_BACK' | translate}}</button>
+    </div>
+  </div>
+
+  <div class="form-panel">
+    <mat-tab-group [selectedIndex]="selectedIndex" [@.disabled]="true">
+      <mat-tab label="{{'ASSET_HISTORY' | translate }}">
+
+        <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+        [pageSize]="pageSize" (page)="getServerData($event)" fxLayoutAlign="center center"></mat-paginator>
+
+        <mat-card>
+          <mat-card-content>
+          <div class="example-container">
+            <div>
+                <div fxLayout="row" class="asset-details-block">
+                  <div fxLayout="row" fxFlex="90">
+                    <div fxFlex="10" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                        <span>{{'ASSET_CODE' | translate}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>{{ 'ASSET_CATEGORY' | translate }}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>{{ 'ASSET_SUB_CATEGORY' | translate }}</span>
+                      </div>
+                    </div>
+        					  <div fxFlex="20" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                        <span>: {{asset.assetCode}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>: {{asset.assetCategoryName}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>: {{asset.subCategoryName}}</span>
+                      </div>
+                    </div>
+                    <div fxFlex="10" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                        <span>{{'ASSET_SERIAL_NO' | translate}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>{{ 'ASSET_GROUP' | translate }}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>{{ 'MODEL_NAME' | translate }}</span>
+                      </div>
+                    </div>
+					          <div fxFlex="20" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                         <span>: {{asset.serialNo}}</span>
+                      </div>
+                      <div fxFlex="30">
+                         <span>: {{ asset.assetGroupName}}</span>
+                      </div>
+                      <div fxFlex="30">
+                         <span>: {{asset.modelName}}</span>
+                      </div>
+                    </div>
+                    <div fxFlex="10" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                        <span>{{'COMMON_CREATED_BY' | translate}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>{{'COMMON_CREATED_DT' | translate}}</span>
+                      </div>
+                    </div>
+					          <div fxFlex="20" fxLayout="column" fxLayoutAlign="start">
+                      <div fxFlex="30">
+                        <span>: {{asset.createdBy}}</span>
+                      </div>
+                      <div fxFlex="30">
+                        <span>: {{asset.createdDtDisp}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div fxFlex="10">
+                  </div>
+                </div>
+            </div>
+
+          <table class="asset-history-table" mat-table [dataSource]="assetAuditList">
+            <ng-container matColumnDef="updatedDt" sticky>
+              <th mat-header-cell *matHeaderCellDef>{{'COMMON_UPDATED_DT' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="assetCode">
+              <th mat-header-cell *matHeaderCellDef> {{'ASSET_CODE' | translate}} </th>
+              <td mat-cell *matCellDef="let element" > {{element?.assetCode}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="serialNo">
+              <th mat-header-cell *matHeaderCellDef> {{'ASSET_SERIAL_NO' | translate}} </th>
+              <td mat-cell *matCellDef="let element" > {{element?.serialNo}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="equipmentCode">
+              <th mat-header-cell *matHeaderCellDef>{{'EQUIPMENT_CODE' | translate}}</th>
+              <td mat-cell *matCellDef="let element" > {{element?.equipmentCode}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="modelName">
+              <th mat-header-cell *matHeaderCellDef> {{'MODEL_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element" > {{element?.modelName}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="manufacturerName">
+              <th mat-header-cell *matHeaderCellDef> {{'MANUFACTURER' | translate}}</th>
+              <td mat-cell *matCellDef="let element" > {{element?.manufacturerName}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef> {{'ASSET_DESCRIPTION' | translate}} </th>
+              <td mat-cell *matCellDef="let element" >{{element?.description}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell *matHeaderCellDef>{{'DEPARTMENT_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.departmentName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="subDepartment">
+              <th mat-header-cell *matHeaderCellDef> {{'SUB_DEPARTMENT_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element" >{{element?.subDepartment}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ownershipType">
+              <th mat-header-cell *matHeaderCellDef>{{'ASSET_OWNERSHIP_TYPE' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.ownershipType}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="functionalStatus">
+              <th mat-header-cell *matHeaderCellDef>{{'ASSET_FUNCTIONALITY' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.functionalStatus}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="maintenanceStrategy">
+              <th mat-header-cell *matHeaderCellDef>{{'MAINTENANCE_STRATEGY' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.maintenanceStrategy}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pmMaintenanceStrategy">
+              <th mat-header-cell *matHeaderCellDef>{{'PM_STRATEGY' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.pmMaintenanceStrategy}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paMaintenanceStrategy">
+              <th mat-header-cell *matHeaderCellDef>{{'PA_STRATEGY' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.paMaintenanceStrategy}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="qaMaintenanceStrategy">
+              <th mat-header-cell *matHeaderCellDef>{{'QA_STRATEGY' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.qaMaintenanceStrategy}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="businessPartnerName">
+              <th mat-header-cell *matHeaderCellDef>{{'SUPPLIER_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.businessPartnerName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="businessPartnerSiteName">
+              <th mat-header-cell *matHeaderCellDef>{{'SUPPLIER_SITE_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.businessPartnerSiteName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="purchaseOrderNo">
+              <th mat-header-cell *matHeaderCellDef>{{'ASSET_PUR_ORD_NO' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.purchaseOrderNo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="purchaseDtDisp">
+              <th mat-header-cell *matHeaderCellDef>{{'ASSET_PUR_DATE' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.purchaseDtDisp}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalPurchaseAmt">
+              <th mat-header-cell *matHeaderCellDef>{{'ASSET_TOT_AMT' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.totalPurchaseAmt}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="transactionSrc">
+                <th mat-header-cell *matHeaderCellDef >{{'SOURCE_MODULE' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element?.transactionSrc | translate}} </td>
+            </ng-container>
+            <ng-container matColumnDef="statusType">
+              <th mat-header-cell *matHeaderCellDef >{{'STATUS_TYPE' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.statusType | translate}} </td>
+            </ng-container>
+            <ng-container matColumnDef="assetStatus">
+              <th mat-header-cell *matHeaderCellDef >{{'ASSET_STATUS' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.assetStatus | translate}} </td>
+            </ng-container>
+            <ng-container matColumnDef="assetCondition">
+              <th mat-header-cell *matHeaderCellDef >{{'ASSET_CONDITION' | translate}}</th>
+              <td mat-cell *matCellDef="let element"> {{element?.assetCondition | translate}} </td>
+            </ng-container>
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell *matHeaderCellDef> {{'LOCATION_NAME' | translate}} </th>
+              <td mat-cell *matCellDef="let element"> {{element?.locationName | translate}}  </td>
+            </ng-container>
+           
+
+            
+            <ng-container matColumnDef="remarks">
+              <th mat-header-cell *matHeaderCellDef> {{'COMMON_REMARKS' | translate}} </th>
+              <td mat-cell *matCellDef="let element"> {{element?.remarks | translate}}  </td>
+            </ng-container>
+            <ng-container matColumnDef="updatedBy">
+                <th mat-header-cell *matHeaderCellDef>{{'COMMON_UPDATED_BY' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-card class="no_records_found" fxLayoutAlign="center center" *ngIf="length=='0' && !subLoader">
+            {{'COMMON_NO_RECORDS_FOUND' | translate}}
+          </mat-card>
+
+          <mat-card *ngIf="subLoader" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="50"></mat-spinner>
+          </mat-card>
+        </div>
+              </mat-card-content>
+          </mat-card>
+      </mat-tab>
+
+        <!-- <mat-tab label="{{'ASSET_ASSIGEE_HISTORY' | translate }}">
+
+          <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]"
+          [length]="assigneeAuditLength" [pageIndex]="assigneePageIndex"
+          [pageSize]="assigneePageSize" (page)="assigneeGetServerData($event)" fxLayoutAlign="center center"></mat-paginator>
+
+          <mat-card>
+            <mat-card-content>
+              <div class="example-container">
+
+                <table class="asset-history-table" mat-table [dataSource]="assetAssigneeAuditList">
+
+                <ng-container matColumnDef="assignToEmpName">
+                  <th mat-header-cell *matHeaderCellDef >{{'ASSET_ASSIGNED_PERSON' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.assignToEmpName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="assignedPersonContactNumber">
+                  <th mat-header-cell *matHeaderCellDef >{{'COMMON_PHONE_NO' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.assignedPersonContactNumber}} </td>
+                </ng-container>
+                <ng-container matColumnDef="assignedPersonEmail">
+                  <th mat-header-cell *matHeaderCellDef >{{'COMMON_EMAIL_ID' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.assignedPersonEmail}} </td>
+                </ng-container>
+                <ng-container matColumnDef="departmentName">
+                  <th mat-header-cell *matHeaderCellDef> {{'DEPARTMENT_NAME' | translate}} </th>
+                  <td mat-cell *matCellDef="let element"> {{element?.departmentName}}  </td>
+                </ng-container>
+                <ng-container matColumnDef="assigneeTypeName">
+                  <th mat-header-cell *matHeaderCellDef>{{'ASSET_ASSIGNEE_TYPE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.assigneeTypeName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="rejectReason">
+                  <th mat-header-cell *matHeaderCellDef> {{'ASSIGNEE_APPROVE_STATUS_REASON' | translate}} </th>
+                  <td mat-cell *matCellDef="let element">{{element.approvalStatus}}
+                    <br /> {{element.rejectReason != 'null'?element.rejectReason:'-'}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="defaultPersonIncharge">
+                  <th mat-header-cell *matHeaderCellDef>{{'PERSON_INCHARGE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element" >{{ element?.defaultPersonIncharge }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="startDt">
+                  <th mat-header-cell *matHeaderCellDef>{{'ASSIGNED_START_DATE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.startDtDisp}} </td>
+                </ng-container>
+                <ng-container matColumnDef="endDt">
+                  <th mat-header-cell *matHeaderCellDef>{{'ASSINED_END_DATE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.endDtDisp}} </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef>{{'COMMON_UPDATED_BY' | translate}}</th>
+                    <td mat-cell *matCellDef="let element"> {{element?.updatedBy}} </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedDt" sticky>
+                  <th mat-header-cell *matHeaderCellDef>{{'COMMON_UPDATED_DT' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.updatedDtDisp}} </td>
+                </ng-container>
+                <ng-container matColumnDef="insertMode">
+                  <th mat-header-cell *matHeaderCellDef>{{'COMMON_MODE' | translate}}</th>
+                  <td mat-cell *matCellDef="let element"> {{element?.insertMode}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayAssigneeColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayAssigneeColumns;">
+                </tr>
+              </table>
+
+
+                <mat-card class="no_records_found" fxLayoutAlign="center center" *ngIf="assigneeAuditLength=='0' && !assigneeAuditSubLoader">
+                  {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                </mat-card>
+
+                <mat-card *ngIf="assigneeAuditSubLoader" fxLayoutAlign="center center">
+                  <mat-spinner [diameter]="50"></mat-spinner>
+                </mat-card>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab> -->
+      </mat-tab-group>
+  </div>
+</div>

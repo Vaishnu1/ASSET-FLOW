@@ -1,0 +1,20 @@
+<div fxLayout="column" fxFlex="100">
+    <div fxLayout="row">
+        <div fxFlex="90">
+            <h5 class="section_title dialogue-box-header">{{'MENU_WORKFLOW_APPROVAL' | translate}}</h5>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="end start">
+            <mat-icon class="close-icon-large close-icon" (click)="close('close')">highlight_off</mat-icon>
+        </div>
+    </div>
+
+    <mat-card class="card-style">
+        <mat-card-content>
+            <app-common-workflow-approval-tab [transactionId]=transactionId [transactionSource]=transactionSource
+                [AssetCodeChangeApproveButtonEnable]=approvebuttonEnable [AssetCodeChangeEmployeeId]=employeeId
+                (confirmAssetCodeChange)=assetWorkflowApproval(true)
+                (rejectAssetCodeChange)=assetWorkflowApproval(false)>
+            </app-common-workflow-approval-tab>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,1069 @@
+<div fxLayout="column" fxFlex="100">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-toolbar-row fxLayoutAlign="start center">
+            <mat-list aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+                <mat-list-item fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+                        <mat-icon class="small-icon">home</mat-icon>
+                    </a>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+                <mat-list-item fxLayoutAlign="start center" aria-current="page">
+                    {{'MENU_EMPLOYEE'| translate}} <mat-icon>keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+                <mat-list-item fxLayoutAlign="start center" aria-current="page">
+                    {{headingDisplay}}
+                </mat-list-item>
+            </mat-list>
+            <span class="example-spacer"></span>
+            <div fxFlex></div>
+
+            <button mat-raised-button class="space" color="primary" [tabindex]=50 (click)="exit()">
+                {{'COMMON_BACK' | translate}}</button>
+            <button mat-raised-button class="space" color="primary" (click)="clear()"
+                [disabled]="disableClear">{{'COMMON_CLEAR' | translate}}</button>
+            <button mat-raised-button class="space" [tabindex]=51
+                [disabled]="employeeForm.invalid || uploadFlag || !formThreeValid" (click)="submit()" color="primary">
+                <span *ngIf="!uploadFlag">{{displayButton}}</span>
+                <span *ngIf="uploadFlag">{{'COMMON_LOADING'| translate}}</span></button>
+
+        </mat-toolbar-row>
+    </div>
+
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+        <form class="margin-fix" fxFlex="100" [formGroup]="employeeForm">
+            <div fxFlex="24">
+                <mat-card style="margin-top: 10px;">
+                    <mat-card-content>
+                        <span class="panel-header"> {{ 'COMMON_BASIC_INFORMATION' | translate }}</span>
+                        <div class="content-style basic-info-form mb-15">
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                    hintLabel="{{ CommonhintMsg.MAX_15 }}">
+                                    <mat-label class="input-label"> {{ 'EMPLOYEE_CODE' | translate }}
+                                        <span class="mandatory-style">*</span>
+                                    </mat-label>
+                                    <input matInput #employeeCodeFocus formControlName="employeeCode" [tabindex]=1
+                                        [maxlength]="15" (blur)="checkUniqueConstrainForEmployee()"
+                                        (keypress)="empCodeLengthCal()" oninput="this.value = this.value.toUpperCase()">
+                                    <mat-hint align="end">{{employeeForm.controls.employeeCode.value?.length || 0}}/15
+                                    </mat-hint>
+                                    <mat-error
+                                        *ngIf="employeeForm.controls.employeeCode.touched && employeeForm.controls.employeeCode.errors ">
+                                        <div class="err-field"
+                                            *ngIf="employeeForm.controls.employeeCode.errors.required">
+                                            {{ 'EMPLOYEE_CODE' | translate }} is Required </div>
+                                        <div class="err-field"
+                                            *ngIf="employeeForm.controls.employeeCode.errors.maxlength">
+                                            {{ 'EMPLOYEE_CODE' | translate }} Max\ Length is 15 </div>
+                                        <div *ngIf="employeeForm.controls.employeeCode.errors.notUnique">{{ErrorMsg}}
+                                        </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <span class="input-label">{{ 'EMPLOYEE_TITLE' | translate }} <span
+                                        class="mandatory-style">*</span> </span>
+                                <ng-select class=" input-field" formControlName="employeeTitle" [items]="employeeTitle"
+                                    bindLabel="name" bindValue="name" required>
+                                </ng-select>
+                                <mat-error
+                                    *ngIf="employeeForm.controls.employeeTitle.errors && employeeForm.controls.employeeTitle.touched">
+                                    <div class="err-field" *ngIf="employeeForm.controls.employeeTitle.errors.required">
+                                        {{ 'EMPLOYEE_TITLE' | translate }} is Required </div>
+                                </mat-error>
+                            </div>
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                    hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                    <mat-label class="input-label"> {{'EMPLOYEE_FIRST_NAME' | translate}}
+                                        <span class="mandatory-style">*</span>
+                                    </mat-label>
+                                    <input matInput class="input-field" formControlName="employeeFirstName" [tabindex]=2
+                                        [maxlength]="100" oninput="this.value = this.value.toUpperCase()"
+                                        (blur)="empDataInput('employeeFirstName')">
+                                    <mat-hint align="end">
+                                        {{employeeForm.controls.employeeFirstName.value?.length || 0}}/100</mat-hint>
+                                    <mat-error
+                                        *ngIf="employeeForm.controls.employeeFirstName.invalid && employeeForm.controls.employeeFirstName.touched">
+                                        <div class="err-field"
+                                            *ngIf="employeeForm.controls.employeeFirstName.errors.required">
+                                            {{'EMPLOYEE_FIRST_NAME' | translate}} is Required </div>
+                                        <div class="err-field"
+                                            *ngIf="employeeForm.controls.employeeFirstName.errors.maxlength">
+                                            {{'EMPLOYEE_FIRST_NAME' | translate}} Max Length is 100 </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                    hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                    <mat-label class="input-label"> {{'EMPLOYEE_LAST_NAME' | translate}} </mat-label>
+                                    <input matInput class="input-field" formControlName="employeeLastName" [tabindex]=3
+                                        (blur)="empDataInput('employeeLastName')" [maxlength]="100"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <mat-hint align="end">
+                                        {{employeeForm.controls.employeeLastName.value?.length || 0}}/100</mat-hint>
+                                    <mat-error
+                                        *ngIf="employeeForm.controls.employeeLastName.invalid && employeeForm.controls.employeeLastName.touched">
+                                        <div class="err-field"
+                                            *ngIf="employeeForm.controls.employeeLastName.errors.maxlength">
+                                            {{'EMPLOYEE_LAST_NAME' | translate}} Max Length is 100 </div>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <span class="input-label">{{ 'DEPARTMENT_NAME' | translate }}<span
+                                        class="mandatory-style">*</span>
+                                </span>
+                                <ng-select class=" input-field" [tabindex]=4 formControlName="departmentName"
+                                    (search)="listOfDepartment({})" (click)="listOfDepartment({})"
+                                    (change)="getDepartmentValue($event)" [items]="departmentList"
+                                    [virtualScroll]="true" (scrollToEnd)="listOfDepartment({})"
+                                    (keyup.backspace)="listOfDepartment($event.target.value ? $event : 'back')"
+                                    (clear)="listOfDepartment('clear')" [loading]="scrollDepartmentNamesync"
+                                    dropdownPosition=top bindLabel="departmentName" bindValue="departmentName" required>
+                                </ng-select>
+                                <mat-error
+                                    *ngIf="employeeForm.controls.departmentName.invalid && employeeForm.controls.departmentName.touched">
+                                    <div class="err-field" *ngIf="employeeForm.controls.departmentName.errors.required">
+                                        {{'DEPARTMENT_NAME' | translate}} is Required </div>
+                                </mat-error>
+                            </div>
+
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                    <mat-label class="input-label"> {{'EMPLOYEE_DATE_OF_JOINING' | translate}}
+                                    </mat-label>
+                                    <input matInput class="input-field" (click)="picker.open()" [matDatepicker]="picker"
+                                        (keypress)="dateValidation($event)" formControlName="dateOfJoiningDisp"
+                                        [tabindex]=5 (dateChange)="getJoinDate($event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group basic-info-form-fields h-55-px">
+                                <div class="example-full-width">
+                                    <mat-checkbox class="input-label" color="primary" formControlName="serviceEngineer"
+                                        [tabindex]=11>
+                                        {{'SERVICE_ENGINEER' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div fxFlex="1"></div>
+
+            <div fxFlex="75" [@.disabled]="true">
+                <mat-tab-group>
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Office Information
+                            <div>
+                                <mat-icon class="mandatory-style" *ngIf="!formOneValid" aria-hidden="true">error
+                                </mat-icon>
+                            </div>
+                        </ng-template>
+                        <mat-card style="height: 250px;">
+                            <mat-card-content>
+                                <div fxLayout="row">
+                                    <div fxFlex="30" class="pdt-7-px">
+                                        <div class="form-group basic-info-form-fields">
+                                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                hintLabel="{{ CommonhintMsg.MAX_15 }}">
+                                                <mat-label class="input-label">
+                                                    {{'EMPLOYEE_OFFICE_CONTACT_NO' | translate}}
+                                                </mat-label>
+                                                <input matInput class="input-field" formControlName="officeContactNo"
+                                                    [tabindex]=6 [maxlength]="15" [minlength]="10"
+                                                    (input)="formOneValidation()">
+                                                <mat-hint align="end">
+                                                    {{employeeForm.controls.officeContactNo.value?.length || 0}}/15
+                                                </mat-hint>
+                                                <mat-error
+                                                    *ngIf="employeeForm.controls.officeContactNo.invalid && employeeForm.controls.officeContactNo.touched">
+                                                    <div *ngIf="employeeForm.controls.officeContactNo.errors.maxlength">
+                                                        {{'EMPLOYEE_OFFICE_CONTACT_NO' | translate}} Max Length is 15
+                                                    </div>
+                                                    <div *ngIf="employeeForm.controls.officeContactNo.errors.minlength">
+                                                        {{'EMPLOYEE_OFFICE_CONTACT_NO' | translate}} Min Length is 10
+                                                    </div>
+                                                    <div *ngIf="employeeForm.controls.officeContactNo.errors.pattern">
+                                                        {{'EMPLOYEE_OFFICE_CONTACT_NO' | translate}} contains only
+                                                        Numbers
+                                                    </div>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div fxFlex="5"></div>
+                                    <div fxFlex="30" class="pdt-7-px">
+                                        <div class="form-group basic-info-form-fields">
+                                            <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                                                <mat-label class="input-label">
+                                                    {{'EMPLOYEE_OFFICE_EMAIL_ID' | translate}}
+                                                </mat-label>
+                                                <input matInput class="input-field" formControlName="officeEmailId"
+                                                    [tabindex]=7 [maxlength]="50" (input)="formOneValidation()"
+                                                    autocomplete="email">
+                                                <mat-hint align="end">
+                                                    {{employeeForm.controls.officeEmailId.value?.length || 0}}/50
+                                                </mat-hint>
+                                                <mat-error
+                                                    *ngIf="employeeForm.controls.officeEmailId.invalid && employeeForm.controls.officeEmailId.touched">
+                                                    <div *ngIf="employeeForm.controls.officeEmailId.errors.required">
+                                                        {{'EMPLOYEE_OFFICE_EMAIL_ID' | translate}} is Required </div>
+                                                    <div *ngIf="employeeForm.controls.officeEmailId.errors.maxlength">
+                                                        {{'EMPLOYEE_OFFICE_EMAIL_ID' | translate}} Max Length is 50
+                                                    </div>
+                                                    <div *ngIf="employeeForm.controls.officeEmailId.errors.pattern">
+                                                        {{'EMPLOYEE_OFFICE_EMAIL_ID' | translate}} Should be xxx@yyy.zzz
+                                                        format
+                                                    </div>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div fxFlex="5"></div>
+                                    <div fxFlex="30" class="mt-2-px">
+                                        <div class="form-group basic-info-form-fields">
+                                            <div class="example-full-width">
+                                                <span class="input-label">{{ 'EMPLOYEE_STATUS' | translate }}<span
+                                                        class="mandatory-style">*</span>
+                                                </span>
+                                                <ng-select class=" input-field" [items]="employeeStatus"
+                                                    bindLabel="name" formControlName="employeeStatus" bindValue="name"
+                                                    [tabindex]=8 (change)="getStatus($event); formOneValidation()"
+                                                    style="margin-bottom:2px !important;" required>
+                                                </ng-select>
+                                                <mat-error
+                                                    *ngIf="employeeForm.controls.employeeStatus.invalid && employeeForm.controls.employeeStatus.touched">
+                                                    <div *ngIf="employeeForm.controls.employeeStatus.errors.required"
+                                                        style="font-size:12px;"> {{'EMPLOYEE_STATUS' | translate}} is
+                                                        Required
+                                                    </div>
+                                                </mat-error>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div fxLayout="row">
+                                    <div fxFlex="30" *ngIf="getEmployeeStatus()">
+                                        <div class="form-group basic-info-form-fields">
+                                            <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                <mat-label class="input-label">
+                                                    {{'EMPLOYEE_DATE_OF_RELIEVING' | translate}}
+                                                </mat-label>
+                                                <input matInput class="input-field" (click)="picker1.open()"
+                                                    [matDatepicker]="picker1" (keypress)="dateValidation1($event)"
+                                                    formControlName="dateOfRelievingDisp" [tabindex]=9
+                                                    [min]="employeeForm.controls.dateOfJoiningDisp.value"
+                                                    (dataChange)="getRevievingDate($event)">
+                                                <mat-datepicker-toggle matSuffix [for]="picker1">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #picker1></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div fxFlex="5" *ngIf="getEmployeeStatus()"></div>
+                                    <div fxFlex="30">
+                                        <div class="form-group basic-info-form-fields emp-ng-select-fields">
+                                            <span class="input-label">{{ 'DESIGNATION_NAME' | translate }}<span
+                                                    class="mandatory-style">*</span>
+                                            </span>
+                                            <ng-select class=" input-field" formControlName="designationName"
+                                                (search)="listOfDesignation($event)" (click)="listOfDesignation({})"
+                                                (change)="getDesignationValue($event);formOneValidation()"
+                                                [items]="designationList" [virtualScroll]="true"
+                                                (scrollToEnd)="listOfDesignation({})"
+                                                (keyup.backspace)="listOfDesignation($event.target.value ? $event : 'back')"
+                                                (clear)="listOfDesignation('clear')" [loading]="scrollDesignationsync"
+                                                bindLabel="designationName" bindValue="designationName" appendTo="body"
+                                                required>
+                                            </ng-select>
+                                            <mat-error
+                                                *ngIf="employeeForm.controls.designationName.invalid && employeeForm.controls.designationName.touched">
+                                                <div *ngIf="employeeForm.controls.designationName.errors.required"
+                                                    class="err-field"> {{'DESIGNATION_NAME' | translate}} is
+                                                    Required
+                                                </div>
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div fxLayout="row">
+                                    <p>Note : Employee replace for option under developement</p>
+                                </div>
+
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Branch Access
+                            <div>
+                                <mat-icon class="mandatory-style" *ngIf="!formThreeValid" aria-hidden="true">error
+                                </mat-icon>
+                            </div>
+                        </ng-template>
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style mt-30">
+                                    <div class="example-container">
+                                        <table mat-table [dataSource]="locationAccessDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="locName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'LOCATION' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.accessLocName}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="assign">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_ASSIGN' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element;let i = index;">
+                                                    <mat-checkbox [(ngModel)]="element.empLocSelected"
+                                                        [ngModelOptions]="{standalone: true}" color="primary"
+                                                        class="example-margin" (change)="onChange($event, i, element)"
+                                                        [disabled]="element.empUserDefaultLocId===element.accessLocId">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="DefaultLoc">
+                                                <th mat-header-cell *matHeaderCellDef style="width: 150px;">
+                                                    {{'DEFAULT_BRANCH' | translate}}
+                                                    <div>
+                                                        <mat-icon class="mandatory-style" *ngIf="selectedItem == 0"
+                                                            aria-hidden="true">error
+                                                        </mat-icon>
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element;let i = index;">
+                                                    <mat-checkbox [(ngModel)]="element.defaultLocation"
+                                                        [ngModelOptions]="{standalone: true}" color="primary"
+                                                        class="example-margin"
+                                                        (change)="selectEmployeeDefaultLocation(element)"
+                                                        [checked]="selectedItem == element?.accessLocId"
+                                                        [disabled]="!element.empLocSelected">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="locationAccessDispCol"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: locationAccessDispCol;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+
+                    </mat-tab>
+
+                    <mat-tab label="Designation">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div fxLayout="column" class="mb-15" fxLayoutAlign="end end">
+                                        <!-- <mat-icon color="primary" aria-hidden="true"
+                                            (click)="employeeDesignationAddEdit(0)" style="cursor: pointer;">add_circle
+                                        </mat-icon> -->
+                                        <div class="plus-icon add-circle-icon" aria-hidden="true"
+                                            (click)="employeeDesignationAddEdit(0)"></div>
+                                    </div>
+                                    <div class="example-container">
+                                        <table mat-table fxFlex="100" [dataSource]="designationDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="designationName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'DESIGNATION_NAME' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.designationName}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="fromDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_FROM_DATE' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.fromDateDisp}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="tillDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_TO_DATE' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.tillDateDisp}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="reportingPersonName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_REPORTING_MANAGER' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.reportingPersonName}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="reportingHodName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_REPORTING_HOD' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.reportingHodName}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;">
+                                                    <mat-icon color="primary" class="action_icon"
+                                                        (click)="DeleteDesignation(element.employeeDesignationId,i)">
+                                                        delete
+                                                    </mat-icon>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="designationDispCol;sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: designationDispCol;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            {{'USER_PERSONAL_INFO' | translate }}
+                        </ng-template>
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style mt-15 mb-15">
+                                    <div class="row">
+
+                                        <div fxlayout="row">
+                                            <div fxFlex="30" class="form-group basic-info-form-fields">
+                                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                    hintLabel="{{ CommonhintMsg.MAX_15 }}">
+                                                    <mat-label class="input-label">
+                                                        {{'EMPLOYEE_CONTACT_NO' | translate}}
+                                                    </mat-label>
+                                                    <input matInput formControlName="personalContactNo" [tabindex]=15
+                                                        [maxlength]="15" [minlength]="10">
+                                                    <mat-hint align="end">
+                                                        {{employeeForm.controls.personalContactNo.value?.length ||
+                                                        0}}/15
+                                                    </mat-hint>
+                                                    <mat-error
+                                                        *ngIf="employeeForm.controls.personalContactNo.invalid && employeeForm.controls.personalContactNo.touched">
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalContactNo.errors.pattern">
+                                                            {{'EMPLOYEE_CONTACT_NO' | translate}} contains only
+                                                            Numbers
+                                                        </div>
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalContactNo.errors.maxlength">
+                                                            {{'EMPLOYEE_CONTACT_NO' | translate}} Max Length is 15
+                                                        </div>
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalContactNo.errors.minlength">
+                                                            {{'EMPLOYEE_CONTACT_NO' | translate}} Min Length is 10
+                                                        </div>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div fxFlex="5">
+                                            </div>
+
+                                            <div fxFlex="30" class="form-group basic-info-form-fields">
+                                                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                                                    <mat-label class="input-label">
+                                                        {{'EMPLOYEE_DATE_OF_BIRTH' | translate}}</mat-label>
+                                                    <input matInput (click)="picker2.open()" formControlName="dobDisp"
+                                                        [matDatepicker]="picker2" (keypress)="dateValidationdob($event)"
+                                                        [tabindex]=17>
+                                                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #picker2></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div fxFlex="5">
+                                            </div>
+
+                                            <div fxFlex="30" class="form-group basic-info-form-fields">
+                                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                    hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                    <mat-label class="input-label">
+                                                        {{'EMPLOYEE_FATHER_NAME' | translate}}
+                                                    </mat-label>
+                                                    <input matInput [tabindex]=16 formControlName="fatherName"
+                                                        [maxlength]="100">
+                                                    <mat-hint align="end">
+                                                        {{employeeForm.controls.fatherName.value?.length || 0}}/100
+                                                    </mat-hint>
+                                                    <mat-error
+                                                        *ngIf="employeeForm.controls.fatherName.invalid && employeeForm.controls.fatherName.touched">
+                                                        <div *ngIf="employeeForm.controls.fatherName.errors.maxlength">
+                                                            {{'EMPLOYEE_FATHER_NAME' | translate}} Max Length is 100
+                                                        </div>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div fxlayout="row">
+                                            <div fxFlex="30" class="form-group basic-info-form-fields">
+                                                <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                    hintLabel="{{ CommonhintMsg.MAX_50 }}">
+                                                    <mat-label class="input-label">
+                                                        {{'COMMON_EMAIL_ID' | translate}}
+                                                    </mat-label>
+                                                    <input matInput formControlName="personalEmailId" [tabindex]=15
+                                                        [maxlength]="50">
+                                                    <mat-hint align="end">
+                                                        {{employeeForm.controls.personalEmailId.value?.length || 0}}/50
+                                                    </mat-hint>
+                                                    <mat-error
+                                                        *ngIf="employeeForm.controls.personalEmailId.invalid && employeeForm.controls.personalEmailId.touched">
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalEmailId.errors.required">
+                                                            {{'COMMON_EMAIL_ID' | translate}} is Required </div>
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalEmailId.errors.maxlength">
+                                                            {{'COMMON_EMAIL_ID' | translate}} Max Length is 50
+                                                        </div>
+                                                        <div
+                                                            *ngIf="employeeForm.controls.personalEmailId.errors.pattern">
+                                                            {{'COMMON_EMAIL_ID' | translate}} Should be xxx@yyy.zzz
+                                                            format
+                                                        </div>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div fxFlex="5">
+                                            </div>
+                                            <div fxFlex="30"
+                                                class="form-group basic-info-form-fields emp-ng-select-fields mt--7-px">
+                                                <span class="input-label">{{ 'EMPLOYEE_BLOOD_GROUP' | translate
+                                                    }}</span>
+                                                <ng-select formControlName="bloodGroup" [items]="bloodGroupList"
+                                                    bindLabel="name" [tabindex]=18 bindValue="name">
+                                                </ng-select>
+                                            </div>
+                                            <div fxFlex="5">
+                                            </div>
+                                            <div fxFlex="30" class="form-group basic-info-form-fields ">
+                                                <div class="form-group basic-info-form-fields emp-ng-select-fields">
+                                                    <span class="input-label">{{ 'EMPLOYEE_GENDER' | translate }}</span>
+                                                    <ng-select formControlName="gender" [items]="gender"
+                                                        bindLabel="name" [tabindex]=19 bindValue="name">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div fxlayout="row">
+                                            <div fxFlex="50" class="form-group basic-info-form-fields mt-2-px">
+                                                <span class="input-label">Image Upload</span>
+
+                                                <br>
+                                                <input class="input-field" type="file"
+                                                    onclick="$('#imgupload').trigger('click');"
+                                                    (change)="handleFileInput($event.target.files)"
+                                                    fromControlName="imagePath"
+                                                    accept=".PNG, .png, JPEG, .jpeg, JPG, .jpg, .GIF, .gif"
+                                                    style="width:72%;" #fileInput_1>
+                                                <img src="{{empUrl}}{{imgPath}}" *ngIf="empImg"
+                                                    style="width:60px; height:60px;" alt="Image">
+                                                <input style="display:none" id="imgupload" />
+                                                <input style="display:none" id="imgupload" name="empImage"
+                                                    formControlName="imagePath" />
+                                            </div>
+                                            <div fxFlex="35" class="form-group basic-info-form-fields mt-2-px">
+                                                <span class="input-label">Signature Upload</span>
+
+                                                <br>
+                                                <input class="input-field" type="file"
+                                                    onclick="$('#signUpload').trigger('click');"
+                                                    (change)="signatureHandleFileInput($event.target.files)"
+                                                    fromControlName="filePath"
+                                                    accept=".PNG, .png, JPEG, .jpeg, JPG, .jpg" style="width:72%;"
+                                                    #fileInput_1>
+                                                <img src="{{empUrl}}" 
+                                                    style="width:60px; height:60px;" alt="Image">
+                                                <input style="display:none" id="signUpload" />
+                                                <input style="display:none" id="signUpload" name="empSignature"
+                                                    formControlName="filePath" />
+                                            </div>
+                                        </div>
+                                        <div fxlayout="row" class="rowstyle">
+                                            <div class="form-group frmstyle">
+                                                <span class="panel-header">
+                                                    {{'EMPLOYEE_RESIDENTIAL_ADDRESS' | translate}}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div fxlayout="row">
+                                            <div fxlayout="column" fxFlex="47">
+                                                <div class="form-group basic-info-form-fields">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">
+                                                            {{'COMMON_STREET' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="resAddress1" [tabindex]=22
+                                                            [maxlength]="100" (change)="SameAddresses_Change(true)">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.resAddress1.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.resAddress1.invalid && employeeForm.controls.resAddress1.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.resAddress1.errors.maxlength47">
+                                                                {{'COMMON_STREET' | translate}} Max Length is 100 </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="form-group basic-info-form-fields">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label"> {{'COMMON_AREA' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="resAddress2" [tabindex]=23
+                                                            [maxlength]="100" (change)="SameAddresses_Change(true)">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.resAddress2.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.resAddress2.invalid && employeeForm.controls.resAddress2.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.resAddress2.value.maxlength">
+                                                                {{'COMMON_AREA' | translate}} Max Length is 100 </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div
+                                                    class="form-group basic-info-form-fields emp-ng-select-fields example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}
+                                                    </span>
+                                                    <ng-select formControlName="resCountry" [tabindex]=24
+                                                        [items]="RescountriesList" (search)="getResCountryData($event)"
+                                                        (click)="getResCountryData({})"
+                                                        (change)="getResCountryValue($event); SameAddresses_Change(true);"
+                                                        bindLabel="countryName" bindValue="countryName"
+                                                        [virtualScroll]="true" (scrollToEnd)="getResCountryData({})"
+                                                        (keyup.backspace)="getResCountryData($event.target.value ? $event : 'back')"
+                                                        (clear)="getResCountryData('clear')"
+                                                        [loading]="scrollCountryForm1sync">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+
+                                            <div fxlayout="column" fxFlex="6"></div>
+
+                                            <div fxlayout="column" fxFlex="47">
+                                                <div
+                                                    class="form-group basic-info-form-fields emp-ng-select-fields mt--7-px example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_STATE' | translate }}
+                                                    </span>
+                                                    <ng-select [tabindex]=25 formControlName="resState"
+                                                        [items]="ResstatesList" bindLabel="stateName"
+                                                        (search)="getResStateData($event)" (click)="getResStateData({})"
+                                                        (change)="getResStateValue($event); SameAddresses_Change(true)"
+                                                        bindValue="stateName" [virtualScroll]="true"
+                                                        (scrollToEnd)="getResStateData({})"
+                                                        (keyup.backspace)="getResStateData($event.target.value ? $event : 'back')"
+                                                        (clear)="getResStateData('clear')"
+                                                        [loading]="scrollStateForm1sync">
+                                                    </ng-select>
+                                                </div>
+                                                <div
+                                                    class="form-group basic-info-form-fields  emp-ng-select-fields mt--7-px example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_CITY' | translate }}
+                                                    </span>
+                                                    <ng-select [tabindex]=26 formControlName="resCity"
+                                                        [items]="resCitiesList" bindLabel="cityName"
+                                                        (search)="getResCityData($event)" (click)="getResCityData({})"
+                                                        (change)="getResCityList($event); SameAddresses_Change(true)"
+                                                        bindValue="cityName" [virtualScroll]="true"
+                                                        (scrollToEnd)="getResCityData({})"
+                                                        (keyup.backspace)="getResCityData($event.target.value ? $event : 'back')"
+                                                        (clear)="getResCityData('clear')"
+                                                        [loading]="scrollCityForm1sync">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="form-group basic-info-form-fields mt-10-px">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                                                        <mat-label class="input-label">
+                                                            {{'COMMON_ZIP_CODE' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="resPostalCd" [maxlength]="10"
+                                                            [tabindex]=27 (change)="SameAddresses_Change(true)"
+                                                            oninput="this.value = this.value.toUpperCase()">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.resPostalCd.value?.length || 0}}/10
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.resPostalCd.invalid && employeeForm.controls.resPostalCd.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.resPostalCd.errors?.maxlength">
+                                                                {{ 'COMMON_ZIP_CODE' | translate }} Maximum Length is 10
+                                                            </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="form-group basic-info-form-fields">
+                                                <div class="input-label">
+                                                    <mat-checkbox formControlName="sameAdd" color="primary"
+                                                        (change)="SameAddresses_Change(true)" [tabindex]=28>
+                                                        {{'EMPLOYEE_SAME_AS_RESIDENTAIL_ADDRESS' | translate}}
+                                                    </mat-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row rowstyle">
+                                            <div class="form-group frmstyle">
+                                                <span class="panel-header">
+                                                    {{'EMPLOYEE_PERMANENT_ADDRESS' | translate}}
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                        <div fxlayout="row" style="min-height: 280px;">
+                                            <div fxlayout="column" fxFlex="47">
+                                                <div class="form-group basic-info-form-fields">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label">
+                                                            {{'COMMON_STREET' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="pmtAddress1" [tabindex]=29
+                                                            [maxlength]="100">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.pmtAddress1.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.pmtAddress1.invalid && employeeForm.controls.pmtAddress1.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.pmtAddress1.errors.maxlength">
+                                                                {{'COMMON_STREET' | translate}} Max Length is 100 </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="form-group basic-info-form-fields">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                                                        <mat-label class="input-label"> {{'COMMON_AREA' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="pmtAddress2" [tabindex]=30
+                                                            [maxlength]="100">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.pmtAddress2.value?.length || 0}}/100
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.pmtAddress2.invalid && employeeForm.controls.pmtAddress2.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.pmtAddress2.errors.maxlength">
+                                                                {{'COMMON_AREA' | translate}} Max Length is 100 </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div
+                                                    class="form-group basic-info-form-fields  emp-ng-select-fields example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_COUNTRY' | translate }}
+                                                    </span>
+                                                    <ng-select formControlName="pmtCountry" [tabindex]=31
+                                                        [items]="PmtcountriesList" (search)="getPmtCountryData($event)"
+                                                        (click)="getPmtCountryData({})"
+                                                        (change)="getPmtCountryValue($event)" [virtualScroll]="true"
+                                                        (scrollToEnd)="getPmtCountryData({})"
+                                                        (keyup.backspace)="getPmtCountryData($event.target.value ? $event : 'back')"
+                                                        (clear)="getPmtCountryData('clear')"
+                                                        [loading]="scrollCountryForm2sync" dropdownPosition=top
+                                                        bindLabel="countryName" bindValue="countryName">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                            <div fxlayout="column" fxFlex="6"></div>
+
+                                            <div fxlayout="column" fxFlex="47">
+                                                <div
+                                                    class="form-group basic-info-form-fields emp-ng-select-fields mt--7-px example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_STATE' | translate }}
+                                                    </span>
+                                                    <ng-select [tabindex]=32 formControlName="pmtState"
+                                                        [items]="PmtstatesList" bindLabel="stateName"
+                                                        (search)="getPmtStateData($event)" (click)="getPmtStateData({})"
+                                                        (change)="getPmtStateValue($event)" [virtualScroll]="true"
+                                                        (scrollToEnd)="getPmtStateData({})"
+                                                        (keyup.backspace)="getPmtStateData($event.target.value ? $event : 'back')"
+                                                        (clear)="getPmtStateData('clear')"
+                                                        [loading]="scrollStateForm2sync" dropdownPosition=top
+                                                        bindValue="stateName">
+                                                    </ng-select>
+                                                </div>
+                                                <div
+                                                    class="form-group basic-info-form-fields emp-ng-select-fields mt--7-px example-full-width">
+                                                    <span class="input-label">{{ 'COMMON_CITY' | translate }}
+                                                    </span>
+                                                    <ng-select [tabindex]=322 formControlName="pmtCity"
+                                                        [items]="pmtCitiesList" bindLabel="cityName"
+                                                        (search)="getPmtCityData($event)" (click)="getPmtCityData({})"
+                                                        (change)="getPmtCityList($event)" [virtualScroll]="true"
+                                                        (scrollToEnd)="getPmtCityData({})"
+                                                        (keyup.backspace)="getPmtCityData($event.target.value ? $event : 'back')"
+                                                        (clear)="getPmtCityData('clear')"
+                                                        [loading]="scrollCityForm2sync" dropdownPosition=top
+                                                        bindValue="cityName">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="form-group basic-info-form-fields mt-10-px">
+                                                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                                                        hintLabel="{{ CommonhintMsg.MAX_10_DIG }}">
+                                                        <mat-label class="input-label">
+                                                            {{'COMMON_ZIP_CODE' | translate}}
+                                                        </mat-label>
+                                                        <input matInput formControlName="pmtPostalCode"
+                                                            oninput="this.value = this.value.toUpperCase()"
+                                                            [tabindex]=34 [maxlength]="10">
+                                                        <mat-hint align="end">
+                                                            {{employeeForm.controls.pmtPostalCode.value?.length ||
+                                                            0}}/10
+                                                        </mat-hint>
+                                                        <mat-error
+                                                            *ngIf="employeeForm.controls.pmtPostalCode.invalid && employeeForm.controls.pmtPostalCode.touched">
+                                                            <div class="err-field"
+                                                                *ngIf="employeeForm.controls.pmtPostalCode.errors?.maxlength">
+                                                                {{ 'COMMON_ZIP_CODE' | translate }} Maximum Length is 10
+                                                            </div>
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab label="Skill Training">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div fxLayout="column" class="mb-15" fxLayoutAlign="end end">
+                                        <!-- <mat-icon aria-hidden="true" (click)="employeeSkillsAddEdit(0)" color="primary"
+                                            style="cursor: pointer;">add_circle</mat-icon> -->
+                                        <div class="plus-icon add-circle-icon" (click)="employeeSkillsAddEdit(0)"></div>
+                                    </div>
+
+                                    <div class="example-container">
+                                        <table fxFlex="100" mat-table [dataSource]="skillTraingDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="skillName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_SKILL_NAME' | translate}}</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.skillName}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="noOfYears">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_NO_OF_YEARS' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.noOfYears}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="level">
+                                                <th mat-header-cell *matHeaderCellDef> {{'EMPLOYEE_LEVEL' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.level}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="remarks">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_REMARKS' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i = index;">
+                                                    <mat-icon color="primary" class="action_icon"
+                                                        (click)="DeleteSkill(element.employeeSkillId,i)">delete
+                                                    </mat-icon>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="skillTrainingDispCol;sticky: true">
+                                            </tr>
+                                            <tr mat-row *matRowDef="let element; columns: skillTrainingDispCol;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+
+                    </mat-tab>
+
+                    <mat-tab label="Experience">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+                                    <div fxLayout="column" class="mb-15" fxLayoutAlign="end end">
+                                        <!-- <mat-icon color="primary" aria-hidden="true"
+                                            (click)="employeeExperienceAddEdit(0)" style="cursor: pointer;">add_circle
+                                        </mat-icon> -->
+                                        <div class="plus-icon add-circle-icon" aria-hidden="true"
+                                            (click)="employeeExperienceAddEdit(0)"></div>
+                                    </div>
+
+                                    <div class="example-container">
+                                        <table mat-table fxFlex="100" [dataSource]="experienceDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="companyName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_COMPANY' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="startDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_FROM_DATE' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.startDateDisp}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="endDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_END_DATE' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.endDateDisp}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="designation">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'DESIGNATION_NAME' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.designation}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="address">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ADDRESS' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i = index;">
+                                                    <mat-icon color="primary" class="action_icon"
+                                                        (click)="DeleteExperience(element.employeeExperienceId,i)">
+                                                        delete</mat-icon>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="experienceDispCol;sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: experienceDispCol;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+
+                    <mat-tab label="Qualification">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="content-style">
+
+                                    <div fxLayout="row" class="mb-15" fxLayoutAlign="end end">
+                                        <!-- <mat-icon color="primary" aria-hidden="true"
+                                            (click)="employeeQualificationAddEdit(0)" style="cursor: pointer;">
+                                            add_circle</mat-icon> -->
+                                        <div class="plus-icon add-circle-icon" aria-hidden="true"
+                                            (click)="employeeQualificationAddEdit(0)"></div>
+                                    </div>
+
+                                    <div class="example-container">
+                                        <table mat-table fxFlex="100" [dataSource]="qualificationDataSource" matSort>
+                                            <ng-container matColumnDef="sno">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_S_NO' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;"> {{i+1}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="qualificationName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_QUALIFICATION' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.qualificationName}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="startDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_FROM_DATE' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.startDateDisp}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="completedDateDisp">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_TO_DATE' | translate}}</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.completedDateDisp}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="university">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_UNIVERSITY' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.university}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="percentage">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_PERCENTAGE' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.percentage}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="yearOfPassing">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    {{'EMPLOYEE_YEAR_OF_PASSED' | translate}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.yearOfPassing}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="action">
+                                                <th mat-header-cell *matHeaderCellDef> {{'COMMON_ACTION' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i=index;">
+                                                    <mat-icon color="primary" class="action_icon"
+                                                        (click)="DeleteQualification(element.employeeQualificationId,i)">
+                                                        delete</mat-icon>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="qualificationDispCol;sticky: true">
+                                            </tr>
+                                            <tr mat-row *matRowDef="let element; columns: qualificationDispCol;">
+                                        </table>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div fxLayout="column">
+  <div fxLayout="row">
+    <div fxFlex="90">
+      <h4 class="dialogue-box-header">Supplier Site</h4>
+    </div>
+
+    <div fxFlex="10" fxLayoutAlign="end start">
+      <mat-icon class="close-icon" (click)="closeSupplierSitePopUp()">highlight_off</mat-icon>
+    </div>
+  </div>
+  <form [formGroup]="supplierSiteFormGroup" fxLayout="column">
+
+    <div style="border: none;">
+      <span class="input-label"> {{'SUPPLIER_SITE_NAME' | translate }}<span class="mandatory-style">*</span> </span>
+        <ng-select class=" input-field" (search)="listOfSupplierApproved($event)"
+          (click)="listOfSupplierApproved({})" (change)="fetchIdOfSupplierApproved($event)"
+          formControlName="supplierSiteName" [virtualScroll]="true" (scrollToEnd)="listOfSupplierApproved({})" (keyup.backspace)="listOfSupplierApproved($event.target.value ? $event : 'back')" (clear)="listOfSupplierApproved('clear')"
+          [loading]="scrollApprovedSuppliersync" [items]="supplierLocationList" bindLabel="comboDisp"
+          bindValue="comboDisp">
+        </ng-select>
+    </div>
+  </form>
+  <div fxLayoutAlign="center center" style="margin-top: 20px;">
+    <button mat-raised-button color="primary" (click)="submitPurchaseSite()">
+      Add
+    </button>
+  </div>
+</div>

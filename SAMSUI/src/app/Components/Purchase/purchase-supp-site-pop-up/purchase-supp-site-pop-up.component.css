@@ -1,0 +1,12 @@
+.example-full-width {
+    width: 95%;
+  }
+
+  .mandatory-style {
+    color: crimson;
+  }
+
+  .font-style-combo {
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-weight: 480;
+  }

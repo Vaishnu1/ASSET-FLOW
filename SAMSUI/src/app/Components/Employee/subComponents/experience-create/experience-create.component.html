@@ -1,0 +1,83 @@
+<div fxLayout="column">
+  <div fxFlex="100"> 
+    <div fxLayout="row" class="mb-10"> 
+      <div fxFlex="95">
+        <h4 class="dialogue-box-header">{{'EMPLOYEE_EXPERIENCE_HEADING' | translate}}</h4>
+      </div>
+      
+      <div fxFlex="5" fxLayoutAlign="end start"> 
+        <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+      </div>
+    </div>
+   
+    <div fxLayout="row"> 
+      <form [formGroup]="empExperienceForm" fxFlex="100">  
+              <div class="form-group">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                  <mat-label class="input-label"> {{'EMPLOYEE_COMPANY' | translate}} </mat-label>
+                  <input matInput class="input-field" #companyNameF formControlName="companyName" required [maxlength]="100">
+                  <mat-hint align="end">{{empExperienceForm.controls.companyName.value?.length || 0}}/100</mat-hint>
+                  <mat-error *ngIf="empExperienceForm.controls.companyName.invalid && empExperienceForm.controls.companyName.touched">
+                    <div *ngIf="empExperienceForm.controls.companyName.errors.required"> {{'EMPLOYEE_COMPANY' | translate}} is
+                      Required </div>
+                    <div *ngIf="empExperienceForm.controls.companyName.errors.maxlength"> {{'EMPLOYEE_COMPANY' | translate}} Maximum length is 100 </div>
+                  </mat-error>
+                </mat-form-field>
+              </div>  
+                <div class="form-group">
+                  <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                    <mat-label class="input-label">{{'EMPLOYEE_START_DATE' | translate}}</mat-label>
+                      <input matInput class="input-field" (click)="picker.open()" [matDatepicker]="picker" 
+                      (keypress)="dateValidation($event)"  formControlName="startDateDisp" required (dateChange)="getFromDate($event)">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="empExperienceForm.controls.startDateDisp.invalid && empExperienceForm.controls.startDateDisp.touched">
+                        <div *ngIf="empExperienceForm.controls.startDateDisp.errors.required"> {{'EMPLOYEE_START_DATE' | translate}} is
+                          Required </div>
+                      </mat-error>
+                  </mat-form-field>
+                </div>  
+              <div class="form-group">
+                <mat-form-field  class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="input-label">{{'EMPLOYEE_END_DATE' | translate}}</mat-label>
+                  <input matInput class="input-field" (click)="picker1.open()" [matDatepicker]="picker1" 
+                  (keypress)="dateValidation1($event)" formControlName="endDateDisp" [min]="minToDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="empExperienceForm.controls.endDateDisp.invalid && empExperienceForm.controls.endDateDisp.touched">
+                      <div *ngIf="empExperienceForm.controls.endDateDisp.errors.required"> {{'EMPLOYEE_END_DATE' | translate}} is
+                        Required </div>
+                    </mat-error>
+                </mat-form-field>
+              </div>  
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                          <mat-label class="input-label"> {{ 'DESIGNATION_NAME' | translate }} <span class="mandatory-style"></span>
+                          </mat-label>
+                          <input matInput class="input-field" formControlName="designation" required [maxlength]="100">
+                          <mat-hint align="end">{{ empExperienceForm.controls.designation.value?.length || 0 }}/100</mat-hint>
+                          <mat-error *ngIf="empExperienceForm.controls.designation.invalid && empExperienceForm.controls.designation.touched">
+                            <div *ngIf="empExperienceForm.controls.designation.errors.required">
+                              {{ 'DESIGNATION_NAME' | translate }} is Required
+                            </div>
+                            <div *ngIf="empExperienceForm.controls.designation.errors.maxlength">
+                              {{ 'DESIGNATION_NAME' | translate }} Maximum length is 100
+                            </div>
+                          </mat-error>
+                        </mat-form-field>
+                <div class="form-group">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                    <mat-label class="input-label"> {{'COMMON_ADDRESS' | translate}} </mat-label>
+                    <textarea matInput class="input-field" formControlName="address" [maxlength]="100"></textarea>
+                    <mat-hint align="end">{{empExperienceForm.controls.address.value?.length || 0}}/100</mat-hint>
+                  </mat-form-field>
+                </div> 
+ 
+            <div fxLayout="row" class="mt-15" fxLayoutAlign="center center">
+              <button mat-raised-button type="button" class="space" (click)="addEmpExperience()" color="primary" 
+                    [disabled]="empExperienceForm.controls.companyName.invalid || !empExperienceForm.controls.companyName.dirty || empExperienceForm.controls.startDateDisp.invalid || !empExperienceForm.controls.startDateDisp.dirty || empExperienceForm.controls.endDateDisp.invalid || !empExperienceForm.controls.endDateDisp.dirty
+                    || empExperienceForm.controls.designation.invalid || !empExperienceForm.controls.designation.dirty">{{'COMMON_SUBMIT' | translate}}</button>  
+            </div> 
+        </form>
+      </div>
+    </div>
+  </div> 

@@ -1,0 +1,33 @@
+<mat-icon class="close-icon-small" (click)="cancel()">highlight_off</mat-icon>
+
+<div class="dash_board_model_title">
+  {{'MODEL' | translate }} ({{frame3Data.category}})
+</div>
+<div class="example-container">
+  <table mat-table [dataSource]="assetByModelList">
+
+    <ng-container matColumnDef="modelName">
+      <th mat-header-cell *matHeaderCellDef> {{ 'NAME' | translate }} </th>
+      <td (click)="loadAssetByModel(element.modelId,i,element.model)" mat-cell *matCellDef="let element; let i = index;"> {{element.model}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="manufacturerName">
+      <th mat-header-cell *matHeaderCellDef> {{ 'MANUFACTURER' | translate }} </th>
+      <td (click)="loadAssetByModel(element.modelId,i,element.model)" mat-cell *matCellDef="let element; let i = index;"> {{element.manufacturerName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modelcount">
+      <th mat-header-cell *matHeaderCellDef> {{ 'COUNT' | translate }} </th>
+      <td (click)="loadAssetByModel(element.modelId,i,element.model)" mat-cell *matCellDef="let element"> {{element.count}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modelvalue">
+      <th mat-header-cell *matHeaderCellDef> {{ 'VALUE' | translate }} {{currencySymbol}} </th>
+      <td (click)="loadAssetByModel(element.modelId,i,element.model)" mat-cell *matCellDef="let element" align="right"> {{element.value | number : '1.2-2'}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr (click)="loadAssetByModel(element.modelId,i,element.model)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>

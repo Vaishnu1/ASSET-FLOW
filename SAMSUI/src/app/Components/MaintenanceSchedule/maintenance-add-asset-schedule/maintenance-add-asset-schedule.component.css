@@ -1,0 +1,104 @@
+
+::ng-deep .mat-tooltip {
+    color: #000 !important;
+    background: #fff;
+    border:1px solid #ccc;
+    padding:7px;
+    font-size: 12px;
+  }
+
+.example-full-width {
+  width: 95%; 
+}
+
+.example-label{
+  font-size: 20px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  color:#000000;
+}
+
+.form-group{  
+  margin-bottom: 0.5rem !important;
+  font-size: 15px !important;
+  margin-top:2%;
+  font-weight: 400;
+}
+
+input.mat-input-element {
+  margin-top: 0.175em;
+}
+
+.font-style-combo{  
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-weight: 480;
+  color: rgba(54, 54, 54, 0.83);
+}   
+ 
+fieldset {
+  width: 100%;
+}
+  
+.mat-form-field-flex {
+  padding: .75em .75em 0 .75em;
+}
+
+.add-asset-inputs { 
+  width: 100%;
+}
+
+.asset-sr-no {
+  margin-top: -14px;
+}
+
+.search-asset-buttons {
+  margin-left: 5px;
+}
+
+.example-container {
+  max-height: 340px;
+  overflow-y: scroll;
+}
+ 
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 0px;
+}
+
+ .addasset-submit-btn {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+  align-items: center
+ }
+ 
+ .modal-dropdown .example-full-width .form-group ng-select .ng-dropdown-panel {
+  position: fixed;
+  width: 22%;
+ }
+
+ .high-light{
+  background-color: #d4f3f4;
+}
+
+.basic-container {
+  padding: 5px;
+  font-size: 11px;
+}
+
+.custom-card{
+  background-color: #eeebeb;
+  box-shadow: 7px 7px 7px #5f5e5e;
+  border-style: solid;
+  border-color: #acacac;
+}
+
+.green-background {
+  background-color: rgb(189, 247, 189);
+}
+.red-background{
+  background-color: rgb(248, 183, 183);
+}
+
+.color-blue{
+  color: rgb(0, 50, 130);
+}

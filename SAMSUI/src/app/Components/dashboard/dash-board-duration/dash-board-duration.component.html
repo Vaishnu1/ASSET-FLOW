@@ -1,0 +1,53 @@
+<div fxLayout="column">
+  <div fxLayoutAlign="end start">
+    <mat-icon class="close-icon" (click)="closeModal()">highlight_off</mat-icon>
+  </div>
+  <form [formGroup]="durationForm" fxLayout="column">
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center" style="margin: 20px 0px 20px;">
+      <div fxFlex="49">
+        <span class="input-label">{{'REPORT_PERIOD' | translate}}</span>
+        <ng-select class=" input-field" (change)="setDuration($event)" [items]="periodOption"
+          bindLabel="period" bindValue="period" formControlName="period">
+        </ng-select>
+      </div>
+
+      <div *ngIf="disableNextAndPrevButton" fxFlex="49" fxLayoutAlign="center center">
+        <button mat-raised-button class="spaceLeft" (click)="changeToPrevious($event)" color="primary"
+          [disabled]="!disableNextAndPrevButton"> {{'REPORT_PREV' | translate}}</button>
+
+        <button mat-raised-button class="spaceLeft" (click)="changeToNext($event)" [disabled]="exceedsCurrentDate"
+          color="primary">{{'REPORT_NEXT' | translate}}</button>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-between center">
+      <div fxFlex="49">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="input-label">{{'REPORT_FROM_DATE' | translate}}</mat-label>
+          <input matInput formControlName="createdDtDisp" [disabled]="fromDateDisabled"
+            [max]="durationForm.controls.updatedDtDisp.value" (click)="picker1.open()"
+            (dateChange)="getFromDate($event)" [matDatepicker]="picker1" (keypress)="dateValidation1($event)">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="49">
+        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+          <mat-label class="input-label">{{'REPORT_TO_DATE' | translate}}</mat-label>
+          <input matInput formControlName="updatedDtDisp" (click)="picker2.open()" [max]="currentDate"
+            [min]="durationForm.controls.createdDtDisp.value" [matDatepicker]="picker2"
+            (keypress)="dateValidation2($event)" (dateChange)="getToDate($event)">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div>
+      <button mat-raised-button class="rightbutton" color="primary" id="dateSubmit" (click)="submit()"
+        fxLayoutAlign="center center"> {{
+        'COMMON_SUBMIT' | translate }}</button>
+    </div>
+  </form>
+</div>

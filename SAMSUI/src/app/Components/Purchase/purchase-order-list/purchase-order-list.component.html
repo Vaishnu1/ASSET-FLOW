@@ -1,0 +1,473 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <mat-toolbar-row>
+      <mat-list aria-label="breadcrumb" fxLayoutAlign="start center">
+        <mat-list-item fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon class="small-icon">home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          
+        </mat-list-item>
+
+        <mat-list-item class="breadcrumb-item">{{'MENU_PURCHASE' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+
+        <mat-list-item class="breadcrumb-item active" aria-current="page">{{'PURCHASE_ORDER' | translate}}
+        </mat-list-item>
+      </mat-list>
+    </mat-toolbar-row>
+  </div>
+
+  <div style="padding-top:0.5%">
+    <div fxLayout="column">
+
+      <mat-expansion-panel fxFlex="100" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{'COMMON_SEARCH'| translate}}
+          </mat-panel-title>
+          <mat-panel-description fxLayoutAlign="end end">
+            <mat-icon>search</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div fxLayout="row">
+
+          <div fxFlex="25" fxFlex.sm="33">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label">{{'LOCATION_NAME' | translate}}</span>
+                <ng-select #focusLocationName [(ngModel)]="poHdr.selectedLocationNames" (search)="listofLocationName($event)"
+                  (click)="listofLocationName({})" (change)="setLocationNameComboValue($event)" [items]="locationCombo"
+                  [virtualScroll]="true" (scrollToEnd)="listofLocationName({})"
+                  (keyup.backspace)="listofLocationName($event.target.value ? $event : 'back')"
+                  (clear)="listofLocationName('clear')" [loading]="scrollLocationNamesync" bindLabel="locDisplayField"
+                  bindValue="locDisplayField" tabindex="1" required appendTo="body" multiple="true">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PURCHASE_PO_NUMBER' | translate }} </span>
+                <ng-select [items]="poNoList" bindLabel="poNO" bindValue="poNO"
+                  tabindex="3" (search)="listofPoNo($event)" (click)="listofPoNo($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listofPoNo({})"
+                  (keyup.backspace)="listofPoNo($event.target.value ? $event : 'back')"
+                  (clear)="listofPoNo('clear')" [loading]="scrollPONosync" loadingText="Loading..."
+                  (change)="setPONo($event)" [(ngModel)]="poHdr.selectedPoNOs"
+                  [ngModelOptions]="{standalone: true}" appendTo="body" multiple="true">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group h-55">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PURCHASE_REVISION_NO' | translate }} </span>
+                <ng-select [items]="poRevNoList" bindLabel="poRevNo" bindValue="poRevNo"
+                  tabindex="3" (search)="listofPoRevNo($event)" (click)="listofPoRevNo($event)"
+                  [virtualScroll]="true" (scrollToEnd)="listofPoRevNo({})"
+                  (keyup.backspace)="listofPoRevNo($event.target.value ? $event : 'back')"
+                  (clear)="listofPoRevNo('clear')" [loading]="scrollPORevNosync" loadingText="Loading..."
+                  (change)="setRevNo($event)" [(ngModel)]="poHdr.poRevNo"
+                  [ngModelOptions]="{standalone: true}" appendTo="body">
+                </ng-select>
+              </div>
+            </div>
+            
+
+          </div>
+
+          <div fxFlex="25" fxFlex.sm="33">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'SUPPLIER_NAME' | translate }} </span>
+                <ng-select [items]="supplierCombo" bindLabel="businessPartnerName" bindValue="businessPartnerName"
+                  tabindex="3" (search)="loadSupplierComboData($event)" (click)="loadSupplierComboData($event)"
+                  [virtualScroll]="true" (scrollToEnd)="loadSupplierComboData({})"
+                  (keyup.backspace)="loadSupplierComboData($event.target.value ? $event : 'back')"
+                  (clear)="loadSupplierComboData('clear')" [loading]="scrollsyncSupplier" loadingText="Loading..."
+                  (change)="selectedSupplierList($event)" [(ngModel)]="poHdr.selectedBusinessPartnerNames"
+                  [ngModelOptions]="{standalone: true}" appendTo="body" multiple="true">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="example-full-width" style="width: 100% !important;">
+                <mat-form-field class="example-full-width  label-spacing" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label">{{ 'SR_NO' | translate }}</mat-label>
+                  <input matInput tabindex="5" [(ngModel)]="poHdr.srNo" [ngModelOptions]="{standalone: true}" class="input-field"  oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="example-full-width" style="width: 100% !important;margin-top: -5px;">
+                <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                  <mat-label class="example-label input-label">{{ 'PR_NO' | translate }}</mat-label>
+                  <input matInput tabindex="6" [(ngModel)]="poHdr.prReqNo" [ngModelOptions]="{standalone: true}" class="input-field"  oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+
+          <div fxFlex="25" fxFlex.sm="33">
+
+            <div class="form-group">
+              <div class="example-full-width">
+                <span class="input-label"> {{ 'PURCHASE_PO_STATUS' | translate }} </span>
+                <ng-select [(ngModel)]="poHdr.poStatus" tabindex="7" appendTo="body"
+                  [ngModelOptions]="{standalone: true}" [items]="poStatus" bindLabel="name" bindValue="name">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field class="example-full-width date-label-spacing" [floatLabel]="'always'">
+                <mat-label class="example-label input-label">{{ 'SR_START_DATE' | translate}}</mat-label>
+                <input matInput class="input-field" (click)="fromDt.open()" [matDatepicker]="fromDt"  
+                  [matDatepickerFilter]="filterStartDate"
+                  [(ngModel)]="poHdr.fromDt" [ngModelOptions]="{standalone: true}"
+                  (dateChange)="srStartDateValidation($event)" tabindex="8">
+                <mat-datepicker-toggle matSuffix [for]="fromDt"></mat-datepicker-toggle>
+                <mat-datepicker #fromDt></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'" style="margin-top: -11px;">
+                <mat-label class="example-label input-label">{{ 'SR_END_DATE' | translate}}</mat-label>
+                <input matInput class="input-field" (click)="endDt.open()" [matDatepicker]="endDt"   
+                   [matDatepickerFilter]="filterEndDate"
+                  [(ngModel)]="poHdr.endDt" [ngModelOptions]="{standalone: true}" (ngModelChange)="srEndDateValidation($event)"
+                  (dateChange)="srEndDateValidation($event)" tabindex="9">
+                <mat-datepicker-toggle matSuffix [for]="endDt"></mat-datepicker-toggle>
+                <mat-datepicker #endDt></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div fxHide.gt-sm>
+              <button mat-raised-button class="space-button-left" color="primary"
+                matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'" tabindex="10"
+                (click)="searchPO()">
+                <mat-icon>search</mat-icon>
+              </button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                [matTooltipPosition]="'below'" tabindex="11" (click)="clear()">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+
+          </div>
+          <div fxLayout="column" fxFlex="25">
+            <div fxFlex="100" fxFlex.sm="33">
+
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'PURCHASE_RCV_STATUS' | translate }} </span>
+                  <ng-select [(ngModel)]="poHdr.compFlgDisp" tabindex="4" appendTo="body" (change)="setReceiptStatus($event)"
+                    [ngModelOptions]="{standalone: true}" [items]="receiptStatus" bindLabel="name" bindValue="name">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'PO_TYPE' | translate }} </span>
+                  <ng-select [items]="purchaseTypeCombo" bindLabel="purchasingTypeName" bindValue="purchasingTypeName"
+                    tabindex="12" (search)="listofPurchaseType($event)" (click)="listofPurchaseType($event)"
+                    [virtualScroll]="true" (scrollToEnd)="listofPurchaseType({})"
+                    (keyup.backspace)="listofPurchaseType($event.target.value ? $event : 'back')"
+                    (clear)="listofPurchaseType('clear')" [loading]="scrollPurchaseTypesync" loadingText="Loading..."
+                    (change)="setPurchaseType($event)" [ngModelOptions]="{standalone: true}" appendTo="body"
+                    [(ngModel)]="poHdr.poType">
+                  </ng-select>
+                </div>
+              </div>
+
+              <!-- <div class="form-group">
+                <div class="example-full-width">
+                  <span class="input-label"> {{ 'PO_USAGE' | translate }} </span>
+                  <ng-select [items]="purchaseUsageCombo" bindLabel="purchasingUsageName"
+                    bindValue="purchasingUsageName" tabindex="13" (search)="listofPurchaseUsage($event)"
+                    (click)="listofPurchaseUsage($event)" [virtualScroll]="true" (scrollToEnd)="listofPurchaseUsage({})"
+                    (keyup.backspace)="listofPurchaseUsage($event.target.value ? $event : 'back')"
+                    (clear)="listofPurchaseUsage('clear')" [loading]="scrollPurchaseUsagesync" loadingText="Loading..."
+                    (change)="setPurchaseUsage($event)" [ngModelOptions]="{standalone: true}" appendTo="body"
+                    [(ngModel)]="poHdr.poUsage">
+                  </ng-select>
+                </div>
+              </div> -->
+
+              <div class="form-group">
+                <div class="example-full-width">
+                <span class="input-label"> {{ 'APPROVAL_STATUS' | translate }} </span>
+                <ng-select  [(ngModel)]="poHdr.processStatus"
+                  (click)="listOfProcessStatus({})" [virtualScroll]="true"
+                  (search)="listOfProcessStatus($event)" (scrollToEnd)="listOfProcessStatus({})" (keyup.backspace)="listOfProcessStatus($event.target.value ? $event : 'back')" (clear)="listOfProcessStatus('clear')"
+                  (change)="setProcessStatus($event)" [items]="processStatusCombo1" bindLabel="processName"
+                  bindValue="processName" [loading]="scrollSyncProcessStatus" loadingText="Loading..." appendTo="body">
+                </ng-select>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div fxFlex="25" fxHide.sm fxHide.xs fxLayoutAlign="end end">
+              <button mat-raised-button class="space-button-left" color="primary"
+                matTooltip="{{'COMMON_SEARCH' | translate}}" [matTooltipPosition]="'below'" tabindex="14"
+                (click)="searchPO()">{{'COMMON_SEARCH' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                [matTooltipPosition]="'below'" tabindex="15" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+              <button mat-raised-button class="space" color="primary" matTooltip="{{'REPORT_EXPORT' | translate}}"
+                (click)="generateReport()" [matTooltipPosition]="'below'" tabindex="16">{{'REPORT_EXPORT' |
+                translate}}</button>
+            </div>
+          </div>
+
+        </div>
+      </mat-expansion-panel>
+
+      <hr />
+
+      <mat-toolbar>
+        <span class="example-spacer"></span>
+
+        <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+        <span class="example-spacer"></span>
+
+        <!-- custom column -->
+        <button mat-raised-button class="space sqr-btn" color="primary" matTooltip="{{'COMMON_MANAGE_COLUMNS' | translate}}" [matTooltipPosition]="'below'" (click)="editManageColumns()">
+          <mat-icon>view_week</mat-icon>
+        </button>
+        
+      <div class="custom-dialog" *ngIf="showManageColumns">
+        <div>
+          <span>{{'COMMON_MANAGE_COLUMNS' | translate}}</span>
+        </div>
+        <hr>
+        <div class="custom-dialog-body" *ngIf="showManageColumns">
+          <div id="column1">        
+            <input type="checkbox" [checked]="displayedColumns.includes('locationName')"(change)="toggleColumn('locationName')">
+            <span>{{'LOCATION_NAME' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('poNO')"(change)="toggleColumn('poNO')">
+            <span>{{'PURCHASE_PO_NUMBER' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('prDetails')" (change)="toggleColumn('prDetails')">
+            <span>{{'PR_DETAILS' | translate}}</span>
+            <br>
+            
+            <input type="checkbox" [checked]="displayedColumns.includes('poDtDisp')" (change)="toggleColumn('poDtDisp')">
+            <span>{{'PURCHASE_PO_DATE' | translate}}</span>
+            <br>
+          </div>
+    
+          <div id="column2">
+            <input type="checkbox" (change)="toggleColumn('poType')" [checked]="displayedColumns.includes('poType')">
+            <span>{{'PO_TYPE' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('poStatus')" [checked]="displayedColumns.includes('poStatus')">
+            <span>{{'PURCHASE_PO_STATUS' | translate}}/{{'PURCHASE_RCV_STATUS' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('updatedDt')" [checked]="displayedColumns.includes('updatedDt')">
+            <span>{{'COMMON_UPDATED_BY_DATE' | translate}}</span> <br>
+    
+            <input type="checkbox" (change)="toggleColumn('poRevNo')" [checked]="displayedColumns.includes('poRevNo')">
+            <span>{{'PURCHASE_REVISION_NO' | translate}}</span> <br>
+          </div>
+    
+          <div id="column3">
+            <input type="checkbox" (change)="toggleColumn('businessPartnerName')" [checked]="displayedColumns.includes('businessPartnerName')">
+            <span>{{'SUPPLIER_NAME' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('poApprovalStatus')" [checked]="displayedColumns.includes('poApprovalStatus')">
+            <span>{{'APPROVAL_STATUS' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('totalPoQty')" [checked]="displayedColumns.includes('totalPoQty')">
+            <span>{{'RTV_PO_QTY' | translate}}</span><br>
+
+            <input type="checkbox" (change)="toggleColumn('grandTotal')" [checked]="displayedColumns.includes('grandTotal')">
+            <span>{{'PURCHASE_AMT_INFO' | translate}}</span>
+          </div>
+        </div>
+    
+        <hr>
+        
+        <div fxLayoutAlign="end end">
+          <button type="button" class="custom-button space" (click)="applyPreferredColumns()">
+            {{'COMMON_OK' | translate}}
+          </button>
+          <button type="button" class="custom-button" (click)="resetPreferredColumns()">
+            {{'COMMON_RESET' | translate}}
+          </button>
+        </div>
+        
+      </div>
+      <!-- custom column end -->
+
+        <button mat-raised-button color="primary" class="space sqr-btn" matTooltip="{{ 'COMMON_CREATE' | translate }}"
+          (click)="viewPO('0','add')" *ngIf="moduleAccessPR.createFlagDisplay">
+          <mat-icon>add</mat-icon>
+        </button>
+
+        <button [disabled]="enableActionBtn  || selectedPoStatus =='CLOSED' || selectedPoStatus =='CANCELLED' || enableEditAction " mat-raised-button color="primary"
+          class="space sqr-btn" matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="viewPO(selectedItem,'edit')"
+          *ngIf="moduleAccessPR.updateFlagDisplay">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button [disabled]="enableActionBtn" *ngIf="moduleAccessPR.readFlagDisplay" mat-raised-button color="primary"
+          class="space sqr-btn" matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="viewPO(selectedItem,'view')">
+          <mat-icon>visibility</mat-icon>
+        </button>
+
+        <button [disabled]="enableActionBtn" mat-raised-button color="primary" class="space sqr-btn"
+          matTooltip="{{ 'COMMON_PDF'|translate }}" (click)="generatePOPdfReport()">
+          <mat-icon>picture_as_pdf</mat-icon>
+        </button>
+
+        <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="validateAndApprovePO()">
+          <mat-icon>spellcheck</mat-icon>
+        </button>
+
+        <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="poWorkflowReject()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+
+        <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn"
+          matTooltip="{{ 'COMMON_CANCEL' | translate }}" (click)="poCancel()">
+          <mat-icon>clear</mat-icon>
+        </button>
+
+      </mat-toolbar>
+
+      <div fxFlex="100" class="example-container">
+        <table class="purchase-order-list" mat-table [dataSource]="poMainDataSource" matSort
+          (matSortChange)="customSort($event)" matSortActive="name" matSortDirection="asc" matSortDisableClear class="PO-list-table">
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="min-width: 30px;"><mat-checkbox color="primary" class="example-margin"
+              (change)="selectMultiplePR()" [(ngModel)]="multiSelectFlag">
+          </mat-checkbox> </th>
+            <td mat-cell *matCellDef="let element;let i = index;">
+              <mat-checkbox color="primary" class="example-margin" (change)="selectPO(element)"
+                [checked]="compareValue(element)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sNo" >
+            <th mat-header-cell *matHeaderCellDef > {{'COMMON_S_NO' | translate }} </th>
+            <td mat-cell *matCellDef="let element; let i=index;" > {{getIndexValue(i+1)}} </td>
+          </ng-container>
+          
+
+          <ng-container matColumnDef="locationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'LOCATION_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)">{{element.locationName}}
+              <!-- {{ (element?.locationName.length>30) ? (element.locationName | slice:0:20)+'...' :
+              (element.locationName) }} -->
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="poNO">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PURCHASE_PO_NUMBER' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)"> {{element?.poNO}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="prDetails">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header ></th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)">
+              <button mat-icon-button color="primary" matTooltip="{{ 'COMMON_VIEW' | translate }}"
+                (click)="viewPrDetails(element)">
+                <mat-icon>info</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poRevNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'PURCHASE_REVISION_NO' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)">
+              {{element?.poRevNo}}</td>
+          </ng-container>
+          <ng-container matColumnDef="poDtDisp">
+            <th mat-header-cell *matHeaderCellDef > {{'PURCHASE_PO_DATE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)">
+              {{element?.poDtDisp.split(" ")[0]}} </td>
+          </ng-container>
+          <ng-container matColumnDef="businessPartnerName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'SUPPLIER_NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)"> {{element?.businessPartnerName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="poStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'PURCHASE_PO_STATUS' | translate}}/{{'PURCHASE_RCV_STATUS' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)" class="{{element?.poStatus}}">
+              {{element?.poStatus}} <br> {{element?.compFlgDisp}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="poType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'PO_TYPE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)" class="{{element?.poType}}">
+              {{element?.poType}} </td>
+          </ng-container>
+          <ng-container matColumnDef="poApprovalStatus" >
+            <th mat-header-cell *matHeaderCellDef> {{'APPROVAL_STATUS' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)">
+              <span class="{{element?.poApprovalStatus.replace(' ','')}}">
+                <!-- {{ element?.poApprovalStatus }}</span> -->
+                {{ element?.poStatus == 'CANCELLED' ? '-' : element?.poApprovalStatus }}</span>
+            </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="totalPoQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'RTV_PO_QTY' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)" style="text-align: center;"> {{element?.totalPOQty}} </td>
+          </ng-container>
+
+          <!-- <ng-container matColumnDef="amtInfo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style=" min-width: 150px;"> {{'PURCHASE_TOTAL_TAX_AMT' | translate}}/{{'PURCHASE_TOTAL_BASIC_AMT' | translate}}/{{'PURCHASE_GRAND_TOTAL' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)" style="text-align: center;"> {{element?.netTaxAmt}} 
+              <br>{{element?.totalBasicAmt}}<br>{{element?.grandTotal}}
+            </td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="grandTotal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header >{{'PURCHASE_GRAND_TOTAL' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)" style="text-align: center;"> {{element?.grandTotal}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="updatedDt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > {{'COMMON_UPDATED_BY_DATE' | translate}} </th>
+            <td mat-cell *matCellDef="let element" (click)="selectPO(element)"> {{element?.updatedBy}} <br>
+              {{element?.updatedDtDisp}}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+          </tr>
+        </table>
+        <mat-card class="no_records_found" *ngIf="length=='0' && !subloaderPO">{{'COMMON_NO_RECORDS_FOUND' |
+          translate}}
+        </mat-card>
+        <mat-card class="no_records_found" *ngIf="subloaderPO" fxFlex="100" fxLayoutAlign="center center">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </mat-card>
+      </div>
+
+
+    </div>
+  </div>
+</div>

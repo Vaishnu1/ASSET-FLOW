@@ -1,0 +1,178 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" fxFlex="40">
+      <mat-toolbar-row style="position: sticky !important;" aria-label="breadcrumb">
+        <mat-list fxLayoutAlign="start center">
+          <mat-list-item fxLayoutAlign="start center">
+            <a href="#" [routerLink]="['/home/dashboard']">
+              <mat-icon>home</mat-icon>
+            </a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item fxLayoutAlign="start center" class="bread-crumb-content">{{'MENU_ASSET'| translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="bread-crumb-content">{{'MENU_MASTER'| translate}}
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item><a (click)="backHomePage()" style="cursor: pointer;">{{'CUSTOMER_NAME' | translate }}</a>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </mat-list-item>
+          <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+        </mat-list>
+      </mat-toolbar-row>
+    </div>
+
+    <div fxLayoutAlign="end start" fxFlex="60">
+      <button mat-raised-button color="primary" class="space" (click)="exit()">{{ 'COMMON_BACK' | translate }}</button>
+      <button *ngIf="!modeDisplay" mat-raised-button color="primary" class="space" (click)="clear()"
+        [disabled]="buttonDisableInEdit" tabindex="50">{{ 'COMMON_CLEAR' | translate }}</button>
+
+      <button *ngIf="!modeDisplay" mat-raised-button color="primary" class="space" (click)="save()"
+        [disabled]="customerCreateForm.invalid || table|| uploadFlagCustomer">
+        <span *ngIf="!uploadFlagCustomer">{{buttonHeadingDisplay}}</span>
+        <span *ngIf="uploadFlagCustomer">{{'COMMON_LOADING' | translate}} </span>
+      </button>
+    </div>
+  </div>
+
+
+  <div fxLayout="column">
+    <div fxLayout="row" fxFlex="100">
+      <form [formGroup]="customerCreateForm" style="width: 100%;">
+        <div fxLayout="row">
+          <mat-card  style="width: 100%;">
+            <mat-card-content>
+              <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center" style=" width: 100%;">
+                <div fxFlex="30">
+                  <div>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                      hintLabel="{{ CommonhintMsg.MAX_100 }}">
+                      <span class="input-label"> {{ 'CUSTOMER_NAME' | translate }}<span class="mandatory-style"> *</span> </span>
+                      <input #customerfocus matInput class="input-field" formControlName="customerName" required
+                        (change)="tabelValidation()" [maxlength]="100" oninput="this.value = this.value.toUpperCase()">
+                      <mat-hint align="end">{{customerCreateForm.controls.customerName.value?.length || 0}}/100
+                      </mat-hint>
+                      <mat-error
+                        *ngIf="customerCreateForm.controls.customerName.invalid && customerCreateForm.controls.customerName.touched">
+                        <div class="err-field" *ngIf="customerCreateForm.controls.customerName.errors.required">"{{'CUSTOMER_NAME' |
+                          translate }}" Is Required</div>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxFlex="30">
+                  <div>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <span class="input-label"> {{ 'CUSTOMER_SINCE' | translate }}</span>
+                      <input matInput class="input-field" formControlName="customerSinceDtDisp" tabindex="2" (click)="picker1.open()"
+                        [matDatepicker]="picker1" (keypress)="dateValidation($event)">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex="10" *ngIf="buttonDisableInEdit">
+                  <div class="example-full-width">
+                    <mat-checkbox color="primary" class="input-label" formControlName="active" tabindex="11"
+                      (change)="setInactiveDt($event)">
+                      {{'COMMON_ACTIVE' | translate }}
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div fxFlex="10" *ngIf="inActiveDtDisplay">
+                  <div>
+                    <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{ 'COMMON_INACTIVE_DT' | translate }} </mat-label>
+                      <input matInput formControlName="inActiveFromDtDisp" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxLayout="column" class="example-container">
+          <mat-tab-group fxFlex="100" [@.disabled]="true">
+            <mat-tab>
+              <ng-template mat-tab-label>
+                {{ 'CUSTOMER_SITE_INFO' | translate }}
+                <div *ngIf="!modeDisplay">
+                  <mat-icon *ngIf="!formOneValid" class="close-icon" aria-hidden="true">error</mat-icon>
+                </div>
+              </ng-template>
+              <mat-card class="card-style">
+                <mat-card-content>
+              <div fxLayoutAlign="end center" style="margin: 5px 0px;">
+                <button [disabled]="customerCreateForm.invalid || modeDisplay" mat-raised-button color="primary"
+                  class="space" (click)="addCustomerSite(0,null,'add')">{{'ADD_CUSTOMER_SITE' | translate }}</button>
+              </div>
+              <div class="example-container" fxLayout="column" fxFlexFill style="padding-top: 0.5%;">
+                <table mat-table [dataSource]="customerSiteList" matSort>
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef style="width: 5%;"> {{'COMMON_S_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width: 5%;"> {{i+1}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerSiteName">
+                    <th mat-header-cell *matHeaderCellDef style="width: 15%;"> {{'CUSTOMER_SITE_NAME' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.customerSiteName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerLocArea">
+                    <th mat-header-cell *matHeaderCellDef style="width: 10%;"> {{'COMMON_AREA' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.customerArea}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerLocCity">
+                    <th mat-header-cell *matHeaderCellDef style="width: 8%;"> {{'COMMON_CITY' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 8%;"> {{element.customerCity}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerLocState">
+                    <th mat-header-cell *matHeaderCellDef style="width: 8%;"> {{'COMMON_STATE' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 8%;"> {{element.customerState}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerLocCurCd">
+                    <th mat-header-cell *matHeaderCellDef style="width: 8%;"> {{'CURRENCY_CD' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 8%;"> {{element.custSiteCurrencyCode}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="contactPerson">
+                    <th mat-header-cell *matHeaderCellDef style="width: 8%;"> {{'COMMON_CONTACT_NAME' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 8%;"> {{element.custContactPerson}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerSiteContactEmailId">
+                    <th mat-header-cell *matHeaderCellDef style="width: 10%;"> {{'COMMON_EMAIL_ID' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.custContactPersonEmailId}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="customerSitePersonPhoneNo">
+                    <th mat-header-cell *matHeaderCellDef style="width: 10%;"> {{'COMMON_PHONE_NO' | translate }} </th>
+                    <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.custContactPersonContactNo}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;"> {{'COMMON_ACTION' | translate }} </th>
+                    <td mat-cell *matCellDef="let element; let i=index;" style="width: 5%;">
+                      <button *ngIf="!modeDisplay" mat-button class="mat-icon-button"
+                        matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="addCustomerSite(element,i,'edit')"
+                        style="text-align: center">
+                        <mat-icon color="primary">edit</mat-icon>
+                      </button>
+                      <button *ngIf="modeDisplay" mat-button class="mat-icon-button"
+                        matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="addCustomerSite(element,i,'view')">
+                        <mat-icon color="primary">visibility</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="customerSiteDisplayColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: customerSiteDisplayColumns;">
+                </table>
+              </div>
+              </mat-card-content>
+            </mat-card>
+            </mat-tab>
+          </mat-tab-group>
+          <!-- </div> -->
+        </div>
+        <!-- </div> -->
+      </form>
+    </div>
+  </div>
+</div>

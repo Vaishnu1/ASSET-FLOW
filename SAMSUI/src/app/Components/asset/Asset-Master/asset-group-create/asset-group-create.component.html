@@ -1,0 +1,700 @@
+<div fxLayout="column" fxFlexFill>
+
+  <div fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="row" fxFlex="60" fxLayout.lt-md="row" fxFlex.lt-md="100">
+      <div fxFlex="100" fxLayoutAlign="start center">
+        <mat-toolbar-row aria-label="breadcrumb" fxLayoutAlign="start center">
+          <mat-list fxLayoutAlign="start center">
+            <mat-list-item fxLayoutAlign="start center">
+              <a href="#" [routerLink]="['/home/dashboard']">
+                <mat-icon>home</mat-icon>
+              </a>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item>{{ 'MENU_ASSET' | translate }}
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item (click)="navigateToAssetDescription()" style="cursor: pointer;">{{'MENU_MASTER'| translate}}
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item (click)="navigateToAssetDescription()" style="cursor: pointer;">{{ 'ASSET_GROUP' | translate
+              }}
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+            <mat-list-item class="active" aria-current="page">{{headingDisplay}}</mat-list-item>
+          </mat-list>
+        </mat-toolbar-row>
+      </div>
+    </div>
+    <div fxFlex="40" fxLayout="row" fxLayout.lt-md="row" fxFlex.lt-md="100">
+      <div fxFlex="100" fxLayoutAlign="end center">
+        <button mat-raised-button color="primary" class="btn-margin-5px" (click)="closeModal()"> {{ 'COMMON_BACK' |
+          translate }}</button>
+        <button *ngIf="!modeDisplay" mat-raised-button color="primary" class="btn-margin-5px" (click)="clear()"
+          [disabled]="disableClear">{{ 'COMMON_CLEAR' | translate }}</button>
+        <button *ngIf="!modeDisplay" class="btn-margin-5px" [disabled]="(assetGroupForm.invalid || !assetGroupForm.dirty || uploadFlagAssetGroup) && !enableUpdate"
+          mat-raised-button color="primary" (click)="submit()">
+          <span *ngIf="!uploadLegalEntityFlag">{{displayButton}}</span>
+          <span *ngIf="uploadLegalEntityFlag">{{'COMMON_LOADING' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <form [formGroup]="assetGroupForm" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlexFill>
+      <div fxFlex="25" fxFlex.sm="100" fxFlex.xs="100" fxLayout="column">
+        <mat-card style="margin-top: 10px;">
+          <mat-card-content>
+
+            <div fxLayout="column" fxLayout.lt-md="row" fxFlex="100" fxFlex.lt-md="100"
+              fxLayoutAlign.lt-md="space-between start" class="pad-1-per">
+              <div fxLayout="column" fxFlex.lt-md="45">
+                <div class="pad-1-per" fxFlex="100">
+                  <mat-form-field [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_100 }}"
+                    class="example-full-width">
+                    <mat-label class="input-label"> {{ 'ASSET_GROUP' | translate }}
+                      <span class="mandatory-style">*</span>
+                    </mat-label>
+                    <input [tabIndex]=1 matInput #assetGroupFocus formControlName="assetGroupName" [maxlength]="100"
+                      (input)="checkForAssetGroupNameExistence()" oninput="this.value = this.value.toUpperCase()">
+                    <mat-hint align="end">{{assetGroupForm.controls.assetGroupName.value?.length || 0}}/100</mat-hint>
+                    <mat-error
+                      *ngIf="assetGroupForm.controls.assetGroupName.errors && assetGroupForm.controls.assetGroupName.touched">
+                      <div class="err-field" *ngIf="assetGroupForm.controls.assetGroupName.errors.required">
+                        "{{ 'ASSET_GROUP' | translate }}" Is Required </div>
+                      <div class="err-field" *ngIf="assetGroupForm.controls.assetGroupName.errors.notUnique">{{ErrorMsg}}</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="pad-1-per">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'" hintLabel="{{ CommonhintMsg.MAX_5 }}">
+                    <mat-label class="input-label"> {{ 'ASSET_GROUP_CODE' | translate }}
+                    </mat-label>
+                    <input [tabIndex]=2 matInput formControlName="assetGroupCode" [maxlength]="5" (input)="checkForAssetGroupCodeExistence()"
+                      oninput="this.value = this.value.toUpperCase()" class="input-field" (input)="fieldvalidationAssetGroupCode()">
+                    <mat-hint align="end">{{assetGroupForm.controls.assetGroupCode.value?.length || 0}}/5
+                    </mat-hint>
+                    <mat-error *ngIf="assetGroupForm.controls.assetGroupCode.errors && assetGroupForm.controls.assetGroupCode.touched">
+                      <div class="err-field" *ngIf="assetGroupForm.controls.assetGroupCode.errors.notUnique">{{ErrorMsgCode}}</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="100" class="pad-1-per example-full-width">
+                  <p class="input-label">{{ 'ASSET_CATEGORY' | translate }} <span class="mandatory-style">*</span>
+                  </p>
+                  <ng-select formControlName="assetCategoryName" [tabIndex]=3
+                    (search)="listOfCategory($event)" (click)="listOfCategory({})"
+                    (change)="getCategoryComboValue($event)" [virtualScroll]="true" (scrollToEnd)="listOfCategory({})" (keyup.backspace)="listOfCategory($event.target.value ? $event : 'back')" (clear)="listOfCategory('clear')"
+                    [loading]="categoryScrollsync" loadingText="Loading..." [items]="assetCategoryName"
+                    bindLabel="assetCategoryName" bindValue="assetCategoryName" required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="assetGroupForm.controls.assetCategoryName.invalid && assetGroupForm.controls.assetCategoryName.touched">
+                    <div class="err-field" *ngIf="assetGroupForm.controls.assetCategoryName.errors.required">
+                      Kindly Select The "{{ 'ASSET_CATEGORY' | translate }}" </div>
+                  </mat-error>
+                </div>
+                <div fxFlex="100" class="pad-1-per example-full-width">
+                  <p class="input-label">{{ 'ASSET_SUB_CATEGORY' | translate }} <span class="mandatory-style">*</span>
+                  </p>
+                  <ng-select formControlName="subCategoryName" [tabIndex]=4
+                    (search)="listOfSubCategory($event)" (click)="listOfSubCategory({})" [virtualScroll]="true"
+                    (scrollToEnd)="listOfSubCategory({})" (keyup.backspace)="listOfSubCategory($event.target.value ? $event : 'back')" (clear)="listOfSubCategory('clear')" [loading]="subScrollsync" loadingText="Loading..."
+                    (change)="getSubCategoryComboValue($event)" [items]="subCategoryName" bindLabel="subCategoryName"
+                    bindValue="subCategoryName" required>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="assetGroupForm.controls.subCategoryName.invalid && assetGroupForm.controls.subCategoryName.touched">
+                    <div class="err-field" *ngIf="assetGroupForm.controls.subCategoryName.errors.required">
+                      Kindly Select The "{{ 'ASSET_SUB_CATEGORY' | translate }}" </div>
+                  </mat-error>
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex.lt-md="45">
+                <div fxFlex="100" class="pad-1-per example-full-width">
+                  <p class="input-label">{{ 'ASSET_TYPE' | translate }}</p>
+                  <ng-select formControlName="assetTypeName" [tabIndex]=5
+                    (search)="listOfAssetType($event)" (click)="listOfAssetType({})"
+                    (change)="getAssetTypeComboValue($event)" [items]="assetTypeName" bindLabel="assetTypeName"
+                    [virtualScroll]="true" (scrollToEnd)="listOfAssetType({})" (keyup.backspace)="listOfAssetType($event.target.value ? $event : 'back')" (clear)="listOfAssetType('clear')" [loading]="typeScrollsync"
+                    loadingText="Loading..." bindValue="assetTypeName">
+                  </ng-select>
+                </div>
+                <div class="pad-1-per" fxFlex="100">
+                  <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                    hintLabel="{{ CommonhintMsg.MAX_1000 }}">
+                    <mat-label class="input-label"> {{ 'ASSETGROUP_REMARKS' | translate }}</mat-label>
+                    <textarea matInput formControlName="assetGroupDesc" [maxlength]="1000" [tabIndex]=6
+                      oninput="this.value = this.value.toUpperCase()" (input)="fieldvalidationDescription()"></textarea>
+                    <mat-hint align="end">{{assetGroupForm.controls.assetGroupDesc.value?.length || 0}}/1000</mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex="75" class="left-margin-1-per" fxFlex.sm="100" fxFlex.xs="100" fxLayout="column" [@.disabled]="true">
+        <mat-tab-group [selectedIndex]="selectedIndex">
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              {{'COMMON_BASIC_INFORMATION' | translate}}
+            </ng-template>
+            <mat-card class="card-style white-bg card-height">
+              <mat-card-content fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxFlex="100"
+                fxLayoutAlign="space-evenly start" fxFlexFill>
+
+                <div fxFlex="100" fxLayout="column">
+                  <div fxLayout="row" fxFlex="100" fxFlexFill class="pad-2-per ml-10px">
+                    <div fxFlex="25">
+                      <div class="pad-1-per">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                          <mat-label class="input-label"> {{ 'ASSET_EXPECTED_LIFE_IN_YEARS' | translate }}</mat-label>
+                          <input matInput class="input-field" formControlName="expectedLifeInYears"  [maxlength]="4" appPercentageDirective>
+                          <mat-error *ngIf="assetGroupForm.controls.expectedLifeInYears.invalid && assetGroupForm.controls.expectedLifeInYears.touched">
+                            <div class="error_font" *ngIf="assetGroupForm.controls.expectedLifeInYears.errors.pattern">{{'ASSET_EXPECTED_LIFE_IN_YEARS' | translate}} contains only Numbers </div>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div fxFlex="25">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_FUNCTIONALITY' | translate }}</span>
+                        <ng-select [items]="functionalityList" appendTo="body" [tabIndex]=7
+                          bindLabel="functionalityName" bindValue="functionalityName"
+                          (search)="loadFunctionalityComboData($event)" (click)="loadFunctionalityComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadFunctionalityComboData({})" (keyup.backspace)="loadFunctionalityComboData($event.target.value ? $event : 'back')" (clear)="loadFunctionalityComboData('clear')"
+                          [loading]="scrollFunctionalitysync" loadingText="Loading..."
+                          (change)="selectedFuncationalityData($event);" formControlName="functionalityName">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="25">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_OFF_WARRANTY_MS' | translate }}</span>
+                        <ng-select [items]="offWarrantyMSList" appendTo="body" [tabIndex]=7
+                          bindLabel="maintenanceStrategyName" bindValue="maintenanceStrategyName"
+                          (search)="loadOffWarrantyMsComboData($event, 'offWarrantyMS')" 
+                          (click)="loadOffWarrantyMsComboData($event, 'offWarrantyMS')"
+                          [virtualScroll]="true" (scrollToEnd)="loadOffWarrantyMsComboData({}, 'offWarrantyMS')" 
+                          (keyup.backspace)="loadOffWarrantyMsComboData($event.target.value ? $event : 'back', 'offWarrantyMS')" (clear)="loadOffWarrantyMsComboData('clear', 'offWarrantyMS')"
+                          [loading]="scrollMSsync" loadingText="Loading..."
+                          (change)="selectedMaintenanceStrategyData($event);" formControlName="offWarrantyMS">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="25">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_QA_STRATEGY' | translate }}</span>
+                        <ng-select [items]="maintenanceStrategyList" appendTo="body" [tabIndex]=7
+                          bindLabel="maintenanceStrategyName" bindValue="maintenanceStrategyName"
+                          (search)="loadMaintenanceStrategyComboData($event, '')" 
+                          (click)="loadMaintenanceStrategyComboData($event, '')"
+                          [virtualScroll]="true" (scrollToEnd)="loadMaintenanceStrategyComboData({}, '')" 
+                          (keyup.backspace)="loadMaintenanceStrategyComboData($event.target.value ? $event : 'back', '')" (clear)="loadMaintenanceStrategyComboData('clear', '')"
+                          [loading]="scrollQaStrategysync" loadingText="Loading..."
+                          (change)="selectedQaStrategyData($event);" formControlName="qaStrategy">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                  </div>
+  
+                  <div fxLayout="row" fxFlex="100" fxFlexFill class="pad-2-per ml-10px">
+                    <div fxFlex="25">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'DEVICE_CODE' | translate }}</span>
+                        <ng-select [items]="deviceCodeList" appendTo="body" [tabIndex]=7
+                          bindLabel="deviceCode" bindValue="deviceCode"
+                          (search)="loadDeviceCodeComboData($event)" (click)="loadDeviceCodeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadDeviceCodeComboData({})" (keyup.backspace)="loadDeviceCodeComboData($event.target.value ? $event : 'back')" (clear)="loadDeviceCodeComboData('clear')"
+                          [loading]="scrollDeviceCodesync" loadingText="Loading..."
+                          (change)="selectedDeviceCodeData($event)" formControlName="deviceCode">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="51">
+                      <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                      <mat-label class="input-label"> {{ 'DEVICE_CONCEPT' | translate }}</mat-label>
+                      <textarea matInput matTextareaAutosize class="input-field" formControlName="deviceConcept" readonly></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  
+                </div>
+
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              {{'ASSET_MAINTENANCE_SCHEDULING' | translate}}
+            </ng-template>
+            <mat-card>
+
+              <mat-card-content>
+                <form [formGroup]="maintenanceScheduleFormGroup" fxLayoutAlign="start center">
+                  <div fxFlex="100">
+                    <div fxFlex="33" fxLayout="row" fxLayoutAlign="start center" class="ml-10px">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'MAINTENANCE_SCHEDULE_TYPE' | translate }}</span>
+                        <ng-select [items]="scheduleTypeList" appendTo="body" [tabIndex]=7
+                          bindLabel="maintenanceScheduleTypeName" bindValue="maintenanceScheduleTypeName"
+                          (search)="loadScheduleTypeComboData($event)" (click)="loadScheduleTypeComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadScheduleTypeComboData({})" 
+                          (keyup.backspace)="loadScheduleTypeComboData($event.target.value ? $event : 'back')" (clear)="loadScheduleTypeComboData('clear')"
+                          [loading]="scrollScheduleTypesync" loadingText="Loading..."
+                          (change)="selectedScheduleTypeData($event)" formControlName="maintenanceScheduleTypeName">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="33" class="ml-10px">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'MAINTENANCE_SCHEDULE_FREQUENCY' | translate }}</span>
+                        <ng-select [items]="scheduleFrequencyList" appendTo="body" [tabIndex]=7
+                          bindLabel="maintenanceScheduleFrequencyName" bindValue="maintenanceScheduleFrequencyName"
+                          (search)="loadScheduleFrequencyComboData($event)" (click)="loadScheduleFrequencyComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadScheduleFrequencyComboData({})" 
+                          (keyup.backspace)="loadScheduleFrequencyComboData($event.target.value ? $event : 'back')" (clear)="loadScheduleFrequencyComboData('clear')"
+                          [loading]="scrollScheduleFrequencysync" loadingText="Loading..."
+                          (change)="selectedScheduleFrequencyData($event)" formControlName="maintenanceScheduleFrequencyName">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="10" fxLayoutAlign="center center">
+                      <button *ngIf="!modeDisplay" mat-raised-button class="space" color="primary"
+                      (click)="addAssetGroupMaintSchedule()" [disabled]="maintenanceScheduleFormGroup.invalid">
+                        {{'COMMON_ADD' | translate}}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+
+                <div>
+                  <div class="mt-20px">
+                    <table mat-table [dataSource]="maintenanceScheduleList">
+  
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'COMMON_S_NO' | translate}} </th>
+                        <td mat-cell *matCellDef="let element let i=index;" style="width: 7%;"> {{(i+1)}} </td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="maintenanceScheduleTypeName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%;">{{'MAINTENANCE_SCHEDULE_TYPE' | translate}}</th>
+                        <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element?.maintenanceScheduleTypeName}}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="maintenanceScheduleFrequencyName">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'MAINTENANCE_SCHEDULE_FREQUENCY' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">{{element?.maintenanceScheduleFrequencyName}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="updatedBy">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;">{{ 'COMMON_UPDATED_BY' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.updatedBy}}</td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="updatedDt">
+                        <th mat-header-cell *matHeaderCellDef style="width:10%;"> {{ 'COMMON_UPDATED_DT' | translate }} </th>
+                        <td mat-cell *matCellDef="let element" style="width:10%;"> {{element.updatedDtDisp}}</td>
+                      </ng-container>
+  
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'COMMON_ACTION' | translate}}</th>
+                        <td mat-cell *matCellDef="let element let i=index" style="width: 10%;">
+                          <button color="warn" mat-icon-button matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                            (click)="deleteMaintenanceSchedule(i, element)" [disabled]="element.maintenanceScheduleTypeId <= 0">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumnsMaintSchedule;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let element; columns: displayedColumnsMaintSchedule;">
+                      </tr>
+                    </table>
+                    <mat-card class="no-record-found" *ngIf="maintenanceScheduleListLength== 0 && !subLoader">
+                      {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                    </mat-card>
+  
+                    <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                      <mat-spinner [diameter]="40"></mat-spinner>
+                    </mat-card>
+                  </div>
+                </div>
+                
+                
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              {{ 'ASSET_GROUP_CHECK_POINTS' | translate}}
+            </ng-template>
+            <mat-card>
+              <mat-card-content>
+                <div fxLayout="column" [formGroup]="assetGroupChkPtsFormGroup">
+                  <div fxLayout="row" fxFlex="100" class="ml-10px">
+                    <div fxFlex="30">
+                      <div class="example-full-width ht-41px">
+                        <span class="input-label"> {{ 'SR_PARAMETER_TYPE' | translate }} <span class="mandatory-style">*</span> </span>
+                        <ng-select class=" input-field" formControlName="parameterTypeName"
+                          (search)="listOfParameterType($event)" (click)="listOfParameterType({})"
+                          [virtualScroll]="true" (scrollToEnd)="listOfParameterType({})" (keyup.backspace)="listOfParameterType($event.target.value ? $event : 'back')" (clear)="listOfParameterType('clear')"
+                          [loading]="scrollsyncParameterType" loadingText="Loading..."
+                          (change)="selectedIdOfParameterType($event)" [items]="parameterTypeCombo"
+                          bindLabel="parameterTypeNameDisp" bindValue="parameterTypeName" appendTo="body" required>
+                        </ng-select>
+                        <mat-error
+                          *ngIf="assetGroupChkPtsFormGroup.controls.parameterTypeName.invalid && assetGroupChkPtsFormGroup.controls.parameterTypeName.touched">
+                          <div class="err-field"
+                            *ngIf="assetGroupChkPtsFormGroup.controls.parameterTypeName.errors.required">
+                            Kindly Select The "{{'SR_PARAMETER_TYPE' | translate }}" </div>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div fxFlex="30">
+                      <div class="example-full-width ht-41px">
+                        <span class="input-label"> {{ 'SR_PARAMETER_GROUP' | translate }} </span>
+                        <ng-select class=" input-field" formControlName="parameterGroupName" (search)="listOfParameterGroup($event)"
+                          (click)="listOfParameterGroup({})" [virtualScroll]="true" (scrollToEnd)="listOfParameterGroup({})"
+                          (keyup.backspace)="listOfParameterGroup($event.target.value ? $event : 'back')"
+                          (clear)="listOfParameterGroup('clear')" [loading]="scrollsyncParameterGroup" loadingText="Loading..."
+                          (change)="selectedIdOfParameterGroup($event)" [items]="parameterGroupCombo" bindLabel="parameterGroupName"
+                          bindValue="parameterGroupName" appendTo="body">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div fxFlex="30">
+                      <div class="example-full-width ht-41px">
+                        <span class="input-label"> {{ 'SR_PARAMETER' | translate }} <span class="mandatory-style">*</span> </span>
+                        <ng-select class=" input-field" formControlName="parameterName"
+                          (search)="listOfParameterName($event)" (click)="listOfParameterName({})"
+                          [virtualScroll]="true" (scrollToEnd)="listOfParameterName({})" (keyup.backspace)="listOfParameterName($event.target.value ? $event : 'back')" (clear)="listOfParameterName('clear')"
+                          [loading]="scrollsyncParameterName" loadingText="Loading..."
+                          (change)="selectedIdOfParameterName($event)" [items]="parameterNameCombo"
+                          bindLabel="parameterName" bindValue="parameterName" appendTo="body" required>
+                        </ng-select>
+                        <mat-error
+                          *ngIf="assetGroupChkPtsFormGroup.controls.parameterName.invalid && assetGroupChkPtsFormGroup.controls.parameterTypeName.touched">
+                          <div class="err-field"
+                            *ngIf="assetGroupChkPtsFormGroup.controls.parameterName.errors.required">
+                            Kindly Select The "{{'SR_PARAMETER' | translate }}" </div>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div fxFlex="10" fxLayoutAlign="center center">
+                      <button mat-raised-button color="primary" [disabled]="assetGroupChkPtsFormGroup.invalid || headingDisplay == 'View'"
+                        (click)="addCheckPointParameter()">Add</button>
+                    </div>
+                    <!-- <div fxFlex="40"></div> -->
+                    </div>
+
+                    <div>
+                      <div class="mt-20px">
+                        <table #matCheckList mat-table [dataSource]="checkPointList">
+                          <ng-container matColumnDef="sno">
+                            <th mat-header-cell *matHeaderCellDef style="width:4%;"> {{ 'COMMON_S_NO' | translate }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index; " style="width:4%;">
+                              {{i+1}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="parameterName">
+                            <th mat-header-cell *matHeaderCellDef style="width:15%;">
+                              {{ 'MODEL_PARAMETER_NAME' | translate }}</th>
+                            <td mat-cell *matCellDef="let element" style="width:15%;">
+                              {{ element?.parameterName }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="parameterGroupName">
+                            <th mat-header-cell *matHeaderCellDef style="width:15%;">
+                              {{ 'SR_PARAMETER_GROUP' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:15%;">
+                              {{ element?.parameterGroupName }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="parameterTypeName">
+                            <th mat-header-cell *matHeaderCellDef style="width:10%;">
+                              {{ 'MODEL_PARAMETER_TYPE_NAME' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:10%;">
+                              {{ element?.parameterTypeNameDisp }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="uom">
+                            <th mat-header-cell *matHeaderCellDef style="width:5%;">
+                              {{ 'UOM' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:5%;">
+                              {{ element?.uomCd }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="inputType">
+                            <th mat-header-cell *matHeaderCellDef style="width:7%;">
+                              {{ 'INPUT_TYPE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:7%;">
+                              {{ element?.inputType }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="defaultValue">
+                            <th mat-header-cell *matHeaderCellDef style="width:7%;">
+                              {{ 'DEFAULT_VALUE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:7%;">
+                              {{ element?.defaultValue }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="minAllowedValue">
+                            <th mat-header-cell *matHeaderCellDef style="width:7%;">
+                              {{ 'MIN_ALLOWED_VALUE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:7%;">
+                              {{ element?.minAllowedValue }}
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="maxAllowedValue">
+                            <th mat-header-cell *matHeaderCellDef style="width:7%;">
+                              {{ 'MAX_ALLOWED_VALUE' | translate }} </th>
+                            <td mat-cell *matCellDef="let element" style="width:7%;">
+                              {{ element?.maxAllowedValue }}
+                            </td>
+                          </ng-container>
+                          
+
+                          <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef style="width: 5%;">{{'COMMON_ACTION' | translate}}</th>
+                            <td mat-cell *matCellDef="let element let i=index" style="width: 5%;">
+                              <button color="warn" mat-icon-button matTooltip="{{ 'COMMON_DELETE' | translate }}" 
+                                (click)="deleteCheckPoints(i, element)">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="checkPointsDisCol;sticky: true"></tr>
+                          <tr mat-row *matRowDef="let element; columns: checkPointsDisCol;">
+                        </table>
+                        <mat-card class="no-record-found" *ngIf="checkPointListLength== 0 && !subLoader">
+                          {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                        </mat-card>
+      
+                        <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                          <mat-spinner [diameter]="40"></mat-spinner>
+                        </mat-card>
+                      </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+
+          <mat-tab *ngIf="assetGroupForm.controls.subCategoryId.value>0 && customFieldsLength >0">
+            <ng-template mat-tab-label>
+              {{ 'CUSTOM_FIELDS' | translate }}
+            </ng-template>
+            <mat-card class="card-style white-bg">
+              <mat-card-content>
+                <div class="content-style">
+                  <!-- <div style="width: 100%;">
+                    <div style="width: 25%;" *ngFor="let cusFieldslist of cusFieldHdrList| slice:0:50; let i = index;"> -->
+
+                  <mat-grid-list cols="4" rowHeight="100px">
+                    <mat-grid-tile *ngFor="let cusFieldslist of cusFieldHdrList| slice:0:50; let i = index;">
+
+                      <div class="example-full-width custom-field-form-group" *ngIf="cusFieldslist.inputType =='NUMBER'"
+                        [style.background]="cusFieldslist.color">
+                        <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                          hintLabel="Max {{ cusFieldslist.inputMaxLength }} Digits">
+                          <mat-label class="input-label"> {{ cusFieldslist.labelName }} </mat-label>
+                          <input matInput type="number" name="numberValue" [maxlength]="cusFieldslist.inputMaxLength"
+                            pattern="^([0-9]*$)" [(ngModel)]="cusFieldslist.value" [ngModelOptions]="{standalone: true}"
+                            title="{{ cusFieldslist.labelName }} should only contain numbers" (change)="isChanged();"
+                            oninput="this.value = this.value.toUpperCase()">
+                          <mat-hint align="end">{{cusFieldslist.value?.toString().length || 0}}/{{
+                            cusFieldslist.inputMaxLength }}</mat-hint>
+                        </mat-form-field>
+                      </div>
+
+                      <div *ngIf="cusFieldslist.inputType =='CHECKBOX'" class="example-full-width">
+                        <div class="custom-field-form-group row" [style.background]="cusFieldslist.color">
+                          <section class="example-section">
+                            <mat-checkbox [(ngModel)]="cusFieldslist.value1" [ngModelOptions]="{standalone: true}"
+                              color="primary" class="example-margin"
+                              (change)="isChanged();cusFieldslist.value=cusFieldslist.value1==true?'TRUE':'FALSE'">
+                              {{cusFieldslist.labelName}}</mat-checkbox>
+                          </section>
+                        </div>
+                      </div>
+
+                      <div *ngIf="cusFieldslist.inputType =='DATE'" class="example-full-width">
+                        <div class="custom-field-form-group" [style.background]="cusFieldslist.color">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                            <mat-label class="input-label">{{cusFieldslist.labelName}}</mat-label>
+                            <input matInput (click)="date.open()" [matDatepicker]="date"
+                              [(ngModel)]="cusFieldslist.value1" [ngModelOptions]="{standalone: true}"
+                              (keypress)="dateValidationinstall($event)" (input)="dateConvert(cusFieldslist.value1,i)"
+                              (dateChange)="dateConvert(cusFieldslist.value1,i);isChanged()">
+                            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                            <mat-datepicker #date></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div *ngIf="cusFieldslist.inputType =='DROP DOWN(TEXT LIST)'" class="example-full-width select-fields">
+                        <div class="custom-field-form-group" [style.background]="cusFieldslist.color">
+                          <span class="spacing">{{ cusFieldslist.labelName }} </span>
+                          <ng-select  [(ngModel)]="cusFieldslist.value" appendTo="body" (change)="isChanged();"
+                            [items]="cusFieldslist.comboValues" [ngModelOptions]="{standalone: true}"
+                            bindLabel="comboValue" bindValue="comboValue">
+                          </ng-select>
+                        </div>
+                      </div>
+
+                      <div *ngIf="cusFieldslist.inputType =='TEXT'" class="example-full-width">
+                        <div class="custom-field-form-group" [style.background]="cusFieldslist.color">
+                          <mat-form-field class="example-full-width" [floatLabel]="'always'"
+                            hintLabel="Max {{ cusFieldslist.inputMaxLength }} Characters">
+                            <mat-label class="input-label"> {{ cusFieldslist.labelName }} </mat-label>
+                            <input matInput name="textValue" [(ngModel)]="cusFieldslist.value"
+                              [ngModelOptions]="{standalone: true}" type="text" (change)="isChanged();"
+                              [maxlength]="cusFieldslist.inputMaxLength"
+                              oninput="this.value = this.value.toUpperCase()">
+                            <mat-hint align="end">{{cusFieldslist.value?.length || 0}}/{{ cusFieldslist.inputMaxLength
+                              }}</mat-hint>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      </mat-grid-tile>
+                      </mat-grid-list>
+                    </div>
+
+                  <!-- </div>
+                </div> -->
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              {{ 'STATUTORY_REQUIREMENTS' | translate }}
+            </ng-template>
+
+            <mat-card>
+              <mat-card-content>
+                <form [formGroup]="statutoryRequirementFormGroup" fxLayoutAlign="start center">
+                  <div fxFlex="100">
+                    <div fxFlex="33" fxLayout="row" fxLayoutAlign="start center" class="ml-10px">
+                      <div class="example-full-width">
+                        <span class="input-label"> {{ 'ASSET_CERTIFICATE_NAME' | translate }}
+                        </span>
+                        <ng-select [items]="certificateNameList" required appendTo="body" [tabIndex]=7
+                          bindLabel="certificateName" bindValue="certificateName"
+                          (search)="loadCertificateComboData($event)" (click)="loadCertificateComboData($event)"
+                          [virtualScroll]="true" (scrollToEnd)="loadCertificateComboData({})" (keyup.backspace)="loadCertificateComboData($event.target.value ? $event : 'back')" (clear)="loadCertificateComboData('clear')"
+                          [loading]="scrollsyncCertificateCombo" loadingText="Loading..."
+                          (change)="selectedCertificateAuthorityData($event);isChanged()" formControlName="certificateName" class="input-field">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div fxFlex="10" fxLayoutAlign="center center">
+                      <button *ngIf="!modeDisplay" mat-raised-button class="space" color="primary"
+                        (click)="addStatutoryRequirement()" [disabled]="statutoryRequirementFormGroup.invalid">
+                        {{ 'COMMON_ADD' |translate}}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <div class="mt-20px">
+                  <table mat-table [dataSource]="statutoryRequirementsList" style="margin-top:5px;">
+
+                    <ng-container matColumnDef="sno">
+                      <th mat-header-cell *matHeaderCellDef style="width: 7%;"> {{'COMMON_S_NO' | translate}} </th>
+                      <td mat-cell *matCellDef="let element let i=index;" style="width: 7%;"> {{(i+1)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="certificateName">
+                      <th mat-header-cell *matHeaderCellDef style="width: 15%;">{{'CERTIFICATE_NAME' | translate}}</th>
+                      <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element?.certificateName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="required">
+                      <th mat-header-cell *matHeaderCellDef style="width: 20%;">{{'STATUTORY_REQUIREMENTS_REQUIRED' |
+                        translate}}</th>
+                      <td mat-cell *matCellDef="let element let i= index" style="width: 20%;">
+                        <ng-select [items]="mandatoryCombo" bindLabel="mandatoryValue" [disabled]="modeDisplay"
+                          bindValue="mandatoryValue" class=" input-field example-full-width"
+                          (change)="selectedMandatoryValue($event, i);isChanged()" [(ngModel)]="element.mandatory"
+                          [ngModelOptions]="{standalone: true}" appendTo="body"></ng-select>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="mandatoryRequiredStage">
+                      <th mat-header-cell *matHeaderCellDef style="width: 20%;">
+                        {{'STATUTORY_REQUIREMENTS_REQUIRED_STAGE' | translate}}</th>
+                      <td mat-cell *matCellDef="let element let i = index" style="width: 20%;">
+                        <div>
+                          <ng-select placeholder={{required_stage}} [items]="requiredStageCombo"
+                            bindLabel="requiredStageName" [disabled]="modeDisplay || (element.mandatory != 'MANDATORY')"
+                            bindValue="requiredStageName" class=" input-field example-full-width"
+                            (change)="selectedMandatoryRequiredStage($event, i);isChanged()"
+                            [(ngModel)]="element.mandatoryRequiredStage" [ngModelOptions]="{standalone: true}"
+                            appendTo="body"></ng-select>
+                          <div
+                          class="err-field" *ngIf="(element.mandatory === 'MANDATORY') && !(element.mandatoryRequiredStage != '' && element.mandatoryRequiredStage != null)"
+                            style="font-size: 11px; color: red;">
+                            Kindly Select The "{{'STATUTORY_REQUIREMENTS_REQUIRED_STAGE' | translate}}"
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="active">
+                      <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'COMMON_ACTIVE' | translate}}</th>
+                      <td mat-cell *matCellDef="let element" style="width: 10%;">
+                        <mat-slide-toggle [(ngModel)]="element.active" [ngModelOptions]="{standalone: true}" color="primary"
+                          [disabled]="modeDisplay" (change)="isChanged();"></mat-slide-toggle>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                      <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'COMMON_ACTION' | translate}}</th>
+                      <td mat-cell *matCellDef="let element let i=index" style="width: 10%;">
+                        <button color="warn" mat-icon-button matTooltip="{{ 'COMMON_DELETE' | translate }}"
+                          (click)="deleteDocument(i)" [disabled]="element.assetGroupStatutoryId > 0">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                    </tr>
+                  </table>
+                  <mat-card class="no-record-found" *ngIf="statutoryReqListLength== 0 && !subLoader">
+                    {{'COMMON_NO_RECORDS_FOUND' | translate}}
+                  </mat-card>
+
+                  <mat-card *ngIf="subLoader" class="no_records_found" fxLayoutAlign="center center">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                  </mat-card>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-tab>
+
+        </mat-tab-group>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

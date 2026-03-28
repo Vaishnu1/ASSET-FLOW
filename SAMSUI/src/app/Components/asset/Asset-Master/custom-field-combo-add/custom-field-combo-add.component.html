@@ -1,0 +1,56 @@
+<div fxLayout="column" fxFlexFill>
+  <div fxLayout="row">
+    <div fxFlex="93" fxLayoutAlign="end start">
+      <button mat-raised-button class="space" color="primary" (click)="addcomboValue()">
+        {{'COMMON_ADD' | translate}}</button>
+      <button id="submit" mat-raised-button class="space rightbutton" color="primary" (click)="saveComboValue()">
+        {{'COMMON_SAVE' | translate}}</button>
+    </div>
+
+    <div fxFlex="7" fxLayoutAlign="end start" class="space">
+      <mat-icon class="close-icon-large close-icon" (click)="exit()" >highlight_off</mat-icon>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" class="custom-field-tbl">
+
+        <table #matAssignee class="asset-history-table" mat-table [dataSource]="custFieldList">
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef class="text-center">
+              {{ 'COMMON_S_NO' | translate }}</th>
+              
+            <td mat-cell *matCellDef="let element; let i = index;" class="text-center">
+                {{(i+1)}}
+            </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="customValues">
+            <th mat-header-cell *matHeaderCellDef class="text-center"> {{'CUSTOM_FIELDS_ADD_COMBO_VALUE' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i = index;">
+              <mat-form-field class="example-full-width" [floatLabel]="'always'">
+                <input autofocus matInput [(ngModel)]="element.customValues" [ngModelOptions]="{standalone: true}" type="text" [maxlength]="30" [disabled]="element.customFieldEdit">
+                <mat-hint *ngIf="!element.customFieldEdit">{{CommonhintMsg.MAX_30}}</mat-hint>
+                <mat-hint align="end" *ngIf="!element.customFieldEdit">{{element.customValues?.length || 0}}/30</mat-hint>
+                <mat-hint *ngIf="element.customFieldEdit">This "Combo Value" Consists Data, Update Restricted.</mat-hint>
+                
+              </mat-form-field>
+            </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="text-center"> {{'COMMON_DELETE' | translate}} </th>
+            <td mat-cell *matCellDef="let element; let i = index;" class="text-center"> 
+              <button color="primary" mat-raised-button class="space sqr-btn" [disabled]="element.customFieldEdit"
+                matTooltip="{{ 'COMMON_DELETE' | translate }}" (click)="deleteCustomField(element,i)">
+                <mat-icon>delete</mat-icon>
+              </button> 
+            </td>
+          </ng-container>
+         
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+
+        </table>
+</div>
+</div>

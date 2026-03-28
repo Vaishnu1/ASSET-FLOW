@@ -1,0 +1,276 @@
+<div fxLayout="column" fxFlex="100">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-toolbar-row class="breadcrumb-padding" fxLayoutAlign="start center">
+      <mat-list class="breadcrumb-padding" aria-label="breadcrumb" fxLayout="row" fxLayoutAlign="start center">
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center"><a href="#" [routerLink]="['/home/dashboard']">
+            <mat-icon>home</mat-icon>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </a></mat-list-item>
+        <mat-list-item class="bread-crumb-content" fxLayoutAlign="start center" aria-current="page">{{'MENU_ASSET' | translate}}
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="bread-crumb-content" aria-current="page">{{'MENU_ASSET_PHYSICAL_AUDIT' | translate}}</mat-list-item>
+      </mat-list>
+      <span class="example-spacer"></span>
+      <div fxFlex></div> 
+      </mat-toolbar-row>
+  </div>  
+  
+  <div fxLayout="row">
+    <div fxFlex="100">
+        <div class="table_section" fxFlex="100">
+
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{'COMMON_SEARCH'| translate}} {{'MENU_ASSET_PHYSICAL_AUDIT'| translate}}
+              </mat-panel-title>
+              <mat-panel-description fxLayoutAlign="end end">
+                <mat-icon>search</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div fxLayout="row">
+              <div fxFlex="25"> 
+                <div class="form-group mt-24-px">
+                    <div class="example-full-width">
+                      <span class="input-label"> {{ 'LOCATION_NAME' | translate }} </span>
+                      <ng-select [items]="locationCombo" class="input-field" bindLabel="locDisplayField" appendTo="body"
+                        bindValue="locDisplayField" (search)="loadLocationComboData($event)" (click)="loadLocationComboData($event)"
+                        [virtualScroll]="true" (scrollToEnd)="loadLocationComboData({})" (keyup.backspace)="loadLocationComboData($event.target.value ? $event : 'back')" (clear)="loadLocationComboData('clear')" [loading]="scrollsyncLocation"
+                        loadingText="Loading..." (change)="selectedLocationData($event)"
+                        [(ngModel)]="assetPhysicalAuditHdrModel.locationName" [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                </div> 
+              </div>
+              <!-- <div fxFlex="25"> 
+                <div>
+                    <mat-form-field class="example-full-width input-dt-lable-font input-lable-font" [floatLabel]="'always'">
+                      <span class="input-label">{{ 'ASSET_PHY_AUDIT_NAME' | translate }}</span>
+                      <input matInput tabindex="2" class="input-field" [(ngModel)]="assetPhysicalAuditHdrModel.phyAuditName" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                </div>
+              </div> -->
+              <div fxFlex="25">
+                <div class="form-group mt-24-px">
+                  <div class="example-full-width">
+                    <span class="input-label"> {{ 'ASSET_PHY_AUDIT_STATUS' | translate }} </span>
+                    <ng-select [ngModelOptions]="{standalone: true}"
+                      (search)="loadStatusComboData($event)" (click)="loadStatusComboData($event)"
+                      [virtualScroll]="true" (scrollToEnd)="loadStatusComboData({})" (keyup.backspace)="loadStatusComboData($event.target.value ? $event : 'back')" (clear)="loadStatusComboData('clear')" [loading]="scrollsyncPhyStatus"
+                      loadingText="Loading..." (change)="selectedPhyAuditStatusData($event)" appendTo="body" [(ngModel)]="assetPhysicalAuditHdrModel.phyAuditStatus"
+                      class="example-full-width input-field">
+                      <ng-option *ngFor="let phyAuditStatus of phyAuditStatusCombo" [value]="phyAuditStatus">
+                        {{ phyAuditStatus.processStatusName | translate }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+              </div> 
+              </div>
+              <div fxFlex="20">
+                <div class="form-group" >
+                  <mat-form-field class="example-full-width">
+                    <span class="input-label">{{'SCHEDULED_FROM_DATE' | translate}}</span>
+                    <input matInput  [(ngModel)]="assetPhysicalAuditHdrModel.scheduleFromDate" (click)="picker1.open()" class="input-field"
+                    [matDatepicker]="picker1" (keypress)="dateValidation($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxFlex="20">
+                <div class="form-group">
+                  <mat-form-field class="example-full-width">
+                    <span class="input-label">{{'SCHEDULED_TO_DATE' | translate}}</span>
+                    <input matInput [(ngModel)]="assetPhysicalAuditHdrModel.scheduleToDate" (click)="picker2.open()" class="input-field"
+                    [matDatepicker]="picker2" (keypress)="dateValidation($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div fxFlex="25"> 
+                <div class="form-group" fxLayoutAlign="end end"> 
+
+                  <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="searchPhysicalAudit()">{{'COMMON_SEARCH' | translate}}</button>
+                      
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_SEARCH' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="searchPhysicalAudit()"  fxHide.gt-sm><mat-icon>search</mat-icon></button>
+ 
+                  <button mat-raised-button fxHide.sm fxHide.xs class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="clear()">{{'COMMON_CLEAR' | translate}}</button>
+
+                  <button mat-raised-button class="space" color="primary" matTooltip="{{'COMMON_CLEAR' | translate}}"
+                  [matTooltipPosition]="'below'" (click)="clear()"  fxHide.gt-sm><mat-icon>clear_all</mat-icon></button> 
+
+                  <button mat-raised-button class="space" color="primary" (click)="generateReport()" matTooltip="{{'REPORT_EXPORT' | translate}}">
+                    {{'REPORT_EXPORT' | translate}} </button>
+                </div>
+              </div> 
+            </div> 
+
+          </mat-expansion-panel>
+
+          <hr />
+
+          <mat-toolbar>
+            <span>{{'MENU_ASSET_PHYSICAL_AUDIT'| translate}} List</span>
+            <span class="example-spacer"></span>
+            <mat-paginator class="asset-list-paginator" #paginatorUsers [pageSizeOptions]="[5, 10, 25, 50, 100]" [length]="length" [pageIndex]="pageIndex"
+          [pageSize]="pageSize" (page)="getServerData($event)"></mat-paginator>
+            <span class="example-spacer"></span>
+          
+          <button mat-raised-button class="space sqr-btn" color="primary"
+            matTooltip="{{ 'COMMON_CREATE' | translate }}" [matTooltipPosition]="'below'"
+            *ngIf="modelAccessModule.createFlagDisplay"
+            (click)="createAssetPhysicalAudit()"><mat-icon>add</mat-icon>
+          </button>
+          <button [disabled]="enableActionBtn || checkEditValid()" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.updateFlagDisplay"
+            matTooltip="{{ 'COMMON_EDIT' | translate }}" (click)="editAssetPhysicalAudit('edit')">
+            <mat-icon>edit</mat-icon>
+          </button>
+            <button [disabled]="enableActionBtn" color="primary" mat-raised-button class="space sqr-btn" *ngIf="modelAccessModule.readFlagDisplay"
+            matTooltip="{{ 'COMMON_VIEW' | translate }}" (click)="editAssetPhysicalAudit('view')">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn" 
+          matTooltip="{{ 'COMMON_APPROVE' | translate }}" (click)="PhyAuditWorkflowApproval(true)">
+          <mat-icon>spellcheck</mat-icon>
+          </button>
+    
+          <button [disabled]="checkApprovalValid()" color="primary" mat-raised-button class="space sqr-btn" 
+          matTooltip="{{ 'COMMON_REJECT' | translate }}" (click)="PhyAuditWorkflowApproval(false)">
+          <mat-icon>cancel</mat-icon>
+          </button>
+
+          </mat-toolbar>
+
+         
+          <div class="example-container">
+              <table mat-table class="phy-audit-list-table"  [dataSource]="auditDataSource" matSort (matSortChange)="customSort($event)" matSortActive="name"
+                matSortDirection="asc" matSortDisableClear>  
+
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="table-head-data"><mat-checkbox color="primary" [checked]="selectAllAsset" class="example-margin" (change)="selectAllAssetPhyAudits($event)">
+                  </mat-checkbox>  </th>
+                  <td mat-cell *matCellDef="let element;let i = index;">
+                    <mat-checkbox color="primary" class="example-margin" (change)="selectAssetPhyAudit(element)" [checked]="compareValue(element)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="locationName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'LOCATION_NAME' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.locationName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="phyAuditName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_PHY_AUDIT_NAME' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.phyAuditName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="phyAuditDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'ASSET_PHY_AUDIT_DATE' | translate}} </th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"> {{element?.phyAuditDateDisp}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="assetAuditStatusName">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{'ASSET_PHY_AUDIT_STATUS' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">
+                    <span class="{{element?.assetAuditStatusName.replace(' ','')}}">{{element?.assetAuditStatusName | translate}}</span> 
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="physicalAuditApprovalStatus">
+                  <th mat-header-cell *matHeaderCellDef >
+                    {{'PHY_AUDIT_APPROVAL_STATUS' | translate}} </th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">
+                    <span class="{{element?.physicalAuditApprovalStatus.replace(' ','')}}">{{element?.physicalAuditApprovalStatus}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noOfAssets">
+                  <th mat-header-cell *matHeaderCellDef>{{'TOTAL_ASSETS' | translate}} / {{'APPROVED_ASSETS' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element.newTotalAsset}} / {{element?.noOfAuditApprovedAssets}}
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="noOfApprovedAssets">
+                  <th mat-header-cell *matHeaderCellDef>{{'APPROVED_ASSETS' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.noOfAuditApprovedAssets}}
+                  </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="noOfAssetAudited">
+                    <th mat-header-cell *matHeaderCellDef>{{'ASSET_PHY_NO_ASSET_AUDITED' | translate}} / {{'ASSET_PHY_NO_ASSET_UNAUDITED' | translate}}</th>
+                    <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.newNoOfAssetAudited}} / {{element?.newNoOfAssetUnAudited}}
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="noOfAssetUnAudited">
+                    <th mat-header-cell *matHeaderCellDef>{{'ASSET_PHY_NO_ASSET_UNAUDITED' | translate}}</th>
+                    <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.newNoOfAssetUnAudited}}
+                    </td>
+                </ng-container>   -->
+                <ng-container matColumnDef="notFoundAssetCount">
+                    <th mat-header-cell *matHeaderCellDef>{{'NOT_FOUND_ASSET_COUNT' | translate}} / {{'NEWLY_FOUND_ASSET_COUNT' | translate}}</th>
+                    <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.notFoundAssetCount}} / {{element?.newlyFoundAssetCount}}
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="newlyFoundAssetCount">
+                  <th mat-header-cell *matHeaderCellDef>{{'NEWLY_FOUND_ASSET_COUNT' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.newlyFoundAssetCount}}
+                  </td>
+              </ng-container> -->
+
+                <ng-container matColumnDef="totalRoomsApproved">
+                    <th mat-header-cell *matHeaderCellDef>{{'TOTAL_APPROVED_ROOMS' | translate}}</th>
+                    <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"><span *ngIf="element?.auditType=='LOCATION'">{{element?.roomCount}} / {{element?.noOfTotalLocationApprovedCount}}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalRoomsAudited">
+                    <th mat-header-cell *matHeaderCellDef>{{'TOTAL_AUDITED_ROOMS' | translate}}</th>
+                    <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"><span *ngIf="element?.auditType=='LOCATION'">{{element?.noOfTotalLocationauditedCount}} / {{element?.noOfTotalLocationUnauditedCount}}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="approvedBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_PHY_APPROVED_REJECTED_BY' | translate}} / {{'ASSET_PHY_APPROVED_REJECTED_DATE' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"> {{element?.approvedBy}} / {{element?.approvedDateDisp}}</td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="approvedDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'ASSET_PHY_APPROVED_REJECTED_DATE' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element" class="{{element?.assetAuditStatusName.replace(' ','')}}"> {{element?.approvedDateDisp}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="createdBy">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;">{{'COMMON_CREATED_BY' | translate}} / {{'COMMON_CREATED_DT' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"> {{element?.createdBy}} / {{element?.createdDtDisp}}</td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="createdDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_CREATED_DT' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element"> {{element?.createdDtDisp}} </td>
+                </ng-container> -->
+                <ng-container matColumnDef="updatedDt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'COMMON_UPDATED_BY' | translate}} / {{'COMMON_UPDATED_DT' | translate}}</th>
+                  <td mat-cell (click)="selectAssetPhyAudit(element)" *matCellDef="let element">{{element?.updatedBy}} / {{element?.updatedDtDisp}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="auditDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: auditDisplayedColumns;">
+                </tr>
+              </table>
+              <mat-card class="no_records_found" *ngIf="length=='0' && !subLoader" fxLayoutAlign="center center">
+                {{'COMMON_NO_RECORDS_FOUND' | translate}}
+              </mat-card>
+    
+              <mat-card *ngIf="subLoader" fxLayoutAlign="center center" class="no_records_found">
+                <mat-spinner [diameter]="40"></mat-spinner>
+              </mat-card> 
+        </div>  
+
+        </div>
+      
+    </div>
+  </div>
+</div>
